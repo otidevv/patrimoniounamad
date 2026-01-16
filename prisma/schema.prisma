@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Tipos de documento de identidad
+enum TipoDocumento {
+  DNI               // Documento Nacional de Identidad (Perú)
+  PASAPORTE         // Pasaporte
+  CARNET_EXTRANJERIA // Carnet de Extranjería
+  PTP               // Permiso Temporal de Permanencia
+  OTRO              // Otro documento
+}
+
+// Roles del sistema (dinámicos - se crean en seed y por el usuario)
+model Rol {
+  id          String      @id @default(cuid())
+  codigo      String      @unique  // Identificador único (ej: "ADMIN", "AUDITOR")
+  nombre      String               // Nombre para mostrar (ej: "Administrador", "Auditor")
+  descripcion String?              // Descripción del rol
+  color       String      @default("#6b7280")  // Color para el badge (hex)
+  activo      Boolean     @default(true)
+  esSistema   Boolean     @default(false)  // Si es true, no se puede eliminar
+  permisos    PermisoRol[]
+  usuarios    Usuario[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("roles")
+}
+
+// Modelo de Usuario
+model Usuario {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  password        String
+  nombre          String
+  apellidos       String
+  tipoDocumento   TipoDocumento @default(DNI)
+  numeroDocumento String?
+  cargo           String?
+  telefono        String?
+  foto            String?
+  activo          Boolean  @default(true)
+  rolId           String
+  rol             Rol      @relation(fields: [rolId], references: [id])
+  dependenciaId   String?
+  dependencia     Dependencia? @relation(fields: [dependenciaId], references: [id])
+  passwordResetTokens PasswordResetToken[]
+  configuracion   ConfiguracionUsuario?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([tipoDocumento, numeroDocumento])
+  @@map("usuarios")
+}
+
+// Configuración personalizada por usuario
+model ConfiguracionUsuario {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme                String   @default("light")  // light, dark, system
+  notificacionesEmail  Boolean  @default(true)
+  notificacionesPush   Boolean  @default(true)
+  idioma               String   @default("es")
+  vistaCompacta        Boolean  @default(false)
+  mostrarEstado        Boolean  @default(true)
+  mostrarActividad     Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("configuracion_usuarios")
+}
+
+// Token para recuperación de contraseña
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("password_reset_tokens")
+}
+
+// Dependencias/Unidades orgánicas
+model Dependencia {
+  id          String    @id @default(cuid())
+  codigo      String    @unique
+  nombre      String
+  siglas      String?
+  tipo        TipoDependencia
+  parentId    String?
+  parent      Dependencia?  @relation("DependenciaHijos", fields: [parentId], references: [id])
+  hijos       Dependencia[] @relation("DependenciaHijos")
+  usuarios    Usuario[]
+  bienes      Bien[]
+  activo      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("dependencias")
+}
+
+enum TipoDependencia {
+  RECTORADO
+  VICERRECTORADO
+  FACULTAD
+  ESCUELA
+  OFICINA
+  DIRECCION
+  UNIDAD
+  OTRO
+}
+
+// Catálogo de bienes (basado en catálogo SBN)
+model CatalogoBien {
+  id              String   @id @default(cuid())
+  codigo          String   @unique  // Código del catálogo nacional
+  descripcion     String
+  cuenta          String   // Cuenta contable
+  grupoId         String?
+  grupo           GrupoBien? @relation(fields: [grupoId], references: [id])
+  vidaUtil        Int?     // Años de vida útil
+  tasaDepreciacion Float?  // Porcentaje anual
+  activo          Boolean  @default(true)
+  bienes          Bien[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("catalogo_bienes")
+}
+
+// Grupos de bienes
+model GrupoBien {
+  id          String         @id @default(cuid())
+  codigo      String         @unique
+  nombre      String
+  catalogos   CatalogoBien[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("grupos_bienes")
+}
+
+// Bienes patrimoniales
+model Bien {
+  id                  String   @id @default(cuid())
+  codigoPatrimonial   String   @unique  // Código de 12 dígitos
+  codigoSBN           String?  // Código del catálogo SBN
+  descripcion         String
+  marca               String?
+  modelo              String?
+  serie               String?
+  color               String?
+  dimensiones         String?
+  caracteristicas     String?
+  estado              EstadoBien @default(BUENO)
+  situacion           SituacionBien @default(EN_USO)
+  valorAdquisicion    Float?
+  valorActual         Float?
+  fechaAdquisicion    DateTime?
+  fechaAlta           DateTime?
+  documentoAlta       String?
+  catalogoId          String?
+  catalogo            CatalogoBien? @relation(fields: [catalogoId], references: [id])
+  dependenciaId       String?
+  dependencia         Dependencia? @relation(fields: [dependenciaId], references: [id])
+  ubicacion           String?
+  observaciones       String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("bienes")
+}
+
+enum EstadoBien {
+  NUEVO
+  BUENO
+  REGULAR
+  MALO
+  MUY_MALO
+  CHATARRA
+}
+
+enum SituacionBien {
+  EN_USO
+  EN_DESUSO
+  BAJA
+  TRANSFERIDO
+  FALTANTE
+  SOBRANTE
+}
+
+// Módulos del sistema
+enum Modulo {
+  DASHBOARD
+  BIENES
+  INVENTARIO
+  ALTAS
+  BAJAS
+  TRANSFERENCIAS
+  CATEGORIAS
+  DEPENDENCIAS
+  RESPONSABLES
+  REPORTES
+  DOCUMENTOS
+  ADMIN_PANEL      // Panel de Administración
+  ROLES_PERMISOS   // Roles y Permisos
+  USUARIOS         // Gestión de Usuarios
+  CONFIGURACION
+}
+
+// Permisos por rol y módulo
+model PermisoRol {
+  id        String   @id @default(cuid())
+  rolId     String
+  rol       Rol      @relation(fields: [rolId], references: [id], onDelete: Cascade)
+  modulo    Modulo
+  ver       Boolean  @default(false)
+  crear     Boolean  @default(false)
+  editar    Boolean  @default(false)
+  eliminar  Boolean  @default(false)
+  reportes  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([rolId, modulo])
+  @@map("permisos_rol")
+}

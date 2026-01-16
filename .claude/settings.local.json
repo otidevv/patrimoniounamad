@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(npx prisma generate:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npm run db:seed:*)",
+      "Bash(del \"D:\\\\sistemas unamad\\\\patrimoniounamad\\\\scripts\\\\create-admin.ts\")",
+      "Bash(npx tsc:*)",
+      "Bash(cmd /c \"set PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=si&& npx prisma db push --force-reset\")",
+      "Bash($env:PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"si\")",
+      "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=si npx prisma db push --force-reset)",
+      "Bash(npx prisma db seed:*)"
+    ]
+  }
+}
