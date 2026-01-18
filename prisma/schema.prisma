@@ -8,51 +8,70 @@ datasource db {
 
 // Tipos de documento de identidad
 enum TipoDocumento {
-  DNI               // Documento Nacional de Identidad (Perú)
-  PASAPORTE         // Pasaporte
+  DNI // Documento Nacional de Identidad (Perú)
+  PASAPORTE // Pasaporte
   CARNET_EXTRANJERIA // Carnet de Extranjería
-  PTP               // Permiso Temporal de Permanencia
-  OTRO              // Otro documento
+  PTP // Permiso Temporal de Permanencia
+  OTRO // Otro documento
 }
 
 // Roles del sistema (dinámicos - se crean en seed y por el usuario)
 model Rol {
-  id          String      @id @default(cuid())
-  codigo      String      @unique  // Identificador único (ej: "ADMIN", "AUDITOR")
-  nombre      String               // Nombre para mostrar (ej: "Administrador", "Auditor")
-  descripcion String?              // Descripción del rol
-  color       String      @default("#6b7280")  // Color para el badge (hex)
-  activo      Boolean     @default(true)
-  esSistema   Boolean     @default(false)  // Si es true, no se puede eliminar
+  id          String       @id @default(cuid())
+  codigo      String       @unique // Identificador único (ej: "ADMIN", "AUDITOR")
+  nombre      String // Nombre para mostrar (ej: "Administrador", "Auditor")
+  descripcion String? // Descripción del rol
+  color       String       @default("#6b7280") // Color para el badge (hex)
+  activo      Boolean      @default(true)
+  esSistema   Boolean      @default(false) // Si es true, no se puede eliminar
   permisos    PermisoRol[]
   usuarios    Usuario[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   @@map("roles")
 }
 
-// Modelo de Usuario
+// Modelo de Usuario (también funciona como empleado)
 model Usuario {
-  id              String   @id @default(cuid())
-  email           String   @unique
-  password        String
-  nombre          String
-  apellidos       String
-  tipoDocumento   TipoDocumento @default(DNI)
-  numeroDocumento String?
-  cargo           String?
-  telefono        String?
-  foto            String?
-  activo          Boolean  @default(true)
-  rolId           String
-  rol             Rol      @relation(fields: [rolId], references: [id])
-  dependenciaId   String?
-  dependencia     Dependencia? @relation(fields: [dependenciaId], references: [id])
+  id                  String                @id @default(cuid())
+  email               String                @unique
+  password            String
+  nombre              String
+  apellidos           String
+  tipoDocumento       TipoDocumento         @default(DNI)
+  numeroDocumento     String?
+  cargo               String?
+  telefono            String?
+  foto                String?
+  // Datos de contrato/cargo
+  fechaInicio         DateTime? // Fecha de inicio del cargo
+  fechaFin            DateTime? // Fecha de fin del cargo (null = vigente)
+  activo              Boolean               @default(true)
+  rolId               String
+  rol                 Rol                   @relation(fields: [rolId], references: [id])
+  sedeId              String?
+  sede                Sede?                 @relation(fields: [sedeId], references: [id])
+  dependenciaId       String?
+  dependencia         Dependencia?          @relation(fields: [dependenciaId], references: [id])
   passwordResetTokens PasswordResetToken[]
-  configuracion   ConfiguracionUsuario?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  configuracion       ConfiguracionUsuario?
+  // Relaciones de trámite documentario
+  documentosCreados      DocumentoTramite[]    @relation("DocumentoRemitente")
+  documentosDestinatario DocumentoDestino[]    @relation("DestinatarioDocumento")
+  documentosRecibidos    DocumentoDestino[]    @relation("ReceptorDocumento")
+  historialDocumentos    DocumentoHistorial[]
+  notificaciones         Notificacion[]
+  // Relaciones del repositorio personal
+  archivosRepositorio    ArchivoRepositorio[]
+  carpetasRepositorio    CarpetaRepositorio[]
+  // Relaciones del inventario físico
+  sesionesResponsable    SesionInventario[]     @relation("SesionResponsable")
+  participacionesInventario ParticipanteInventario[] @relation("ParticipanteInventario")
+  verificacionesRealizadas VerificacionBien[]    @relation("VerificadorBien")
+  bienesSobrantesRegistrados BienSobrante[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 
   @@unique([tipoDocumento, numeroDocumento])
   @@map("usuarios")
@@ -60,18 +79,18 @@ model Usuario {
 
 // Configuración personalizada por usuario
 model ConfiguracionUsuario {
-  id                   String   @id @default(cuid())
-  userId               String   @unique
-  user                 Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  theme                String   @default("light")  // light, dark, system
-  notificacionesEmail  Boolean  @default(true)
-  notificacionesPush   Boolean  @default(true)
-  idioma               String   @default("es")
-  vistaCompacta        Boolean  @default(false)
-  mostrarEstado        Boolean  @default(true)
-  mostrarActividad     Boolean  @default(true)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme               String   @default("light") // light, dark, system
+  notificacionesEmail Boolean  @default(true)
+  notificacionesPush  Boolean  @default(true)
+  idioma              String   @default("es")
+  vistaCompacta       Boolean  @default(false)
+  mostrarEstado       Boolean  @default(true)
+  mostrarActividad    Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@map("configuracion_usuarios")
 }
@@ -91,19 +110,27 @@ model PasswordResetToken {
 
 // Dependencias/Unidades orgánicas
 model Dependencia {
-  id          String    @id @default(cuid())
-  codigo      String    @unique
-  nombre      String
-  siglas      String?
-  tipo        TipoDependencia
-  parentId    String?
-  parent      Dependencia?  @relation("DependenciaHijos", fields: [parentId], references: [id])
-  hijos       Dependencia[] @relation("DependenciaHijos")
-  usuarios    Usuario[]
-  bienes      Bien[]
-  activo      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                  String               @id @default(cuid())
+  codigo              String               @unique
+  nombre              String
+  siglas              String?
+  tipo                TipoDependencia
+  sedeId              String
+  sede                Sede                 @relation(fields: [sedeId], references: [id])
+  parentId            String?
+  parent              Dependencia?         @relation("DependenciaHijos", fields: [parentId], references: [id])
+  hijos               Dependencia[]        @relation("DependenciaHijos")
+  usuarios            Usuario[]
+  bienes              Bien[]
+  // Relaciones de trámite documentario
+  documentosOrigen    DocumentoTramite[]   @relation("DocumentoOrigen")
+  documentosDestino   DocumentoDestino[]   @relation("DestinoDocumento")
+  historialDocumentos DocumentoHistorial[]
+  // Relaciones del inventario físico
+  sesionesInventario  SesionInventario[]
+  activo              Boolean              @default(true)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 
   @@map("dependencias")
 }
@@ -119,63 +146,87 @@ enum TipoDependencia {
   OTRO
 }
 
+// ========================================
+// MÓDULO DE SEDES
+// ========================================
+
+// Sedes de la universidad
+model Sede {
+  id           String        @id @default(cuid())
+  codigo       String        @unique // Código único de la sede
+  nombre       String // Nombre de la sede
+  direccion    String? // Dirección física
+  ciudad       String?
+  telefono     String?
+  email        String?
+  activo       Boolean       @default(true)
+  dependencias Dependencia[]
+  usuarios     Usuario[]
+  // Relaciones del inventario físico
+  sesionesInventario SesionInventario[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("sedes")
+}
+
 // Catálogo de bienes (basado en catálogo SBN)
 model CatalogoBien {
-  id              String   @id @default(cuid())
-  codigo          String   @unique  // Código del catálogo nacional
-  descripcion     String
-  cuenta          String   // Cuenta contable
-  grupoId         String?
-  grupo           GrupoBien? @relation(fields: [grupoId], references: [id])
-  vidaUtil        Int?     // Años de vida útil
-  tasaDepreciacion Float?  // Porcentaje anual
-  activo          Boolean  @default(true)
-  bienes          Bien[]
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               String     @id @default(cuid())
+  codigo           String     @unique // Código del catálogo nacional
+  descripcion      String
+  cuenta           String // Cuenta contable
+  grupoId          String?
+  grupo            GrupoBien? @relation(fields: [grupoId], references: [id])
+  vidaUtil         Int? // Años de vida útil
+  tasaDepreciacion Float? // Porcentaje anual
+  activo           Boolean    @default(true)
+  bienes           Bien[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
   @@map("catalogo_bienes")
 }
 
 // Grupos de bienes
 model GrupoBien {
-  id          String         @id @default(cuid())
-  codigo      String         @unique
-  nombre      String
-  catalogos   CatalogoBien[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id        String         @id @default(cuid())
+  codigo    String         @unique
+  nombre    String
+  catalogos CatalogoBien[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 
   @@map("grupos_bienes")
 }
 
 // Bienes patrimoniales
 model Bien {
-  id                  String   @id @default(cuid())
-  codigoPatrimonial   String   @unique  // Código de 12 dígitos
-  codigoSBN           String?  // Código del catálogo SBN
-  descripcion         String
-  marca               String?
-  modelo              String?
-  serie               String?
-  color               String?
-  dimensiones         String?
-  caracteristicas     String?
-  estado              EstadoBien @default(BUENO)
-  situacion           SituacionBien @default(EN_USO)
-  valorAdquisicion    Float?
-  valorActual         Float?
-  fechaAdquisicion    DateTime?
-  fechaAlta           DateTime?
-  documentoAlta       String?
-  catalogoId          String?
-  catalogo            CatalogoBien? @relation(fields: [catalogoId], references: [id])
-  dependenciaId       String?
-  dependencia         Dependencia? @relation(fields: [dependenciaId], references: [id])
-  ubicacion           String?
-  observaciones       String?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                String        @id @default(cuid())
+  codigoPatrimonial String        @unique // Código de 12 dígitos
+  codigoSBN         String? // Código del catálogo SBN
+  descripcion       String
+  marca             String?
+  modelo            String?
+  serie             String?
+  color             String?
+  dimensiones       String?
+  caracteristicas   String?
+  estado            EstadoBien    @default(BUENO)
+  situacion         SituacionBien @default(EN_USO)
+  valorAdquisicion  Float?
+  valorActual       Float?
+  fechaAdquisicion  DateTime?
+  fechaAlta         DateTime?
+  documentoAlta     String?
+  catalogoId        String?
+  catalogo          CatalogoBien? @relation(fields: [catalogoId], references: [id])
+  dependenciaId     String?
+  dependencia       Dependencia?  @relation(fields: [dependenciaId], references: [id])
+  ubicacion         String?
+  observaciones     String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   @@map("bienes")
 }
@@ -211,10 +262,13 @@ enum Modulo {
   RESPONSABLES
   REPORTES
   DOCUMENTOS
-  ADMIN_PANEL      // Panel de Administración
-  ROLES_PERMISOS   // Roles y Permisos
-  USUARIOS         // Gestión de Usuarios
+  ADMIN_PANEL // Panel de Administración
+  ROLES_PERMISOS // Roles y Permisos
+  USUARIOS // Gestión de Usuarios
   CONFIGURACION
+  // Nuevos módulos
+  SEDES // Gestión de Sedes
+  TRAMITE // Trámite Documentario
 }
 
 // Permisos por rol y módulo
@@ -233,4 +287,402 @@ model PermisoRol {
 
   @@unique([rolId, modulo])
   @@map("permisos_rol")
+}
+
+// ========================================
+// MÓDULO DE TRÁMITE DOCUMENTARIO
+// ========================================
+
+// Estados del documento en el flujo
+enum EstadoDocumentoTramite {
+  BORRADOR // Documento en edición, no enviado
+  ENVIADO // Documento enviado, pendiente de recepción
+  RECIBIDO // Documento recibido por el destinatario
+  DERIVADO // Documento reenviado a otra dependencia
+  OBSERVADO // Documento con observaciones pendientes
+  ATENDIDO // Documento procesado/respondido
+  ARCHIVADO // Documento finalizado y archivado
+}
+
+// Tipo de firma del documento
+enum TipoFirma {
+  DIGITAL // Firma digital con token/certificado
+  ESCANEADO // PDF escaneado con firma manuscrita
+  NINGUNA // Sin firma (borrador o documento interno)
+}
+
+// Acciones registradas en el historial
+enum AccionDocumento {
+  CREADO
+  EDITADO
+  ENVIADO
+  RECIBIDO
+  DERIVADO
+  OBSERVADO
+  ATENDIDO
+  ARCHIVADO
+  FIRMADO
+  ANULADO
+}
+
+// Tipos de notificación
+enum TipoNotificacion {
+  DOCUMENTO_RECIBIDO
+  DOCUMENTO_DERIVADO
+  DOCUMENTO_OBSERVADO
+  DOCUMENTO_ATENDIDO
+  DOCUMENTO_FIRMADO
+  RECORDATORIO
+}
+
+// Tipos de documento para trámite (Oficio, Memorándum, etc.)
+model TipoDocumentoTramite {
+  id            String             @id @default(cuid())
+  codigo        String             @unique // Ej: "OF", "MEM", "RES", "CARTA"
+  nombre        String // Ej: "Oficio", "Memorándum", "Resolución"
+  descripcion   String?
+  requiereFirma Boolean            @default(true)
+  prefijo       String? // Prefijo para el correlativo (ej: "OF-2024-")
+  activo        Boolean            @default(true)
+  documentos    DocumentoTramite[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@map("tipos_documento_tramite")
+}
+
+// Documento de trámite
+model DocumentoTramite {
+  id                     String                 @id @default(cuid())
+  // Identificación del documento
+  correlativo            String // Número correlativo (ingresado por usuario)
+  anio                   Int // Año del documento
+  tipoDocumentoId        String
+  tipoDocumento          TipoDocumentoTramite   @relation(fields: [tipoDocumentoId], references: [id])
+  // Contenido
+  asunto                 String
+  contenido              String? // Contenido o descripción del documento
+  folios                 Int                    @default(1) // Cantidad de folios/páginas
+  // Origen
+  dependenciaOrigenId    String
+  dependenciaOrigen      Dependencia            @relation("DocumentoOrigen", fields: [dependenciaOrigenId], references: [id])
+  remitenteId            String
+  remitente              Usuario                @relation("DocumentoRemitente", fields: [remitenteId], references: [id])
+  // Estado y firma
+  estado                 EstadoDocumentoTramite @default(BORRADOR)
+  tipoFirma              TipoFirma              @default(NINGUNA)
+  archivoFirmadoUrl      String? // URL del PDF firmado (digital o escaneado)
+  firmaDigitalData       String? // Datos de la firma digital (hash, certificado, etc.)
+  fechaFirma             DateTime?
+  // Prioridad y fechas
+  prioridad              PrioridadDocumento     @default(NORMAL)
+  fechaDocumento         DateTime               @default(now()) // Fecha del documento
+  fechaEnvio             DateTime? // Fecha de envío
+  fechaLimite            DateTime? // Fecha límite de atención
+  // Archivos adjuntos
+  archivosAdjuntos       ArchivoAdjunto[]
+  // Destinos y trazabilidad
+  destinos               DocumentoDestino[]
+  historial              DocumentoHistorial[]
+  notificaciones         Notificacion[]
+  // Referencia a otros documentos
+  documentoReferenciaId  String? // Documento al que responde/refiere
+  documentoReferencia    DocumentoTramite?      @relation("DocumentoReferencia", fields: [documentoReferenciaId], references: [id])
+  documentosRelacionados DocumentoTramite[]     @relation("DocumentoReferencia")
+  // Metadatos
+  observaciones          String?
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+
+  @@unique([tipoDocumentoId, correlativo, anio]) // Correlativo único por tipo y año
+  @@map("documentos_tramite")
+}
+
+// Prioridad del documento
+enum PrioridadDocumento {
+  BAJA
+  NORMAL
+  ALTA
+  URGENTE
+}
+
+// Destinos del documento (principal + copias)
+model DocumentoDestino {
+  id                   String           @id @default(cuid())
+  documentoId          String
+  documento            DocumentoTramite @relation(fields: [documentoId], references: [id], onDelete: Cascade)
+  dependenciaDestinoId String
+  dependenciaDestino   Dependencia      @relation("DestinoDocumento", fields: [dependenciaDestinoId], references: [id])
+  // Destinatario específico (a quién va dirigido el documento)
+  destinatarioId       String?
+  destinatario         Usuario?         @relation("DestinatarioDocumento", fields: [destinatarioId], references: [id])
+  esCopia              Boolean          @default(false) // true = CC (con copia), false = destinatario principal
+  // Estado de recepción (quién lo recibió físicamente)
+  estadoRecepcion      EstadoRecepcion  @default(PENDIENTE)
+  fechaRecepcion       DateTime?
+  receptorId           String?
+  receptor             Usuario?         @relation("ReceptorDocumento", fields: [receptorId], references: [id])
+  observacionRecepcion String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  @@unique([documentoId, dependenciaDestinoId]) // Un documento no puede ir dos veces al mismo destino
+  @@map("documentos_destino")
+}
+
+// Estado de recepción en cada destino
+enum EstadoRecepcion {
+  PENDIENTE // Aún no recibido
+  RECIBIDO // Recibido por la dependencia
+  RECHAZADO // Rechazado por la dependencia
+}
+
+// Archivos adjuntos del documento
+model ArchivoAdjunto {
+  id                   String              @id @default(cuid())
+  documentoId          String
+  documento            DocumentoTramite    @relation(fields: [documentoId], references: [id], onDelete: Cascade)
+  nombre               String // Nombre del archivo
+  url                  String // URL de almacenamiento
+  tipo                 String // MIME type
+  tamanio              Int // Tamaño en bytes
+  // Referencia al repositorio personal (si el archivo viene del repositorio)
+  archivoRepositorioId String?
+  archivoRepositorio   ArchivoRepositorio? @relation(fields: [archivoRepositorioId], references: [id], onDelete: SetNull)
+  createdAt            DateTime            @default(now())
+
+  @@map("archivos_adjuntos")
+}
+
+// Historial de acciones del documento (trazabilidad completa)
+model DocumentoHistorial {
+  id             String                  @id @default(cuid())
+  documentoId    String
+  documento      DocumentoTramite        @relation(fields: [documentoId], references: [id], onDelete: Cascade)
+  accion         AccionDocumento
+  usuarioId      String
+  usuario        Usuario                 @relation(fields: [usuarioId], references: [id])
+  dependenciaId  String?
+  dependencia    Dependencia?            @relation(fields: [dependenciaId], references: [id])
+  // Detalles de la acción
+  descripcion    String? // Descripción de la acción realizada
+  estadoAnterior EstadoDocumentoTramite?
+  estadoNuevo    EstadoDocumentoTramite?
+  ip             String? // IP desde donde se realizó la acción
+  createdAt      DateTime                @default(now())
+
+  @@map("documentos_historial")
+}
+
+// Notificaciones del sistema
+model Notificacion {
+  id              String            @id @default(cuid())
+  usuarioId       String
+  usuario         Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  documentoId     String?
+  documento       DocumentoTramite? @relation(fields: [documentoId], references: [id], onDelete: Cascade)
+  tipo            TipoNotificacion
+  titulo          String
+  mensaje         String
+  enlace          String? // URL para navegar al documento
+  leido           Boolean           @default(false)
+  fechaLeido      DateTime?
+  enviadoEmail    Boolean           @default(false)
+  fechaEnvioEmail DateTime?
+  createdAt       DateTime          @default(now())
+
+  @@map("notificaciones")
+}
+
+// ========================================
+// REPOSITORIO PERSONAL DE PDFs
+// ========================================
+
+// Carpetas del repositorio personal
+model CarpetaRepositorio {
+  id          String               @id @default(cuid())
+  nombre      String
+  descripcion String?
+  color       String? // Color para UI (hex)
+  usuarioId   String
+  usuario     Usuario              @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  parentId    String? // Para subcarpetas (NULL = raíz)
+  parent      CarpetaRepositorio?  @relation("Subcarpetas", fields: [parentId], references: [id])
+  hijos       CarpetaRepositorio[] @relation("Subcarpetas")
+  archivos    ArchivoRepositorio[]
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@map("carpetas_repositorio")
+}
+
+// PDFs del repositorio personal
+model ArchivoRepositorio {
+  id             String              @id @default(cuid())
+  nombre         String // Nombre descriptivo
+  nombreArchivo  String // Nombre del archivo físico
+  url            String // Ruta del archivo
+  tipo           String              @default("application/pdf")
+  tamanio        Int
+  usuarioId      String
+  usuario        Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  carpetaId      String? // NULL = raíz
+  carpeta        CarpetaRepositorio? @relation(fields: [carpetaId], references: [id], onDelete: SetNull)
+  firmado        Boolean             @default(false) // Indica si está firmado digitalmente
+  fechaFirma     DateTime?
+  hashArchivo    String? // SHA256 para verificación
+  usosEnTramites ArchivoAdjunto[] // Trámites que usan este archivo
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@map("archivos_repositorio")
+}
+
+// ========================================
+// MÓDULO DE INVENTARIO FÍSICO (PATRIMONIO)
+// ========================================
+
+// Estado de la sesión de inventario
+enum EstadoSesionInventario {
+  PROGRAMADA // Programada pero no iniciada
+  EN_PROCESO // En ejecución
+  PAUSADA    // Pausada temporalmente
+  FINALIZADA // Completada
+  CANCELADA  // Cancelada
+}
+
+// Estado físico del bien al verificar
+enum EstadoFisicoBien {
+  BUENO      // En buen estado
+  REGULAR    // Estado aceptable con desgaste
+  MALO       // En mal estado, requiere reparación
+  INOPERATIVO // No funciona
+  CHATARRA   // Para baja
+}
+
+// Resultado de la verificación
+enum ResultadoVerificacion {
+  ENCONTRADO       // Bien encontrado en su ubicación
+  REUBICADO        // Bien encontrado pero en otra ubicación
+  NO_ENCONTRADO    // Bien no encontrado (faltante)
+  SOBRANTE         // Bien sin registro en SIGA (excedente)
+}
+
+// Sesión de inventario físico
+model SesionInventario {
+  id              String                  @id @default(cuid())
+  codigo          String                  @unique // INV-2024-001
+  nombre          String // Nombre descriptivo de la sesión
+  descripcion     String?
+  // Alcance del inventario
+  dependenciaId   String?
+  dependencia     Dependencia?            @relation(fields: [dependenciaId], references: [id])
+  sedeId          String?
+  sede            Sede?                   @relation(fields: [sedeId], references: [id])
+  ubicacionFisica String? // Ambiente/piso específico
+  // Fechas
+  fechaProgramada DateTime // Fecha programada para el inventario
+  fechaInicio     DateTime? // Fecha real de inicio
+  fechaFin        DateTime? // Fecha de finalización
+  // Estado y responsable
+  estado          EstadoSesionInventario  @default(PROGRAMADA)
+  responsableId   String
+  responsable     Usuario                 @relation("SesionResponsable", fields: [responsableId], references: [id])
+  // Estadísticas (se actualizan al verificar)
+  totalBienesSiga     Int             @default(0) // Total de bienes según SIGA
+  totalVerificados    Int             @default(0) // Total verificados
+  totalEncontrados    Int             @default(0)
+  totalReubicados     Int             @default(0)
+  totalNoEncontrados  Int             @default(0)
+  totalSobrantes      Int             @default(0)
+  // Verificaciones realizadas
+  verificaciones  VerificacionBien[]
+  participantes   ParticipanteInventario[]
+  bienesSobrantes BienSobrante[]
+  observaciones   String?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@map("sesiones_inventario")
+}
+
+// Participantes/verificadores de la sesión
+model ParticipanteInventario {
+  id        String           @id @default(cuid())
+  sesionId  String
+  sesion    SesionInventario @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  usuarioId String
+  usuario   Usuario          @relation("ParticipanteInventario", fields: [usuarioId], references: [id])
+  rol       String           @default("VERIFICADOR") // RESPONSABLE, VERIFICADOR, OBSERVADOR
+  activo    Boolean          @default(true)
+  createdAt DateTime         @default(now())
+
+  @@unique([sesionId, usuarioId])
+  @@map("participantes_inventario")
+}
+
+// Registro de cada bien verificado
+model VerificacionBien {
+  id                String               @id @default(cuid())
+  sesionId          String
+  sesion            SesionInventario     @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  // Código escaneado/ingresado
+  codigoPatrimonial String
+  // Datos obtenidos de SIGA al momento de escanear (cache)
+  descripcionSiga   String?
+  marcaSiga         String?
+  modeloSiga        String?
+  serieSiga         String?
+  colorSiga         String?
+  responsableSiga   String? // Nombre del responsable en SIGA
+  usuarioSiga       String? // Usuario final en SIGA
+  dependenciaSiga   String? // Nombre de la dependencia en SIGA
+  ubicacionSiga     String? // Ubicación física según SIGA
+  valorSiga         Float? // Valor neto del bien
+  // Resultado de la verificación física
+  resultado         ResultadoVerificacion @default(ENCONTRADO)
+  estadoFisico      EstadoFisicoBien?
+  ubicacionReal     String? // Dónde se encontró realmente
+  responsableReal   String? // Quién lo tiene realmente
+  // Observaciones y evidencia
+  observaciones     String?
+  fotoUrl           String? // Foto del bien verificado
+  // Quién y cuándo verificó
+  verificadorId     String
+  verificador       Usuario              @relation("VerificadorBien", fields: [verificadorId], references: [id])
+  fechaVerificacion DateTime             @default(now())
+  // Dispositivo usado
+  dispositivoTipo   String? // "MOVIL", "PISTOLA", "MANUAL"
+  dispositivoInfo   String? // Info adicional del dispositivo
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  @@unique([sesionId, codigoPatrimonial]) // Un bien solo se verifica una vez por sesión
+  @@map("verificaciones_bien")
+}
+
+// Bienes sobrantes (encontrados sin registro en SIGA)
+model BienSobrante {
+  id                String           @id @default(cuid())
+  sesionId          String
+  sesion            SesionInventario @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  // Datos del bien encontrado
+  descripcion       String
+  marca             String?
+  modelo            String?
+  serie             String?
+  color             String?
+  estadoFisico      EstadoFisicoBien?
+  ubicacionEncontrado String?
+  // Posible código si tiene etiqueta antigua
+  codigoAntiguo     String?
+  // Evidencia
+  fotoUrl           String?
+  observaciones     String?
+  // Registro
+  registradoPorId   String
+  registradoPor     Usuario          @relation(fields: [registradoPorId], references: [id])
+  createdAt         DateTime         @default(now())
+
+  @@map("bienes_sobrantes")
 }

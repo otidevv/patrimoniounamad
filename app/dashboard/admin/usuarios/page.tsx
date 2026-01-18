@@ -5,10 +5,15 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
 import {
+  AlertTriangle,
   ArrowLeft,
+  Calendar,
   Check,
+  ChevronsUpDown,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   Edit,
   FileDown,
   FileSpreadsheet,
@@ -61,6 +66,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { cn } from "@/lib/utils"
 import { exportUsuariosToExcel } from "@/lib/excel-export"
 
 interface UsuarioRol {
@@ -80,9 +88,18 @@ interface Usuario {
   cargo: string | null
   telefono: string | null
   foto: string | null
+  fechaInicio: string | null
+  fechaFin: string | null
   activo: boolean
   rolId: string
   rol: UsuarioRol
+  sedeId: string | null
+  sede: {
+    id: string
+    codigo: string
+    nombre: string
+  } | null
+  dependenciaId: string | null
   dependencia: {
     id: string
     nombre: string
@@ -91,11 +108,22 @@ interface Usuario {
   createdAt: string
 }
 
+interface Sede {
+  id: string
+  codigo: string
+  nombre: string
+}
+
 interface Dependencia {
   id: string
   codigo: string
   nombre: string
   siglas: string | null
+  sede: {
+    id: string
+    codigo: string
+    nombre: string
+  }
 }
 
 interface Permisos {
@@ -139,7 +167,10 @@ const initialFormData = {
   numeroDocumento: "",
   cargo: "",
   telefono: "",
+  fechaInicio: "",
+  fechaFin: "",
   rolId: "",
+  sedeId: "",
   dependenciaId: "",
 }
 
@@ -147,6 +178,7 @@ export default function UsuariosPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
+  const [sedes, setSedes] = useState<Sede[]>([])
   const [dependencias, setDependencias] = useState<Dependencia[]>([])
   const [roles, setRoles] = useState<RolInfo[]>([])
   const [permisos, setPermisos] = useState<Permisos>({
@@ -194,6 +226,9 @@ export default function UsuariosPage() {
   // Búsqueda de DNI
   const [isSearchingDni, setIsSearchingDni] = useState(false)
 
+  // Popover de dependencia
+  const [openDependenciaPopover, setOpenDependenciaPopover] = useState(false)
+
   const fetchUsuarios = useCallback(async () => {
     setIsLoading(true)
     try {
@@ -222,12 +257,24 @@ export default function UsuariosPage() {
     }
   }, [pagination.page, pagination.limit, search, filterRolId, filterActivo, router])
 
+  const fetchSedes = async () => {
+    try {
+      const response = await fetch("/api/sedes")
+      if (response.ok) {
+        const data = await response.json()
+        setSedes(data)
+      }
+    } catch (error) {
+      console.error("Error al cargar sedes:", error)
+    }
+  }
+
   const fetchDependencias = async () => {
     try {
       const response = await fetch("/api/dependencias")
       if (response.ok) {
         const data = await response.json()
-        setDependencias(data.dependencias)
+        setDependencias(data)
       }
     } catch (error) {
       console.error("Error al cargar dependencias:", error)
@@ -321,10 +368,16 @@ export default function UsuariosPage() {
 
   useEffect(() => {
     fetchUsuarios()
+    fetchSedes()
     fetchDependencias()
     fetchPermisos()
     fetchRoles()
   }, [fetchUsuarios])
+
+  // Filtrar dependencias por sede seleccionada
+  const dependenciasFiltradas = formData.sedeId
+    ? dependencias.filter(d => d.sede?.id === formData.sedeId)
+    : dependencias
 
   // Búsqueda automática de DNI cuando se ingresan 8 dígitos
   useEffect(() => {
@@ -359,8 +412,11 @@ export default function UsuariosPage() {
         numeroDocumento: usuario.numeroDocumento || "",
         cargo: usuario.cargo || "",
         telefono: usuario.telefono || "",
+        fechaInicio: usuario.fechaInicio ? usuario.fechaInicio.split("T")[0] : "",
+        fechaFin: usuario.fechaFin ? usuario.fechaFin.split("T")[0] : "",
         rolId: usuario.rolId,
-        dependenciaId: usuario.dependencia?.id || "",
+        sedeId: usuario.sedeId || "",
+        dependenciaId: usuario.dependenciaId || "",
       })
     } else {
       setIsEditing(false)
@@ -372,6 +428,15 @@ export default function UsuariosPage() {
       })
     }
     setIsModalOpen(true)
+  }
+
+  // Manejar cambio de sede - limpiar dependencia si cambia la sede
+  const handleSedeChange = (sedeId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      sedeId: sedeId === "none" ? "" : sedeId,
+      dependenciaId: "", // Limpiar dependencia al cambiar sede
+    }))
   }
 
   const handleSaveUsuario = async (e: React.FormEvent) => {
@@ -392,7 +457,10 @@ export default function UsuariosPage() {
             numeroDocumento: formData.numeroDocumento || null,
             cargo: formData.cargo || null,
             telefono: formData.telefono || null,
+            fechaInicio: formData.fechaInicio || null,
+            fechaFin: formData.fechaFin || null,
             rolId: formData.rolId,
+            sedeId: formData.sedeId || null,
             dependenciaId: formData.dependenciaId || null,
           }
         : formData
@@ -523,6 +591,26 @@ export default function UsuariosPage() {
     return `${nombre.charAt(0)}${apellidos.charAt(0)}`.toUpperCase()
   }
 
+  // Función para determinar el estado del contrato
+  const getContratoStatus = (fechaFin: string | null) => {
+    if (!fechaFin) return null
+
+    const hoy = new Date()
+    hoy.setHours(0, 0, 0, 0)
+    const fin = new Date(fechaFin)
+    fin.setHours(0, 0, 0, 0)
+
+    const diffTime = fin.getTime() - hoy.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    if (diffDays < 0) {
+      return { status: "vencido", label: "Contrato vencido", color: "text-red-600 bg-red-50 border-red-200" }
+    } else if (diffDays <= 30) {
+      return { status: "por_vencer", label: `Vence en ${diffDays} días`, color: "text-amber-600 bg-amber-50 border-amber-200" }
+    }
+    return { status: "vigente", label: "Vigente", color: "text-green-600 bg-green-50 border-green-200" }
+  }
+
   // Mostrar loading mientras se cargan los permisos
   if (!permisosLoaded) {
     return (
@@ -535,7 +623,7 @@ export default function UsuariosPage() {
   // Verificar permiso de ver
   if (!permisos.ver) {
     return (
-      <div className="p-6 max-w-7xl mx-auto">
+      <div className="p-6">
         <Card className="border-red-200 bg-red-50">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -560,7 +648,7 @@ export default function UsuariosPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-4 md:space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6 overflow-x-hidden">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex items-center gap-4 flex-1">
@@ -690,14 +778,16 @@ export default function UsuariosPage() {
           ) : (
             <>
               {/* Vista de tabla para desktop */}
-              <div className="hidden md:block">
+              <div className="hidden md:block overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Usuario</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Rol</TableHead>
+                      <TableHead>Sede</TableHead>
                       <TableHead>Dependencia</TableHead>
+                      <TableHead>Contrato</TableHead>
                       <TableHead>Estado</TableHead>
                       <TableHead className="w-[100px]">Acciones</TableHead>
                     </TableRow>
@@ -728,9 +818,30 @@ export default function UsuariosPage() {
                         <TableCell>{usuario.email}</TableCell>
                         <TableCell>{getRolBadge(usuario.rol)}</TableCell>
                         <TableCell>
-                          {usuario.dependencia?.nombre || (
-                            <span className="text-muted-foreground">Sin asignar</span>
+                          {usuario.sede?.nombre || (
+                            <span className="text-muted-foreground">-</span>
                           )}
+                        </TableCell>
+                        <TableCell>
+                          {usuario.dependencia?.nombre || (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {(() => {
+                            const contratoStatus = getContratoStatus(usuario.fechaFin)
+                            if (!contratoStatus) {
+                              return <span className="text-muted-foreground text-sm">Sin fecha</span>
+                            }
+                            return (
+                              <Badge variant="outline" className={contratoStatus.color}>
+                                {contratoStatus.status === "vencido" && <AlertTriangle className="size-3 mr-1" />}
+                                {contratoStatus.status === "por_vencer" && <Calendar className="size-3 mr-1" />}
+                                {contratoStatus.status === "vigente" && <Check className="size-3 mr-1" />}
+                                {contratoStatus.label}
+                              </Badge>
+                            )
+                          })()}
                         </TableCell>
                         <TableCell>
                           {usuario.activo ? (
@@ -915,12 +1026,32 @@ export default function UsuariosPage() {
                         </div>
                       )}
                       <div>
+                        <span className="text-muted-foreground">Sede:</span>{" "}
+                        <span className="font-medium">
+                          {usuario.sede?.nombre || "-"}
+                        </span>
+                      </div>
+                      <div>
                         <span className="text-muted-foreground">Dependencia:</span>{" "}
                         <span className="font-medium">
-                          {usuario.dependencia?.siglas || usuario.dependencia?.nombre || "Sin asignar"}
+                          {usuario.dependencia?.siglas || usuario.dependencia?.nombre || "-"}
                         </span>
                       </div>
                     </div>
+
+                    {/* Alerta de contrato si aplica */}
+                    {(() => {
+                      const contratoStatus = getContratoStatus(usuario.fechaFin)
+                      if (contratoStatus && contratoStatus.status !== "vigente") {
+                        return (
+                          <div className={`flex items-center gap-2 px-2 py-1 rounded text-sm ${contratoStatus.color}`}>
+                            <AlertTriangle className="size-4" />
+                            <span>{contratoStatus.label}</span>
+                          </div>
+                        )
+                      }
+                      return null
+                    })()}
 
                     {/* Footer con badges */}
                     <div className="flex items-center justify-between pt-2 border-t">
@@ -942,39 +1073,69 @@ export default function UsuariosPage() {
               </div>
 
               {/* Paginación responsive */}
-              {pagination.totalPages > 1 && (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4 border-t">
-                  <p className="text-sm text-muted-foreground text-center sm:text-left">
-                    <span className="hidden sm:inline">Mostrando </span>
-                    {(pagination.page - 1) * pagination.limit + 1}-
-                    {Math.min(pagination.page * pagination.limit, pagination.total)}
-                    <span className="hidden sm:inline"> de</span>
-                    <span className="sm:hidden">/</span> {pagination.total}
-                    <span className="hidden sm:inline"> usuarios</span>
-                  </p>
-                  <div className="flex items-center justify-center gap-2">
+              {pagination.total > 0 && (
+                <div className="flex flex-col gap-4 px-2 py-4 sm:flex-row sm:items-center sm:justify-between mt-4 pt-4 border-t">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-sm text-muted-foreground">
+                    <span>
+                      Mostrando {(pagination.page - 1) * pagination.limit + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total}
+                    </span>
+                    <Select
+                      value={String(pagination.limit)}
+                      onValueChange={(value) => {
+                        setPagination((prev) => ({ ...prev, limit: Number(value), page: 1 }))
+                      }}
+                    >
+                      <SelectTrigger className="h-8 w-[70px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="5">5</SelectItem>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="20">20</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <span>por página</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-1">
                     <Button
                       variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setPagination((prev) => ({ ...prev, page: prev.page - 1 }))
-                      }
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setPagination((prev) => ({ ...prev, page: 1 }))}
                       disabled={pagination.page === 1}
                     >
-                      <ChevronLeft className="size-4" />
+                      <ChevronsLeft className="h-4 w-4" />
                     </Button>
-                    <span className="text-sm min-w-[80px] text-center">
-                      {pagination.page} / {pagination.totalPages}
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
+                      disabled={pagination.page === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <span className="px-3 text-sm">
+                      Página {pagination.page} de {pagination.totalPages || 1}
                     </span>
                     <Button
                       variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
-                      }
-                      disabled={pagination.page === pagination.totalPages}
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
+                      disabled={pagination.page >= pagination.totalPages}
                     >
-                      <ChevronRight className="size-4" />
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.totalPages }))}
+                      disabled={pagination.page >= pagination.totalPages}
+                    >
+                      <ChevronsRight className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -1136,49 +1297,144 @@ export default function UsuariosPage() {
                 </div>
               </div>
 
-              {/* Rol y Dependencia */}
+              {/* Fechas de contrato */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="rol">Rol *</Label>
-                  <Select
-                    value={formData.rolId}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, rolId: value })
+                  <Label htmlFor="fechaInicio">Fecha Inicio Contrato</Label>
+                  <Input
+                    id="fechaInicio"
+                    type="date"
+                    value={formData.fechaInicio}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fechaInicio: e.target.value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un rol" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {roles.map((rol) => (
-                        <SelectItem key={rol.id} value={rol.id}>
-                          {rol.nombre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dependencia">Dependencia</Label>
-                  <Select
-                    value={formData.dependenciaId}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, dependenciaId: value })
+                  <Label htmlFor="fechaFin">Fecha Fin Contrato</Label>
+                  <Input
+                    id="fechaFin"
+                    type="date"
+                    value={formData.fechaFin}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fechaFin: e.target.value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona dependencia" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Sin asignar</SelectItem>
-                      {dependencias.map((dep) => (
-                        <SelectItem key={dep.id} value={dep.id}>
-                          {dep.siglas || dep.nombre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Si se establece, el usuario no podrá acceder después de esta fecha
+                  </p>
                 </div>
+              </div>
+
+              {/* Rol */}
+              <div className="space-y-2">
+                <Label htmlFor="rol">Rol *</Label>
+                <Select
+                  value={formData.rolId}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, rolId: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona un rol" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roles.map((rol) => (
+                      <SelectItem key={rol.id} value={rol.id}>
+                        {rol.nombre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Sede */}
+              <div className="space-y-2">
+                <Label htmlFor="sede">Sede</Label>
+                <Select
+                  value={formData.sedeId || "none"}
+                  onValueChange={handleSedeChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona sede" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Sin asignar</SelectItem>
+                    {sedes.map((sede) => (
+                      <SelectItem key={sede.id} value={sede.id}>
+                        {sede.nombre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Dependencia con buscador */}
+              <div className="space-y-2">
+                <Label htmlFor="dependencia">Dependencia</Label>
+                <Popover open={openDependenciaPopover} onOpenChange={setOpenDependenciaPopover}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={openDependenciaPopover}
+                      className="w-full justify-between font-normal"
+                      disabled={!formData.sedeId}
+                    >
+                      {formData.dependenciaId
+                        ? dependenciasFiltradas.find((dep) => dep.id === formData.dependenciaId)?.nombre ||
+                          dependenciasFiltradas.find((dep) => dep.id === formData.dependenciaId)?.siglas
+                        : formData.sedeId
+                        ? "Buscar dependencia..."
+                        : "Primero selecciona sede"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Buscar dependencia..." />
+                      <CommandList>
+                        <CommandEmpty>No se encontró dependencia.</CommandEmpty>
+                        <CommandGroup>
+                          <CommandItem
+                            value="none"
+                            onSelect={() => {
+                              setFormData({ ...formData, dependenciaId: "" })
+                              setOpenDependenciaPopover(false)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                !formData.dependenciaId ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            Sin asignar
+                          </CommandItem>
+                          {dependenciasFiltradas.map((dep) => (
+                            <CommandItem
+                              key={dep.id}
+                              value={`${dep.siglas} ${dep.nombre}`}
+                              onSelect={() => {
+                                setFormData({ ...formData, dependenciaId: dep.id })
+                                setOpenDependenciaPopover(false)
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  formData.dependenciaId === dep.id ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              <span className="font-medium">{dep.siglas}</span>
+                              <span className="ml-2 text-muted-foreground truncate">{dep.nombre}</span>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
             <DialogFooter className="flex-col sm:flex-row gap-2">

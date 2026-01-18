@@ -43,6 +43,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Verificar si el contrato ha vencido
+    if (usuario.fechaFin) {
+      const hoy = new Date()
+      hoy.setHours(0, 0, 0, 0)
+      const fechaFin = new Date(usuario.fechaFin)
+      fechaFin.setHours(0, 0, 0, 0)
+
+      if (fechaFin < hoy) {
+        return NextResponse.json(
+          { error: "Su contrato ha vencido. Contacte al administrador." },
+          { status: 401 }
+        )
+      }
+    }
+
     // Verificar contraseña
     const passwordValid = await bcrypt.compare(password, usuario.password)
 

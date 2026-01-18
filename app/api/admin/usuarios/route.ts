@@ -125,6 +125,8 @@ export async function GET(request: NextRequest) {
           cargo: true,
           telefono: true,
           foto: true,
+          fechaInicio: true,
+          fechaFin: true,
           activo: true,
           rolId: true,
           rol: {
@@ -135,6 +137,15 @@ export async function GET(request: NextRequest) {
               color: true,
             }
           },
+          sedeId: true,
+          sede: {
+            select: {
+              id: true,
+              codigo: true,
+              nombre: true,
+            },
+          },
+          dependenciaId: true,
           dependencia: {
             select: {
               id: true,
@@ -179,7 +190,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { email, password, nombre, apellidos, tipoDocumento, numeroDocumento, cargo, telefono, rolId, dependenciaId } = body
+    const { email, password, nombre, apellidos, tipoDocumento, numeroDocumento, cargo, telefono, fechaInicio, fechaFin, rolId, sedeId, dependenciaId } = body
 
     // Validaciones
     if (!email || !password || !nombre || !apellidos) {
@@ -265,7 +276,10 @@ export async function POST(request: NextRequest) {
         numeroDocumento: numeroDocumento || null,
         cargo: cargo || null,
         telefono: telefono || null,
+        fechaInicio: fechaInicio ? new Date(fechaInicio) : null,
+        fechaFin: fechaFin ? new Date(fechaFin) : null,
         rolId: finalRolId,
+        sedeId: sedeId || null,
         dependenciaId: dependenciaId || null,
       },
       select: {
@@ -278,6 +292,8 @@ export async function POST(request: NextRequest) {
         cargo: true,
         telefono: true,
         foto: true,
+        fechaInicio: true,
+        fechaFin: true,
         activo: true,
         rolId: true,
         rol: {
@@ -288,6 +304,15 @@ export async function POST(request: NextRequest) {
             color: true,
           }
         },
+        sedeId: true,
+        sede: {
+          select: {
+            id: true,
+            codigo: true,
+            nombre: true,
+          },
+        },
+        dependenciaId: true,
         dependencia: {
           select: {
             id: true,
@@ -321,7 +346,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { id, email, nombre, apellidos, tipoDocumento, numeroDocumento, cargo, telefono, rolId, dependenciaId, activo } = body
+    const { id, email, nombre, apellidos, tipoDocumento, numeroDocumento, cargo, telefono, fechaInicio, fechaFin, rolId, sedeId, dependenciaId, activo } = body
 
     if (!id) {
       return NextResponse.json({ error: "ID de usuario requerido" }, { status: 400 })
@@ -394,7 +419,10 @@ export async function PUT(request: NextRequest) {
         numeroDocumento: numeroDocumento !== undefined ? (numeroDocumento || null) : existingUser.numeroDocumento,
         cargo: cargo !== undefined ? (cargo || null) : existingUser.cargo,
         telefono: telefono !== undefined ? (telefono || null) : existingUser.telefono,
+        fechaInicio: fechaInicio !== undefined ? (fechaInicio ? new Date(fechaInicio) : null) : existingUser.fechaInicio,
+        fechaFin: fechaFin !== undefined ? (fechaFin ? new Date(fechaFin) : null) : existingUser.fechaFin,
         rolId: rolId || existingUser.rolId,
+        sedeId: sedeId !== undefined ? (sedeId || null) : existingUser.sedeId,
         dependenciaId: dependenciaId !== undefined ? (dependenciaId || null) : existingUser.dependenciaId,
         activo: activo !== undefined ? activo : existingUser.activo,
       },
@@ -408,6 +436,8 @@ export async function PUT(request: NextRequest) {
         cargo: true,
         telefono: true,
         foto: true,
+        fechaInicio: true,
+        fechaFin: true,
         activo: true,
         rolId: true,
         rol: {
@@ -418,6 +448,15 @@ export async function PUT(request: NextRequest) {
             color: true,
           }
         },
+        sedeId: true,
+        sede: {
+          select: {
+            id: true,
+            codigo: true,
+            nombre: true,
+          },
+        },
+        dependenciaId: true,
         dependencia: {
           select: {
             id: true,

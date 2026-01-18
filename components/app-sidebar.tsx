@@ -3,21 +3,24 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
-  Archive,
   BarChart3,
   Building2,
   ChevronUp,
   ClipboardList,
+  FilePlus,
   FileText,
+  FolderArchive,
+  FolderOpen,
   Home,
+  Inbox,
   LogOut,
+  MapPin,
   Package,
   Search,
+  Send,
   Settings,
   Settings2,
   Shield,
-  Tags,
-  Truck,
   User,
   Users,
 } from "lucide-react"
@@ -67,53 +70,41 @@ const menuPrincipal = [
     icon: Home,
     modulo: "DASHBOARD",
   },
-  {
-    title: "Buscar Bien",
-    url: "/dashboard/buscar",
-    icon: Search,
-    modulo: "BIENES",
-  },
 ]
 
 const menuPatrimonio = [
   {
-    title: "Bienes Patrimoniales",
-    url: "/dashboard/bienes",
-    icon: Package,
+    title: "Buscar Bien",
+    url: "/dashboard/patrimonio/buscar",
+    icon: Search,
     modulo: "BIENES",
   },
   {
-    title: "Inventario",
-    url: "/dashboard/inventario",
+    title: "Inventario Físico",
+    url: "/dashboard/patrimonio/inventario",
     icon: ClipboardList,
     modulo: "INVENTARIO",
   },
   {
-    title: "Altas de Bienes",
-    url: "/dashboard/altas",
-    icon: Archive,
-    modulo: "ALTAS",
+    title: "Generar Etiquetas",
+    url: "/dashboard/patrimonio/etiquetas",
+    icon: Package,
+    modulo: "BIENES",
   },
   {
-    title: "Bajas de Bienes",
-    url: "/dashboard/bajas",
-    icon: Truck,
-    modulo: "BAJAS",
-  },
-  {
-    title: "Transferencias",
-    url: "/dashboard/transferencias",
-    icon: Building2,
-    modulo: "TRANSFERENCIAS",
+    title: "Reportes",
+    url: "/dashboard/patrimonio/reportes",
+    icon: BarChart3,
+    modulo: "REPORTES",
   },
 ]
 
 const menuCatalogos = [
   {
-    title: "Categorías",
-    url: "/dashboard/categorias",
-    icon: Tags,
-    modulo: "CATEGORIAS",
+    title: "Sedes",
+    url: "/dashboard/sedes",
+    icon: MapPin,
+    modulo: "SEDES",
   },
   {
     title: "Dependencias",
@@ -121,11 +112,44 @@ const menuCatalogos = [
     icon: Building2,
     modulo: "DEPENDENCIAS",
   },
+]
+
+const menuTramite = [
   {
-    title: "Responsables",
-    url: "/dashboard/responsables",
-    icon: Users,
-    modulo: "RESPONSABLES",
+    title: "Bandeja de Entrada",
+    url: "/dashboard/tramite/entrada",
+    icon: Inbox,
+    modulo: "TRAMITE",
+  },
+  {
+    title: "Bandeja de Salida",
+    url: "/dashboard/tramite/salida",
+    icon: Send,
+    modulo: "TRAMITE",
+  },
+  {
+    title: "Nuevo Documento",
+    url: "/dashboard/tramite/nuevo",
+    icon: FilePlus,
+    modulo: "TRAMITE",
+  },
+  {
+    title: "Mis Documentos",
+    url: "/dashboard/tramite/mis-documentos",
+    icon: FolderOpen,
+    modulo: "TRAMITE",
+  },
+  {
+    title: "Mi Repositorio",
+    url: "/dashboard/tramite/repositorio",
+    icon: FolderArchive,
+    modulo: "TRAMITE",
+  },
+  {
+    title: "Tipos de Documento",
+    url: "/dashboard/tramite/tipos",
+    icon: FileText,
+    modulo: "TRAMITE",
   },
 ]
 
@@ -186,6 +210,7 @@ export function AppSidebar({ user, permisos = {} }: AppSidebarProps) {
   const filteredMenuPrincipal = menuPrincipal.filter((item) => canView(item.modulo))
   const filteredMenuPatrimonio = menuPatrimonio.filter((item) => canView(item.modulo))
   const filteredMenuCatalogos = menuCatalogos.filter((item) => canView(item.modulo))
+  const filteredMenuTramite = menuTramite.filter((item) => canView(item.modulo))
   const filteredMenuReportes = menuReportes.filter((item) => canView(item.modulo))
   const filteredMenuAdmin = menuAdmin.filter((item) => canView(item.modulo))
 
@@ -279,6 +304,26 @@ export function AppSidebar({ user, permisos = {} }: AppSidebarProps) {
             <SidebarGroupContent>
               <SidebarMenu>
                 {filteredMenuCatalogos.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild tooltip={item.title}>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {filteredMenuTramite.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Trámite Documentario</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {filteredMenuTramite.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild tooltip={item.title}>
                       <Link href={item.url}>

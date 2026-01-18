@@ -40,11 +40,18 @@ export async function GET() {
         nombre: true,
         siglas: true,
         tipo: true,
+        sede: {
+          select: {
+            id: true,
+            codigo: true,
+            nombre: true,
+          },
+        },
       },
       orderBy: { nombre: "asc" },
     })
 
-    return NextResponse.json({ dependencias })
+    return NextResponse.json(dependencias)
   } catch (error) {
     console.error("Error al listar dependencias:", error)
     return NextResponse.json(
