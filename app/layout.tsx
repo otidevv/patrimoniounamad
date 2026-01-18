@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SIGA Patrimonio - UNAMAD",
   description: "Sistema de Gestión de Patrimonio - Universidad Nacional Amazónica de Madre de Dios",
+  icons: {
+    icon: "/logos/logo_single_min.png",
+    shortcut: "/logos/logo_single_min.png",
+    apple: "/logos/logo_single_min.png",
+  },
 };
 
 export default function RootLayout({

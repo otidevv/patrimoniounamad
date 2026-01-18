@@ -33,13 +33,13 @@ export async function GET() {
       prisma.sesionInventario.count({
         where: { estado: "EN_PROCESO" },
       }),
-      // Sesiones pendientes
+      // Sesiones programadas (pendientes de iniciar)
       prisma.sesionInventario.count({
-        where: { estado: "PENDIENTE" },
+        where: { estado: "PROGRAMADA" },
       }),
       // Sesiones finalizadas
       prisma.sesionInventario.count({
-        where: { estado: "FINALIZADO" },
+        where: { estado: "FINALIZADA" },
       }),
       // Total de verificaciones
       prisma.verificacionBien.count(),
@@ -66,7 +66,7 @@ export async function GET() {
         take: 5,
         orderBy: { createdAt: "desc" },
         include: {
-          creador: {
+          responsable: {
             select: { nombre: true, apellidos: true },
           },
           dependencia: {
@@ -121,7 +121,7 @@ export async function GET() {
         nombre: s.nombre,
         estado: s.estado,
         totalVerificados: s._count.verificaciones,
-        creador: s.creador ? `${s.creador.nombre} ${s.creador.apellidos}` : "N/A",
+        responsable: s.responsable ? `${s.responsable.nombre} ${s.responsable.apellidos}` : "N/A",
         dependencia: s.dependencia?.nombre || "Sin dependencia",
         fecha: s.createdAt,
       })),
