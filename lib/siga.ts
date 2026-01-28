@@ -311,6 +311,87 @@ export async function buscarBienesPorDependencia(
   }
 }
 
+// Buscar bienes por número de documento (DNI) del responsable o usuario final
+export async function buscarBienesPorDocumento(
+  numeroDocumento: string,
+  limit: number = 100
+): Promise<BienPatrimonial[]> {
+  try {
+    const poolConnection = await getConnection()
+    const result = await poolConnection
+      .request()
+      .input("documento", sql.VarChar(20), numeroDocumento)
+      .input("limit", sql.Int, limit)
+      .query(`
+        SELECT TOP (@limit)
+          pat.CODIGO_ACTIVO AS codigo_patrimonial,
+          pat.DESCRIPCION AS descripcion,
+          sed.nombre_sede,
+          cc.NOMBRE_DEPEND AS nombre_depend,
+          resp.nombre_completo AS responsable,
+          usuf.nombre_completo AS usuario,
+          cnt.NOMBRE_PROV AS proveedor,
+          CONVERT(VARCHAR, pat.FECHA_COMPRA, 103) AS fecha_compra,
+          pat.VALOR_COMPRA AS valor_compra,
+          CONVERT(VARCHAR, pat.FECHA_ALTA, 103) AS fecha_alta,
+          pat.VALOR_INICIAL AS valor_inicial,
+          ubi.UBICAC_FISICA AS ubicacion_fisica,
+          cat.NOMBRE_ITEM AS nombre_item,
+          pat.CODIGO_BARRA AS codigo_barra,
+          pat.MODELO AS modelo,
+          pat.MEDIDAS AS medidas,
+          (ISNULL(pat.HVALOR_INICIAL,0) - ISNULL(pat.HDEPR_INICIAL,0)) AS valor_neto,
+          pat.NRO_SERIE AS serie,
+          mrc.NOMBRE AS marca,
+          pat.CENTRO_COSTO AS centro_costo,
+          cc.ABREVIADO_DEPEND AS abreviatura,
+          col.NOMBRE AS color,
+          pat.CARACTERISTICAS AS caracteristicas,
+          pat.OBSERVACIONES AS observaciones
+        FROM SIG_PATRIMONIO pat
+        LEFT JOIN SIG_SEDES sed
+          ON pat.SEDE = sed.sede AND pat.PLIEGO = sed.pliego
+        LEFT JOIN SIG_CENTRO_COSTO cc
+          ON pat.CENTRO_COSTO = cc.CENTRO_COSTO
+          AND pat.SEC_EJEC = cc.SEC_EJEC
+          AND pat.ANO_EJE = cc.ANO_EJE
+        LEFT JOIN SIG_PERSONAL resp
+          ON pat.SEC_EJEC = resp.sec_ejec AND pat.EMPLEADO = resp.empleado
+        LEFT JOIN SIG_PERSONAL usuf
+          ON pat.SEC_EJEC = usuf.sec_ejec AND pat.EMPLEADO_FINAL = usuf.empleado
+        LEFT JOIN SIG_CONTRATISTAS cnt
+          ON pat.PROVEEDOR = cnt.PROVEEDOR
+        LEFT JOIN SIG_UBICAC_FISICA ubi
+          ON pat.TIPO_UBICAC = ubi.TIPO_UBICAC AND pat.COD_UBICAC = ubi.COD_UBICAC
+        LEFT JOIN MARCA mrc
+          ON pat.MARCA = mrc.MARCA AND pat.TIPO_MARCA = mrc.TIPO_MARCA
+        LEFT JOIN CATALOGO_BIEN_SERV cat
+          ON pat.SEC_EJEC = cat.SEC_EJEC
+          AND pat.GRUPO_BIEN = cat.GRUPO_BIEN
+          AND pat.CLASE_BIEN = cat.CLASE_BIEN
+          AND pat.FAMILIA_BIEN = cat.FAMILIA_BIEN
+          AND pat.ITEM_BIEN = cat.ITEM_BIEN
+        OUTER APPLY (
+          SELECT TOP 1 col2.NOMBRE
+          FROM SIG_ESPECIF_TECNICA_ACTIVO eta
+          LEFT JOIN SIG_COLORES col2 ON eta.CODIGO_COLOR = col2.CODIGO_COLOR
+          WHERE eta.SEC_EJEC = pat.SEC_EJEC
+            AND eta.TIPO_MODALIDAD = pat.TIPO_MODALIDAD
+            AND eta.SECUENCIA = pat.SECUENCIA
+            AND eta.CODIGO_COLOR IS NOT NULL
+        ) col
+        WHERE (resp.docum_ident = @documento OR usuf.docum_ident = @documento)
+          AND pat.ESTADO = 1
+        ORDER BY pat.CODIGO_ACTIVO
+      `)
+
+    return result.recordset as BienPatrimonial[]
+  } catch (error) {
+    console.error("Error al buscar bienes por documento:", error)
+    throw error
+  }
+}
+
 // Verificar conexión a SIGA
 export async function verificarConexion(): Promise<boolean> {
   try {

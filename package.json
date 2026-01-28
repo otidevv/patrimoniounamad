@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -H 0.0.0.0",
     "lint": "eslint",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -38,6 +38,7 @@
     "dotenv": "^17.2.3",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.562.0",
     "mssql": "^12.2.0",

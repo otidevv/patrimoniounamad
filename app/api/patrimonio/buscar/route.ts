@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth"
 import {
   buscarBienPorCodigo,
   buscarBienesPorDescripcion,
+  buscarBienesPorDocumento,
   verificarConexion,
 } from "@/lib/siga"
 
@@ -21,6 +22,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const codigo = searchParams.get("codigo")
     const descripcion = searchParams.get("descripcion")
+    const documento = searchParams.get("documento")
     const limit = parseInt(searchParams.get("limit") || "50")
 
     // Verificar conexión primero
@@ -56,8 +58,18 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    // Búsqueda por número de documento (DNI)
+    if (documento) {
+      const bienes = await buscarBienesPorDocumento(documento.trim(), limit)
+
+      return NextResponse.json({
+        bienes,
+        total: bienes.length,
+      })
+    }
+
     return NextResponse.json(
-      { error: "Debe proporcionar código patrimonial o descripción" },
+      { error: "Debe proporcionar código patrimonial, descripción o documento" },
       { status: 400 }
     )
   } catch (error) {

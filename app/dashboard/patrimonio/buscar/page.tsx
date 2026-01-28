@@ -21,7 +21,13 @@ import {
   Tag,
   ChevronLeft,
   ChevronRight,
+  IdCard,
+  Camera,
+  Usb,
+  Wifi,
 } from "lucide-react"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { BarcodeScanner } from "@/components/barcode-scanner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -74,18 +80,24 @@ interface BienPatrimonial {
 export default function BuscarBienPage() {
   const [codigo, setCodigo] = useState("")
   const [descripcion, setDescripcion] = useState("")
+  const [documento, setDocumento] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [bien, setBien] = useState<BienPatrimonial | null>(null)
   const [bienes, setBienes] = useState<BienPatrimonial[]>([])
   const [modoEscaner, setModoEscaner] = useState(false)
+  const [modoCamara, setModoCamara] = useState(false)
+  const [escanerDetectado, setEscanerDetectado] = useState(false)
   const [bienSeleccionado, setBienSeleccionado] = useState<BienPatrimonial | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [paginaActual, setPaginaActual] = useState(1)
+  const [personaBusqueda, setPersonaBusqueda] = useState<string | null>(null)
   const itemsPorPagina = 10
   const inputRef = useRef<HTMLInputElement>(null)
   const lastInputTime = useRef<number>(0)
   const inputBuffer = useRef<string>("")
+  const escanerTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const isMobile = useIsMobile()
 
   // Buscar por código patrimonial
   const buscarPorCodigo = useCallback(async (codigoBuscar: string) => {
@@ -95,6 +107,7 @@ export default function BuscarBienPage() {
     setError(null)
     setBien(null)
     setBienes([])
+    setPersonaBusqueda(null)
 
     try {
       const response = await fetch(
@@ -124,6 +137,7 @@ export default function BuscarBienPage() {
     setPaginaActual(1)
     setBien(null)
     setBienes([])
+    setPersonaBusqueda(null)
 
     try {
       const response = await fetch(
@@ -144,6 +158,46 @@ export default function BuscarBienPage() {
     }
   }
 
+  // Buscar por número de documento (DNI)
+  const buscarPorDocumento = async () => {
+    if (!documento.trim()) return
+
+    setLoading(true)
+    setError(null)
+    setPaginaActual(1)
+    setBien(null)
+    setBienes([])
+    setPersonaBusqueda(null)
+
+    try {
+      const response = await fetch(
+        `/api/patrimonio/buscar?documento=${encodeURIComponent(documento.trim())}`
+      )
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || "Error al buscar")
+        return
+      }
+
+      setBienes(data.bienes)
+      // Obtener el nombre del responsable/usuario del primer resultado
+      if (data.bienes.length > 0) {
+        const primerBien = data.bienes[0]
+        setPersonaBusqueda(primerBien.responsable || primerBien.usuario || null)
+      }
+    } catch {
+      setError("Error de conexión al servidor")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDocumentoSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    buscarPorDocumento()
+  }
+
   // Detectar entrada de escáner (entrada rápida)
   useEffect(() => {
     if (!modoEscaner) return
@@ -154,7 +208,17 @@ export default function BuscarBienPage() {
 
       // Si el tiempo entre teclas es muy corto (<50ms), es un escáner
       if (timeDiff < 50 && inputBuffer.current.length > 0) {
-        // Continuar acumulando
+        // Detectar que hay un escáner USB activo
+        if (!escanerDetectado) {
+          setEscanerDetectado(true)
+        }
+        // Reiniciar timeout para ocultar indicador
+        if (escanerTimeoutRef.current) {
+          clearTimeout(escanerTimeoutRef.current)
+        }
+        escanerTimeoutRef.current = setTimeout(() => {
+          setEscanerDetectado(false)
+        }, 3000)
       } else if (timeDiff > 200) {
         // Reset buffer si pasó mucho tiempo
         inputBuffer.current = ""
@@ -176,8 +240,20 @@ export default function BuscarBienPage() {
     }
 
     window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [modoEscaner, buscarPorCodigo])
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+      if (escanerTimeoutRef.current) {
+        clearTimeout(escanerTimeoutRef.current)
+      }
+    }
+  }, [modoEscaner, buscarPorCodigo, escanerDetectado])
+
+  // Manejar escaneo desde cámara
+  const handleCameraScan = useCallback((code: string) => {
+    setModoCamara(false)
+    setCodigo(code)
+    buscarPorCodigo(code)
+  }, [buscarPorCodigo])
 
   // Focus en input al cambiar a modo escáner
   useEffect(() => {
@@ -214,33 +290,73 @@ export default function BuscarBienPage() {
             Consulta información de bienes desde SIGA
           </p>
         </div>
-        <Button
-          variant={modoEscaner ? "default" : "outline"}
-          onClick={() => setModoEscaner(!modoEscaner)}
-          className="gap-2"
-        >
-          <Barcode className="h-4 w-4" />
-          <span className="hidden sm:inline">
-            {modoEscaner ? "Modo Escáner Activo" : "Activar Modo Escáner"}
-          </span>
-          <span className="sm:hidden">
-            {modoEscaner ? "Escáner ON" : "Escáner OFF"}
-          </span>
-        </Button>
+        <div className="flex gap-2">
+          {/* Botón escáner USB */}
+          <Button
+            variant={modoEscaner ? "default" : "outline"}
+            onClick={() => setModoEscaner(!modoEscaner)}
+            className="gap-2"
+          >
+            <Usb className="h-4 w-4" />
+            <span className="hidden sm:inline">
+              {modoEscaner ? "Escáner USB Activo" : "Escáner USB"}
+            </span>
+            <span className="sm:hidden">USB</span>
+            {escanerDetectado && (
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+            )}
+          </Button>
+
+          {/* Botón cámara - visible siempre pero resaltado en móvil */}
+          <Button
+            variant={isMobile ? "default" : "outline"}
+            onClick={() => setModoCamara(true)}
+            className="gap-2"
+          >
+            <Camera className="h-4 w-4" />
+            <span className="hidden sm:inline">Cámara</span>
+          </Button>
+        </div>
       </div>
 
-      {/* Alerta modo escáner */}
+      {/* Alerta modo escáner USB */}
       {modoEscaner && (
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className={escanerDetectado ? "border-green-300 bg-green-50" : "border-blue-200 bg-blue-50"}>
           <CardContent className="p-3 sm:p-4">
             <div className="flex items-start gap-3">
-              <Barcode className="h-5 w-5 text-blue-600 mt-0.5" />
-              <div>
-                <p className="font-medium text-blue-800">Modo Escáner Activado</p>
-                <p className="text-sm text-blue-600">
-                  Escanea el código de barras del bien. La búsqueda se realizará automáticamente.
-                </p>
-              </div>
+              {escanerDetectado ? (
+                <>
+                  <div className="relative">
+                    <Usb className="h-5 w-5 text-green-600 mt-0.5" />
+                    <Wifi className="h-3 w-3 text-green-600 absolute -top-1 -right-1" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-green-800 flex items-center gap-2">
+                      Lector USB Detectado
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                      </span>
+                    </p>
+                    <p className="text-sm text-green-600">
+                      Lector de códigos de barras conectado y funcionando.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Usb className="h-5 w-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-blue-800">Modo Escáner USB Activado</p>
+                    <p className="text-sm text-blue-600">
+                      Conecta tu lector de códigos de barras USB y escanea. La búsqueda se realizará automáticamente.
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -248,7 +364,7 @@ export default function BuscarBienPage() {
 
       {/* Tabs de búsqueda */}
       <Tabs defaultValue="codigo" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="codigo" className="text-xs sm:text-sm">
             <Hash className="mr-1 sm:mr-2 h-4 w-4" />
             <span className="hidden xs:inline">Por </span>Código
@@ -256,6 +372,10 @@ export default function BuscarBienPage() {
           <TabsTrigger value="descripcion" className="text-xs sm:text-sm">
             <FileText className="mr-1 sm:mr-2 h-4 w-4" />
             <span className="hidden xs:inline">Por </span>Descripción
+          </TabsTrigger>
+          <TabsTrigger value="documento" className="text-xs sm:text-sm">
+            <IdCard className="mr-1 sm:mr-2 h-4 w-4" />
+            <span className="hidden xs:inline">Por </span>DNI
           </TabsTrigger>
         </TabsList>
 
@@ -322,6 +442,44 @@ export default function BuscarBienPage() {
                   />
                 </div>
                 <Button type="submit" disabled={loading || !descripcion.trim()} className="h-11 sm:h-12">
+                  {loading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Search className="mr-2 h-4 w-4" />
+                  )}
+                  Buscar
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Búsqueda por número de documento (DNI) */}
+        <TabsContent value="documento">
+          <Card>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Buscar por Número de Documento</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
+                Consulta los bienes asignados a una persona por su DNI
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 pt-0">
+              <form onSubmit={handleDocumentoSubmit} className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1">
+                  <Label htmlFor="documento" className="sr-only">
+                    Número de Documento
+                  </Label>
+                  <Input
+                    id="documento"
+                    placeholder="Ej: 12345678"
+                    value={documento}
+                    onChange={(e) => setDocumento(e.target.value)}
+                    className="font-mono text-base sm:text-lg h-11 sm:h-12"
+                    maxLength={8}
+                    autoComplete="off"
+                  />
+                </div>
+                <Button type="submit" disabled={loading || !documento.trim()} className="h-11 sm:h-12">
                   {loading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
@@ -542,7 +700,7 @@ export default function BuscarBienPage() {
         </Card>
       )}
 
-      {/* Resultados múltiples (búsqueda por descripción) */}
+      {/* Resultados múltiples (búsqueda por descripción o DNI) */}
       {bienes.length > 0 && (() => {
         const totalPaginas = Math.ceil(bienes.length / itemsPorPagina)
         const indiceInicio = (paginaActual - 1) * itemsPorPagina
@@ -552,13 +710,21 @@ export default function BuscarBienPage() {
         return (
           <Card>
             <CardHeader className="p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base sm:text-lg">
-                  Resultados ({bienes.length})
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Mostrando {indiceInicio + 1}-{Math.min(indiceFin, bienes.length)} de {bienes.length}
-                </p>
+              <div className="flex flex-col gap-2">
+                {personaBusqueda && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <User className="h-4 w-4" />
+                    <span>Bienes asignados a: <strong className="text-foreground">{personaBusqueda}</strong></span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base sm:text-lg">
+                    Resultados ({bienes.length} {bienes.length === 1 ? 'bien' : 'bienes'})
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Mostrando {indiceInicio + 1}-{Math.min(indiceFin, bienes.length)} de {bienes.length}
+                  </p>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="p-0 sm:p-6 sm:pt-0">
@@ -872,6 +1038,14 @@ export default function BuscarBienPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Escáner de cámara (modal fullscreen) */}
+      {modoCamara && (
+        <BarcodeScanner
+          onScan={handleCameraScan}
+          onClose={() => setModoCamara(false)}
+        />
+      )}
     </div>
   )
 }

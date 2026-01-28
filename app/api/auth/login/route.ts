@@ -85,9 +85,12 @@ export async function POST(request: NextRequest) {
 
     // Guardar token en cookie
     const cookieStore = await cookies()
+    // secure: true solo cuando HTTPS esté habilitado (producción real)
+    const isHttps = process.env.HTTPS_ENABLED === "true"
+
     cookieStore.set("auth-token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isHttps,
       sameSite: "lax",
       maxAge: 60 * 60 * 8, // 8 horas
       path: "/",
