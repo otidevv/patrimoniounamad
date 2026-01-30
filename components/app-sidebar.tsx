@@ -16,6 +16,7 @@ import {
   LogOut,
   MapPin,
   Package,
+  PackageCheck,
   Search,
   Send,
   Settings,
@@ -73,6 +74,12 @@ const menuPrincipal = [
 ]
 
 const menuPatrimonio = [
+  {
+    title: "Mis Bienes",
+    url: "/dashboard/patrimonio/mis-bienes",
+    icon: PackageCheck,
+    modulo: "BIENES",
+  },
   {
     title: "Buscar Bien",
     url: "/dashboard/patrimonio/buscar",
