@@ -580,6 +580,9 @@ model SesionInventario {
   sedeId          String?
   sede            Sede?                   @relation(fields: [sedeId], references: [id])
   ubicacionFisica String? // Ambiente/piso específico
+  // Relación con SIGA
+  sigaCentroCosto     String? // Código CENTRO_COSTO de SIGA
+  sigaNombreDependencia String? // Nombre cacheado de la dependencia SIGA
   // Fechas
   fechaProgramada DateTime // Fecha programada para el inventario
   fechaInicio     DateTime? // Fecha real de inicio

@@ -112,6 +112,8 @@ export async function POST(request: NextRequest) {
       ubicacionFisica,
       fechaProgramada,
       participantesIds,
+      sigaCentroCosto,
+      sigaNombreDependencia,
     } = body
 
     if (!nombre || !fechaProgramada) {
@@ -146,6 +148,8 @@ export async function POST(request: NextRequest) {
         dependenciaId: dependenciaId || null,
         sedeId: sedeId || null,
         ubicacionFisica,
+        sigaCentroCosto: sigaCentroCosto || null,
+        sigaNombreDependencia: sigaNombreDependencia || null,
         fechaProgramada: new Date(fechaProgramada),
         responsableId: session.id,
         participantes: participantesIds?.length

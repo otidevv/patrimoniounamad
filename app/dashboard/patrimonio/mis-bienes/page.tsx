@@ -268,7 +268,14 @@ export default function MisBienesPage() {
                 </TableHeader>
                 <TableBody>
                   {bienesPaginados.map((item) => (
-                    <TableRow key={item.codigo_patrimonial}>
+                    <TableRow
+                      key={item.codigo_patrimonial}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => {
+                        setBienSeleccionado(item)
+                        setModalOpen(true)
+                      }}
+                    >
                       <TableCell className="font-mono text-xs sm:text-sm whitespace-nowrap">
                         {item.codigo_patrimonial}
                       </TableCell>
@@ -291,7 +298,8 @@ export default function MisBienesPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation()
                             setBienSeleccionado(item)
                             setModalOpen(true)
                           }}

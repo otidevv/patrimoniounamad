@@ -93,6 +93,8 @@ interface Sesion {
   totalReubicados: number
   totalNoEncontrados: number
   totalSobrantes: number
+  sigaCentroCosto: string | null
+  sigaNombreDependencia: string | null
   dependencia: { id: string; nombre: string; siglas: string | null } | null
   sede: { id: string; nombre: string } | null
   responsable: { id: string; nombre: string; apellidos: string }
@@ -103,10 +105,10 @@ interface Sesion {
   }
 }
 
-interface Dependencia {
-  id: string
-  nombre: string
-  siglas: string | null
+interface DependenciaSiga {
+  centro_costo: string
+  nombre_depend: string
+  abreviado_depend: string | null
 }
 
 interface Sede {
@@ -117,7 +119,7 @@ interface Sede {
 export default function InventarioPage() {
   const router = useRouter()
   const [sesiones, setSesiones] = useState<Sesion[]>([])
-  const [dependencias, setDependencias] = useState<Dependencia[]>([])
+  const [dependenciasSiga, setDependenciasSiga] = useState<DependenciaSiga[]>([])
   const [sedes, setSedes] = useState<Sede[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -125,7 +127,8 @@ export default function InventarioPage() {
   const [busqueda, setBusqueda] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [dependenciaOpen, setDependenciaOpen] = useState(false)
+  const [sigaDependenciaOpen, setSigaDependenciaOpen] = useState(false)
+  const [loadingSiga, setLoadingSiga] = useState(false)
   const [paginaActual, setPaginaActual] = useState(1)
   const itemsPorPagina = 10
 
@@ -133,7 +136,8 @@ export default function InventarioPage() {
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
-    dependenciaId: "",
+    sigaCentroCosto: "",
+    sigaNombreDependencia: "",
     sedeId: "",
     ubicacionFisica: "",
     fechaProgramada: "",
@@ -164,22 +168,35 @@ export default function InventarioPage() {
 
   const cargarCatalogos = useCallback(async () => {
     try {
-      const [depRes, sedeRes] = await Promise.all([
-        fetch("/api/dependencias/all"),
-        fetch("/api/sedes?limit=100"),
-      ])
-
-      const [depData, sedeData] = await Promise.all([
-        depRes.json(),
-        sedeRes.json(),
-      ])
-
-      if (depRes.ok) setDependencias(depData.dependencias || depData)
+      const sedeRes = await fetch("/api/sedes?limit=100")
+      const sedeData = await sedeRes.json()
       if (sedeRes.ok) setSedes(sedeData.sedes || sedeData)
     } catch (err) {
       console.error("Error al cargar catálogos:", err)
     }
   }, [])
+
+  const cargarDependenciasSiga = useCallback(async () => {
+    if (dependenciasSiga.length > 0) return
+    setLoadingSiga(true)
+    try {
+      const res = await fetch("/api/siga/dependencias")
+      const data = await res.json()
+      if (res.ok) {
+        setDependenciasSiga(data.dependencias || [])
+        if (!data.dependencias?.length) {
+          setError("No se encontraron dependencias en SIGA")
+        }
+      } else {
+        setError(data.error || "Error al cargar dependencias SIGA")
+      }
+    } catch (err) {
+      console.error("Error al cargar dependencias SIGA:", err)
+      setError("Error de conexión al cargar dependencias SIGA")
+    } finally {
+      setLoadingSiga(false)
+    }
+  }, [dependenciasSiga.length])
 
   useEffect(() => {
     cargarSesiones()
@@ -198,9 +215,13 @@ export default function InventarioPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
-          dependenciaId: formData.dependenciaId || null,
+          nombre: formData.nombre,
+          descripcion: formData.descripcion,
           sedeId: formData.sedeId || null,
+          ubicacionFisica: formData.ubicacionFisica,
+          fechaProgramada: formData.fechaProgramada,
+          sigaCentroCosto: formData.sigaCentroCosto || null,
+          sigaNombreDependencia: formData.sigaNombreDependencia || null,
         }),
       })
 
@@ -214,7 +235,8 @@ export default function InventarioPage() {
       setFormData({
         nombre: "",
         descripcion: "",
-        dependenciaId: "",
+        sigaCentroCosto: "",
+        sigaNombreDependencia: "",
         sedeId: "",
         ubicacionFisica: "",
         fechaProgramada: "",
@@ -306,7 +328,10 @@ export default function InventarioPage() {
             Gestiona las sesiones de verificación de bienes patrimoniales
           </p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={(open) => {
+          setDialogOpen(open)
+          if (open) cargarDependenciasSiga()
+        }}>
           <DialogTrigger asChild>
             <Button className="gap-2">
               <Plus className="h-4 w-4" />
@@ -314,7 +339,7 @@ export default function InventarioPage() {
               <span className="sm:hidden">Nuevo</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Nueva Sesión de Inventario</DialogTitle>
               <DialogDescription>
@@ -359,55 +384,70 @@ export default function InventarioPage() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="dependencia">Dependencia</Label>
-                <Popover open={dependenciaOpen} onOpenChange={setDependenciaOpen}>
+                <Label htmlFor="dependencia">Dependencia SIGA</Label>
+                <Popover
+                  open={sigaDependenciaOpen}
+                  onOpenChange={setSigaDependenciaOpen}
+                >
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       role="combobox"
-                      aria-expanded={dependenciaOpen}
+                      aria-expanded={sigaDependenciaOpen}
                       className="justify-between font-normal"
                     >
-                      {formData.dependenciaId
-                        ? (() => {
-                            const dep = dependencias.find((d) => d.id === formData.dependenciaId)
-                            return dep
-                              ? dep.siglas
-                                ? `${dep.siglas} - ${dep.nombre}`
-                                : dep.nombre
-                              : "Seleccionar dependencia..."
-                          })()
-                        : "Seleccionar dependencia..."}
+                      {formData.sigaCentroCosto
+                        ? formData.sigaNombreDependencia || formData.sigaCentroCosto
+                        : "Seleccionar dependencia SIGA..."}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
                     <Command>
-                      <CommandInput placeholder="Buscar dependencia..." />
+                      <CommandInput placeholder="Buscar dependencia SIGA..." />
                       <CommandList>
-                        <CommandEmpty>No se encontró la dependencia.</CommandEmpty>
-                        <CommandGroup className="max-h-[200px] overflow-auto">
-                          {dependencias.map((dep) => (
-                            <CommandItem
-                              key={dep.id}
-                              value={dep.siglas ? `${dep.siglas} ${dep.nombre}` : dep.nombre}
-                              onSelect={() => {
-                                setFormData({ ...formData, dependenciaId: dep.id })
-                                setDependenciaOpen(false)
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  formData.dependenciaId === dep.id ? "opacity-100" : "opacity-0"
-                                )}
-                              />
-                              <span className="truncate">
-                                {dep.siglas ? `${dep.siglas} - ${dep.nombre}` : dep.nombre}
-                              </span>
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
+                        {loadingSiga ? (
+                          <div className="flex items-center justify-center py-6">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <span className="ml-2 text-sm text-muted-foreground">Cargando...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <CommandEmpty>No se encontró la dependencia.</CommandEmpty>
+                            <CommandGroup className="max-h-[200px] overflow-auto">
+                              {dependenciasSiga.map((dep) => (
+                                <CommandItem
+                                  key={dep.centro_costo}
+                                  value={`${dep.centro_costo} ${dep.abreviado_depend || ""} ${dep.nombre_depend}`}
+                                  onSelect={() => {
+                                    setFormData({
+                                      ...formData,
+                                      sigaCentroCosto: dep.centro_costo,
+                                      sigaNombreDependencia: dep.nombre_depend,
+                                    })
+                                    setSigaDependenciaOpen(false)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      formData.sigaCentroCosto === dep.centro_costo ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                  <div className="flex flex-col min-w-0">
+                                    <span className="truncate text-sm">
+                                      {dep.nombre_depend}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      CC: {dep.centro_costo}
+                                      {dep.abreviado_depend ? ` — ${dep.abreviado_depend}` : ""}
+                                    </span>
+                                  </div>
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </>
+                        )}
                       </CommandList>
                     </Command>
                   </PopoverContent>
@@ -614,7 +654,7 @@ export default function InventarioPage() {
                         )}
                       </TableCell>
                       <TableCell className="hidden md:table-cell max-w-[150px] truncate">
-                        {sesion.dependencia?.siglas || sesion.dependencia?.nombre || "—"}
+                        {sesion.sigaNombreDependencia || sesion.dependencia?.siglas || sesion.dependencia?.nombre || "—"}
                       </TableCell>
                       <TableCell className="hidden lg:table-cell whitespace-nowrap">
                         {formatDate(sesion.fechaProgramada)}

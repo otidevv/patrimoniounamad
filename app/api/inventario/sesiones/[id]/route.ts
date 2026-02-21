@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { contarBienesPorDependencia } from "@/lib/siga"
 
 // GET: Obtener sesión por ID
 export async function GET(
@@ -114,11 +115,22 @@ export async function PUT(
         )
       }
 
+      // Si tiene dependencia SIGA, contar bienes para totalBienesSiga
+      let totalBienesSiga = sesionActual.totalBienesSiga
+      if (sesionActual.sigaCentroCosto) {
+        try {
+          totalBienesSiga = await contarBienesPorDependencia(sesionActual.sigaCentroCosto)
+        } catch (err) {
+          console.error("Error al contar bienes SIGA:", err)
+        }
+      }
+
       const sesionActualizada = await prisma.sesionInventario.update({
         where: { id },
         data: {
           estado: "EN_PROCESO",
           fechaInicio: sesionActual.fechaInicio || new Date(),
+          totalBienesSiga,
         },
       })
 

@@ -181,10 +181,10 @@ export default function BuscarBienPage() {
       }
 
       setBienes(data.bienes)
-      // Obtener el nombre del responsable/usuario del primer resultado
+      // Obtener el nombre del usuario final del primer resultado
       if (data.bienes.length > 0) {
         const primerBien = data.bienes[0]
-        setPersonaBusqueda(primerBien.responsable || primerBien.usuario || null)
+        setPersonaBusqueda(primerBien.usuario || primerBien.responsable || null)
       }
     } catch {
       setError("Error de conexión al servidor")
@@ -742,7 +742,14 @@ export default function BuscarBienPage() {
                   </TableHeader>
                   <TableBody>
                     {bienesPaginados.map((item) => (
-                      <TableRow key={item.codigo_patrimonial}>
+                      <TableRow
+                        key={item.codigo_patrimonial}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => {
+                          setBienSeleccionado(item)
+                          setModalOpen(true)
+                        }}
+                      >
                         <TableCell className="font-mono text-xs sm:text-sm whitespace-nowrap">
                           {item.codigo_patrimonial}
                         </TableCell>
@@ -762,7 +769,8 @@ export default function BuscarBienPage() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation()
                               setBienSeleccionado(item)
                               setModalOpen(true)
                             }}
