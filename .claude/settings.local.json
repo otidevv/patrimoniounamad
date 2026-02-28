@@ -24,7 +24,15 @@
       "Bash(findstr:*)",
       "Bash(npx next build)",
       "Bash(node -e:*)",
-      "Bash(node --check:*)"
+      "Bash(node --check:*)",
+      "WebSearch",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:docs.zebra.com)",
+      "WebFetch(domain:www.hprt.com)",
+      "WebFetch(domain:developer.zebra.com)",
+      "WebFetch(domain:supportcommunity.zebra.com)",
+      "WebFetch(domain:www.lpautomation.com)",
+      "WebFetch(domain:blog.labtag.com)"
     ]
   }
 }

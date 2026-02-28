@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef } from "react"
-import Image from "next/image"
 import Barcode from "react-barcode"
 import {
   Search,
@@ -61,7 +60,7 @@ export default function EtiquetasPage() {
   const [error, setError] = useState<string | null>(null)
   const [resultados, setResultados] = useState<BienPatrimonial[]>([])
   const [seleccionados, setSeleccionados] = useState<BienPatrimonial[]>([])
-  const [tamano, setTamano] = useState<TamanoEtiqueta>("mediana")
+  const [tamano, setTamano] = useState<TamanoEtiqueta>("pequena")
   const printRef = useRef<HTMLDivElement>(null)
 
   const buscar = async () => {
@@ -126,81 +125,91 @@ export default function EtiquetasPage() {
           <title>Etiquetas Patrimoniales - UNAMAD</title>
           <style>
             @page {
-              size: auto;
-              margin: 5mm;
+              size: 50mm 25mm;
+              margin: 0;
             }
             body {
               font-family: Arial, sans-serif;
               margin: 0;
-              padding: 10px;
+              padding: 0;
             }
             .etiquetas-container {
-              display: flex;
-              flex-wrap: wrap;
-              gap: 10px;
-              justify-content: flex-start;
+              display: block;
             }
             .etiqueta {
-              border: 1px solid #ccc;
-              padding: 8px;
+              width: 50mm;
+              height: 25mm;
+              box-sizing: border-box;
+              padding: 1mm 2mm;
               background: white;
-              page-break-inside: avoid;
+              overflow: hidden;
+              page-break-after: always;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
             }
-            .etiqueta-pequena {
-              width: 200px;
-            }
-            .etiqueta-mediana {
-              width: 280px;
-            }
-            .etiqueta-grande {
-              width: 380px;
+            .etiqueta:last-child {
+              page-break-after: avoid;
             }
             .etiqueta-header {
               position: relative;
-              margin-bottom: 4px;
+              margin-bottom: 0;
             }
             .etiqueta-logo {
               position: absolute;
               left: 0;
               top: 0;
-              width: 30px;
-              height: 30px;
+              width: 4mm;
+              height: 4mm;
             }
             .etiqueta-titulo {
               text-align: center;
             }
             .etiqueta-titulo-unamad {
-              font-size: 14px;
+              font-size: 8pt;
               font-weight: bold;
               margin: 0;
+              line-height: 1.1;
             }
             .etiqueta-titulo-siga {
-              font-size: 10px;
+              font-size: 5pt;
               font-weight: bold;
               margin: 0;
-            }
-            .etiqueta-codigo {
-              text-align: center;
-              margin: 4px 0;
-            }
-            .etiqueta-codigo svg {
-              max-width: 100%;
-              height: auto;
+              line-height: 1.1;
             }
             .etiqueta-descripcion {
-              font-size: 10px;
+              font-size: 5pt;
               font-weight: bold;
               text-align: center;
-              margin: 4px 0;
+              margin: 0;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
+              line-height: 1.1;
             }
-            .etiqueta-footer {
-              font-size: 9px;
+            .etiqueta-numero {
+              font-size: 5.5pt;
               font-weight: bold;
               text-align: center;
-              margin-top: 4px;
+              margin: 0;
+              line-height: 1.1;
+              font-family: monospace;
+            }
+            .etiqueta-codigo {
+              text-align: center;
+              margin: 0;
+              line-height: 0;
+            }
+            .etiqueta-codigo svg {
+              max-width: 46mm;
+              height: auto;
+            }
+            .etiqueta-footer {
+              font-size: 4.5pt;
+              font-weight: bold;
+              text-align: center;
+              margin: 0;
+              line-height: 1.1;
             }
             @media print {
               body {
@@ -441,71 +450,70 @@ export default function EtiquetasPage() {
               ref={printRef}
               className="etiquetas-container flex flex-wrap gap-3 p-4 bg-gray-100 rounded-lg"
             >
+              {/* Etiqueta en blanco para calentar cabezal térmico */}
+              <div
+                className="etiqueta bg-white border border-dashed border-gray-300"
+                style={{ width: "189px", height: "94px", display: "flex", alignItems: "center", justifyContent: "center" }}
+              >
+                <span className="text-[10px] text-gray-400">(en blanco - calentamiento)</span>
+              </div>
               {seleccionados.map((bien) => (
                 <div
                   key={bien.codigo_patrimonial}
-                  className={`etiqueta etiqueta-${tamano} bg-white border border-gray-300 rounded p-3`}
-                  style={{
-                    width:
-                      tamano === "pequena"
-                        ? "200px"
-                        : tamano === "mediana"
-                        ? "280px"
-                        : "380px",
-                  }}
+                  className="etiqueta bg-white border border-gray-300"
+                  style={{ width: "189px", height: "94px", padding: "3px 6px", display: "flex", flexDirection: "column", justifyContent: "space-between", overflow: "hidden" }}
                 >
                   {/* Header con logo */}
-                  <div className="etiqueta-header relative mb-2">
+                  <div className="etiqueta-header" style={{ position: "relative" }}>
                     <img
                       src="/logos/logo_single_min.png"
                       alt="UNAMAD"
-                      className="etiqueta-logo absolute left-0 top-0"
-                      style={{
-                        width: tamano === "pequena" ? "24px" : tamano === "mediana" ? "30px" : "36px",
-                        height: tamano === "pequena" ? "24px" : tamano === "mediana" ? "30px" : "36px",
-                      }}
+                      className="etiqueta-logo"
+                      style={{ position: "absolute", left: 0, top: 0, width: "15px", height: "15px" }}
                     />
-                    <div className="etiqueta-titulo text-center">
-                      <p
-                        className="etiqueta-titulo-unamad font-bold m-0"
-                        style={{ fontSize: tamano === "pequena" ? "12px" : tamano === "mediana" ? "14px" : "16px" }}
-                      >
+                    <div className="etiqueta-titulo" style={{ textAlign: "center" }}>
+                      <p className="etiqueta-titulo-unamad" style={{ fontSize: "10px", fontWeight: "bold", margin: 0, lineHeight: 1.1 }}>
                         UNAMAD
                       </p>
-                      <p
-                        className="etiqueta-titulo-siga font-bold m-0"
-                        style={{ fontSize: tamano === "pequena" ? "8px" : tamano === "mediana" ? "10px" : "12px" }}
-                      >
+                      <p className="etiqueta-titulo-siga" style={{ fontSize: "7px", fontWeight: "bold", margin: 0, lineHeight: 1.1 }}>
                         CODIFICACION SIGA
                       </p>
                     </div>
                   </div>
 
-                  {/* Código de barras */}
-                  <div className="etiqueta-codigo flex justify-center my-1">
-                    <Barcode
-                      value={bien.codigo_patrimonial}
-                      width={tamano === "pequena" ? 1.2 : tamano === "mediana" ? 1.5 : 2}
-                      height={tamano === "pequena" ? 30 : tamano === "mediana" ? 40 : 50}
-                      fontSize={tamano === "pequena" ? 12 : tamano === "mediana" ? 14 : 16}
-                      margin={2}
-                      displayValue={true}
-                    />
-                  </div>
-
-                  {/* Descripción */}
+                  {/* Descripción ARRIBA del barcode */}
                   <div
-                    className="etiqueta-descripcion font-bold text-center truncate my-1"
-                    style={{ fontSize: tamano === "pequena" ? "9px" : tamano === "mediana" ? "10px" : "12px" }}
+                    className="etiqueta-descripcion"
+                    style={{ fontSize: "7px", fontWeight: "bold", textAlign: "center", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", lineHeight: 1.1 }}
                     title={bien.descripcion}
                   >
                     {bien.descripcion}
                   </div>
 
+                  {/* Número del código ARRIBA del barcode */}
+                  <div
+                    className="etiqueta-numero"
+                    style={{ fontSize: "7px", fontWeight: "bold", textAlign: "center", margin: 0, lineHeight: 1.1, fontFamily: "monospace" }}
+                  >
+                    {bien.codigo_patrimonial}
+                  </div>
+
+                  {/* Código de barras centrado */}
+                  <div className="etiqueta-codigo" style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: 0, lineHeight: 0 }}>
+                    <Barcode
+                      value={bien.codigo_patrimonial}
+                      width={1}
+                      height={25}
+                      fontSize={0}
+                      margin={0}
+                      displayValue={false}
+                    />
+                  </div>
+
                   {/* Footer */}
                   <div
-                    className="etiqueta-footer font-bold text-center mt-1"
-                    style={{ fontSize: tamano === "pequena" ? "7px" : tamano === "mediana" ? "8px" : "10px" }}
+                    className="etiqueta-footer"
+                    style={{ fontSize: "6px", fontWeight: "bold", textAlign: "center", margin: 0, lineHeight: 1.1 }}
                   >
                     UNIDAD DE BIENES PATRIMONIALES
                   </div>
