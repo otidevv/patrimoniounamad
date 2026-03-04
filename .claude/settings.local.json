@@ -32,7 +32,9 @@
       "WebFetch(domain:developer.zebra.com)",
       "WebFetch(domain:supportcommunity.zebra.com)",
       "WebFetch(domain:www.lpautomation.com)",
-      "WebFetch(domain:blog.labtag.com)"
+      "WebFetch(domain:blog.labtag.com)",
+      "Bash(npx next:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

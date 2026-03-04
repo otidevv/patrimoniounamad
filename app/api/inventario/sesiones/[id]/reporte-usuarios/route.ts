@@ -3,7 +3,8 @@ import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import {
   obtenerResumenPorUsuarioFinal,
-  buscarBienesPorDependenciaPaginado,
+  obtenerCodigosPorDependencia,
+  buscarBienesPorEmpleadoFinal,
 } from "@/lib/siga"
 
 // GET: Reporte de verificación agrupado por usuario final
@@ -48,18 +49,12 @@ export async function GET(
       )
     }
 
-    // Si se pide detalle de un usuario final específico
+    // Si se pide detalle de un usuario final específico (por código EMPLEADO_FINAL)
     if (empleadoFinal) {
-      // Obtener todos los bienes de esa dependencia (sin paginación para cruzar)
-      const { bienes } = await buscarBienesPorDependenciaPaginado(
+      // Consultar SIGA directamente filtrando por EMPLEADO_FINAL
+      const bienesUsuario = await buscarBienesPorEmpleadoFinal(
         sesion.sigaCentroCosto,
-        1,
-        1000
-      )
-
-      // Filtrar por usuario final (EMPLEADO_FINAL)
-      const bienesUsuario = bienes.filter(
-        (b) => b.usuario === empleadoFinal
+        empleadoFinal
       )
 
       // Obtener verificaciones de esta sesión
@@ -89,14 +84,17 @@ export async function GET(
     }
 
     // Resumen general por usuario final
+    // 1. Obtener totales por usuario desde SIGA (1 query con GROUP BY)
     const resumen = await obtenerResumenPorUsuarioFinal(sesion.sigaCentroCosto)
 
-    // Obtener todas las verificaciones de esta sesión para calcular porcentajes
+    // 2. Obtener lista ligera de códigos + empleado_final (1 query, solo 2 columnas)
+    const codigosEmpleados = await obtenerCodigosPorDependencia(sesion.sigaCentroCosto)
+
+    // 3. Obtener verificaciones de esta sesión (1 query a PostgreSQL)
     const verificaciones = await prisma.verificacionBien.findMany({
       where: { sesionId: id },
       select: {
         codigoPatrimonial: true,
-        resultado: true,
       },
     })
 
@@ -104,20 +102,19 @@ export async function GET(
       verificaciones.map((v) => v.codigoPatrimonial)
     )
 
-    // Para cada usuario, obtener sus bienes y contar verificados
-    // Usamos los bienes completos para cruzar por usuario
-    const { bienes: todosLosBienes } = await buscarBienesPorDependenciaPaginado(
-      sesion.sigaCentroCosto,
-      1,
-      5000
-    )
+    // 4. Agrupar códigos por empleado_final para cruzar
+    const codigosPorEmpleado = new Map<string, string[]>()
+    for (const item of codigosEmpleados) {
+      const lista = codigosPorEmpleado.get(item.empleado_final) || []
+      lista.push(item.codigo_patrimonial)
+      codigosPorEmpleado.set(item.empleado_final, lista)
+    }
 
+    // 5. Calcular verificados por usuario
     const resumenConVerificacion = resumen.map((usuario) => {
-      const bienesDelUsuario = todosLosBienes.filter(
-        (b) => b.usuario === usuario.usuario_nombre
-      )
-      const verificadosDelUsuario = bienesDelUsuario.filter((b) =>
-        codigosVerificados.has(b.codigo_patrimonial)
+      const codigosDelUsuario = codigosPorEmpleado.get(usuario.empleado_final) || []
+      const verificadosDelUsuario = codigosDelUsuario.filter((c) =>
+        codigosVerificados.has(c)
       ).length
 
       return {

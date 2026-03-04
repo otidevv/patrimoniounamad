@@ -58,9 +58,9 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Búsqueda por número de documento (DNI)
+    // Búsqueda por número de documento (DNI) - límite más alto que búsqueda por texto
     if (documento) {
-      const bienes = await buscarBienesPorDocumento(documento.trim(), limit)
+      const bienes = await buscarBienesPorDocumento(documento.trim(), Math.max(limit, 500))
 
       return NextResponse.json({
         bienes,

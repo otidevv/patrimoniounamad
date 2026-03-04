@@ -27,6 +27,8 @@ import {
   ChevronUp,
   Users,
   ListChecks,
+  FileSpreadsheet,
+  Download,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -273,6 +275,41 @@ export default function VerificacionPage() {
       console.error("Error al cargar bienes del usuario:", err)
     } finally {
       setLoadingBienesUsuario(false)
+    }
+  }
+
+  const descargarAnexo7 = async (empleadoFinal: string, nombreUsuario: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      toast.loading("Generando Anexo 7...", { id: "anexo7" })
+      const params = new URLSearchParams({ empleadoFinal })
+      const response = await fetch(
+        `/api/inventario/sesiones/${sesionId}/anexo7?${params}`
+      )
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || "Error al generar reporte")
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download =
+        response.headers
+          .get("Content-Disposition")
+          ?.match(/filename="(.+)"/)?.[1] || `Anexo7_${empleadoFinal}.xlsx`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      toast.success("Anexo 7 descargado correctamente", { id: "anexo7" })
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Error al descargar reporte",
+        { id: "anexo7" }
+      )
     }
   }
 
@@ -902,7 +939,7 @@ export default function VerificacionPage() {
                       <div key={usuario.empleado_final || usuario.usuario_nombre || "sin-asignar"}>
                         <Card
                           className="cursor-pointer hover:bg-accent/50 transition-colors"
-                          onClick={() => cargarBienesDeUsuario(usuario.usuario_nombre || usuario.empleado_final)}
+                          onClick={() => cargarBienesDeUsuario(usuario.empleado_final)}
                         >
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-2">
@@ -928,7 +965,22 @@ export default function VerificacionPage() {
                                   </p>
                                   <p className="text-xs text-muted-foreground">verificados</p>
                                 </div>
-                                {usuarioExpandido === (usuario.usuario_nombre || usuario.empleado_final) ? (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  title="Descargar Anexo 7"
+                                  onClick={(e) =>
+                                    descargarAnexo7(
+                                      usuario.empleado_final,
+                                      usuario.usuario_nombre || usuario.empleado_final,
+                                      e
+                                    )
+                                  }
+                                >
+                                  <FileSpreadsheet className="h-4 w-4 text-green-600" />
+                                </Button>
+                                {usuarioExpandido === usuario.empleado_final ? (
                                   <ChevronUp className="h-4 w-4 text-muted-foreground" />
                                 ) : (
                                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -946,7 +998,7 @@ export default function VerificacionPage() {
                         </Card>
 
                         {/* Bienes expandidos del usuario */}
-                        {usuarioExpandido === (usuario.usuario_nombre || usuario.empleado_final) && (
+                        {usuarioExpandido === usuario.empleado_final && (
                           <Card className="mt-1 ml-4 border-l-4 border-l-primary/30">
                             <CardContent className="p-0">
                               {loadingBienesUsuario ? (

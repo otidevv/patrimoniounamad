@@ -49,6 +49,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface BienPatrimonial {
   codigo_patrimonial: string
@@ -92,6 +99,7 @@ export default function BuscarBienPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [paginaActual, setPaginaActual] = useState(1)
   const [personaBusqueda, setPersonaBusqueda] = useState<string | null>(null)
+  const [filtroDependencia, setFiltroDependencia] = useState<string>("todas")
   const itemsPorPagina = 10
   const inputRef = useRef<HTMLInputElement>(null)
   const lastInputTime = useRef<number>(0)
@@ -108,6 +116,7 @@ export default function BuscarBienPage() {
     setBien(null)
     setBienes([])
     setPersonaBusqueda(null)
+    setFiltroDependencia("todas")
 
     try {
       const response = await fetch(
@@ -138,6 +147,7 @@ export default function BuscarBienPage() {
     setBien(null)
     setBienes([])
     setPersonaBusqueda(null)
+    setFiltroDependencia("todas")
 
     try {
       const response = await fetch(
@@ -168,6 +178,7 @@ export default function BuscarBienPage() {
     setBien(null)
     setBienes([])
     setPersonaBusqueda(null)
+    setFiltroDependencia("todas")
 
     try {
       const response = await fetch(
@@ -702,10 +713,20 @@ export default function BuscarBienPage() {
 
       {/* Resultados múltiples (búsqueda por descripción o DNI) */}
       {bienes.length > 0 && (() => {
-        const totalPaginas = Math.ceil(bienes.length / itemsPorPagina)
+        // Obtener dependencias únicas para el filtro
+        const dependenciasUnicas = Array.from(
+          new Set(bienes.map(b => b.abreviatura || b.nombre_depend || "Sin dependencia"))
+        ).sort()
+
+        // Filtrar bienes por dependencia seleccionada
+        const bienesFiltrados = filtroDependencia === "todas"
+          ? bienes
+          : bienes.filter(b => (b.abreviatura || b.nombre_depend || "Sin dependencia") === filtroDependencia)
+
+        const totalPaginas = Math.ceil(bienesFiltrados.length / itemsPorPagina)
         const indiceInicio = (paginaActual - 1) * itemsPorPagina
         const indiceFin = indiceInicio + itemsPorPagina
-        const bienesPaginados = bienes.slice(indiceInicio, indiceFin)
+        const bienesPaginados = bienesFiltrados.slice(indiceInicio, indiceFin)
 
         return (
           <Card>
@@ -717,13 +738,38 @@ export default function BuscarBienPage() {
                     <span>Bienes asignados a: <strong className="text-foreground">{personaBusqueda}</strong></span>
                   </div>
                 )}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <CardTitle className="text-base sm:text-lg">
-                    Resultados ({bienes.length} {bienes.length === 1 ? 'bien' : 'bienes'})
+                    Resultados ({bienesFiltrados.length} {bienesFiltrados.length === 1 ? 'bien' : 'bienes'}
+                    {filtroDependencia !== "todas" && ` de ${bienes.length}`})
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Mostrando {indiceInicio + 1}-{Math.min(indiceFin, bienes.length)} de {bienes.length}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    {dependenciasUnicas.length > 1 && (
+                      <Select
+                        value={filtroDependencia}
+                        onValueChange={(value) => {
+                          setFiltroDependencia(value)
+                          setPaginaActual(1)
+                        }}
+                      >
+                        <SelectTrigger className="w-[200px] sm:w-[250px]">
+                          <Building2 className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <SelectValue placeholder="Filtrar por dependencia" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="todas">Todas las dependencias</SelectItem>
+                          {dependenciasUnicas.map((dep) => (
+                            <SelectItem key={dep} value={dep}>
+                              {dep}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                    <p className="text-sm text-muted-foreground whitespace-nowrap">
+                      {indiceInicio + 1}-{Math.min(indiceFin, bienesFiltrados.length)} de {bienesFiltrados.length}
+                    </p>
+                  </div>
                 </div>
               </div>
             </CardHeader>

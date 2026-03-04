@@ -314,7 +314,7 @@ export async function buscarBienesPorDependencia(
 // Buscar bienes por número de documento (DNI) del responsable o usuario final
 export async function buscarBienesPorDocumento(
   numeroDocumento: string,
-  limit: number = 100
+  limit: number = 500
 ): Promise<BienPatrimonial[]> {
   try {
     const poolConnection = await getConnection()
@@ -380,7 +380,7 @@ export async function buscarBienesPorDocumento(
             AND eta.SECUENCIA = pat.SECUENCIA
             AND eta.CODIGO_COLOR IS NOT NULL
         ) col
-        WHERE usuf.docum_ident = @documento
+        WHERE (usuf.docum_ident = @documento OR resp.docum_ident = @documento)
           AND pat.ESTADO = 1
         ORDER BY pat.CODIGO_ACTIVO
       `)
@@ -570,6 +570,31 @@ export async function buscarBienesPorDependenciaPaginado(
   }
 }
 
+// Obtener lista ligera de códigos patrimoniales con su empleado final (para cruce de verificaciones)
+export async function obtenerCodigosPorDependencia(
+  centroCosto: string
+): Promise<{ codigo_patrimonial: string; empleado_final: string }[]> {
+  try {
+    const poolConnection = await getConnection()
+    const result = await poolConnection
+      .request()
+      .input("centro_costo", sql.VarChar(20), centroCosto)
+      .query(`
+        SELECT
+          pat.CODIGO_ACTIVO AS codigo_patrimonial,
+          pat.EMPLEADO_FINAL AS empleado_final
+        FROM SIG_PATRIMONIO pat
+        WHERE pat.CENTRO_COSTO = @centro_costo
+          AND pat.ESTADO = 1
+      `)
+
+    return result.recordset
+  } catch (error) {
+    console.error("Error al obtener códigos por dependencia:", error)
+    throw error
+  }
+}
+
 // Obtener resumen de bienes agrupado por usuario final
 export async function obtenerResumenPorUsuarioFinal(
   centroCosto: string
@@ -597,6 +622,88 @@ export async function obtenerResumenPorUsuarioFinal(
     return result.recordset as ResumenUsuarioFinal[]
   } catch (error) {
     console.error("Error al obtener resumen por usuario final:", error)
+    throw error
+  }
+}
+
+// Buscar bienes por empleado final (usuario) dentro de una dependencia
+export async function buscarBienesPorEmpleadoFinal(
+  centroCosto: string,
+  empleadoFinal: string
+): Promise<BienPatrimonial[]> {
+  try {
+    const poolConnection = await getConnection()
+    const result = await poolConnection
+      .request()
+      .input("centro_costo", sql.VarChar(20), centroCosto)
+      .input("empleado_final", sql.VarChar(20), empleadoFinal)
+      .query(`
+        SELECT
+          pat.CODIGO_ACTIVO AS codigo_patrimonial,
+          pat.DESCRIPCION AS descripcion,
+          sed.nombre_sede,
+          cc.NOMBRE_DEPEND AS nombre_depend,
+          resp.nombre_completo AS responsable,
+          usuf.nombre_completo AS usuario,
+          cnt.NOMBRE_PROV AS proveedor,
+          CONVERT(VARCHAR, pat.FECHA_COMPRA, 103) AS fecha_compra,
+          pat.VALOR_COMPRA AS valor_compra,
+          CONVERT(VARCHAR, pat.FECHA_ALTA, 103) AS fecha_alta,
+          pat.VALOR_INICIAL AS valor_inicial,
+          ubi.UBICAC_FISICA AS ubicacion_fisica,
+          cat.NOMBRE_ITEM AS nombre_item,
+          pat.CODIGO_BARRA AS codigo_barra,
+          pat.MODELO AS modelo,
+          pat.MEDIDAS AS medidas,
+          (ISNULL(pat.HVALOR_INICIAL,0) - ISNULL(pat.HDEPR_INICIAL,0)) AS valor_neto,
+          pat.NRO_SERIE AS serie,
+          mrc.NOMBRE AS marca,
+          pat.CENTRO_COSTO AS centro_costo,
+          cc.ABREVIADO_DEPEND AS abreviatura,
+          col.NOMBRE AS color,
+          pat.CARACTERISTICAS AS caracteristicas,
+          pat.OBSERVACIONES AS observaciones
+        FROM SIG_PATRIMONIO pat
+        LEFT JOIN SIG_SEDES sed
+          ON pat.SEDE = sed.sede AND pat.PLIEGO = sed.pliego
+        LEFT JOIN SIG_CENTRO_COSTO cc
+          ON pat.CENTRO_COSTO = cc.CENTRO_COSTO
+          AND pat.SEC_EJEC = cc.SEC_EJEC
+          AND pat.ANO_EJE = cc.ANO_EJE
+        LEFT JOIN SIG_PERSONAL resp
+          ON pat.SEC_EJEC = resp.sec_ejec AND pat.EMPLEADO = resp.empleado
+        LEFT JOIN SIG_PERSONAL usuf
+          ON pat.SEC_EJEC = usuf.sec_ejec AND pat.EMPLEADO_FINAL = usuf.empleado
+        LEFT JOIN SIG_CONTRATISTAS cnt
+          ON pat.PROVEEDOR = cnt.PROVEEDOR
+        LEFT JOIN SIG_UBICAC_FISICA ubi
+          ON pat.TIPO_UBICAC = ubi.TIPO_UBICAC AND pat.COD_UBICAC = ubi.COD_UBICAC
+        LEFT JOIN MARCA mrc
+          ON pat.MARCA = mrc.MARCA AND pat.TIPO_MARCA = mrc.TIPO_MARCA
+        LEFT JOIN CATALOGO_BIEN_SERV cat
+          ON pat.SEC_EJEC = cat.SEC_EJEC
+          AND pat.GRUPO_BIEN = cat.GRUPO_BIEN
+          AND pat.CLASE_BIEN = cat.CLASE_BIEN
+          AND pat.FAMILIA_BIEN = cat.FAMILIA_BIEN
+          AND pat.ITEM_BIEN = cat.ITEM_BIEN
+        OUTER APPLY (
+          SELECT TOP 1 col2.NOMBRE
+          FROM SIG_ESPECIF_TECNICA_ACTIVO eta
+          LEFT JOIN SIG_COLORES col2 ON eta.CODIGO_COLOR = col2.CODIGO_COLOR
+          WHERE eta.SEC_EJEC = pat.SEC_EJEC
+            AND eta.TIPO_MODALIDAD = pat.TIPO_MODALIDAD
+            AND eta.SECUENCIA = pat.SECUENCIA
+            AND eta.CODIGO_COLOR IS NOT NULL
+        ) col
+        WHERE pat.CENTRO_COSTO = @centro_costo
+          AND pat.EMPLEADO_FINAL = @empleado_final
+          AND pat.ESTADO = 1
+        ORDER BY pat.CODIGO_ACTIVO
+      `)
+
+    return result.recordset as BienPatrimonial[]
+  } catch (error) {
+    console.error("Error al buscar bienes por empleado final:", error)
     throw error
   }
 }

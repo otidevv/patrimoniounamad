@@ -34,44 +34,44 @@ model Rol {
 
 // Modelo de Usuario (también funciona como empleado)
 model Usuario {
-  id                  String                @id @default(cuid())
-  email               String                @unique
-  password            String
-  nombre              String
-  apellidos           String
-  tipoDocumento       TipoDocumento         @default(DNI)
-  numeroDocumento     String?
-  cargo               String?
-  telefono            String?
-  foto                String?
+  id                         String                   @id @default(cuid())
+  email                      String                   @unique
+  password                   String
+  nombre                     String
+  apellidos                  String
+  tipoDocumento              TipoDocumento            @default(DNI)
+  numeroDocumento            String?
+  cargo                      String?
+  telefono                   String?
+  foto                       String?
   // Datos de contrato/cargo
-  fechaInicio         DateTime? // Fecha de inicio del cargo
-  fechaFin            DateTime? // Fecha de fin del cargo (null = vigente)
-  activo              Boolean               @default(true)
-  rolId               String
-  rol                 Rol                   @relation(fields: [rolId], references: [id])
-  sedeId              String?
-  sede                Sede?                 @relation(fields: [sedeId], references: [id])
-  dependenciaId       String?
-  dependencia         Dependencia?          @relation(fields: [dependenciaId], references: [id])
-  passwordResetTokens PasswordResetToken[]
-  configuracion       ConfiguracionUsuario?
+  fechaInicio                DateTime? // Fecha de inicio del cargo
+  fechaFin                   DateTime? // Fecha de fin del cargo (null = vigente)
+  activo                     Boolean                  @default(true)
+  rolId                      String
+  rol                        Rol                      @relation(fields: [rolId], references: [id])
+  sedeId                     String?
+  sede                       Sede?                    @relation(fields: [sedeId], references: [id])
+  dependenciaId              String?
+  dependencia                Dependencia?             @relation(fields: [dependenciaId], references: [id])
+  passwordResetTokens        PasswordResetToken[]
+  configuracion              ConfiguracionUsuario?
   // Relaciones de trámite documentario
-  documentosCreados      DocumentoTramite[]    @relation("DocumentoRemitente")
-  documentosDestinatario DocumentoDestino[]    @relation("DestinatarioDocumento")
-  documentosRecibidos    DocumentoDestino[]    @relation("ReceptorDocumento")
-  historialDocumentos    DocumentoHistorial[]
-  notificaciones         Notificacion[]
+  documentosCreados          DocumentoTramite[]       @relation("DocumentoRemitente")
+  documentosDestinatario     DocumentoDestino[]       @relation("DestinatarioDocumento")
+  documentosRecibidos        DocumentoDestino[]       @relation("ReceptorDocumento")
+  historialDocumentos        DocumentoHistorial[]
+  notificaciones             Notificacion[]
   // Relaciones del repositorio personal
-  archivosRepositorio    ArchivoRepositorio[]
-  carpetasRepositorio    CarpetaRepositorio[]
+  archivosRepositorio        ArchivoRepositorio[]
+  carpetasRepositorio        CarpetaRepositorio[]
   // Relaciones del inventario físico
-  sesionesResponsable    SesionInventario[]     @relation("SesionResponsable")
-  participacionesInventario ParticipanteInventario[] @relation("ParticipanteInventario")
-  verificacionesRealizadas VerificacionBien[]    @relation("VerificadorBien")
+  sesionesResponsable        SesionInventario[]       @relation("SesionResponsable")
+  participacionesInventario  ParticipanteInventario[] @relation("ParticipanteInventario")
+  verificacionesRealizadas   VerificacionBien[]       @relation("VerificadorBien")
   bienesSobrantesRegistrados BienSobrante[]
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
+  createdAt                  DateTime                 @default(now())
+  updatedAt                  DateTime                 @updatedAt
 
   @@unique([tipoDocumento, numeroDocumento])
   @@map("usuarios")
@@ -152,20 +152,20 @@ enum TipoDependencia {
 
 // Sedes de la universidad
 model Sede {
-  id           String        @id @default(cuid())
-  codigo       String        @unique // Código único de la sede
-  nombre       String // Nombre de la sede
-  direccion    String? // Dirección física
-  ciudad       String?
-  telefono     String?
-  email        String?
-  activo       Boolean       @default(true)
-  dependencias Dependencia[]
-  usuarios     Usuario[]
+  id                 String             @id @default(cuid())
+  codigo             String             @unique // Código único de la sede
+  nombre             String // Nombre de la sede
+  direccion          String? // Dirección física
+  ciudad             String?
+  telefono           String?
+  email              String?
+  activo             Boolean            @default(true)
+  dependencias       Dependencia[]
+  usuarios           Usuario[]
   // Relaciones del inventario físico
   sesionesInventario SesionInventario[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 
   @@map("sedes")
 }
@@ -546,65 +546,65 @@ model ArchivoRepositorio {
 enum EstadoSesionInventario {
   PROGRAMADA // Programada pero no iniciada
   EN_PROCESO // En ejecución
-  PAUSADA    // Pausada temporalmente
+  PAUSADA // Pausada temporalmente
   FINALIZADA // Completada
-  CANCELADA  // Cancelada
+  CANCELADA // Cancelada
 }
 
 // Estado físico del bien al verificar
 enum EstadoFisicoBien {
-  BUENO      // En buen estado
-  REGULAR    // Estado aceptable con desgaste
-  MALO       // En mal estado, requiere reparación
+  BUENO // En buen estado
+  REGULAR // Estado aceptable con desgaste
+  MALO // En mal estado, requiere reparación
   INOPERATIVO // No funciona
-  CHATARRA   // Para baja
+  CHATARRA // Para baja
 }
 
 // Resultado de la verificación
 enum ResultadoVerificacion {
-  ENCONTRADO       // Bien encontrado en su ubicación
-  REUBICADO        // Bien encontrado pero en otra ubicación
-  NO_ENCONTRADO    // Bien no encontrado (faltante)
-  SOBRANTE         // Bien sin registro en SIGA (excedente)
+  ENCONTRADO // Bien encontrado en su ubicación
+  REUBICADO // Bien encontrado pero en otra ubicación
+  NO_ENCONTRADO // Bien no encontrado (faltante)
+  SOBRANTE // Bien sin registro en SIGA (excedente)
 }
 
 // Sesión de inventario físico
 model SesionInventario {
-  id              String                  @id @default(cuid())
-  codigo          String                  @unique // INV-2024-001
-  nombre          String // Nombre descriptivo de la sesión
-  descripcion     String?
+  id                    String                   @id @default(cuid())
+  codigo                String                   @unique // INV-2024-001
+  nombre                String // Nombre descriptivo de la sesión
+  descripcion           String?
   // Alcance del inventario
-  dependenciaId   String?
-  dependencia     Dependencia?            @relation(fields: [dependenciaId], references: [id])
-  sedeId          String?
-  sede            Sede?                   @relation(fields: [sedeId], references: [id])
-  ubicacionFisica String? // Ambiente/piso específico
+  dependenciaId         String?
+  dependencia           Dependencia?             @relation(fields: [dependenciaId], references: [id])
+  sedeId                String?
+  sede                  Sede?                    @relation(fields: [sedeId], references: [id])
+  ubicacionFisica       String? // Ambiente/piso específico
   // Relación con SIGA
-  sigaCentroCosto     String? // Código CENTRO_COSTO de SIGA
+  sigaCentroCosto       String? // Código CENTRO_COSTO de SIGA
   sigaNombreDependencia String? // Nombre cacheado de la dependencia SIGA
   // Fechas
-  fechaProgramada DateTime // Fecha programada para el inventario
-  fechaInicio     DateTime? // Fecha real de inicio
-  fechaFin        DateTime? // Fecha de finalización
+  fechaProgramada       DateTime // Fecha programada para el inventario
+  fechaInicio           DateTime? // Fecha real de inicio
+  fechaFin              DateTime? // Fecha de finalización
   // Estado y responsable
-  estado          EstadoSesionInventario  @default(PROGRAMADA)
-  responsableId   String
-  responsable     Usuario                 @relation("SesionResponsable", fields: [responsableId], references: [id])
+  estado                EstadoSesionInventario   @default(PROGRAMADA)
+  responsableId         String
+  responsable           Usuario                  @relation("SesionResponsable", fields: [responsableId], references: [id])
   // Estadísticas (se actualizan al verificar)
-  totalBienesSiga     Int             @default(0) // Total de bienes según SIGA
-  totalVerificados    Int             @default(0) // Total verificados
-  totalEncontrados    Int             @default(0)
-  totalReubicados     Int             @default(0)
-  totalNoEncontrados  Int             @default(0)
-  totalSobrantes      Int             @default(0)
+  totalBienesSiga       Int                      @default(0) // Total de bienes según SIGA
+  totalVerificados      Int                      @default(0) // Total verificados
+  totalEncontrados      Int                      @default(0)
+  totalReubicados       Int                      @default(0)
+  totalNoEncontrados    Int                      @default(0)
+  totalSobrantes        Int                      @default(0)
   // Verificaciones realizadas
-  verificaciones  VerificacionBien[]
-  participantes   ParticipanteInventario[]
-  bienesSobrantes BienSobrante[]
-  observaciones   String?
-  createdAt       DateTime                @default(now())
-  updatedAt       DateTime                @updatedAt
+  verificaciones        VerificacionBien[]
+  participantes         ParticipanteInventario[]
+  bienesSobrantes       BienSobrante[]
+  observaciones         String?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
 
   @@map("sesiones_inventario")
 }
@@ -626,9 +626,9 @@ model ParticipanteInventario {
 
 // Registro de cada bien verificado
 model VerificacionBien {
-  id                String               @id @default(cuid())
+  id                String                @id @default(cuid())
   sesionId          String
-  sesion            SesionInventario     @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  sesion            SesionInventario      @relation(fields: [sesionId], references: [id], onDelete: Cascade)
   // Código escaneado/ingresado
   codigoPatrimonial String
   // Datos obtenidos de SIGA al momento de escanear (cache)
@@ -652,13 +652,13 @@ model VerificacionBien {
   fotoUrl           String? // Foto del bien verificado
   // Quién y cuándo verificó
   verificadorId     String
-  verificador       Usuario              @relation("VerificadorBien", fields: [verificadorId], references: [id])
-  fechaVerificacion DateTime             @default(now())
+  verificador       Usuario               @relation("VerificadorBien", fields: [verificadorId], references: [id])
+  fechaVerificacion DateTime              @default(now())
   // Dispositivo usado
   dispositivoTipo   String? // "MOVIL", "PISTOLA", "MANUAL"
   dispositivoInfo   String? // Info adicional del dispositivo
-  createdAt         DateTime             @default(now())
-  updatedAt         DateTime             @updatedAt
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
 
   @@unique([sesionId, codigoPatrimonial]) // Un bien solo se verifica una vez por sesión
   @@map("verificaciones_bien")
@@ -666,26 +666,26 @@ model VerificacionBien {
 
 // Bienes sobrantes (encontrados sin registro en SIGA)
 model BienSobrante {
-  id                String           @id @default(cuid())
-  sesionId          String
-  sesion            SesionInventario @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  id                  String            @id @default(cuid())
+  sesionId            String
+  sesion              SesionInventario  @relation(fields: [sesionId], references: [id], onDelete: Cascade)
   // Datos del bien encontrado
-  descripcion       String
-  marca             String?
-  modelo            String?
-  serie             String?
-  color             String?
-  estadoFisico      EstadoFisicoBien?
+  descripcion         String
+  marca               String?
+  modelo              String?
+  serie               String?
+  color               String?
+  estadoFisico        EstadoFisicoBien?
   ubicacionEncontrado String?
   // Posible código si tiene etiqueta antigua
-  codigoAntiguo     String?
+  codigoAntiguo       String?
   // Evidencia
-  fotoUrl           String?
-  observaciones     String?
+  fotoUrl             String?
+  observaciones       String?
   // Registro
-  registradoPorId   String
-  registradoPor     Usuario          @relation(fields: [registradoPorId], references: [id])
-  createdAt         DateTime         @default(now())
+  registradoPorId     String
+  registradoPor       Usuario           @relation(fields: [registradoPorId], references: [id])
+  createdAt           DateTime          @default(now())
 
   @@map("bienes_sobrantes")
 }
