@@ -4,6 +4,7 @@ import {
   buscarBienPorCodigo,
   buscarBienesPorDescripcion,
   buscarBienesPorDocumento,
+  buscarBienesPorSerie,
   verificarConexion,
 } from "@/lib/siga"
 
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
     const codigo = searchParams.get("codigo")
     const descripcion = searchParams.get("descripcion")
     const documento = searchParams.get("documento")
+    const serie = searchParams.get("serie")
     const limit = parseInt(searchParams.get("limit") || "50")
 
     // Verificar conexión primero
@@ -68,8 +70,18 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    // Búsqueda por número de serie (parcial)
+    if (serie) {
+      const bienes = await buscarBienesPorSerie(serie.trim(), limit)
+
+      return NextResponse.json({
+        bienes,
+        total: bienes.length,
+      })
+    }
+
     return NextResponse.json(
-      { error: "Debe proporcionar código patrimonial, descripción o documento" },
+      { error: "Debe proporcionar código patrimonial, descripción, documento o serie" },
       { status: 400 }
     )
   } catch (error) {

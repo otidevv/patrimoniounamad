@@ -88,8 +88,10 @@ export default function BuscarBienPage() {
   const [codigo, setCodigo] = useState("")
   const [descripcion, setDescripcion] = useState("")
   const [documento, setDocumento] = useState("")
+  const [serie, setSerie] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [busquedaRealizada, setBusquedaRealizada] = useState<string | null>(null) // tipo de búsqueda realizada
   const [bien, setBien] = useState<BienPatrimonial | null>(null)
   const [bienes, setBienes] = useState<BienPatrimonial[]>([])
   const [modoEscaner, setModoEscaner] = useState(false)
@@ -117,6 +119,7 @@ export default function BuscarBienPage() {
     setBienes([])
     setPersonaBusqueda(null)
     setFiltroDependencia("todas")
+    setBusquedaRealizada("codigo")
 
     try {
       const response = await fetch(
@@ -148,6 +151,7 @@ export default function BuscarBienPage() {
     setBienes([])
     setPersonaBusqueda(null)
     setFiltroDependencia("todas")
+    setBusquedaRealizada("descripcion")
 
     try {
       const response = await fetch(
@@ -179,6 +183,7 @@ export default function BuscarBienPage() {
     setBienes([])
     setPersonaBusqueda(null)
     setFiltroDependencia("todas")
+    setBusquedaRealizada("documento")
 
     try {
       const response = await fetch(
@@ -207,6 +212,43 @@ export default function BuscarBienPage() {
   const handleDocumentoSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     buscarPorDocumento()
+  }
+
+  // Buscar por número de serie
+  const buscarPorSerie = async () => {
+    if (!serie.trim()) return
+
+    setLoading(true)
+    setError(null)
+    setPaginaActual(1)
+    setBien(null)
+    setBienes([])
+    setPersonaBusqueda(null)
+    setFiltroDependencia("todas")
+    setBusquedaRealizada("serie")
+
+    try {
+      const response = await fetch(
+        `/api/patrimonio/buscar?serie=${encodeURIComponent(serie.trim())}`
+      )
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || "Error al buscar")
+        return
+      }
+
+      setBienes(data.bienes)
+    } catch {
+      setError("Error de conexión al servidor")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSerieSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    buscarPorSerie()
   }
 
   // Detectar entrada de escáner (entrada rápida)
@@ -375,7 +417,7 @@ export default function BuscarBienPage() {
 
       {/* Tabs de búsqueda */}
       <Tabs defaultValue="codigo" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="codigo" className="text-xs sm:text-sm">
             <Hash className="mr-1 sm:mr-2 h-4 w-4" />
             <span className="hidden xs:inline">Por </span>Código
@@ -387,6 +429,10 @@ export default function BuscarBienPage() {
           <TabsTrigger value="documento" className="text-xs sm:text-sm">
             <IdCard className="mr-1 sm:mr-2 h-4 w-4" />
             <span className="hidden xs:inline">Por </span>DNI
+          </TabsTrigger>
+          <TabsTrigger value="serie" className="text-xs sm:text-sm">
+            <Tag className="mr-1 sm:mr-2 h-4 w-4" />
+            <span className="hidden xs:inline">Por </span>Serie
           </TabsTrigger>
         </TabsList>
 
@@ -491,6 +537,43 @@ export default function BuscarBienPage() {
                   />
                 </div>
                 <Button type="submit" disabled={loading || !documento.trim()} className="h-11 sm:h-12">
+                  {loading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Search className="mr-2 h-4 w-4" />
+                  )}
+                  Buscar
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Búsqueda por número de serie */}
+        <TabsContent value="serie">
+          <Card>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Buscar por Número de Serie</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
+                Busca bienes por su número de serie (búsqueda parcial)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6 pt-0">
+              <form onSubmit={handleSerieSubmit} className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1">
+                  <Label htmlFor="serie" className="sr-only">
+                    Número de Serie
+                  </Label>
+                  <Input
+                    id="serie"
+                    placeholder="Ej: 5CD536B7H5, CMB7G9W792..."
+                    value={serie}
+                    onChange={(e) => setSerie(e.target.value)}
+                    className="font-mono text-base sm:text-lg h-11 sm:h-12"
+                    autoComplete="off"
+                  />
+                </div>
+                <Button type="submit" disabled={loading || !serie.trim()} className="h-11 sm:h-12">
                   {loading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
@@ -886,15 +969,50 @@ export default function BuscarBienPage() {
         )
       })()}
 
-      {/* Sin resultados */}
-      {!loading && !error && !bien && bienes.length === 0 && (codigo || descripcion) && (
-        <Card className="border-dashed">
-          <CardContent className="p-6 sm:p-12 text-center">
-            <Search className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground/50" />
-            <h3 className="mt-4 text-base sm:text-lg font-medium">Ingresa un criterio de búsqueda</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Usa el código patrimonial o la descripción para buscar bienes en SIGA
-            </p>
+      {/* Sin resultados después de una búsqueda */}
+      {!loading && !error && !bien && bienes.length === 0 && busquedaRealizada && (
+        <Card className="border-amber-200 bg-amber-50/50">
+          <CardContent className="p-6 sm:p-10 text-center">
+            <div className="mx-auto w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+              <Package className="h-8 w-8 text-amber-600" />
+            </div>
+            {busquedaRealizada === "documento" ? (
+              <>
+                <h3 className="text-base sm:text-lg font-semibold text-amber-900">
+                  No se encontraron bienes asignados
+                </h3>
+                <p className="mt-2 text-sm text-amber-700 max-w-md mx-auto">
+                  El DNI <span className="font-mono font-bold">{documento}</span> no tiene bienes patrimoniales registrados como usuario final ni como responsable en el sistema SIGA.
+                </p>
+              </>
+            ) : busquedaRealizada === "serie" ? (
+              <>
+                <h3 className="text-base sm:text-lg font-semibold text-amber-900">
+                  No se encontraron bienes con esa serie
+                </h3>
+                <p className="mt-2 text-sm text-amber-700 max-w-md mx-auto">
+                  No existe ningún bien con el número de serie <span className="font-mono font-bold">{serie}</span> en el sistema SIGA.
+                </p>
+              </>
+            ) : busquedaRealizada === "descripcion" ? (
+              <>
+                <h3 className="text-base sm:text-lg font-semibold text-amber-900">
+                  No se encontraron resultados
+                </h3>
+                <p className="mt-2 text-sm text-amber-700 max-w-md mx-auto">
+                  No se encontraron bienes que coincidan con &quot;{descripcion}&quot;. Intenta con otros términos de búsqueda.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-base sm:text-lg font-semibold text-amber-900">
+                  Bien no encontrado
+                </h3>
+                <p className="mt-2 text-sm text-amber-700 max-w-md mx-auto">
+                  El código patrimonial <span className="font-mono font-bold">{codigo}</span> no fue encontrado en el sistema SIGA.
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       )}
