@@ -17,10 +17,11 @@ export async function GET(
     const { id } = await params
     const { searchParams } = new URL(request.url)
     const empleadoFinal = searchParams.get("empleadoFinal")
+    const dniResponsable = searchParams.get("dniResponsable")
 
-    if (!empleadoFinal) {
+    if (!empleadoFinal && !dniResponsable) {
       return NextResponse.json(
-        { error: "Se requiere el parámetro empleadoFinal" },
+        { error: "Se requiere empleadoFinal o dniResponsable" },
         { status: 400 }
       )
     }
@@ -45,55 +46,162 @@ export async function GET(
       return NextResponse.json({ error: "Sesión no encontrada" }, { status: 404 })
     }
 
-    if (!sesion.sigaCentroCosto) {
-      return NextResponse.json(
-        { error: "Esta sesión no tiene dependencia SIGA asociada" },
-        { status: 400 }
-      )
-    }
-
-    // Obtener bienes del usuario directamente desde SIGA (filtrado por EMPLEADO_FINAL)
-    const bienesUsuario = await buscarBienesPorEmpleadoFinal(
-      sesion.sigaCentroCosto,
-      empleadoFinal
-    )
-
-    if (bienesUsuario.length === 0) {
-      return NextResponse.json(
-        { error: "No se encontraron bienes para este usuario" },
-        { status: 404 }
-      )
-    }
-
-    // Nombre del usuario (viene del primer bien)
-    const nombreUsuario = bienesUsuario[0].usuario || empleadoFinal
-
-    // Obtener verificaciones de esta sesión para los bienes del usuario
-    const codigosPatrimoniales = bienesUsuario.map((b) => b.codigo_patrimonial)
-    const verificaciones = await prisma.verificacionBien.findMany({
-      where: {
-        sesionId: id,
-        codigoPatrimonial: { in: codigosPatrimoniales },
-      },
-      select: {
-        codigoPatrimonial: true,
-        resultado: true,
-        estadoFisico: true,
-        observaciones: true,
-      },
-    })
-
-    const verificacionMap = new Map(
-      verificaciones.map((v) => [v.codigoPatrimonial, v])
-    )
-
-    // Info del primer bien para datos de dependencia/ubicación
-    const primerBien = bienesUsuario[0]
-
     // Participantes como inventariadores
     const inventariadores = sesion.participantes
       .filter((p) => p.rol === "VERIFICADOR" || p.rol === "RESPONSABLE")
       .map((p) => `${p.usuario.apellidos} ${p.usuario.nombre}`.toUpperCase())
+
+    // Dos modos: desde SIGA (empleadoFinal) o desde verificaciones (dniResponsable)
+    let datosFilas: Array<{
+      codigo: string
+      denominacion: string
+      marca: string
+      modelo: string
+      tipo: string
+      color: string
+      serie: string
+      dimensiones: string
+      otros: string
+      situacion: string
+      estadoConservacion: string
+      observacion: string
+    }> = []
+    let nombreUsuario = ""
+    let nombreDependencia = ""
+    let ubicacionFisica = ""
+
+    if (dniResponsable) {
+      // Modo verificaciones: generar desde datos guardados en la BD
+      const verificaciones = await prisma.verificacionBien.findMany({
+        where: {
+          sesionId: id,
+          dniResponsableActual: dniResponsable,
+        },
+        orderBy: { fechaVerificacion: "asc" },
+      })
+
+      if (verificaciones.length === 0) {
+        return NextResponse.json(
+          { error: "No se encontraron bienes verificados para esta persona" },
+          { status: 404 }
+        )
+      }
+
+      const primera = verificaciones[0]
+      nombreUsuario = [primera.nombresResponsableActual, primera.apellidosResponsableActual]
+        .filter(Boolean).join(" ") || dniResponsable
+      nombreDependencia = sesion.sigaNombreDependencia || sesion.dependencia?.nombre || primera.dependenciaSiga || ""
+      ubicacionFisica = primera.ubicacionSiga || sesion.ubicacionFisica || ""
+
+      datosFilas = verificaciones.map((v) => {
+        // Usar situación guardada, o derivar del resultado como fallback
+        let situacion = v.situacion || ""
+        if (!situacion) {
+          if (v.resultado === "ENCONTRADO" || v.resultado === "REUBICADO") {
+            situacion = "U"
+          } else if (v.resultado === "NO_ENCONTRADO") {
+            situacion = "F"
+          } else if (v.resultado === "SOBRANTE") {
+            situacion = "S"
+          }
+        }
+
+        const mapEstado: Record<string, string> = {
+          BUENO: "BUENO", REGULAR: "REGULAR", MALO: "MALO",
+          INOPERATIVO: "MALO", CHATARRA: "CHATARRA",
+        }
+
+        return {
+          codigo: v.codigoPatrimonial,
+          denominacion: v.descripcionSiga || "",
+          marca: v.marcaSiga || "SIN MARCA",
+          modelo: v.modeloSiga || "",
+          tipo: "Sin tipo",
+          color: v.colorSiga || "Sin color",
+          serie: v.serieSiga || "SIN SERIE",
+          dimensiones: v.dimensionesSiga || "Sin medidas",
+          otros: v.otrosSiga || "No indica",
+          situacion,
+          estadoConservacion: v.estadoFisico ? (mapEstado[v.estadoFisico] || v.estadoFisico) : "",
+          observacion: v.observaciones || "",
+        }
+      })
+    } else if (empleadoFinal) {
+      // Modo SIGA: obtener bienes desde SIGA
+      if (!sesion.sigaCentroCosto) {
+        return NextResponse.json(
+          { error: "Esta sesión no tiene dependencia SIGA asociada" },
+          { status: 400 }
+        )
+      }
+
+      const bienesUsuario = await buscarBienesPorEmpleadoFinal(
+        sesion.sigaCentroCosto,
+        empleadoFinal
+      )
+
+      if (bienesUsuario.length === 0) {
+        return NextResponse.json(
+          { error: "No se encontraron bienes para este usuario" },
+          { status: 404 }
+        )
+      }
+
+      nombreUsuario = bienesUsuario[0].usuario || empleadoFinal
+      nombreDependencia = sesion.sigaNombreDependencia || sesion.dependencia?.nombre || bienesUsuario[0].nombre_depend || ""
+      ubicacionFisica = bienesUsuario[0].ubicacion_fisica || sesion.ubicacionFisica || ""
+
+      const codigosPatrimoniales = bienesUsuario.map((b) => b.codigo_patrimonial)
+      const verificaciones = await prisma.verificacionBien.findMany({
+        where: {
+          sesionId: id,
+          codigoPatrimonial: { in: codigosPatrimoniales },
+        },
+        select: {
+          codigoPatrimonial: true,
+          resultado: true,
+          estadoFisico: true,
+          situacion: true,
+          observaciones: true,
+        },
+      })
+
+      const verificacionMap = new Map(
+        verificaciones.map((v) => [v.codigoPatrimonial, v])
+      )
+
+      datosFilas = bienesUsuario.map((bien) => {
+        const verif = verificacionMap.get(bien.codigo_patrimonial)
+        let situacion = verif?.situacion || ""
+        if (!situacion && verif) {
+          if (verif.resultado === "ENCONTRADO" || verif.resultado === "REUBICADO") {
+            situacion = "U"
+          } else if (verif.resultado === "NO_ENCONTRADO") {
+            situacion = "F"
+          }
+        }
+
+        const mapEstado: Record<string, string> = {
+          BUENO: "BUENO", REGULAR: "REGULAR", MALO: "MALO",
+          INOPERATIVO: "MALO", CHATARRA: "CHATARRA",
+        }
+
+        return {
+          codigo: bien.codigo_patrimonial || "",
+          denominacion: bien.descripcion || "",
+          marca: bien.marca || "SIN MARCA",
+          modelo: bien.modelo || "",
+          tipo: "Sin tipo",
+          color: bien.color || bien.caracteristicas?.match(/COLOR:\s*([^/]+)/i)?.[1]?.trim() || "Sin color",
+          serie: bien.serie || "SIN SERIE",
+          dimensiones: bien.medidas || "Sin medidas",
+          otros: bien.observaciones || "No indica",
+          situacion,
+          estadoConservacion: verif?.estadoFisico ? (mapEstado[verif.estadoFisico] || verif.estadoFisico) : "",
+          observacion: verif?.observaciones || "",
+        }
+      })
+    }
 
     // Generar Excel con ExcelJS
     const workbook = new ExcelJS.Workbook()
@@ -158,12 +266,15 @@ export async function GET(
     row2.getCell(1).font = fontBold(12)
     row2.getCell(1).alignment = { horizontal: "center" }
 
+    // Fecha en zona horaria de Perú
+    const fechaPeru = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Lima" }))
+
     // Row 3: INVENTARIO PATRIMONIAL
     ws.mergeCells("A3:M3")
     const row3 = ws.getRow(3)
     const year = sesion.fechaProgramada
       ? new Date(sesion.fechaProgramada).getFullYear()
-      : new Date().getFullYear()
+      : fechaPeru.getFullYear()
     row3.getCell(1).value = `INVENTARIO PATRIMONIAL ${year}`
     row3.getCell(1).font = fontBold(12)
     row3.getCell(1).alignment = { horizontal: "center" }
@@ -174,7 +285,7 @@ export async function GET(
     row4.getCell(1).font = fontBold(9)
     row4.getCell(7).value = "FECHA:"
     row4.getCell(7).font = fontBold(9)
-    row4.getCell(8).value = new Date()
+    row4.getCell(8).value = fechaPeru
     row4.getCell(8).numFmt = "DD/MM/YYYY"
     row4.getCell(8).font = fontNormal(9)
 
@@ -210,11 +321,7 @@ export async function GET(
     row8.getCell(1).value = "DEPENDENCIA/UNIDAD/OTROS:"
     row8.getCell(1).font = fontBold(9)
     ws.mergeCells("C8:F8")
-    row8.getCell(3).value =
-      sesion.sigaNombreDependencia ||
-      sesion.dependencia?.nombre ||
-      primerBien.nombre_depend ||
-      ""
+    row8.getCell(3).value = nombreDependencia
     row8.getCell(3).font = fontNormal(9)
     row8.getCell(7).value = "NOMBRES Y APELLIDOS:"
     row8.getCell(7).font = fontBold(9)
@@ -228,7 +335,7 @@ export async function GET(
     row9.getCell(1).value = "UBICACIÓN FÍSICA DE LOS BIENES:"
     row9.getCell(1).font = fontBold(9)
     ws.mergeCells("C9:F9")
-    row9.getCell(3).value = primerBien.ubicacion_fisica || sesion.ubicacionFisica || ""
+    row9.getCell(3).value = ubicacionFisica
     row9.getCell(3).font = fontNormal(9)
     row9.getCell(7).value = "EQUIPO DE TRABAJO:"
     row9.getCell(7).font = fontBold(9)
@@ -298,48 +405,24 @@ export async function GET(
 
     // ====== DATA ROWS ======
     const dataStartRow = 15
-    bienesUsuario.forEach((bien, index) => {
-      const verif = verificacionMap.get(bien.codigo_patrimonial)
+    datosFilas.forEach((fila, index) => {
       const rowNum = dataStartRow + index
       const row = ws.getRow(rowNum)
 
-      // Mapear situación
-      let situacion = ""
-      if (verif) {
-        if (verif.resultado === "ENCONTRADO" || verif.resultado === "REUBICADO") {
-          situacion = "U"
-        } else if (verif.resultado === "NO_ENCONTRADO") {
-          situacion = "F"
-        }
-      }
-
-      // Mapear estado de conservación
-      let estadoConservacion = ""
-      if (verif?.estadoFisico) {
-        const map: Record<string, string> = {
-          BUENO: "BUENO",
-          REGULAR: "REGULAR",
-          MALO: "MALO",
-          INOPERATIVO: "MALO",
-          CHATARRA: "CHATARRA",
-        }
-        estadoConservacion = map[verif.estadoFisico] || verif.estadoFisico
-      }
-
       const values = [
         index + 1,
-        bien.codigo_patrimonial || "",
-        bien.descripcion || "",
-        bien.marca || "SIN MARCA",
-        bien.modelo || "",
-        bien.caracteristicas || "",
-        bien.color || "",
-        bien.serie || "SIN SERIE",
-        bien.medidas || "",
-        bien.observaciones || "",
-        situacion,
-        estadoConservacion,
-        verif?.observaciones || "",
+        fila.codigo,
+        fila.denominacion,
+        fila.marca,
+        fila.modelo,
+        fila.tipo,
+        fila.color,
+        fila.serie,
+        fila.dimensiones,
+        fila.otros,
+        fila.situacion,
+        fila.estadoConservacion,
+        fila.observacion,
       ]
 
       values.forEach((val, i) => {
@@ -357,7 +440,7 @@ export async function GET(
     })
 
     // ====== FOOTER ======
-    const footerStart = dataStartRow + bienesUsuario.length + 2
+    const footerStart = dataStartRow + datosFilas.length + 2
 
     // Leyendas
     const rowLeyenda1 = ws.getRow(footerStart)

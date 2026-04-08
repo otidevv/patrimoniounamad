@@ -17,6 +17,8 @@ import {
   MapPin,
   Package,
   PackageCheck,
+  ClipboardCheck,
+  ArrowRightLeft,
   Search,
   Send,
   Settings,
@@ -91,6 +93,18 @@ const menuPatrimonio = [
     url: "/dashboard/patrimonio/inventario",
     icon: ClipboardList,
     modulo: "INVENTARIO",
+  },
+  {
+    title: "Mis Verificaciones",
+    url: "/dashboard/patrimonio/mis-verificaciones",
+    icon: ClipboardCheck,
+    modulo: "BIENES",
+  },
+  {
+    title: "Mis Bienes Asignados",
+    url: "/dashboard/patrimonio/mis-bienes-asignados",
+    icon: ArrowRightLeft,
+    modulo: "BIENES",
   },
   {
     title: "Generar Etiquetas",

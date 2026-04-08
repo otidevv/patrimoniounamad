@@ -606,7 +606,10 @@ export default function InventarioPage() {
                 : "Crea tu primera sesión de inventario para comenzar"}
             </p>
             {!busqueda && filtroEstado === "all" && (
-              <Button className="mt-4" onClick={() => setDialogOpen(true)}>
+              <Button className="mt-4" onClick={() => {
+                setDialogOpen(true)
+                cargarDependenciasSiga()
+              }}>
                 <Plus className="mr-2 h-4 w-4" />
                 Nueva Sesión
               </Button>

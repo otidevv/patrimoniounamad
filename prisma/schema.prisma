@@ -69,6 +69,9 @@ model Usuario {
   sesionesResponsable        SesionInventario[]       @relation("SesionResponsable")
   participacionesInventario  ParticipanteInventario[] @relation("ParticipanteInventario")
   verificacionesRealizadas   VerificacionBien[]       @relation("VerificadorBien")
+  asignacionesInventario     AsignacionInventario[]   @relation("AsignacionesUsuario")
+  transferenciasEnviadas     TransferenciaBien[]      @relation("TransferenciasEnviadas")
+  transferenciasRecibidas    TransferenciaBien[]      @relation("TransferenciasRecibidas")
   bienesSobrantesRegistrados BienSobrante[]
   createdAt                  DateTime                 @default(now())
   updatedAt                  DateTime                 @updatedAt
@@ -600,6 +603,7 @@ model SesionInventario {
   totalSobrantes        Int                      @default(0)
   // Verificaciones realizadas
   verificaciones        VerificacionBien[]
+  asignaciones          AsignacionInventario[]
   participantes         ParticipanteInventario[]
   bienesSobrantes       BienSobrante[]
   observaciones         String?
@@ -624,11 +628,50 @@ model ParticipanteInventario {
   @@map("participantes_inventario")
 }
 
+// Estado de la asignación de bienes a una persona
+enum EstadoAsignacion {
+  PENDIENTE  // El verificador está agregando/editando bienes
+  ENVIADO    // Enviado al usuario para revisión
+  ACEPTADO   // El usuario aceptó la asignación
+  RECHAZADO  // El usuario rechazó, el verificador debe revisar
+  CERRADO    // Ambas partes aceptaron, finalizado
+}
+
+// Asignación de bienes verificados a una persona en una sesión
+model AsignacionInventario {
+  id                     String              @id @default(cuid())
+  sesionId               String
+  sesion                 SesionInventario    @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  // Persona asignada (puede ser usuario del sistema o externo)
+  usuarioId              String?             // FK si es usuario del sistema
+  usuario                Usuario?            @relation("AsignacionesUsuario", fields: [usuarioId], references: [id])
+  tipoDocumento          String              @default("DNI")
+  numeroDocumento        String
+  nombres                String
+  apellidoPaterno        String
+  apellidoMaterno        String?
+  // Estado del workflow
+  estado                 EstadoAsignacion    @default(PENDIENTE)
+  fechaEnvio             DateTime?           // Cuándo se envió al usuario
+  fechaRespuestaUsuario  DateTime?           // Cuándo respondió el usuario
+  fechaCierre            DateTime?           // Cuándo se cerró definitivamente
+  observacionesUsuario   String?             // Observaciones del usuario al aceptar/rechazar
+  // Verificaciones asociadas
+  verificaciones         VerificacionBien[]
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  @@unique([sesionId, numeroDocumento]) // Una persona solo tiene una asignación por sesión
+  @@map("asignaciones_inventario")
+}
+
 // Registro de cada bien verificado
 model VerificacionBien {
   id                String                @id @default(cuid())
   sesionId          String
   sesion            SesionInventario      @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  asignacionId      String?
+  asignacion        AsignacionInventario? @relation(fields: [asignacionId], references: [id], onDelete: SetNull)
   // Código escaneado/ingresado
   codigoPatrimonial String
   // Datos obtenidos de SIGA al momento de escanear (cache)
@@ -637,6 +680,9 @@ model VerificacionBien {
   modeloSiga        String?
   serieSiga         String?
   colorSiga         String?
+  tipoSiga          String? // Tipo/características del bien
+  dimensionesSiga   String? // Dimensiones/medidas
+  otrosSiga         String? // Otros datos descriptivos
   responsableSiga   String? // Nombre del responsable en SIGA
   usuarioSiga       String? // Usuario final en SIGA
   dependenciaSiga   String? // Nombre de la dependencia en SIGA
@@ -645,8 +691,12 @@ model VerificacionBien {
   // Resultado de la verificación física
   resultado         ResultadoVerificacion @default(ENCONTRADO)
   estadoFisico      EstadoFisicoBien?
+  situacion         String?             // "U" (Uso) o "D" (Desuso)
   ubicacionReal     String? // Dónde se encontró realmente
-  responsableReal   String? // Quién lo tiene realmente
+  responsableReal            String? // Quién lo tiene realmente
+  dniResponsableActual       String? // DNI del responsable actual verificado
+  nombresResponsableActual   String? // Nombres del responsable actual
+  apellidosResponsableActual String? // Apellidos del responsable actual
   // Observaciones y evidencia
   observaciones     String?
   fotoUrl           String? // Foto del bien verificado
@@ -660,8 +710,51 @@ model VerificacionBien {
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
 
+  transferenciasEnviadas  TransferenciaBien[] @relation("TransferenciaBienOrigen")
+  transferenciasRecibidas TransferenciaBien[] @relation("TransferenciaBienDestino")
+
   @@unique([sesionId, codigoPatrimonial]) // Un bien solo se verifica una vez por sesión
   @@map("verificaciones_bien")
+}
+
+// Estado de transferencia de bien
+enum EstadoTransferencia {
+  PENDIENTE  // Solicitud enviada, esperando aceptación
+  ACEPTADA   // El destinatario aceptó
+  RECHAZADA  // El destinatario rechazó
+}
+
+// Transferencia de un bien entre personas
+model TransferenciaBien {
+  id                      String              @id @default(cuid())
+  // Bien que se transfiere
+  verificacionId          String
+  verificacion            VerificacionBien    @relation("TransferenciaBienOrigen", fields: [verificacionId], references: [id])
+  codigoPatrimonial       String              // Cache para consultas rápidas
+  descripcionBien         String?             // Cache descripción
+  // Remitente (quien transfiere)
+  remitenteId             String?
+  remitente               Usuario?            @relation("TransferenciasEnviadas", fields: [remitenteId], references: [id])
+  dniRemitente            String
+  nombreRemitente         String
+  // Destinatario (quien recibe)
+  destinatarioId          String?
+  destinatario            Usuario?            @relation("TransferenciasRecibidas", fields: [destinatarioId], references: [id])
+  dniDestinatario         String
+  nombreDestinatario      String
+  // Bien destino (se crea al aceptar, para que el destinatario lo tenga en su lista)
+  verificacionDestinoId   String?
+  verificacionDestino     VerificacionBien?   @relation("TransferenciaBienDestino", fields: [verificacionDestinoId], references: [id])
+  // Workflow
+  estado                  EstadoTransferencia @default(PENDIENTE)
+  motivo                  String?             // Por qué se transfiere
+  observacionesDestinatario String?           // Observaciones del destinatario
+  fechaSolicitud          DateTime            @default(now())
+  fechaRespuesta          DateTime?
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @updatedAt
+
+  @@map("transferencias_bien")
 }
 
 // Bienes sobrantes (encontrados sin registro en SIGA)

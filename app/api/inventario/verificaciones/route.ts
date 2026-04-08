@@ -17,10 +17,41 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const sesionId = searchParams.get("sesionId")
+    const misbienes = searchParams.get("misbienes")
     const resultado = searchParams.get("resultado")
     const page = parseInt(searchParams.get("page") || "1")
     const limit = parseInt(searchParams.get("limit") || "20")
     const skip = (page - 1) * limit
+
+    // Modo "mis bienes": bienes donde el usuario actual es responsable
+    if (misbienes === "true") {
+      // Buscar el usuario actual para obtener su documento
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: session.id },
+        select: { numeroDocumento: true },
+      })
+
+      if (!usuario?.numeroDocumento) {
+        return NextResponse.json({ verificaciones: [] })
+      }
+
+      const verificaciones = await prisma.verificacionBien.findMany({
+        where: {
+          dniResponsableActual: usuario.numeroDocumento,
+          asignacion: {
+            estado: { in: ["ACEPTADO", "CERRADO"] },
+          },
+        },
+        include: {
+          sesion: { select: { codigo: true, nombre: true } },
+          asignacion: { select: { estado: true } },
+        },
+        orderBy: { fechaVerificacion: "asc" },
+        take: limit,
+      })
+
+      return NextResponse.json({ verificaciones })
+    }
 
     if (!sesionId) {
       return NextResponse.json(
@@ -92,6 +123,20 @@ export async function POST(request: NextRequest) {
       observaciones,
       dispositivoTipo,
       dispositivoInfo,
+      dniResponsableActual,
+      nombresResponsableActual,
+      apellidosResponsableActual,
+      asignacionId,
+      situacion,
+      // Campos descriptivos para bienes sin código
+      denominacion,
+      marca,
+      modelo,
+      tipo,
+      color,
+      serie,
+      dimensiones,
+      otros,
     } = body
 
     if (!sesionId || !codigoPatrimonial) {
@@ -118,6 +163,20 @@ export async function POST(request: NextRequest) {
         { error: "La sesión no está en proceso" },
         { status: 400 }
       )
+    }
+
+    // Verificar que la asignación permite edición
+    if (asignacionId) {
+      const asignacion = await prisma.asignacionInventario.findUnique({
+        where: { id: asignacionId },
+        select: { estado: true },
+      })
+      if (asignacion && asignacion.estado !== "PENDIENTE" && asignacion.estado !== "RECHAZADO") {
+        return NextResponse.json(
+          { error: "No se pueden agregar bienes: la asignación ya fue enviada o cerrada" },
+          { status: 400 }
+        )
+      }
     }
 
     // Verificar si ya existe una verificación para este código en esta sesión
@@ -160,13 +219,20 @@ export async function POST(request: NextRequest) {
     const verificacion = await prisma.verificacionBien.create({
       data: {
         sesionId,
+        asignacionId: asignacionId || null,
         codigoPatrimonial,
-        // Datos de SIGA (si se encontró)
-        descripcionSiga: datosSiga?.descripcion || null,
-        marcaSiga: datosSiga?.marca || null,
-        modeloSiga: datosSiga?.modelo || null,
-        serieSiga: datosSiga?.serie || null,
-        colorSiga: datosSiga?.color || null,
+        // Datos: prioridad al formulario del usuario, luego SIGA, luego campos manuales
+        descripcionSiga: denominacion || datosSiga?.descripcion || null,
+        marcaSiga: marca || datosSiga?.marca || null,
+        modeloSiga: modelo || datosSiga?.modelo || null,
+        serieSiga: serie || datosSiga?.serie || null,
+        colorSiga: color
+          || datosSiga?.color
+          || (datosSiga?.caracteristicas?.match(/COLOR:\s*([^/]+)/i)?.[1]?.trim())
+          || null,
+        tipoSiga: tipo || null,
+        dimensionesSiga: dimensiones || datosSiga?.medidas || null,
+        otrosSiga: otros || null,
         responsableSiga: datosSiga?.responsable || null,
         usuarioSiga: datosSiga?.usuario || null,
         dependenciaSiga: datosSiga?.nombre_depend || null,
@@ -175,8 +241,14 @@ export async function POST(request: NextRequest) {
         // Resultado de la verificación
         resultado: resultadoFinal,
         estadoFisico: estadoFisico || null,
+        situacion: situacion || null,
         ubicacionReal: ubicacionReal || null,
-        responsableReal: responsableReal || null,
+        responsableReal: responsableReal || (nombresResponsableActual && apellidosResponsableActual
+          ? `${nombresResponsableActual} ${apellidosResponsableActual}`
+          : null),
+        dniResponsableActual: dniResponsableActual || null,
+        nombresResponsableActual: nombresResponsableActual || null,
+        apellidosResponsableActual: apellidosResponsableActual || null,
         observaciones: observaciones || null,
         // Verificador
         verificadorId: session.id,

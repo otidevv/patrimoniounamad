@@ -34,7 +34,8 @@
       "WebFetch(domain:www.lpautomation.com)",
       "WebFetch(domain:blog.labtag.com)",
       "Bash(npx next:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(ls -d /c/Apache24/htdocs/patrimoniounamad/prisma/migrations/*/)"
     ]
   }
 }

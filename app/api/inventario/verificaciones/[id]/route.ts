@@ -89,13 +89,35 @@ export async function PUT(
       )
     }
 
+    // Si tiene asignación, solo se puede editar si está PENDIENTE o RECHAZADO
+    if (verificacionActual.asignacionId) {
+      const asignacion = await prisma.asignacionInventario.findUnique({
+        where: { id: verificacionActual.asignacionId },
+        select: { estado: true },
+      })
+      if (asignacion && asignacion.estado !== "PENDIENTE" && asignacion.estado !== "RECHAZADO") {
+        return NextResponse.json(
+          { error: "No se puede editar: la asignación ya fue enviada o cerrada" },
+          { status: 400 }
+        )
+      }
+    }
+
     const {
       resultado,
       estadoFisico,
+      situacion,
       ubicacionReal,
       responsableReal,
       observaciones,
       fotoUrl,
+      marcaSiga,
+      modeloSiga,
+      serieSiga,
+      colorSiga,
+      tipoSiga,
+      dimensionesSiga,
+      otrosSiga,
     } = body
 
     const verificacionActualizada = await prisma.verificacionBien.update({
@@ -103,10 +125,18 @@ export async function PUT(
       data: {
         resultado: resultado || undefined,
         estadoFisico: estadoFisico || undefined,
+        situacion: situacion !== undefined ? situacion : undefined,
         ubicacionReal: ubicacionReal,
         responsableReal: responsableReal,
         observaciones: observaciones,
         fotoUrl: fotoUrl,
+        marcaSiga: marcaSiga !== undefined ? marcaSiga : undefined,
+        modeloSiga: modeloSiga !== undefined ? modeloSiga : undefined,
+        serieSiga: serieSiga !== undefined ? serieSiga : undefined,
+        colorSiga: colorSiga !== undefined ? colorSiga : undefined,
+        tipoSiga: tipoSiga !== undefined ? tipoSiga : undefined,
+        dimensionesSiga: dimensionesSiga !== undefined ? dimensionesSiga : undefined,
+        otrosSiga: otrosSiga !== undefined ? otrosSiga : undefined,
       },
       include: {
         verificador: {
@@ -187,6 +217,20 @@ export async function DELETE(
         { error: "Solo se pueden eliminar verificaciones de sesiones en proceso" },
         { status: 400 }
       )
+    }
+
+    // Si tiene asignación, solo se puede eliminar si está PENDIENTE o RECHAZADO
+    if (verificacion.asignacionId) {
+      const asignacion = await prisma.asignacionInventario.findUnique({
+        where: { id: verificacion.asignacionId },
+        select: { estado: true },
+      })
+      if (asignacion && asignacion.estado !== "PENDIENTE" && asignacion.estado !== "RECHAZADO") {
+        return NextResponse.json(
+          { error: "No se puede eliminar: la asignación ya fue enviada o cerrada" },
+          { status: 400 }
+        )
+      }
     }
 
     await prisma.verificacionBien.delete({ where: { id } })
