@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { signOut } from "next-auth/react"
 import {
   BarChart3,
   Building2,
@@ -196,13 +197,16 @@ export function AppSidebar({ user, permisos = {} }: AppSidebarProps) {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-      })
+      // Borrar JWT propio
+      await fetch("/api/auth/logout", { method: "POST" })
+      // Cerrar sesión de NextAuth (Google) sin redirigir automáticamente
+      await signOut({ redirect: false })
       router.push("/login")
       router.refresh()
     } catch (error) {
       console.error("Error al cerrar sesión:", error)
+      // Forzar redirección aunque falle
+      window.location.href = "/login"
     }
   }
 
