@@ -1,37 +1,15 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
+import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  rol: string
-}
 
 interface Params {
   params: Promise<{ id: string }>
 }
 
-async function verifyAuth(): Promise<UserPayload | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")?.value
-
-  if (!token) return null
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-    return decoded
-  } catch {
-    return null
-  }
-}
-
 // GET: Obtener un documento por ID con todos sus detalles
 export async function GET(request: Request, { params }: Params) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
@@ -69,6 +47,14 @@ export async function GET(request: Request, { params }: Params) {
                 siglas: true,
               },
             },
+            destinatario: {
+              select: {
+                id: true,
+                nombre: true,
+                apellidos: true,
+                cargo: true,
+              },
+            },
             receptor: {
               select: {
                 nombre: true,
@@ -103,6 +89,26 @@ export async function GET(request: Request, { params }: Params) {
             },
           },
           orderBy: { createdAt: "desc" },
+        },
+        // Transferencias vinculadas (para actas de entrega)
+        transferencias: {
+          select: {
+            id: true,
+            codigoPatrimonial: true,
+            descripcionBien: true,
+            estado: true,
+            nombreRemitente: true,
+            nombreDestinatario: true,
+            fechaSolicitud: true,
+            fechaRespuesta: true,
+            verificacion: {
+              select: {
+                marcaSiga: true,
+                modeloSiga: true,
+                serieSiga: true,
+              },
+            },
+          },
         },
       },
     })
@@ -155,7 +161,7 @@ export async function GET(request: Request, { params }: Params) {
 // PUT: Actualizar un documento (solo borradores)
 export async function PUT(request: Request, { params }: Params) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
@@ -226,7 +232,7 @@ export async function PUT(request: Request, { params }: Params) {
 // DELETE: Eliminar un documento (solo borradores)
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }

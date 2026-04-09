@@ -44,6 +44,7 @@ model Usuario {
   cargo                      String?
   telefono                   String?
   foto                       String?
+  fotoGoogle                 String? // URL de foto de perfil de Google
   // Datos de contrato/cargo
   fechaInicio                DateTime? // Fecha de inicio del cargo
   fechaFin                   DateTime? // Fecha de fin del cargo (null = vigente)
@@ -388,6 +389,8 @@ model DocumentoTramite {
   destinos               DocumentoDestino[]
   historial              DocumentoHistorial[]
   notificaciones         Notificacion[]
+  // Transferencias de bienes vinculadas (para actas de entrega)
+  transferencias         TransferenciaBien[]
   // Referencia a otros documentos
   documentoReferenciaId  String? // Documento al que responde/refiere
   documentoReferencia    DocumentoTramite?      @relation("DocumentoReferencia", fields: [documentoReferenciaId], references: [id])
@@ -753,6 +756,9 @@ model TransferenciaBien {
   // Bien destino (se crea al aceptar, para que el destinatario lo tenga en su lista)
   verificacionDestinoId   String?
   verificacionDestino     VerificacionBien?   @relation("TransferenciaBienDestino", fields: [verificacionDestinoId], references: [id])
+  // Documento de acta vinculado
+  documentoActaId         String?
+  documentoActa           DocumentoTramite?   @relation(fields: [documentoActaId], references: [id])
   // Workflow
   estado                  EstadoTransferencia @default(PENDIENTE)
   motivo                  String?             // Por qué se transfiere

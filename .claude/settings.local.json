@@ -43,7 +43,9 @@
       "Bash(ls:*)",
       "Bash(cp \"D:/sistemas unamad/seguimientotesis/public/images/firma_horizontal.png\" \"D:/sistemas unamad/patrimoniounamad/public/images/firma_horizontal.png\")",
       "Bash(cp \"D:/sistemas unamad/seguimientotesis/public/images/firma_horizontal.png\" \"D:/sistemas unamad/patrimoniounamad/public/images/firma_vertical.png\")",
-      "Bash(\"C:\\\\Program Files\\\\7-Zip\\\\7z.exe\" --help)"
+      "Bash(\"C:\\\\Program Files\\\\7-Zip\\\\7z.exe\" --help)",
+      "Bash(openssl rand:*)",
+      "Bash(PGPASSWORD=954040025 psql -h localhost -U postgres -d patrimonio_unamad -c 'SELECT email, activo, nombre FROM \"Usuario\" LIMIT 10;')"
     ]
   }
 }

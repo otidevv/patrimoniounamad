@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
 import { FirmaModal } from "@/components/firma-peru/firma-modal"
 import {
   FolderPlus,
@@ -17,23 +17,19 @@ import {
   Download,
   RefreshCw,
   ChevronRight,
+  ChevronLeft,
   Home,
   Shield,
   Loader2,
-  File,
   CheckCircle,
   X,
   PenTool,
+  ArrowUpDown,
+  FolderInput,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -58,9 +54,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -71,6 +72,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -80,10 +84,7 @@ interface Carpeta {
   descripcion: string | null
   color: string | null
   parentId: string | null
-  _count: {
-    hijos: number
-    archivos: number
-  }
+  _count: { hijos: number; archivos: number }
   children?: Carpeta[]
 }
 
@@ -97,14 +98,11 @@ interface Archivo {
   fechaFirma: string | null
   carpetaId: string | null
   createdAt: string
-  carpeta?: {
-    id: string
-    nombre: string
-  } | null
-  _count?: {
-    usosEnTramites: number
-  }
+  carpeta?: { id: string; nombre: string } | null
+  _count?: { usosEnTramites: number }
 }
+
+type ItemLista = { tipo: "carpeta"; data: Carpeta } | { tipo: "archivo"; data: Archivo }
 
 const coloresDisponibles = [
   { value: "#3b82f6", label: "Azul" },
@@ -116,12 +114,19 @@ const coloresDisponibles = [
   { value: "#6b7280", label: "Gris" },
 ]
 
+const OPCIONES_PAGINADO = [10, 20, 50, 100]
+
 export default function RepositorioPage() {
   const [carpetas, setCarpetas] = useState<Carpeta[]>([])
   const [archivos, setArchivos] = useState<Archivo[]>([])
   const [carpetasPlanas, setCarpetasPlanas] = useState<Carpeta[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
+  const [paginaActual, setPaginaActual] = useState(1)
+  const [itemsPorPagina, setItemsPorPagina] = useState(20)
+  const [ordenCol, setOrdenCol] = useState<"nombre" | "fecha" | "tamanio">("nombre")
+  const [ordenDir, setOrdenDir] = useState<"asc" | "desc">("asc")
+  const [seleccionados, setSeleccionados] = useState<Set<string>>(new Set())
 
   // Navegación
   const [carpetaActual, setCarpetaActual] = useState<string | null>(null)
@@ -129,44 +134,32 @@ export default function RepositorioPage() {
     { id: null, nombre: "Mi Repositorio" },
   ])
 
-  // Estados de modales
+  // Modales
   const [crearCarpetaOpen, setCrearCarpetaOpen] = useState(false)
   const [editarCarpetaOpen, setEditarCarpetaOpen] = useState(false)
   const [uploadOpen, setUploadOpen] = useState(false)
   const [editarArchivoOpen, setEditarArchivoOpen] = useState(false)
-  const [moverArchivoOpen, setMoverArchivoOpen] = useState(false)
+  const [moverOpen, setMoverOpen] = useState(false)
   const [confirmarEliminarOpen, setConfirmarEliminarOpen] = useState(false)
 
-  // Estados de formularios
-  const [carpetaForm, setCarpetaForm] = useState({
-    nombre: "",
-    descripcion: "",
-    color: "",
-  })
-  const [archivoForm, setArchivoForm] = useState({
-    nombre: "",
-  })
-  const [moverForm, setMoverForm] = useState({
-    carpetaId: "",
-  })
+  // Forms
+  const [carpetaForm, setCarpetaForm] = useState({ nombre: "", descripcion: "", color: "" })
+  const [archivoForm, setArchivoForm] = useState({ nombre: "" })
+  const [moverDestino, setMoverDestino] = useState("")
+  const [itemsMover, setItemsMover] = useState<Array<{ tipo: string; id: string; nombre: string }>>([])
 
-  // Estados de selección
+  // Selección
   const [carpetaSeleccionada, setCarpetaSeleccionada] = useState<Carpeta | null>(null)
   const [archivoSeleccionado, setArchivoSeleccionado] = useState<Archivo | null>(null)
   const [itemEliminar, setItemEliminar] = useState<{ tipo: "carpeta" | "archivo"; item: Carpeta | Archivo } | null>(null)
 
-  // Estados de carga
+  // Carga
   const [uploadLoading, setUploadLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
-
-  // Archivos para subir
   const [archivosSubir, setArchivosSubir] = useState<File[]>([])
   const [nombreArchivoSubir, setNombreArchivoSubir] = useState("")
 
-  // Carpetas expandidas
-  const [carpetasExpandidas, setCarpetasExpandidas] = useState<Set<string>>(new Set())
-
-  // Firma Perú — modal
+  // Firma Perú
   const [firmaModalOpen, setFirmaModalOpen] = useState(false)
   const [archivosFirmar, setArchivosFirmar] = useState<{ id: string; nombre: string; url: string }[]>([])
 
@@ -176,13 +169,12 @@ export default function RepositorioPage() {
   }
 
   const handleFirmaSuccess = useCallback(() => {
-    toast.success("Documento firmado digitalmente con éxito")
+    toast.success("Documento firmado digitalmente")
     fetchData()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Escuchar cancelación
   useEffect(() => {
-    const handleCancel = () => toast.info("Firma cancelada por el usuario")
+    const handleCancel = () => toast.info("Firma cancelada")
     window.addEventListener("firma-peru-cancel", handleCancel)
     return () => window.removeEventListener("firma-peru-cancel", handleCancel)
   }, [])
@@ -190,997 +182,778 @@ export default function RepositorioPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await fetch("/api/repositorio/selector")
-      if (response.ok) {
-        const data = await response.json()
+      const res = await fetch("/api/repositorio/selector")
+      if (res.ok) {
+        const data = await res.json()
         setCarpetas(data.carpetas)
         setCarpetasPlanas(data.carpetasPlanas)
         setArchivos(data.archivos)
       }
-    } catch (error) {
-      console.error("Error al cargar datos:", error)
-      toast.error("Error al cargar el repositorio")
-    } finally {
-      setLoading(false)
-    }
+    } catch { toast.error("Error al cargar repositorio") }
+    finally { setLoading(false) }
   }, [])
 
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  useEffect(() => { fetchData() }, [fetchData])
+  useEffect(() => { setPaginaActual(1); setSeleccionados(new Set()) }, [carpetaActual, searchTerm])
 
-  // Construir ruta de navegación
-  const construirRuta = (carpetaId: string | null) => {
-    const ruta: { id: string | null; nombre: string }[] = [{ id: null, nombre: "Mi Repositorio" }]
+  // Helpers
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }
 
-    if (carpetaId) {
-      const encontrarRuta = (id: string): { id: string; nombre: string }[] => {
-        const carpeta = carpetasPlanas.find((c) => c.id === id)
-        if (!carpeta) return []
+  const formatDate = (d: string) =>
+    new Date(d).toLocaleDateString("es-PE", { day: "numeric", month: "short", year: "numeric" })
 
-        if (carpeta.parentId) {
-          return [...encontrarRuta(carpeta.parentId), { id: carpeta.id, nombre: carpeta.nombre }]
-        }
-        return [{ id: carpeta.id, nombre: carpeta.nombre }]
+  const buscarCarpeta = (id: string, lista: Carpeta[]): Carpeta | null => {
+    for (const c of lista) {
+      if (c.id === id) return c
+      if (c.children) {
+        const found = buscarCarpeta(id, c.children)
+        if (found) return found
       }
-
-      ruta.push(...encontrarRuta(carpetaId))
     }
-
-    return ruta
+    return null
   }
 
-  const navegarACarpeta = (carpetaId: string | null) => {
-    setCarpetaActual(carpetaId)
-    setRutaNavegacion(construirRuta(carpetaId))
-    setSearchTerm("")
+  const obtenerSubcarpetas = (parentId: string | null): Carpeta[] => {
+    if (!parentId) return carpetas
+    const carpeta = buscarCarpeta(parentId, carpetas)
+    return carpeta?.children || []
   }
 
-  // Archivos de la carpeta actual
-  const archivosActuales = archivos.filter((a) => {
+  const obtenerArchivos = (carpetaId: string | null): Archivo[] =>
+    archivos.filter((a) => a.carpetaId === carpetaId)
+
+  // Items de la carpeta actual (carpetas + archivos), con búsqueda y orden
+  const itemsLista = useMemo((): ItemLista[] => {
+    let subcarpetas = obtenerSubcarpetas(carpetaActual)
+    let archsCarpeta = obtenerArchivos(carpetaActual)
+
     if (searchTerm) {
-      return a.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        a.nombreArchivo.toLowerCase().includes(searchTerm.toLowerCase())
+      const q = searchTerm.toLowerCase()
+      subcarpetas = subcarpetas.filter((c) => c.nombre.toLowerCase().includes(q))
+      archsCarpeta = archivos.filter((a) =>
+        a.nombre.toLowerCase().includes(q) || a.nombreArchivo.toLowerCase().includes(q)
+      )
     }
-    return a.carpetaId === carpetaActual
-  })
 
-  // Subcarpetas de la carpeta actual
-  const subcarpetasActuales = carpetasPlanas.filter((c) => c.parentId === carpetaActual)
+    const items: ItemLista[] = [
+      ...subcarpetas.map((c) => ({ tipo: "carpeta" as const, data: c })),
+      ...archsCarpeta.map((a) => ({ tipo: "archivo" as const, data: a })),
+    ]
 
-  // Crear carpeta
+    items.sort((a, b) => {
+      // Carpetas siempre primero
+      if (a.tipo !== b.tipo) return a.tipo === "carpeta" ? -1 : 1
+
+      let cmp = 0
+      if (ordenCol === "nombre") {
+        const nA = a.tipo === "carpeta" ? a.data.nombre : a.data.nombre
+        const nB = b.tipo === "carpeta" ? b.data.nombre : b.data.nombre
+        cmp = nA.localeCompare(nB)
+      } else if (ordenCol === "fecha") {
+        const dA = a.tipo === "carpeta" ? "" : (a.data as Archivo).createdAt
+        const dB = b.tipo === "carpeta" ? "" : (b.data as Archivo).createdAt
+        cmp = dA.localeCompare(dB)
+      } else if (ordenCol === "tamanio") {
+        const sA = a.tipo === "archivo" ? (a.data as Archivo).tamanio : 0
+        const sB = b.tipo === "archivo" ? (b.data as Archivo).tamanio : 0
+        cmp = sA - sB
+      }
+      return ordenDir === "asc" ? cmp : -cmp
+    })
+
+    return items
+  }, [carpetas, archivos, carpetaActual, searchTerm, ordenCol, ordenDir]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const totalPaginas = Math.ceil(itemsLista.length / itemsPorPagina)
+  const itemsPaginados = itemsLista.slice((paginaActual - 1) * itemsPorPagina, paginaActual * itemsPorPagina)
+
+  const toggleOrden = (col: "nombre" | "fecha" | "tamanio") => {
+    if (ordenCol === col) setOrdenDir((d) => (d === "asc" ? "desc" : "asc"))
+    else { setOrdenCol(col); setOrdenDir("asc") }
+  }
+
+  // Navegación
+  const navegarCarpeta = (id: string | null, nombre: string) => {
+    setCarpetaActual(id)
+    if (id === null) {
+      setRutaNavegacion([{ id: null, nombre: "Mi Repositorio" }])
+    } else {
+      const idx = rutaNavegacion.findIndex((r) => r.id === id)
+      if (idx >= 0) {
+        setRutaNavegacion(rutaNavegacion.slice(0, idx + 1))
+      } else {
+        setRutaNavegacion([...rutaNavegacion, { id, nombre }])
+      }
+    }
+  }
+
+  // Selección
+  const toggleSeleccion = (id: string) => {
+    setSeleccionados((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id); else next.add(id)
+      return next
+    })
+  }
+
+  const toggleTodos = () => {
+    const ids = itemsPaginados.filter((i) => i.tipo === "archivo").map((i) => i.data.id)
+    const allSelected = ids.every((id) => seleccionados.has(id))
+    setSeleccionados((prev) => {
+      const next = new Set(prev)
+      ids.forEach((id) => allSelected ? next.delete(id) : next.add(id))
+      return next
+    })
+  }
+
+  // CRUD handlers
   const handleCrearCarpeta = async () => {
-    if (!carpetaForm.nombre.trim()) {
-      toast.error("El nombre de la carpeta es requerido")
-      return
-    }
-
+    if (!carpetaForm.nombre.trim()) return
     setActionLoading(true)
     try {
-      const response = await fetch("/api/repositorio/carpetas", {
+      const res = await fetch("/api/repositorio/carpetas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          nombre: carpetaForm.nombre,
-          descripcion: carpetaForm.descripcion || null,
+          nombre: carpetaForm.nombre.trim(),
+          descripcion: carpetaForm.descripcion.trim() || null,
           color: carpetaForm.color || null,
           parentId: carpetaActual,
         }),
       })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        toast.success("Carpeta creada correctamente")
+      if (res.ok) {
+        toast.success("Carpeta creada")
         setCrearCarpetaOpen(false)
         setCarpetaForm({ nombre: "", descripcion: "", color: "" })
         fetchData()
       } else {
-        toast.error(data.error || "Error al crear la carpeta")
+        const data = await res.json()
+        toast.error(data.error || "Error al crear carpeta")
       }
-    } catch {
-      toast.error("Error de conexión")
-    } finally {
-      setActionLoading(false)
-    }
+    } catch { toast.error("Error de conexión") }
+    finally { setActionLoading(false) }
   }
 
-  // Editar carpeta
   const handleEditarCarpeta = async () => {
-    if (!carpetaSeleccionada || !carpetaForm.nombre.trim()) {
-      toast.error("El nombre de la carpeta es requerido")
-      return
-    }
-
+    if (!carpetaSeleccionada || !carpetaForm.nombre.trim()) return
     setActionLoading(true)
     try {
-      const response = await fetch(`/api/repositorio/carpetas/${carpetaSeleccionada.id}`, {
+      const res = await fetch(`/api/repositorio/carpetas/${carpetaSeleccionada.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          nombre: carpetaForm.nombre,
-          descripcion: carpetaForm.descripcion || null,
+          nombre: carpetaForm.nombre.trim(),
+          descripcion: carpetaForm.descripcion.trim() || null,
           color: carpetaForm.color || null,
         }),
       })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        toast.success("Carpeta actualizada correctamente")
+      if (res.ok) {
+        toast.success("Carpeta actualizada")
         setEditarCarpetaOpen(false)
-        setCarpetaSeleccionada(null)
-        setCarpetaForm({ nombre: "", descripcion: "", color: "" })
         fetchData()
       } else {
-        toast.error(data.error || "Error al actualizar la carpeta")
+        const data = await res.json()
+        toast.error(data.error || "Error")
       }
-    } catch {
-      toast.error("Error de conexión")
-    } finally {
-      setActionLoading(false)
-    }
+    } catch { toast.error("Error de conexión") }
+    finally { setActionLoading(false) }
   }
 
-  // Subir archivo
   const handleSubirArchivo = async () => {
-    if (archivosSubir.length === 0) {
-      toast.error("Selecciona al menos un archivo")
-      return
-    }
-
+    if (archivosSubir.length === 0) return
     setUploadLoading(true)
     try {
       for (const file of archivosSubir) {
         const formData = new FormData()
         formData.append("archivo", file)
-        formData.append("nombre", nombreArchivoSubir || file.name.replace(".pdf", ""))
-        if (carpetaActual) {
-          formData.append("carpetaId", carpetaActual)
-        }
-
-        const response = await fetch("/api/repositorio/upload", {
-          method: "POST",
-          body: formData,
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
+        formData.append("nombre", nombreArchivoSubir || file.name.replace(/\.pdf$/i, ""))
+        if (carpetaActual) formData.append("carpetaId", carpetaActual)
+        const res = await fetch("/api/repositorio/upload", { method: "POST", body: formData })
+        if (!res.ok) {
+          const data = await res.json()
           toast.error(data.error || `Error al subir ${file.name}`)
-          continue
         }
       }
-
-      toast.success(archivosSubir.length === 1 ? "Archivo subido correctamente" : "Archivos subidos correctamente")
+      toast.success("Archivo(s) subido(s)")
       setUploadOpen(false)
       setArchivosSubir([])
       setNombreArchivoSubir("")
       fetchData()
-    } catch {
-      toast.error("Error de conexión")
-    } finally {
-      setUploadLoading(false)
-    }
+    } catch { toast.error("Error de conexión") }
+    finally { setUploadLoading(false) }
   }
 
-  // Editar archivo
   const handleEditarArchivo = async () => {
-    if (!archivoSeleccionado) return
-
+    if (!archivoSeleccionado || !archivoForm.nombre.trim()) return
     setActionLoading(true)
     try {
-      const response = await fetch(`/api/repositorio/archivos/${archivoSeleccionado.id}`, {
+      const res = await fetch(`/api/repositorio/archivos/${archivoSeleccionado.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nombre: archivoForm.nombre,
-        }),
+        body: JSON.stringify({ nombre: archivoForm.nombre.trim() }),
       })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        toast.success("Archivo actualizado correctamente")
+      if (res.ok) {
+        toast.success("Archivo actualizado")
         setEditarArchivoOpen(false)
-        setArchivoSeleccionado(null)
-        setArchivoForm({ nombre: "" })
         fetchData()
       } else {
-        toast.error(data.error || "Error al actualizar el archivo")
+        const data = await res.json()
+        toast.error(data.error || "Error")
       }
-    } catch {
-      toast.error("Error de conexión")
-    } finally {
-      setActionLoading(false)
-    }
+    } catch { toast.error("Error de conexión") }
+    finally { setActionLoading(false) }
   }
 
-  // Mover archivo
-  const handleMoverArchivo = async () => {
-    if (!archivoSeleccionado) return
-
+  const handleMover = async () => {
+    if (itemsMover.length === 0) return
     setActionLoading(true)
-    try {
-      const response = await fetch(`/api/repositorio/archivos/${archivoSeleccionado.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          carpetaId: moverForm.carpetaId === "raiz" ? null : moverForm.carpetaId || null,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        toast.success("Archivo movido correctamente")
-        setMoverArchivoOpen(false)
-        setArchivoSeleccionado(null)
-        setMoverForm({ carpetaId: "" })
-        fetchData()
-      } else {
-        toast.error(data.error || "Error al mover el archivo")
-      }
-    } catch {
-      toast.error("Error de conexión")
-    } finally {
-      setActionLoading(false)
+    let ok = 0
+    for (const item of itemsMover) {
+      try {
+        const url = item.tipo === "archivo"
+          ? `/api/repositorio/archivos/${item.id}`
+          : `/api/repositorio/carpetas/${item.id}`
+        const body = item.tipo === "archivo"
+          ? { carpetaId: moverDestino === "__raiz__" ? null : moverDestino }
+          : { parentId: moverDestino === "__raiz__" ? null : moverDestino }
+        const res = await fetch(url, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+        if (res.ok) ok++
+        else { const d = await res.json(); toast.error(d.error || `Error al mover ${item.nombre}`) }
+      } catch { /* silenciar */ }
     }
+    if (ok > 0) toast.success(`${ok} item(s) movido(s)`)
+    setMoverOpen(false)
+    setSeleccionados(new Set())
+    fetchData()
+    setActionLoading(false)
   }
 
-  // Eliminar
   const handleEliminar = async () => {
     if (!itemEliminar) return
-
     setActionLoading(true)
     try {
-      const endpoint = itemEliminar.tipo === "carpeta"
+      const url = itemEliminar.tipo === "carpeta"
         ? `/api/repositorio/carpetas/${itemEliminar.item.id}`
         : `/api/repositorio/archivos/${itemEliminar.item.id}`
-
-      const response = await fetch(endpoint, { method: "DELETE" })
-      const data = await response.json()
-
-      if (response.ok) {
-        toast.success(`${itemEliminar.tipo === "carpeta" ? "Carpeta" : "Archivo"} eliminado correctamente`)
-        if (data.advertencia) {
-          toast.warning(data.advertencia)
-        }
-        setConfirmarEliminarOpen(false)
-        setItemEliminar(null)
+      const res = await fetch(url, { method: "DELETE" })
+      if (res.ok) {
+        toast.success(`${itemEliminar.tipo === "carpeta" ? "Carpeta" : "Archivo"} eliminado`)
         fetchData()
       } else {
+        const data = await res.json()
         toast.error(data.error || "Error al eliminar")
       }
-    } catch {
-      toast.error("Error de conexión")
-    } finally {
-      setActionLoading(false)
-    }
+    } catch { toast.error("Error de conexión") }
+    finally { setActionLoading(false); setConfirmarEliminarOpen(false); setItemEliminar(null) }
   }
 
-  // Formatear tamaño de archivo
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+  const abrirMoverSeleccionados = () => {
+    const items = archivos
+      .filter((a) => seleccionados.has(a.id))
+      .map((a) => ({ tipo: "archivo", id: a.id, nombre: a.nombre }))
+    setItemsMover(items)
+    setMoverDestino("")
+    setMoverOpen(true)
   }
 
-  // Formatear fecha
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-PE", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    })
-  }
-
-  // Abrir editar carpeta
-  const abrirEditarCarpeta = (carpeta: Carpeta) => {
-    setCarpetaSeleccionada(carpeta)
-    setCarpetaForm({
-      nombre: carpeta.nombre,
-      descripcion: carpeta.descripcion || "",
-      color: carpeta.color || "",
-    })
-    setEditarCarpetaOpen(true)
-  }
-
-  // Abrir editar archivo
-  const abrirEditarArchivo = (archivo: Archivo) => {
-    setArchivoSeleccionado(archivo)
-    setArchivoForm({
-      nombre: archivo.nombre,
-    })
-    setEditarArchivoOpen(true)
-  }
-
-  // Abrir mover archivo
-  const abrirMoverArchivo = (archivo: Archivo) => {
-    setArchivoSeleccionado(archivo)
-    setMoverForm({
-      carpetaId: archivo.carpetaId || "raiz",
-    })
-    setMoverArchivoOpen(true)
-  }
-
-  // Expandir/contraer carpeta en el árbol
-  const toggleCarpetaExpandida = (id: string) => {
-    setCarpetasExpandidas((prev) => {
-      const newSet = new Set(prev)
-      if (newSet.has(id)) {
-        newSet.delete(id)
-      } else {
-        newSet.add(id)
-      }
-      return newSet
-    })
-  }
-
-  // Renderizar árbol de carpetas
-  const renderArbolCarpetas = (carpetas: Carpeta[], nivel = 0) => {
-    return carpetas.map((carpeta) => (
-      <div key={carpeta.id}>
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => navegarACarpeta(carpeta.id)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault()
-              navegarACarpeta(carpeta.id)
-            }
-          }}
-          className={cn(
-            "w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-md hover:bg-accent cursor-pointer",
-            carpetaActual === carpeta.id && "bg-accent font-medium"
-          )}
-          style={{ paddingLeft: `${8 + nivel * 16}px` }}
-        >
-          {carpeta._count.hijos > 0 && (
-            <span
-              role="button"
-              tabIndex={0}
-              onClick={(e) => {
-                e.stopPropagation()
-                toggleCarpetaExpandida(carpeta.id)
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  toggleCarpetaExpandida(carpeta.id)
-                }
-              }}
-              className="p-0.5 hover:bg-muted rounded"
-            >
-              <ChevronRight
-                className={cn(
-                  "h-3 w-3 transition-transform",
-                  carpetasExpandidas.has(carpeta.id) && "rotate-90"
-                )}
-              />
-            </span>
-          )}
-          {carpeta._count.hijos === 0 && <div className="w-4" />}
-          {carpetasExpandidas.has(carpeta.id) || carpetaActual === carpeta.id ? (
-            <FolderOpen className="h-4 w-4" style={{ color: carpeta.color || undefined }} />
-          ) : (
-            <Folder className="h-4 w-4" style={{ color: carpeta.color || undefined }} />
-          )}
-          <span className="truncate flex-1 text-left">{carpeta.nombre}</span>
-          <span className="text-xs text-muted-foreground">{carpeta._count.archivos}</span>
-        </div>
-        {carpetasExpandidas.has(carpeta.id) && carpeta.children && carpeta.children.length > 0 && (
-          renderArbolCarpetas(carpeta.children, nivel + 1)
-        )}
-      </div>
-    ))
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-2 sm:p-4 pt-0">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-1 flex-col gap-4 p-3 sm:p-4 md:p-6">
+      {/* Header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Mi Repositorio</h1>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Repositorio Personal</h1>
           <p className="text-sm text-muted-foreground">
-            Organiza y gestiona tus documentos PDF firmados
+            {archivos.length} archivo(s) en {carpetasPlanas.length} carpeta(s)
           </p>
         </div>
-        <div className="flex gap-2 flex-wrap">
-          <Button variant="outline" size="icon" onClick={fetchData}>
-            <RefreshCw className="h-4 w-4" />
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => {
+            setCarpetaForm({ nombre: "", descripcion: "", color: "" })
+            setCrearCarpetaOpen(true)
+          }}>
+            <FolderPlus className="h-4 w-4" />
+            <span className="hidden sm:inline">Carpeta</span>
           </Button>
-          <Button variant="outline" onClick={() => setCrearCarpetaOpen(true)} className="flex-1 sm:flex-none">
-            <FolderPlus className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Nueva </span>Carpeta
-          </Button>
-          <Button onClick={() => setUploadOpen(true)} className="flex-1 sm:flex-none">
-            <Upload className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Subir </span>PDF
+          <Button size="sm" className="gap-1.5" onClick={() => {
+            setArchivosSubir([]); setNombreArchivoSubir(""); setUploadOpen(true)
+          }}>
+            <Upload className="h-4 w-4" />
+            <span className="hidden sm:inline">Subir PDF</span>
           </Button>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4 flex-1">
-        {/* Sidebar con árbol de carpetas - oculto en móvil */}
-        <Card className="hidden lg:block w-64 shrink-0">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Carpetas</CardTitle>
-          </CardHeader>
-          <CardContent className="p-2">
-            <ScrollArea className="h-[calc(100vh-280px)]">
+      {/* Breadcrumb + Search + Actions */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-1 text-sm flex-wrap flex-1 min-w-0">
+          {rutaNavegacion.map((r, i) => (
+            <div key={r.id || "root"} className="flex items-center gap-1">
+              {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
               <button
-                onClick={() => navegarACarpeta(null)}
+                onClick={() => navegarCarpeta(r.id, r.nombre)}
                 className={cn(
-                  "w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-md hover:bg-accent",
-                  carpetaActual === null && "bg-accent font-medium"
+                  "hover:underline truncate max-w-[120px] sm:max-w-[200px]",
+                  i === rutaNavegacion.length - 1 ? "font-medium" : "text-muted-foreground"
                 )}
               >
-                <Home className="h-4 w-4" />
-                <span>Mi Repositorio</span>
-                <span className="text-xs text-muted-foreground ml-auto">
-                  {archivos.filter((a) => !a.carpetaId).length}
-                </span>
+                {i === 0 ? <Home className="h-4 w-4 inline" /> : r.nombre}
               </button>
-              <div className="mt-1">
-                {renderArbolCarpetas(carpetas)}
-              </div>
-            </ScrollArea>
-          </CardContent>
-        </Card>
-
-        {/* Contenido principal */}
-        <Card className="flex-1">
-          <CardHeader className="p-4 sm:p-6">
-            <div className="flex flex-col gap-4">
-              <div>
-                {/* Breadcrumb */}
-                <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground mb-1 flex-wrap">
-                  {rutaNavegacion.map((item, index) => (
-                    <span key={item.id ?? "root"} className="flex items-center gap-1">
-                      {index > 0 && <ChevronRight className="h-3 w-3" />}
-                      <button
-                        onClick={() => navegarACarpeta(item.id)}
-                        className={cn(
-                          "hover:text-foreground",
-                          index === rutaNavegacion.length - 1 && "text-foreground font-medium"
-                        )}
-                      >
-                        {item.nombre}
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                <CardTitle className="text-lg sm:text-xl">
-                  {rutaNavegacion[rutaNavegacion.length - 1]?.nombre || "Mi Repositorio"}
-                </CardTitle>
-                <CardDescription>
-                  {subcarpetasActuales.length} carpeta{subcarpetasActuales.length !== 1 ? "s" : ""},{" "}
-                  {archivosActuales.length} archivo{archivosActuales.length !== 1 ? "s" : ""}
-                </CardDescription>
-              </div>
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar archivos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8 w-full sm:w-[200px]"
-                />
-              </div>
             </div>
-          </CardHeader>
-          <CardContent className="p-4 sm:p-6 pt-0">
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {/* Subcarpetas */}
-                {!searchTerm && subcarpetasActuales.length > 0 && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
-                    {subcarpetasActuales.map((carpeta) => (
-                      <div
-                        key={carpeta.id}
-                        className="group relative flex flex-col items-center p-2 sm:p-3 border rounded-lg hover:bg-accent cursor-pointer"
-                        onClick={() => navegarACarpeta(carpeta.id)}
-                      >
-                        <Folder
-                          className="h-10 w-10 sm:h-12 sm:w-12 mb-1 sm:mb-2"
-                          style={{ color: carpeta.color || undefined }}
-                        />
-                        <span className="text-xs sm:text-sm font-medium text-center truncate w-full">
-                          {carpeta.nombre}
-                        </span>
-                        <span className="text-[10px] sm:text-xs text-muted-foreground">
-                          {carpeta._count.archivos} archivo{carpeta._count.archivos !== 1 ? "s" : ""}
-                        </span>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => navegarACarpeta(carpeta.id)}>
-                              <FolderOpen className="mr-2 h-4 w-4" />
-                              Abrir
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => abrirEditarCarpeta(carpeta)}>
-                              <Edit2 className="mr-2 h-4 w-4" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => {
-                                setItemEliminar({ tipo: "carpeta", item: carpeta })
-                                setConfirmarEliminarOpen(true)
-                              }}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Eliminar
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Archivos */}
-                {archivosActuales.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
-                    {archivosActuales.map((archivo) => (
-                      <div
-                        key={archivo.id}
-                        className="group relative flex flex-col items-center p-2 sm:p-3 border rounded-lg hover:bg-accent"
-                      >
-                        <div className="relative">
-                          <FileText className="h-10 w-10 sm:h-12 sm:w-12 mb-1 sm:mb-2 text-red-500" />
-                          {archivo.firmado && (
-                            <Shield className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
-                          )}
-                        </div>
-                        <span className="text-xs sm:text-sm font-medium text-center truncate w-full">
-                          {archivo.nombre}
-                        </span>
-                        <span className="text-[10px] sm:text-xs text-muted-foreground">
-                          {formatFileSize(archivo.tamanio)}
-                        </span>
-                        {archivo.firmado && (
-                          <Badge variant="outline" className="mt-1 text-[10px] sm:text-xs text-green-700 border-green-300">
-                            <CheckCircle className="mr-1 h-2 w-2 sm:h-3 sm:w-3 text-green-500" />
-                            Firmado {archivo.fechaFirma && new Date(archivo.fechaFirma).toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "2-digit" })}
-                          </Badge>
-                        )}
-                        {searchTerm && archivo.carpeta && (
-                          <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">
-                            en {archivo.carpeta.nombre}
-                          </span>
-                        )}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                              <a href={archivo.url} target="_blank" rel="noopener noreferrer">
-                                <Eye className="mr-2 h-4 w-4" />
-                                Ver
-                              </a>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <a href={archivo.url} download={archivo.nombreArchivo}>
-                                <Download className="mr-2 h-4 w-4" />
-                                Descargar
-                              </a>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => abrirEditarArchivo(archivo)}>
-                              <Edit2 className="mr-2 h-4 w-4" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => abrirMoverArchivo(archivo)}>
-                              <Move className="mr-2 h-4 w-4" />
-                              Mover
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            {!archivo.firmado && (
-                              <DropdownMenuItem
-                                onClick={() => abrirFirmaModal(archivo)}
-                                className="text-blue-600"
-                              >
-                                <PenTool className="mr-2 h-4 w-4" />
-                                Firmar con Firma Perú
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => {
-                                setItemEliminar({ tipo: "archivo", item: archivo })
-                                setConfirmarEliminarOpen(true)
-                              }}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Eliminar
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  !searchTerm && subcarpetasActuales.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                      <File className="h-12 w-12 text-muted-foreground/50" />
-                      <h3 className="mt-4 text-lg font-semibold">Carpeta vacía</h3>
-                      <p className="text-muted-foreground">
-                        Sube PDFs o crea subcarpetas para organizar tus documentos
-                      </p>
-                      <div className="flex gap-2 mt-4">
-                        <Button variant="outline" onClick={() => setCrearCarpetaOpen(true)}>
-                          <FolderPlus className="mr-2 h-4 w-4" />
-                          Nueva Carpeta
-                        </Button>
-                        <Button onClick={() => setUploadOpen(true)}>
-                          <Upload className="mr-2 h-4 w-4" />
-                          Subir PDF
-                        </Button>
-                      </div>
-                    </div>
-                  )
-                )}
-
-                {searchTerm && archivosActuales.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <Search className="h-12 w-12 text-muted-foreground/50" />
-                    <h3 className="mt-4 text-lg font-semibold">Sin resultados</h3>
-                    <p className="text-muted-foreground">
-                      No se encontraron archivos que coincidan con &quot;{searchTerm}&quot;
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          {seleccionados.size > 0 && (
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={abrirMoverSeleccionados}>
+              <FolderInput className="h-4 w-4" />
+              Mover {seleccionados.size}
+            </Button>
+          )}
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8 w-[180px] sm:w-[220px] h-8"
+            />
+          </div>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={fetchData}>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
-      {/* Modal: Crear Carpeta */}
+      {/* Tabla */}
+      {itemsLista.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="p-6 sm:p-12 text-center">
+            <Folder className="mx-auto h-12 w-12 text-muted-foreground/50" />
+            <h3 className="mt-4 text-lg font-medium">
+              {searchTerm ? "Sin resultados" : "Carpeta vacía"}
+            </h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {searchTerm ? "No se encontraron archivos con la búsqueda" : "Crea una carpeta o sube un archivo para comenzar"}
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[40px] px-2">
+                      <Checkbox
+                        checked={itemsPaginados.filter((i) => i.tipo === "archivo").length > 0 &&
+                          itemsPaginados.filter((i) => i.tipo === "archivo").every((i) => seleccionados.has(i.data.id))}
+                        onCheckedChange={toggleTodos}
+                      />
+                    </TableHead>
+                    <TableHead className="text-xs cursor-pointer select-none" onClick={() => toggleOrden("nombre")}>
+                      <div className="flex items-center gap-1">
+                        Nombre
+                        {ordenCol === "nombre" && <ArrowUpDown className="h-3 w-3" />}
+                      </div>
+                    </TableHead>
+                    <TableHead className="hidden sm:table-cell text-xs">Carpeta</TableHead>
+                    <TableHead className="hidden md:table-cell text-xs cursor-pointer select-none" onClick={() => toggleOrden("tamanio")}>
+                      <div className="flex items-center gap-1">
+                        Tamaño
+                        {ordenCol === "tamanio" && <ArrowUpDown className="h-3 w-3" />}
+                      </div>
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell text-xs cursor-pointer select-none" onClick={() => toggleOrden("fecha")}>
+                      <div className="flex items-center gap-1">
+                        Fecha
+                        {ordenCol === "fecha" && <ArrowUpDown className="h-3 w-3" />}
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-xs">Estado</TableHead>
+                    <TableHead className="text-xs text-right">Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {itemsPaginados.map((item) => {
+                    if (item.tipo === "carpeta") {
+                      const c = item.data as Carpeta
+                      return (
+                        <TableRow
+                          key={`c-${c.id}`}
+                          className="cursor-pointer hover:bg-accent/50"
+                          onDoubleClick={() => navegarCarpeta(c.id, c.nombre)}
+                        >
+                          <TableCell className="px-2 py-2" />
+                          <TableCell className="py-2">
+                            <div
+                              className="flex items-center gap-2 cursor-pointer"
+                              onClick={() => navegarCarpeta(c.id, c.nombre)}
+                            >
+                              <Folder className="h-4 w-4 shrink-0" style={{ color: c.color || "#6b7280" }} />
+                              <span className="font-medium text-sm">{c.nombre}</span>
+                              <span className="text-[10px] text-muted-foreground">
+                                {c._count.archivos} archivo(s)
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell text-xs text-muted-foreground py-2">—</TableCell>
+                          <TableCell className="hidden md:table-cell text-xs text-muted-foreground py-2">—</TableCell>
+                          <TableCell className="hidden lg:table-cell text-xs text-muted-foreground py-2">—</TableCell>
+                          <TableCell className="py-2">
+                            <Badge variant="outline" className="text-[10px]">Carpeta</Badge>
+                          </TableCell>
+                          <TableCell className="text-right py-2">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-7 w-7">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => {
+                                  setCarpetaSeleccionada(c)
+                                  setCarpetaForm({ nombre: c.nombre, descripcion: c.descripcion || "", color: c.color || "" })
+                                  setEditarCarpetaOpen(true)
+                                }}>
+                                  <Edit2 className="mr-2 h-4 w-4" />Editar
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {
+                                  setItemsMover([{ tipo: "carpeta", id: c.id, nombre: c.nombre }])
+                                  setMoverDestino("")
+                                  setMoverOpen(true)
+                                }}>
+                                  <FolderInput className="mr-2 h-4 w-4" />Mover
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-red-600" onClick={() => {
+                                  setItemEliminar({ tipo: "carpeta", item: c })
+                                  setConfirmarEliminarOpen(true)
+                                }}>
+                                  <Trash2 className="mr-2 h-4 w-4" />Eliminar
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    }
+
+                    const a = item.data as Archivo
+                    return (
+                      <TableRow key={`a-${a.id}`} className={seleccionados.has(a.id) ? "bg-primary/5" : ""}>
+                        <TableCell className="px-2 py-2">
+                          <Checkbox checked={seleccionados.has(a.id)} onCheckedChange={() => toggleSeleccion(a.id)} />
+                        </TableCell>
+                        <TableCell className="py-2">
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-red-500 shrink-0" />
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium truncate max-w-[200px] sm:max-w-[300px]">{a.nombre}</p>
+                              <p className="sm:hidden text-[10px] text-muted-foreground">
+                                {formatSize(a.tamanio)} — {formatDate(a.createdAt)}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell text-xs text-muted-foreground py-2 truncate max-w-[100px]">
+                          {a.carpeta?.nombre || "Raíz"}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-xs py-2">{formatSize(a.tamanio)}</TableCell>
+                        <TableCell className="hidden lg:table-cell text-xs text-muted-foreground py-2">{formatDate(a.createdAt)}</TableCell>
+                        <TableCell className="py-2">
+                          {a.firmado ? (
+                            <Badge className="bg-green-100 text-green-800 gap-1 text-[10px]">
+                              <Shield className="h-3 w-3" />Firmado
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[10px]">PDF</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right py-2">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => window.open(a.url, "_blank")}>
+                                <Eye className="mr-2 h-4 w-4" />Ver
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => {
+                                const link = document.createElement("a")
+                                link.href = a.url; link.download = a.nombreArchivo
+                                link.click()
+                              }}>
+                                <Download className="mr-2 h-4 w-4" />Descargar
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => {
+                                setArchivoSeleccionado(a)
+                                setArchivoForm({ nombre: a.nombre })
+                                setEditarArchivoOpen(true)
+                              }}>
+                                <Edit2 className="mr-2 h-4 w-4" />Renombrar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => {
+                                setItemsMover([{ tipo: "archivo", id: a.id, nombre: a.nombre }])
+                                setMoverDestino("")
+                                setMoverOpen(true)
+                              }}>
+                                <FolderInput className="mr-2 h-4 w-4" />Mover
+                              </DropdownMenuItem>
+                              {!a.firmado && (
+                                <DropdownMenuItem onClick={() => abrirFirmaModal(a)}>
+                                  <PenTool className="mr-2 h-4 w-4" />Firmar
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-red-600" onClick={() => {
+                                setItemEliminar({ tipo: "archivo", item: a })
+                                setConfirmarEliminarOpen(true)
+                              }}>
+                                <Trash2 className="mr-2 h-4 w-4" />Eliminar
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Paginación */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-4 py-3 border-t">
+              <div className="flex items-center gap-3">
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {seleccionados.size > 0 ? `${seleccionados.size} seleccionado(s) — ` : ""}
+                  {itemsLista.length} item(s)
+                </p>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs text-muted-foreground hidden sm:inline">Mostrar</span>
+                  <Select value={String(itemsPorPagina)} onValueChange={(v) => { setItemsPorPagina(Number(v)); setPaginaActual(1) }}>
+                    <SelectTrigger className="h-7 w-[70px] text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {OPCIONES_PAGINADO.map((n) => (
+                        <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-xs text-muted-foreground hidden sm:inline">por página</span>
+                </div>
+              </div>
+              {totalPaginas > 1 && (
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" disabled={paginaActual === 1} onClick={() => setPaginaActual((p) => p - 1)}>
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-xs sm:text-sm text-muted-foreground">{paginaActual} / {totalPaginas}</span>
+                  <Button variant="outline" size="sm" disabled={paginaActual === totalPaginas} onClick={() => setPaginaActual((p) => p + 1)}>
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Dialog: Crear Carpeta */}
       <Dialog open={crearCarpetaOpen} onOpenChange={setCrearCarpetaOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Nueva Carpeta</DialogTitle>
-            <DialogDescription>
-              Crea una nueva carpeta para organizar tus documentos
-            </DialogDescription>
+            <DialogDescription>Se creará en {rutaNavegacion[rutaNavegacion.length - 1]?.nombre || "la raíz"}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="nombre">Nombre *</Label>
-              <Input
-                id="nombre"
-                value={carpetaForm.nombre}
-                onChange={(e) => setCarpetaForm((prev) => ({ ...prev, nombre: e.target.value }))}
-                placeholder="Ej: Oficios 2024"
-              />
+          <div className="grid gap-4 py-2">
+            <div className="grid gap-2">
+              <Label>Nombre *</Label>
+              <Input value={carpetaForm.nombre} onChange={(e) => setCarpetaForm({ ...carpetaForm, nombre: e.target.value })} placeholder="Nombre de la carpeta..." />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="descripcion">Descripción</Label>
-              <Textarea
-                id="descripcion"
-                value={carpetaForm.descripcion}
-                onChange={(e) => setCarpetaForm((prev) => ({ ...prev, descripcion: e.target.value }))}
-                placeholder="Descripción opcional de la carpeta"
-                rows={2}
-              />
+            <div className="grid gap-2">
+              <Label>Descripción</Label>
+              <Textarea value={carpetaForm.descripcion} onChange={(e) => setCarpetaForm({ ...carpetaForm, descripcion: e.target.value })} placeholder="Descripción opcional..." />
             </div>
-            <div className="space-y-2">
+            <div className="grid gap-2">
               <Label>Color</Label>
-              <div className="flex gap-2">
-                {coloresDisponibles.map((color) => (
-                  <button
-                    key={color.value}
-                    type="button"
-                    onClick={() => setCarpetaForm((prev) => ({ ...prev, color: color.value }))}
-                    className={cn(
-                      "w-8 h-8 rounded-full border-2 transition-all",
-                      carpetaForm.color === color.value
-                        ? "border-foreground scale-110"
-                        : "border-transparent hover:scale-105"
-                    )}
-                    style={{ backgroundColor: color.value }}
-                    title={color.label}
+              <div className="flex gap-2 flex-wrap">
+                {coloresDisponibles.map((c) => (
+                  <button key={c.value} onClick={() => setCarpetaForm({ ...carpetaForm, color: c.value })}
+                    className={cn("h-7 w-7 rounded-full border-2 transition-transform", carpetaForm.color === c.value ? "border-foreground scale-110" : "border-transparent")}
+                    style={{ backgroundColor: c.value }} title={c.label}
                   />
                 ))}
-                {carpetaForm.color && (
-                  <button
-                    type="button"
-                    onClick={() => setCarpetaForm((prev) => ({ ...prev, color: "" }))}
-                    className="w-8 h-8 rounded-full border border-dashed border-muted-foreground flex items-center justify-center hover:bg-muted"
-                    title="Sin color"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
               </div>
             </div>
           </div>
-          <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setCrearCarpetaOpen(false)} className="w-full sm:w-auto">
-              Cancelar
-            </Button>
-            <Button onClick={handleCrearCarpeta} disabled={actionLoading} className="w-full sm:w-auto">
-              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Crear Carpeta
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCrearCarpetaOpen(false)}>Cancelar</Button>
+            <Button onClick={handleCrearCarpeta} disabled={actionLoading || !carpetaForm.nombre.trim()}>
+              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Crear
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Modal: Editar Carpeta */}
+      {/* Dialog: Editar Carpeta */}
       <Dialog open={editarCarpetaOpen} onOpenChange={setEditarCarpetaOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Editar Carpeta</DialogTitle>
-            <DialogDescription>
-              Modifica los datos de la carpeta
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-nombre">Nombre *</Label>
-              <Input
-                id="edit-nombre"
-                value={carpetaForm.nombre}
-                onChange={(e) => setCarpetaForm((prev) => ({ ...prev, nombre: e.target.value }))}
-              />
+        <DialogContent className="max-w-md">
+          <DialogHeader><DialogTitle>Editar Carpeta</DialogTitle></DialogHeader>
+          <div className="grid gap-4 py-2">
+            <div className="grid gap-2">
+              <Label>Nombre *</Label>
+              <Input value={carpetaForm.nombre} onChange={(e) => setCarpetaForm({ ...carpetaForm, nombre: e.target.value })} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-descripcion">Descripción</Label>
-              <Textarea
-                id="edit-descripcion"
-                value={carpetaForm.descripcion}
-                onChange={(e) => setCarpetaForm((prev) => ({ ...prev, descripcion: e.target.value }))}
-                rows={2}
-              />
+            <div className="grid gap-2">
+              <Label>Descripción</Label>
+              <Textarea value={carpetaForm.descripcion} onChange={(e) => setCarpetaForm({ ...carpetaForm, descripcion: e.target.value })} />
             </div>
-            <div className="space-y-2">
+            <div className="grid gap-2">
               <Label>Color</Label>
-              <div className="flex gap-2">
-                {coloresDisponibles.map((color) => (
-                  <button
-                    key={color.value}
-                    type="button"
-                    onClick={() => setCarpetaForm((prev) => ({ ...prev, color: color.value }))}
-                    className={cn(
-                      "w-8 h-8 rounded-full border-2 transition-all",
-                      carpetaForm.color === color.value
-                        ? "border-foreground scale-110"
-                        : "border-transparent hover:scale-105"
-                    )}
-                    style={{ backgroundColor: color.value }}
-                    title={color.label}
+              <div className="flex gap-2 flex-wrap">
+                {coloresDisponibles.map((c) => (
+                  <button key={c.value} onClick={() => setCarpetaForm({ ...carpetaForm, color: c.value })}
+                    className={cn("h-7 w-7 rounded-full border-2", carpetaForm.color === c.value ? "border-foreground scale-110" : "border-transparent")}
+                    style={{ backgroundColor: c.value }} title={c.label}
                   />
                 ))}
-                <button
-                  type="button"
-                  onClick={() => setCarpetaForm((prev) => ({ ...prev, color: "" }))}
-                  className="w-8 h-8 rounded-full border border-dashed border-muted-foreground flex items-center justify-center hover:bg-muted"
-                  title="Sin color"
-                >
-                  <X className="h-4 w-4" />
-                </button>
               </div>
             </div>
           </div>
-          <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setEditarCarpetaOpen(false)} className="w-full sm:w-auto">
-              Cancelar
-            </Button>
-            <Button onClick={handleEditarCarpeta} disabled={actionLoading} className="w-full sm:w-auto">
-              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Guardar Cambios
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditarCarpetaOpen(false)}>Cancelar</Button>
+            <Button onClick={handleEditarCarpeta} disabled={actionLoading || !carpetaForm.nombre.trim()}>
+              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Modal: Subir Archivo */}
+      {/* Dialog: Subir PDF */}
       <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Subir PDF</DialogTitle>
-            <DialogDescription>
-              Sube un documento PDF a tu repositorio
-              {carpetaActual && (
-                <span className="block mt-1">
-                  Se guardará en: <strong>{rutaNavegacion[rutaNavegacion.length - 1]?.nombre}</strong>
-                </span>
-              )}
-            </DialogDescription>
+            <DialogTitle>Subir Archivo PDF</DialogTitle>
+            <DialogDescription>Máximo 10MB por archivo. Solo PDF.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="archivo">Archivo PDF *</Label>
-              <Input
-                id="archivo"
-                type="file"
-                accept=".pdf,application/pdf"
-                onChange={(e) => {
-                  const files = Array.from(e.target.files || [])
-                  setArchivosSubir(files)
-                  if (files.length === 1) {
-                    setNombreArchivoSubir(files[0].name.replace(".pdf", ""))
-                  }
-                }}
-              />
-              {archivosSubir.length > 0 && (
-                <p className="text-sm text-muted-foreground">
-                  {archivosSubir.map((f) => f.name).join(", ")}
-                </p>
-              )}
+          <div className="grid gap-4 py-2">
+            <div className="grid gap-2">
+              <Label>Archivo *</Label>
+              <Input type="file" accept=".pdf" onChange={(e) => {
+                if (e.target.files) setArchivosSubir(Array.from(e.target.files))
+              }} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="nombre-archivo">Nombre del documento</Label>
-              <Input
-                id="nombre-archivo"
-                value={nombreArchivoSubir}
-                onChange={(e) => setNombreArchivoSubir(e.target.value)}
-                placeholder="Nombre descriptivo del documento"
-              />
+            <div className="grid gap-2">
+              <Label>Nombre descriptivo</Label>
+              <Input value={nombreArchivoSubir} onChange={(e) => setNombreArchivoSubir(e.target.value)} placeholder="Nombre para identificar..." />
             </div>
           </div>
-          <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setUploadOpen(false)} className="w-full sm:w-auto">
-              Cancelar
-            </Button>
-            <Button onClick={handleSubirArchivo} disabled={uploadLoading || archivosSubir.length === 0} className="w-full sm:w-auto">
-              {uploadLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Subir
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setUploadOpen(false)}>Cancelar</Button>
+            <Button onClick={handleSubirArchivo} disabled={uploadLoading || archivosSubir.length === 0}>
+              {uploadLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Subir
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Modal: Editar Archivo */}
+      {/* Dialog: Renombrar Archivo */}
       <Dialog open={editarArchivoOpen} onOpenChange={setEditarArchivoOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Editar Archivo</DialogTitle>
-            <DialogDescription>
-              Modifica los datos del archivo
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-archivo-nombre">Nombre *</Label>
-              <Input
-                id="edit-archivo-nombre"
-                value={archivoForm.nombre}
-                onChange={(e) => setArchivoForm((prev) => ({ ...prev, nombre: e.target.value }))}
-              />
-            </div>
+        <DialogContent className="max-w-md">
+          <DialogHeader><DialogTitle>Renombrar Archivo</DialogTitle></DialogHeader>
+          <div className="grid gap-2 py-2">
+            <Label>Nombre</Label>
+            <Input value={archivoForm.nombre} onChange={(e) => setArchivoForm({ nombre: e.target.value })} />
           </div>
-          <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setEditarArchivoOpen(false)} className="w-full sm:w-auto">
-              Cancelar
-            </Button>
-            <Button onClick={handleEditarArchivo} disabled={actionLoading} className="w-full sm:w-auto">
-              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Guardar Cambios
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditarArchivoOpen(false)}>Cancelar</Button>
+            <Button onClick={handleEditarArchivo} disabled={actionLoading || !archivoForm.nombre.trim()}>
+              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Guardar
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Modal: Mover Archivo */}
-      <Dialog open={moverArchivoOpen} onOpenChange={setMoverArchivoOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+      {/* Dialog: Mover Items */}
+      <Dialog open={moverOpen} onOpenChange={setMoverOpen}>
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Mover Archivo</DialogTitle>
-            <DialogDescription>
-              Selecciona la carpeta destino para &quot;{archivoSeleccionado?.nombre}&quot;
-            </DialogDescription>
+            <DialogTitle className="flex items-center gap-2"><FolderInput className="h-5 w-5" />Mover {itemsMover.length} item(s)</DialogTitle>
+            <DialogDescription>Selecciona la carpeta destino</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Carpeta destino</Label>
-              <Select
-                value={moverForm.carpetaId}
-                onValueChange={(value) => setMoverForm({ carpetaId: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecciona una carpeta" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="raiz">
-                    <span className="flex items-center gap-2">
-                      <Home className="h-4 w-4" />
-                      Mi Repositorio (raíz)
-                    </span>
-                  </SelectItem>
-                  {carpetasPlanas.map((carpeta) => (
-                    <SelectItem key={carpeta.id} value={carpeta.id}>
-                      <span className="flex items-center gap-2">
-                        <Folder className="h-4 w-4" style={{ color: carpeta.color || undefined }} />
-                        {carpeta.nombre}
-                      </span>
-                    </SelectItem>
+          <div className="max-h-[80px] overflow-y-auto border rounded p-2 space-y-1 text-xs">
+            {itemsMover.map((i) => (
+              <div key={i.id} className="flex items-center gap-2">
+                {i.tipo === "carpeta" ? <Folder className="h-3 w-3" /> : <FileText className="h-3 w-3 text-red-500" />}
+                <span className="truncate">{i.nombre}</span>
+              </div>
+            ))}
+          </div>
+          <div className="grid gap-2 py-2">
+            <Label>Carpeta destino</Label>
+            <Select value={moverDestino} onValueChange={setMoverDestino}>
+              <SelectTrigger><SelectValue placeholder="Seleccionar carpeta..." /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__raiz__">Mi Repositorio (raíz)</SelectItem>
+                {carpetasPlanas
+                  .filter((c) => !itemsMover.some((i) => i.id === c.id))
+                  .map((c) => (
+                    <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
+              </SelectContent>
+            </Select>
           </div>
-          <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setMoverArchivoOpen(false)} className="w-full sm:w-auto">
-              Cancelar
-            </Button>
-            <Button onClick={handleMoverArchivo} disabled={actionLoading} className="w-full sm:w-auto">
-              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Mover
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMoverOpen(false)}>Cancelar</Button>
+            <Button onClick={handleMover} disabled={actionLoading || !moverDestino}>
+              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Mover
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Confirmar Eliminar */}
+      {/* Confirm Delete */}
       <AlertDialog open={confirmarEliminarOpen} onOpenChange={setConfirmarEliminarOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              ¿Eliminar {itemEliminar?.tipo === "carpeta" ? "carpeta" : "archivo"}?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Confirmar eliminación</AlertDialogTitle>
             <AlertDialogDescription>
-              {itemEliminar?.tipo === "carpeta" ? (
-                <>
-                  La carpeta &quot;{(itemEliminar.item as Carpeta).nombre}&quot; será eliminada permanentemente.
-                  <br />
-                  <strong>Nota:</strong> Solo puedes eliminar carpetas vacías.
-                </>
-              ) : (
-                <>
-                  El archivo &quot;{(itemEliminar?.item as Archivo)?.nombre}&quot; será eliminado permanentemente.
-                  <br />
-                  <strong>Advertencia:</strong> Si este archivo está siendo usado en trámites, los trámites mostrarán &quot;Archivo no disponible&quot;.
-                </>
-              )}
+              {itemEliminar?.tipo === "carpeta"
+                ? "¿Está seguro de eliminar esta carpeta? Solo se puede eliminar si está vacía."
+                : "¿Está seguro de eliminar este archivo? Esta acción no se puede deshacer."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleEliminar}
-              className="bg-red-600 hover:bg-red-700"
-              disabled={actionLoading}
-            >
-              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Eliminar
+            <AlertDialogAction onClick={handleEliminar} className="bg-red-600 hover:bg-red-700">
+              {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Modal de Firma Digital */}
+      {/* Firma Modal */}
       <FirmaModal
         isOpen={firmaModalOpen}
-        onClose={() => setFirmaModalOpen(false)}
         archivos={archivosFirmar}
+        onClose={() => setFirmaModalOpen(false)}
         onSuccess={handleFirmaSuccess}
       />
     </div>

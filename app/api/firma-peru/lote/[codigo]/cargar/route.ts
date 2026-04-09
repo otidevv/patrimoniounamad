@@ -77,34 +77,68 @@ export async function POST(
       const filePath = path.join(extractDir, filename)
       const fileBuffer = fs.readFileSync(filePath)
 
-      // Buscar el archivo original en la BD
+      // Calcular nuevo hash
+      const hash = crypto.createHash("sha256").update(fileBuffer).digest("hex")
+
+      // Buscar primero en ArchivoRepositorio (repositorio personal)
       const archivoRepo = await prisma.archivoRepositorio.findUnique({
         where: { id: archivoId },
       })
 
-      if (!archivoRepo) continue
+      if (archivoRepo) {
+        // Sobreescribir el archivo original con la versión firmada
+        const originalRelativePath = archivoRepo.url.replace(/^\/api\//, "")
+        const originalFilePath = path.join(process.cwd(), originalRelativePath)
+        const originalDir = path.dirname(originalFilePath)
+        if (!fs.existsSync(originalDir)) fs.mkdirSync(originalDir, { recursive: true })
+        fs.copyFileSync(filePath, originalFilePath)
 
-      // Sobreescribir el archivo original con la versión firmada
-      const originalRelativePath = archivoRepo.url.replace(/^\/api\//, "")
-      const originalFilePath = path.join(process.cwd(), originalRelativePath)
-      const originalDir = path.dirname(originalFilePath)
+        await prisma.archivoRepositorio.update({
+          where: { id: archivoId },
+          data: {
+            firmado: true,
+            fechaFirma: new Date(),
+            hashArchivo: hash,
+            tamanio: fileBuffer.length,
+          },
+        })
+      } else {
+        // Buscar en ArchivoAdjunto (adjuntos de trámite)
+        const archivoAdjunto = await prisma.archivoAdjunto.findUnique({
+          where: { id: archivoId },
+          include: { documento: true },
+        })
 
-      if (!fs.existsSync(originalDir)) fs.mkdirSync(originalDir, { recursive: true })
-      fs.copyFileSync(filePath, originalFilePath)
+        if (!archivoAdjunto) continue
 
-      // Calcular nuevo hash
-      const hash = crypto.createHash("sha256").update(fileBuffer).digest("hex")
+        // Sobreescribir el archivo adjunto con la versión firmada
+        const originalRelativePath = archivoAdjunto.url.replace(/^\/api\//, "")
+        const originalFilePath = path.join(process.cwd(), originalRelativePath)
+        const originalDir = path.dirname(originalFilePath)
+        if (!fs.existsSync(originalDir)) fs.mkdirSync(originalDir, { recursive: true })
+        fs.copyFileSync(filePath, originalFilePath)
 
-      // Actualizar registro en BD
-      await prisma.archivoRepositorio.update({
-        where: { id: archivoId },
-        data: {
-          firmado: true,
-          fechaFirma: new Date(),
-          hashArchivo: hash,
-          tamanio: fileBuffer.length,
-        },
-      })
+        // Actualizar el documento de trámite con la firma
+        await prisma.documentoTramite.update({
+          where: { id: archivoAdjunto.documentoId },
+          data: {
+            archivoFirmadoUrl: archivoAdjunto.url,
+            firmaDigitalData: hash,
+            fechaFirma: new Date(),
+            tipoFirma: "DIGITAL",
+          },
+        })
+
+        // Registrar en historial
+        await prisma.documentoHistorial.create({
+          data: {
+            documentoId: archivoAdjunto.documentoId,
+            accion: "FIRMADO",
+            usuarioId: loteParams.usuario_id || "",
+            descripcion: "Documento firmado digitalmente con Firma Perú",
+          },
+        })
+      }
 
       procesados.push(archivoId)
     }

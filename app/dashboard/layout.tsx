@@ -17,6 +17,12 @@ export default async function DashboardLayout({
   }
 
   const user = await getCurrentUser()
+
+  // Si falta numeroDocumento, redirigir a completar perfil
+  if (user && !user.numeroDocumento) {
+    redirect("/completar-perfil")
+  }
+
   const permisos = await getUserPermisos()
 
   return (

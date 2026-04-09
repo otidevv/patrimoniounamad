@@ -120,6 +120,7 @@ export async function POST(request: NextRequest) {
       apariencia: body.apariencia,
       nombre_lote: body.nombre_lote,
       fecha: new Date().toISOString(),
+      usuario_id: session.id,
     }
 
     saveLoteParams(tokenLote, params)

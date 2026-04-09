@@ -618,6 +618,57 @@ export default function MisVerificacionesPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Dialog: Aceptar/Rechazar (en vista detalle) */}
+        <Dialog open={dialogRespuesta} onOpenChange={setDialogRespuesta}>
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {accionDialog === "aceptar" ? "Aceptar Asignación" : "Rechazar Asignación"}
+              </DialogTitle>
+              <DialogDescription>
+                {accionDialog === "aceptar"
+                  ? "Al aceptar, confirmas que los bienes listados están bajo tu responsabilidad."
+                  : "Indica el motivo del rechazo para que el verificador pueda corregir."}
+              </DialogDescription>
+            </DialogHeader>
+
+            {asignacionDialog && (
+              <div className="p-3 rounded-md bg-muted text-sm space-y-1">
+                <p><strong>Sesión:</strong> {asignacionDialog.sesion.codigo} — {asignacionDialog.sesion.nombre}</p>
+                <p><strong>Bienes:</strong> {asignacionDialog._count.verificaciones}</p>
+                {asignacionDialog.sesion.sigaNombreDependencia && (
+                  <p><strong>Dependencia:</strong> {asignacionDialog.sesion.sigaNombreDependencia}</p>
+                )}
+              </div>
+            )}
+
+            <div className="grid gap-2">
+              <Label>{accionDialog === "aceptar" ? "Observaciones (opcional)" : "Motivo del rechazo *"}</Label>
+              <Textarea
+                placeholder={accionDialog === "aceptar"
+                  ? "Observaciones opcionales..."
+                  : "Indique por qué rechaza la asignación..."}
+                value={observacionesResp}
+                onChange={(e) => setObservacionesResp(e.target.value)}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDialogRespuesta(false)}>
+                Cancelar
+              </Button>
+              <Button
+                onClick={enviarRespuesta}
+                disabled={enviando || (accionDialog === "rechazar" && !observacionesResp.trim())}
+                variant={accionDialog === "aceptar" ? "default" : "destructive"}
+              >
+                {enviando && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {accionDialog === "aceptar" ? "Confirmar Aceptación" : "Confirmar Rechazo"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     )
   }

@@ -111,6 +111,13 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     prefijo: "ACTA",
   },
   {
+    codigo: "ACTA-ENT",
+    nombre: "Acta de Entrega de Bien",
+    descripcion: "Acta de transferencia de bienes patrimoniales entre dependencias",
+    requiereFirma: true,
+    prefijo: "ACTA-ENT",
+  },
+  {
     codigo: "CIRCULAR",
     nombre: "Circular",
     descripcion: "Comunicación de difusión masiva",

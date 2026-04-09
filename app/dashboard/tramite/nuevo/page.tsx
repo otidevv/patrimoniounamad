@@ -21,6 +21,11 @@ import {
   ChevronRight,
   Home,
   Shield,
+  Package,
+  CheckSquare,
+  Square,
+  Loader2,
+  ArrowRightLeft,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -68,6 +73,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -76,6 +90,17 @@ interface TipoDocumento {
   codigo: string
   nombre: string
   requiereFirma: boolean
+}
+
+interface BienVerificado {
+  id: string
+  codigoPatrimonial: string
+  descripcionSiga: string | null
+  marcaSiga: string | null
+  modeloSiga: string | null
+  serieSiga: string | null
+  estadoFisico: string | null
+  valorSiga: number | null
 }
 
 interface Dependencia {
@@ -158,6 +183,15 @@ export default function NuevoDocumentoPage() {
   // Estado para controlar los popovers de dependencias
   const [openDependenciaPopover, setOpenDependenciaPopover] = useState<number | null>(null)
 
+  // === Estado para modo ACTA DE ENTREGA ===
+  const [bienesVerificados, setBienesVerificados] = useState<BienVerificado[]>([])
+  const [bienesSeleccionados, setBienesSeleccionados] = useState<Set<string>>(new Set())
+  const [loadingBienes, setLoadingBienes] = useState(false)
+  const [busquedaBienes, setBusquedaBienes] = useState("")
+  const [estadosPorBien, setEstadosPorBien] = useState<Record<string, string>>({})
+  const [paginaBienes, setPaginaBienes] = useState(1)
+  const [porPaginaBienes, setPorPaginaBienes] = useState(10)
+
   useEffect(() => {
     fetchTiposDocumento()
     fetchDependencias()
@@ -186,6 +220,82 @@ export default function NuevoDocumentoPage() {
       console.error("Error al cargar dependencias:", error)
     }
   }
+
+  // Detectar si el tipo seleccionado es Acta de Entrega
+  const tipoSeleccionadoObj = tiposDocumento.find((t) => t.id === formData.tipoDocumentoId)
+  const esActaEntrega = tipoSeleccionadoObj?.codigo === "ACTA-ENT"
+
+  // Cargar bienes verificados cuando se selecciona tipo ACTA-ENT
+  const fetchBienesVerificados = async () => {
+    setLoadingBienes(true)
+    try {
+      const response = await fetch("/api/inventario/verificaciones?misbienes=true")
+      if (response.ok) {
+        const data = await response.json()
+        const bienes: BienVerificado[] = data.verificaciones || []
+        setBienesVerificados(bienes)
+        // Inicializar estados con el estadoFisico de cada verificación
+        const estados: Record<string, string> = {}
+        for (const b of bienes) {
+          estados[b.id] = (b.estadoFisico || "BUENO").toLowerCase()
+        }
+        setEstadosPorBien(estados)
+      }
+    } catch (error) {
+      console.error("Error al cargar bienes verificados:", error)
+    } finally {
+      setLoadingBienes(false)
+    }
+  }
+
+  // Efecto: cargar bienes cuando se activa modo acta
+  useEffect(() => {
+    if (esActaEntrega && bienesVerificados.length === 0) {
+      fetchBienesVerificados()
+      // Agregar un destinatario principal automaticamente si no hay
+      if (destinatarios.filter(d => !d.esCopia).length === 0) {
+        addDestinatario(false)
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [esActaEntrega])
+
+  const toggleBienSeleccionado = (id: string) => {
+    setBienesSeleccionados((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const toggleTodosBienes = () => {
+    if (bienesSeleccionados.size === bienesFiltrados.length) {
+      setBienesSeleccionados(new Set())
+    } else {
+      setBienesSeleccionados(new Set(bienesFiltrados.map((b) => b.id)))
+    }
+  }
+
+  const bienesFiltrados = bienesVerificados.filter((b) => {
+    if (!busquedaBienes) return true
+    const q = busquedaBienes.toLowerCase()
+    return (
+      b.codigoPatrimonial?.toLowerCase().includes(q) ||
+      b.descripcionSiga?.toLowerCase().includes(q) ||
+      b.marcaSiga?.toLowerCase().includes(q) ||
+      b.serieSiga?.toLowerCase().includes(q)
+    )
+  })
+
+  const totalPaginasBienes = Math.max(1, Math.ceil(bienesFiltrados.length / porPaginaBienes))
+  const bienesPaginados = bienesFiltrados.slice(
+    (paginaBienes - 1) * porPaginaBienes,
+    paginaBienes * porPaginaBienes
+  )
+
+  // Reset página al buscar
+  useEffect(() => { setPaginaBienes(1) }, [busquedaBienes])
 
   // Cargar usuarios de una dependencia (con cache)
   const fetchUsuariosDependencia = async (dependenciaId: string) => {
@@ -310,7 +420,74 @@ export default function NuevoDocumentoPage() {
     setDestinatarios(updated)
   }
 
+  // Submit para Acta de Entrega de Bien
+  const handleSubmitActa = async () => {
+    if (!formData.tipoDocumentoId) {
+      toast.error("Selecciona un tipo de documento")
+      return
+    }
+    if (!formData.correlativo) {
+      toast.error("Ingresa el número correlativo")
+      return
+    }
+    if (bienesSeleccionados.size === 0) {
+      toast.error("Selecciona al menos un bien para transferir")
+      return
+    }
+
+    const destPrincipal = destinatarios.find((d) => !d.esCopia && d.dependenciaId && d.destinatarioId)
+    if (!destPrincipal) {
+      toast.error("Selecciona una dependencia y persona destinataria")
+      return
+    }
+
+    setLoading(true)
+    try {
+      // Determinar estado general predominante
+      const idsSeleccionados = Array.from(bienesSeleccionados)
+      const estados = idsSeleccionados.map((id) => estadosPorBien[id] || "bueno")
+      const estadoGeneral = estados.every((e) => e === estados[0]) ? estados[0] : "bueno"
+
+      const payload = {
+        tipoDocumentoId: formData.tipoDocumentoId,
+        correlativo: formData.correlativo,
+        anio: formData.anio,
+        destinatarioId: destPrincipal.destinatarioId,
+        dependenciaDestinoId: destPrincipal.dependenciaId,
+        verificacionIds: idsSeleccionados,
+        motivo: formData.observaciones || null,
+        estadoConservacion: estadoGeneral,
+      }
+
+      const response = await fetch("/api/tramite/generar-acta", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        toast.success("Acta generada correctamente. Fírmala digitalmente para poder enviarla.")
+        router.push(`/dashboard/tramite/documento/${data.documento.id}`)
+      } else {
+        const error = await response.json()
+        toast.error(error.message || "Error al generar el acta")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      toast.error("Error al generar el acta de entrega")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleSubmit = async (enviar: boolean = false) => {
+    // Si es acta de entrega, usar flujo especial
+    if (esActaEntrega) {
+      await handleSubmitActa()
+      return
+    }
+
     // Validaciones
     if (!formData.tipoDocumentoId) {
       toast.error("Selecciona un tipo de documento")
@@ -429,7 +606,7 @@ export default function NuevoDocumentoPage() {
     }
   }
 
-  const tipoSeleccionado = tiposDocumento.find((t) => t.id === formData.tipoDocumentoId)
+  const tipoSeleccionado = tipoSeleccionadoObj
 
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`
@@ -441,9 +618,13 @@ export default function NuevoDocumentoPage() {
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Nuevo Documento</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {esActaEntrega ? "Acta de Entrega de Bien" : "Nuevo Documento"}
+          </h1>
           <p className="text-muted-foreground">
-            Registra un nuevo documento de trámite
+            {esActaEntrega
+              ? "Selecciona los bienes a transferir y el destinatario"
+              : "Registra un nuevo documento de trámite"}
           </p>
         </div>
       </div>
@@ -451,118 +632,321 @@ export default function NuevoDocumentoPage() {
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Formulario principal */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Archivo PDF - Lo más importante */}
-          <Card className="border-primary/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileUp className="h-5 w-5" />
-                Documento PDF *
-              </CardTitle>
-              <CardDescription>
-                Sube un nuevo documento o selecciona uno de tu repositorio
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {!archivoPDF && !archivoRepositorio ? (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {/* Opción 1: Subir archivo */}
-                    <label
-                      htmlFor="archivoPDF"
-                      className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary hover:bg-primary/5 transition-all cursor-pointer block"
-                    >
-                      <FileUp className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
-                      <div className="space-y-1">
-                        <span className="text-sm font-medium block">
-                          Subir nuevo PDF
-                        </span>
-                        <p className="text-xs text-muted-foreground">
-                          Máximo 10MB
-                        </p>
-                      </div>
-                      <Input
-                        id="archivoPDF"
-                        type="file"
-                        accept=".pdf"
-                        onChange={handleFileChange}
-                        className="hidden"
-                      />
-                    </label>
-
-                    {/* Opción 2: Seleccionar del repositorio */}
-                    <button
-                      type="button"
-                      onClick={abrirSelectorRepositorio}
-                      className="border-2 border-dashed rounded-lg p-6 text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer"
-                    >
-                      <FolderArchive className="mx-auto h-10 w-10 text-blue-500 mb-3" />
-                      <div className="space-y-1">
-                        <span className="text-sm font-medium block">
-                          Seleccionar del Repositorio
-                        </span>
-                        <p className="text-xs text-muted-foreground">
-                          Usar un PDF ya subido
-                        </p>
-                      </div>
-                    </button>
+          {/* Sección condicional: PDF upload o Selector de bienes */}
+          {esActaEntrega ? (
+            /* === MODO ACTA: Selector de bienes verificados === */
+            <Card className="border-orange-300">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Package className="h-5 w-5 text-orange-600" />
+                      Bienes a Transferir *
+                    </CardTitle>
+                    <CardDescription>
+                      Selecciona los bienes verificados que deseas transferir. El PDF se genera automáticamente.
+                    </CardDescription>
                   </div>
-                ) : archivoPDF ? (
-                  <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 border border-green-200">
-                    <div className="flex items-center gap-3">
-                      <FileCheck className="h-10 w-10 text-green-600" />
-                      <div>
-                        <p className="font-medium text-green-900">{archivoPDF.name}</p>
-                        <p className="text-sm text-green-700">
-                          {formatFileSize(archivoPDF.size)} - Archivo nuevo
-                        </p>
-                      </div>
-                    </div>
+                  {bienesSeleccionados.size > 0 && (
+                    <Badge className="bg-orange-100 text-orange-800 gap-1 text-sm">
+                      <CheckSquare className="h-3.5 w-3.5" />
+                      {bienesSeleccionados.size} seleccionado{bienesSeleccionados.size !== 1 ? "s" : ""}
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                {/* Barra de búsqueda y controles */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar por código, descripción, marca o serie..."
+                      value={busquedaBienes}
+                      onChange={(e) => setBusquedaBienes(e.target.value)}
+                      className="pl-8 h-9"
+                    />
+                  </div>
+                  {bienesSeleccionados.size > 0 && (
                     <Button
                       variant="ghost"
-                      size="icon"
-                      onClick={limpiarArchivo}
-                      className="text-green-700 hover:text-red-600 hover:bg-red-50"
+                      size="sm"
+                      onClick={() => setBienesSeleccionados(new Set())}
+                      className="text-orange-700 hover:text-red-600 shrink-0"
                     >
-                      <X className="h-5 w-5" />
+                      <X className="h-4 w-4 mr-1" />
+                      Limpiar
                     </Button>
-                  </div>
-                ) : archivoRepositorio ? (
-                  <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50 border border-blue-200">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <FileText className="h-10 w-10 text-blue-600" />
-                        {archivoRepositorio.firmado && (
-                          <Shield className="absolute -top-1 -right-1 h-4 w-4 text-green-500" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-blue-900">{archivoRepositorio.nombre}</p>
-                        <p className="text-sm text-blue-700">
-                          {formatFileSize(archivoRepositorio.tamanio)} - Desde repositorio
-                          {archivoRepositorio.firmado && " (Firmado)"}
-                        </p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={limpiarArchivo}
-                      className="text-blue-700 hover:text-red-600 hover:bg-red-50"
-                    >
-                      <X className="h-5 w-5" />
-                    </Button>
-                  </div>
-                ) : null}
+                  )}
+                </div>
 
-                {archivoError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{archivoError}</AlertDescription>
-                  </Alert>
+                {/* Tabla de bienes */}
+                {loadingBienes ? (
+                  <div className="flex items-center justify-center py-16">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    <span className="ml-2 text-muted-foreground">Cargando bienes...</span>
+                  </div>
+                ) : bienesFiltrados.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <Package className="h-12 w-12 text-muted-foreground/50" />
+                    <p className="mt-2 text-muted-foreground">
+                      {bienesVerificados.length === 0
+                        ? "No tienes bienes verificados disponibles para transferir"
+                        : "No se encontraron bienes con ese criterio"}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-muted/40">
+                            <TableHead className="w-[40px] pl-4">
+                              <Checkbox
+                                checked={bienesPaginados.every((b) => bienesSeleccionados.has(b.id)) && bienesPaginados.length > 0}
+                                onCheckedChange={() => {
+                                  const allSelected = bienesPaginados.every((b) => bienesSeleccionados.has(b.id))
+                                  setBienesSeleccionados((prev) => {
+                                    const next = new Set(prev)
+                                    for (const b of bienesPaginados) {
+                                      if (allSelected) next.delete(b.id)
+                                      else next.add(b.id)
+                                    }
+                                    return next
+                                  })
+                                }}
+                              />
+                            </TableHead>
+                            <TableHead className="text-xs font-semibold">N°</TableHead>
+                            <TableHead className="text-xs font-semibold">Código Patrimonial</TableHead>
+                            <TableHead className="text-xs font-semibold">Descripción</TableHead>
+                            <TableHead className="text-xs font-semibold">Marca</TableHead>
+                            <TableHead className="text-xs font-semibold">Modelo</TableHead>
+                            <TableHead className="text-xs font-semibold">Serie</TableHead>
+                            <TableHead className="text-xs font-semibold w-[130px]">Estado</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {bienesPaginados.map((bien, idx) => (
+                            <TableRow
+                              key={bien.id}
+                              className={cn(
+                                "cursor-pointer transition-colors",
+                                bienesSeleccionados.has(bien.id) && "bg-orange-50 hover:bg-orange-100",
+                                !bienesSeleccionados.has(bien.id) && "hover:bg-muted/30"
+                              )}
+                              onClick={() => toggleBienSeleccionado(bien.id)}
+                            >
+                              <TableCell className="pl-4 py-2">
+                                <Checkbox
+                                  checked={bienesSeleccionados.has(bien.id)}
+                                  onCheckedChange={() => toggleBienSeleccionado(bien.id)}
+                                />
+                              </TableCell>
+                              <TableCell className="text-xs text-muted-foreground py-2">
+                                {(paginaBienes - 1) * porPaginaBienes + idx + 1}
+                              </TableCell>
+                              <TableCell className="font-mono text-xs py-2 whitespace-nowrap">
+                                {bien.codigoPatrimonial}
+                              </TableCell>
+                              <TableCell className="text-xs py-2 max-w-[200px]">
+                                <span className="line-clamp-2">{bien.descripcionSiga || "-"}</span>
+                              </TableCell>
+                              <TableCell className="text-xs py-2">
+                                {bien.marcaSiga || "S/N"}
+                              </TableCell>
+                              <TableCell className="text-xs py-2">
+                                {bien.modeloSiga || "S/N"}
+                              </TableCell>
+                              <TableCell className="text-xs py-2">
+                                {bien.serieSiga || "S/N"}
+                              </TableCell>
+                              <TableCell className="py-2" onClick={(e) => e.stopPropagation()}>
+                                <Select
+                                  value={estadosPorBien[bien.id] || (bien.estadoFisico || "BUENO").toLowerCase()}
+                                  onValueChange={(val) =>
+                                    setEstadosPorBien((prev) => ({ ...prev, [bien.id]: val }))
+                                  }
+                                >
+                                  <SelectTrigger className="h-7 text-xs w-[120px]">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="bueno">Bueno</SelectItem>
+                                    <SelectItem value="regular">Regular</SelectItem>
+                                    <SelectItem value="malo">Malo</SelectItem>
+                                    <SelectItem value="inoperativo">Inoperativo</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+
+                    {/* Paginación */}
+                    <div className="flex items-center justify-between px-4 py-3 border-t">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground">Mostrar</span>
+                        <Select value={String(porPaginaBienes)} onValueChange={(v) => { setPorPaginaBienes(Number(v)); setPaginaBienes(1) }}>
+                          <SelectTrigger className="h-8 w-[65px] text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {[10, 20, 50, 100].map((n) => (
+                              <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <span className="text-xs text-muted-foreground">
+                          de {bienesFiltrados.length} bienes
+                        </span>
+                      </div>
+                      {totalPaginasBienes > 1 && (
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            disabled={paginaBienes <= 1}
+                            onClick={() => setPaginaBienes((p) => p - 1)}
+                          >
+                            <ChevronRight className="h-4 w-4 rotate-180" />
+                          </Button>
+                          <span className="text-xs px-2 min-w-[50px] text-center">
+                            {paginaBienes} / {totalPaginasBienes}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            disabled={paginaBienes >= totalPaginasBienes}
+                            onClick={() => setPaginaBienes((p) => p + 1)}
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </>
                 )}
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ) : (
+            /* === MODO NORMAL: Upload de PDF === */
+            <Card className="border-primary/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileUp className="h-5 w-5" />
+                  Documento PDF *
+                </CardTitle>
+                <CardDescription>
+                  Sube un nuevo documento o selecciona uno de tu repositorio
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {!archivoPDF && !archivoRepositorio ? (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {/* Opción 1: Subir archivo */}
+                      <label
+                        htmlFor="archivoPDF"
+                        className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary hover:bg-primary/5 transition-all cursor-pointer block"
+                      >
+                        <FileUp className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+                        <div className="space-y-1">
+                          <span className="text-sm font-medium block">
+                            Subir nuevo PDF
+                          </span>
+                          <p className="text-xs text-muted-foreground">
+                            Máximo 10MB
+                          </p>
+                        </div>
+                        <Input
+                          id="archivoPDF"
+                          type="file"
+                          accept=".pdf"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                      </label>
+
+                      {/* Opción 2: Seleccionar del repositorio */}
+                      <button
+                        type="button"
+                        onClick={abrirSelectorRepositorio}
+                        className="border-2 border-dashed rounded-lg p-6 text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer"
+                      >
+                        <FolderArchive className="mx-auto h-10 w-10 text-blue-500 mb-3" />
+                        <div className="space-y-1">
+                          <span className="text-sm font-medium block">
+                            Seleccionar del Repositorio
+                          </span>
+                          <p className="text-xs text-muted-foreground">
+                            Usar un PDF ya subido
+                          </p>
+                        </div>
+                      </button>
+                    </div>
+                  ) : archivoPDF ? (
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 border border-green-200">
+                      <div className="flex items-center gap-3">
+                        <FileCheck className="h-10 w-10 text-green-600" />
+                        <div>
+                          <p className="font-medium text-green-900">{archivoPDF.name}</p>
+                          <p className="text-sm text-green-700">
+                            {formatFileSize(archivoPDF.size)} - Archivo nuevo
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={limpiarArchivo}
+                        className="text-green-700 hover:text-red-600 hover:bg-red-50"
+                      >
+                        <X className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  ) : archivoRepositorio ? (
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-blue-50 border border-blue-200">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <FileText className="h-10 w-10 text-blue-600" />
+                          {archivoRepositorio.firmado && (
+                            <Shield className="absolute -top-1 -right-1 h-4 w-4 text-green-500" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-blue-900">{archivoRepositorio.nombre}</p>
+                          <p className="text-sm text-blue-700">
+                            {formatFileSize(archivoRepositorio.tamanio)} - Desde repositorio
+                            {archivoRepositorio.firmado && " (Firmado)"}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={limpiarArchivo}
+                        className="text-blue-700 hover:text-red-600 hover:bg-red-50"
+                      >
+                        <X className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  ) : null}
+
+                  {archivoError && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>{archivoError}</AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Datos del documento */}
           <Card>
@@ -621,69 +1005,77 @@ export default function NuevoDocumentoPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="asunto">Asunto *</Label>
-                <Input
-                  id="asunto"
-                  placeholder="Resumen breve del documento"
-                  value={formData.asunto}
-                  onChange={(e) =>
-                    setFormData({ ...formData, asunto: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="referencia">Referencia (opcional)</Label>
-                <Input
-                  id="referencia"
-                  placeholder="Ej: Ref. Oficio N° 123-2024-UREDES"
-                  value={formData.referencia}
-                  onChange={(e) =>
-                    setFormData({ ...formData, referencia: e.target.value })
-                  }
-                />
-                <p className="text-xs text-muted-foreground">
-                  Si este documento responde a otro, indica la referencia
-                </p>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-3">
+              {!esActaEntrega && (
                 <div className="space-y-2">
-                  <Label htmlFor="folios">Folios</Label>
+                  <Label htmlFor="asunto">Asunto *</Label>
                   <Input
-                    id="folios"
-                    type="number"
-                    min={1}
-                    value={formData.folios}
+                    id="asunto"
+                    placeholder="Resumen breve del documento"
+                    value={formData.asunto}
                     onChange={(e) =>
-                      setFormData({ ...formData, folios: parseInt(e.target.value) || 1 })
+                      setFormData({ ...formData, asunto: e.target.value })
                     }
                   />
                 </div>
+              )}
+
+              {!esActaEntrega && (
                 <div className="space-y-2">
-                  <Label htmlFor="prioridad">Prioridad</Label>
-                  <Select
-                    value={formData.prioridad}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, prioridad: value })
+                  <Label htmlFor="referencia">Referencia (opcional)</Label>
+                  <Input
+                    id="referencia"
+                    placeholder="Ej: Ref. Oficio N° 123-2024-UREDES"
+                    value={formData.referencia}
+                    onChange={(e) =>
+                      setFormData({ ...formData, referencia: e.target.value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="BAJA">Baja</SelectItem>
-                      <SelectItem value="NORMAL">Normal</SelectItem>
-                      <SelectItem value="ALTA">Alta</SelectItem>
-                      <SelectItem value="URGENTE">Urgente</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Si este documento responde a otro, indica la referencia
+                  </p>
                 </div>
-              </div>
+              )}
+
+              {!esActaEntrega && (
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="folios">Folios</Label>
+                    <Input
+                      id="folios"
+                      type="number"
+                      min={1}
+                      value={formData.folios}
+                      onChange={(e) =>
+                        setFormData({ ...formData, folios: parseInt(e.target.value) || 1 })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="prioridad">Prioridad</Label>
+                    <Select
+                      value={formData.prioridad}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, prioridad: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="BAJA">Baja</SelectItem>
+                        <SelectItem value="NORMAL">Normal</SelectItem>
+                        <SelectItem value="ALTA">Alta</SelectItem>
+                        <SelectItem value="URGENTE">Urgente</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2">
-                <Label htmlFor="observaciones">Observaciones internas</Label>
+                <Label htmlFor="observaciones">
+                  {esActaEntrega ? "Motivo de la transferencia (opcional)" : "Observaciones internas"}
+                </Label>
                 <Textarea
                   id="observaciones"
                   placeholder="Notas adicionales (solo visibles para tu dependencia)..."
@@ -964,23 +1356,45 @@ export default function NuevoDocumentoPage() {
           {/* Acciones */}
           <Card>
             <CardContent className="pt-6 space-y-2">
-              <Button
-                className="w-full"
-                onClick={() => handleSubmit(true)}
-                disabled={loading || (!archivoPDF && !archivoRepositorio)}
-              >
-                <Send className="mr-2 h-4 w-4" />
-                {loading ? "Enviando..." : "Enviar Documento"}
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => handleSubmit(false)}
-                disabled={loading || (!archivoPDF && !archivoRepositorio)}
-              >
-                <Save className="mr-2 h-4 w-4" />
-                Guardar Borrador
-              </Button>
+              {esActaEntrega ? (
+                <>
+                  <Button
+                    className="w-full"
+                    onClick={() => handleSubmit(true)}
+                    disabled={loading || bienesSeleccionados.size === 0}
+                  >
+                    {loading ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <ArrowRightLeft className="mr-2 h-4 w-4" />
+                    )}
+                    {loading ? "Generando acta..." : `Generar Acta y Enviar (${bienesSeleccionados.size})`}
+                  </Button>
+                  <p className="text-xs text-muted-foreground text-center">
+                    Se generará el PDF automáticamente y se enviará al destinatario para firma
+                  </p>
+                </>
+              ) : (
+                <>
+                  <Button
+                    className="w-full"
+                    onClick={() => handleSubmit(true)}
+                    disabled={loading || (!archivoPDF && !archivoRepositorio)}
+                  >
+                    <Send className="mr-2 h-4 w-4" />
+                    {loading ? "Enviando..." : "Enviar Documento"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleSubmit(false)}
+                    disabled={loading || (!archivoPDF && !archivoRepositorio)}
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    Guardar Borrador
+                  </Button>
+                </>
+              )}
               <Button
                 variant="ghost"
                 className="w-full"

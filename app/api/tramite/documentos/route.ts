@@ -1,33 +1,11 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
+import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  rol: string
-}
-
-async function verifyAuth(): Promise<UserPayload | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")?.value
-
-  if (!token) return null
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-    return decoded
-  } catch {
-    return null
-  }
-}
 
 // POST: Crear nuevo documento de trámite
 export async function POST(request: Request) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
@@ -209,7 +187,7 @@ export async function POST(request: Request) {
 // GET: Obtener documentos (con filtros)
 export async function GET(request: Request) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }

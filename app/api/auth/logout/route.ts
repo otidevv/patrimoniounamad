@@ -4,7 +4,12 @@ import { cookies } from "next/headers"
 export async function POST() {
   try {
     const cookieStore = await cookies()
+    // Borrar JWT propio
     cookieStore.delete("auth-token")
+    // Borrar cookies de NextAuth
+    cookieStore.delete("next-auth.session-token")
+    cookieStore.delete("next-auth.csrf-token")
+    cookieStore.delete("next-auth.callback-url")
 
     return NextResponse.json({ success: true })
   } catch (error) {

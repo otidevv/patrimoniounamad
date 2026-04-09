@@ -1,37 +1,15 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
 import { prisma } from "@/lib/prisma"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  rol: string
-}
+import { getSession } from "@/lib/auth"
 
 interface Params {
   params: Promise<{ id: string }>
 }
 
-async function verifyAuth(): Promise<UserPayload | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")?.value
-
-  if (!token) return null
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-    return decoded
-  } catch {
-    return null
-  }
-}
-
 // GET: Obtener un tipo de documento por ID
 export async function GET(request: Request, { params }: Params) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
@@ -69,7 +47,7 @@ export async function GET(request: Request, { params }: Params) {
 // PUT: Actualizar un tipo de documento
 export async function PUT(request: Request, { params }: Params) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
@@ -136,7 +114,7 @@ export async function PUT(request: Request, { params }: Params) {
 // DELETE: Eliminar un tipo de documento
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }

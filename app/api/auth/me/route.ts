@@ -1,36 +1,20 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
+import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  email: string
-  nombre: string
-  apellidos: string
-  rol: string
-  rolId: string
-  dependenciaId: string | null
-}
 
 export async function GET() {
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get("auth-token")?.value
+    const session = await getSession()
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json(
         { error: "No autenticado" },
         { status: 401 }
       )
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-
     const user = await prisma.usuario.findUnique({
-      where: { id: decoded.id },
+      where: { id: session.id },
       select: {
         id: true,
         email: true,
@@ -41,6 +25,7 @@ export async function GET() {
         cargo: true,
         telefono: true,
         foto: true,
+        fotoGoogle: true,
         rol: {
           select: {
             id: true,
@@ -71,6 +56,7 @@ export async function GET() {
     return NextResponse.json({
       user: {
         ...user,
+        foto: user.foto ?? user.fotoGoogle ?? null,
         rol: user.rol.codigo,  // Para compatibilidad, enviar código como "rol"
         rolId: user.rol.id,
         rolNombre: user.rol.nombre,

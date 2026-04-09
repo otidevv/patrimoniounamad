@@ -52,6 +52,7 @@ export interface LoteParams {
   nombre_lote: string
   fecha: string
   codigo_lote?: string
+  usuario_id?: string
 }
 
 export const MOTIVOS_FIRMA = { AUTOR: 1, VOBO: 2 } as const

@@ -21,6 +21,11 @@ import {
   Printer,
   FileSignature,
   ArrowRight,
+  PenTool,
+  Shield,
+  PackageCheck,
+  Package,
+  Loader2,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -42,6 +47,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { toast } from "sonner"
+import { FirmaModal } from "@/components/firma-peru/firma-modal"
 
 interface Documento {
   id: string
@@ -54,6 +60,7 @@ interface Documento {
   prioridad: string
   tipoFirma: string
   archivoFirmadoUrl: string | null
+  fechaFirma: string | null
   fechaDocumento: string
   fechaEnvio: string | null
   observaciones: string | null
@@ -118,6 +125,21 @@ interface Documento {
       nombre: string
     } | null
   }[]
+  transferencias: {
+    id: string
+    codigoPatrimonial: string
+    descripcionBien: string | null
+    estado: string
+    nombreRemitente: string
+    nombreDestinatario: string
+    fechaSolicitud: string
+    fechaRespuesta: string | null
+    verificacion: {
+      marcaSiga: string | null
+      modeloSiga: string | null
+      serieSiga: string | null
+    }
+  }[]
   usuarioActual: {
     id: string
     dependenciaId: string | null
@@ -167,6 +189,8 @@ export default function DocumentoDetallePage({
   const router = useRouter()
   const [documento, setDocumento] = useState<Documento | null>(null)
   const [loading, setLoading] = useState(true)
+  const [firmaModalOpen, setFirmaModalOpen] = useState(false)
+  const [aceptandoTransferencia, setAceptandoTransferencia] = useState(false)
 
   useEffect(() => {
     fetchDocumento()
@@ -191,6 +215,70 @@ export default function DocumentoDetallePage({
       toast.error("Error al cargar el documento")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleAceptarTransferencia = async () => {
+    setAceptandoTransferencia(true)
+    try {
+      const response = await fetch(`/api/tramite/documentos/${id}/aceptar-transferencia`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ observaciones: "" }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        toast.success(data.message || "Transferencia aceptada correctamente")
+        fetchDocumento()
+      } else {
+        const error = await response.json()
+        toast.error(error.message || "Error al aceptar la transferencia")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      toast.error("Error al aceptar la transferencia")
+    } finally {
+      setAceptandoTransferencia(false)
+    }
+  }
+
+  const [enviandoDocumento, setEnviandoDocumento] = useState(false)
+
+  // Detectar firmas del historial
+  const firmasDelHistorial = documento?.historial?.filter((h) => h.accion === "FIRMADO") || []
+  const remitenteFirmo = firmasDelHistorial.some((h) => h.usuario && documento &&
+    `${h.usuario.nombre} ${h.usuario.apellidos}` === `${documento.remitente.nombre} ${documento.remitente.apellidos}`)
+  const esActaEntrega = documento?.tipoDocumento?.codigo === "ACTA-ENT"
+  const esRemitente = documento?.remitente?.id === documento?.usuarioActual?.id
+  const esDestinatarioDoc = documento?.destinos?.some(
+    (d) => d.dependenciaDestinoId === documento?.usuarioActual?.dependenciaId
+  ) || false
+  const destinatarioFirmo = firmasDelHistorial.some((h) => !esRemitente || (h.usuario &&
+    `${h.usuario.nombre} ${h.usuario.apellidos}` !== `${documento?.remitente?.nombre} ${documento?.remitente?.apellidos}`))
+  const tieneTransferenciasPendientes = (documento?.transferencias?.some((t) => t.estado === "PENDIENTE")) || false
+
+  const handleEnviarDocumento = async () => {
+    setEnviandoDocumento(true)
+    try {
+      const response = await fetch(`/api/tramite/documentos/${id}/enviar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      })
+
+      if (response.ok) {
+        toast.success("Documento firmado enviado correctamente al destinatario")
+        fetchDocumento()
+      } else {
+        const error = await response.json()
+        toast.error(error.message || "Error al enviar el documento")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      toast.error("Error al enviar el documento")
+    } finally {
+      setEnviandoDocumento(false)
     }
   }
 
@@ -466,6 +554,102 @@ export default function DocumentoDetallePage({
             </Card>
           )}
 
+          {/* Bienes Transferidos (para actas de entrega) */}
+          {documento.transferencias && documento.transferencias.length > 0 && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Package className="h-5 w-5" />
+                      Bienes Transferidos
+                    </CardTitle>
+                    <CardDescription>
+                      {documento.transferencias.length} bien(es) en esta acta de entrega
+                    </CardDescription>
+                  </div>
+                  {documento.transferencias.every((t) => t.estado === "ACEPTADA") ? (
+                    <Badge className="bg-green-100 text-green-800 gap-1">
+                      <PackageCheck className="h-3 w-3" />
+                      Transferencia completada
+                    </Badge>
+                  ) : documento.transferencias.some((t) => t.estado === "PENDIENTE") ? (
+                    <Badge className="bg-amber-100 text-amber-800 gap-1">
+                      <Clock className="h-3 w-3" />
+                      Pendiente de aceptación
+                    </Badge>
+                  ) : null}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>N°</TableHead>
+                      <TableHead>Código</TableHead>
+                      <TableHead>Descripción</TableHead>
+                      <TableHead>Marca</TableHead>
+                      <TableHead>Modelo</TableHead>
+                      <TableHead>Serie</TableHead>
+                      <TableHead>Estado</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {documento.transferencias.map((t, idx) => (
+                      <TableRow key={t.id}>
+                        <TableCell className="text-xs">{idx + 1}</TableCell>
+                        <TableCell className="font-mono text-xs">{t.codigoPatrimonial}</TableCell>
+                        <TableCell className="text-xs max-w-[200px]">
+                          <span className="line-clamp-2">{t.descripcionBien || "-"}</span>
+                        </TableCell>
+                        <TableCell className="text-xs">{t.verificacion?.marcaSiga || "S/N"}</TableCell>
+                        <TableCell className="text-xs">{t.verificacion?.modeloSiga || "S/N"}</TableCell>
+                        <TableCell className="text-xs">{t.verificacion?.serieSiga || "S/N"}</TableCell>
+                        <TableCell>
+                          <Badge className={
+                            t.estado === "ACEPTADA" ? "bg-green-100 text-green-800" :
+                            t.estado === "RECHAZADA" ? "bg-red-100 text-red-800" :
+                            "bg-amber-100 text-amber-800"
+                          }>
+                            {t.estado === "ACEPTADA" ? "Aceptado" :
+                             t.estado === "RECHAZADA" ? "Rechazado" : "Pendiente"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {/* Botón aceptar transferencia - solo para destinatario con transferencias pendientes */}
+                {documento.transferencias.some((t) => t.estado === "PENDIENTE") &&
+                  documento.destinos.some(
+                    (d) => d.dependenciaDestinoId === documento.usuarioActual.dependenciaId
+                  ) && (
+                    <div className="mt-4 p-4 rounded-lg border-2 border-dashed border-green-300 bg-green-50">
+                      <p className="text-sm text-green-800 mb-3">
+                        Al aceptar, confirmas que recibes los {documento.transferencias.filter(t => t.estado === "PENDIENTE").length} bien(es)
+                        listados y quedan bajo tu responsabilidad.
+                      </p>
+                      <Button
+                        className="w-full bg-green-600 hover:bg-green-700"
+                        onClick={handleAceptarTransferencia}
+                        disabled={aceptandoTransferencia}
+                      >
+                        {aceptandoTransferencia ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <PackageCheck className="mr-2 h-4 w-4" />
+                        )}
+                        {aceptandoTransferencia
+                          ? "Procesando..."
+                          : `Aceptar Transferencia (${documento.transferencias.filter(t => t.estado === "PENDIENTE").length} bienes)`}
+                      </Button>
+                    </div>
+                  )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Historial */}
           <Card>
             <CardHeader>
@@ -526,28 +710,184 @@ export default function DocumentoDetallePage({
               <CardTitle>Acciones</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {documento.estado === "BORRADOR" && (
-                <Button className="w-full" asChild>
-                  <Link href={`/dashboard/tramite/editar/${documento.id}`}>
-                    Editar Documento
-                  </Link>
-                </Button>
+              {/* === FLUJO ACTA DE ENTREGA === */}
+              {esActaEntrega ? (
+                <>
+                  {/* PASO 1: Remitente - Borrador sin firmar → Firmar */}
+                  {documento.estado === "BORRADOR" && esRemitente && !remitenteFirmo && (
+                    <>
+                      <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-800 mb-2">
+                        <AlertCircle className="inline h-4 w-4 mr-1" />
+                        Debes firmar el acta antes de poder enviarla al destinatario.
+                      </div>
+                      <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                        onClick={() => setFirmaModalOpen(true)}
+                        disabled={documento.archivosAdjuntos.length === 0}
+                      >
+                        <PenTool className="mr-2 h-4 w-4" />
+                        Firmar Digitalmente
+                      </Button>
+                    </>
+                  )}
+
+                  {/* PASO 2: Remitente - Borrador firmado → Enviar */}
+                  {documento.estado === "BORRADOR" && esRemitente && remitenteFirmo && (
+                    <>
+                      <div className="p-3 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800 mb-2">
+                        <Shield className="inline h-4 w-4 mr-1" />
+                        Documento firmado. Ahora puedes enviarlo al destinatario.
+                      </div>
+                      <Button
+                        className="w-full"
+                        onClick={handleEnviarDocumento}
+                        disabled={enviandoDocumento}
+                      >
+                        {enviandoDocumento ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="mr-2 h-4 w-4" />
+                        )}
+                        {enviandoDocumento ? "Enviando..." : "Enviar al Destinatario"}
+                      </Button>
+                    </>
+                  )}
+
+                  {/* PASO 3: Destinatario - Recibido, puede firmar */}
+                  {documento.estado === "ENVIADO" && esDestinatarioDoc && (
+                    <Button
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      onClick={() => setFirmaModalOpen(true)}
+                      disabled={documento.archivosAdjuntos.length === 0}
+                    >
+                      <PenTool className="mr-2 h-4 w-4" />
+                      Firmar Digitalmente
+                    </Button>
+                  )}
+
+                  {/* Remitente puede ver estado después de enviar */}
+                  {documento.estado === "ENVIADO" && esRemitente && (
+                    <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 text-sm text-blue-800">
+                      <Send className="inline h-4 w-4 mr-1" />
+                      Acta enviada. Esperando firma y aceptación del destinatario.
+                    </div>
+                  )}
+
+                  {/* Documento atendido/cerrado */}
+                  {documento.estado === "ATENDIDO" && (
+                    <div className="p-3 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800">
+                      <PackageCheck className="inline h-4 w-4 mr-1" />
+                      Transferencia completada. Todos los bienes fueron aceptados.
+                    </div>
+                  )}
+                </>
+              ) : (
+                /* === FLUJO NORMAL (no acta) === */
+                <>
+                  {documento.estado === "BORRADOR" && (
+                    <Button className="w-full" asChild>
+                      <Link href={`/dashboard/tramite/editar/${documento.id}`}>
+                        Editar Documento
+                      </Link>
+                    </Button>
+                  )}
+
+                  {/* Firma para documentos normales */}
+                  {documento.tipoDocumento.requiereFirma &&
+                    documento.estado !== "ARCHIVADO" &&
+                    documento.archivosAdjuntos.length > 0 &&
+                    (esRemitente || esDestinatarioDoc) && (
+                      <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                        onClick={() => setFirmaModalOpen(true)}
+                      >
+                        <PenTool className="mr-2 h-4 w-4" />
+                        Firmar Digitalmente
+                      </Button>
+                    )}
+
+                  {documento.estado !== "ARCHIVADO" &&
+                    documento.estado !== "BORRADOR" && (
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link href={`/dashboard/tramite/derivar/${documento.id}`}>
+                          <ArrowRight className="mr-2 h-4 w-4" />
+                          Derivar
+                        </Link>
+                      </Button>
+                    )}
+                </>
               )}
-              {documento.estado !== "ARCHIVADO" &&
-                documento.estado !== "BORRADOR" && (
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link href={`/dashboard/tramite/derivar/${documento.id}`}>
-                      <ArrowRight className="mr-2 h-4 w-4" />
-                      Derivar
-                    </Link>
-                  </Button>
-                )}
+
               <Button variant="outline" className="w-full">
                 <Printer className="mr-2 h-4 w-4" />
                 Imprimir
               </Button>
             </CardContent>
           </Card>
+
+          {/* Estado de firmas (para actas y documentos con firma) */}
+          {documento.tipoDocumento.requiereFirma && (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  <FileSignature className="h-4 w-4" />
+                  {esActaEntrega ? "Firmas del Acta" : "Firma Digital"}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {esActaEntrega ? (
+                  <>
+                    {/* Firma remitente (ENTREGA) */}
+                    <div className={`flex items-center gap-2 p-2 rounded-lg border ${remitenteFirmo ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-200"}`}>
+                      {remitenteFirmo ? (
+                        <Shield className="h-4 w-4 text-green-600 shrink-0" />
+                      ) : (
+                        <Clock className="h-4 w-4 text-gray-400 shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <p className={`text-xs font-medium ${remitenteFirmo ? "text-green-800" : "text-gray-500"}`}>
+                          ENTREGA — {documento.remitente.nombre} {documento.remitente.apellidos}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {remitenteFirmo ? "Firmado" : "Pendiente de firma"}
+                        </p>
+                      </div>
+                    </div>
+                    {/* Firma destinatario (RECIBE) */}
+                    <div className={`flex items-center gap-2 p-2 rounded-lg border ${destinatarioFirmo && documento.estado !== "BORRADOR" ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-200"}`}>
+                      {destinatarioFirmo && documento.estado !== "BORRADOR" ? (
+                        <Shield className="h-4 w-4 text-green-600 shrink-0" />
+                      ) : (
+                        <Clock className="h-4 w-4 text-gray-400 shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <p className={`text-xs font-medium ${destinatarioFirmo && documento.estado !== "BORRADOR" ? "text-green-800" : "text-gray-500"}`}>
+                          RECIBE — {documento.transferencias?.[0]?.nombreDestinatario || "Destinatario"}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {destinatarioFirmo && documento.estado !== "BORRADOR" ? "Firmado" : "Pendiente de firma"}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {documento.archivoFirmadoUrl ? (
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-green-50 border border-green-200">
+                        <Shield className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-green-800 font-medium">Documento firmado</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-amber-50 border border-amber-200">
+                        <AlertCircle className="h-4 w-4 text-amber-600" />
+                        <span className="text-sm text-amber-800">Pendiente de firma</span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           {/* Origen */}
           <Card>
@@ -610,6 +950,22 @@ export default function DocumentoDetallePage({
           </Card>
         </div>
       </div>
+
+      {/* Modal de Firma Digital */}
+      <FirmaModal
+        isOpen={firmaModalOpen}
+        onClose={() => setFirmaModalOpen(false)}
+        archivos={documento.archivosAdjuntos.map((a) => ({
+          id: a.id,
+          nombre: a.nombre,
+          url: a.url,
+        }))}
+        onSuccess={() => {
+          toast.success("Documento firmado digitalmente")
+          setFirmaModalOpen(false)
+          fetchDocumento()
+        }}
+      />
     </div>
   )
 }
