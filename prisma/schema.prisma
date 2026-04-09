@@ -620,9 +620,17 @@ model ParticipanteInventario {
   sesion    SesionInventario @relation(fields: [sesionId], references: [id], onDelete: Cascade)
   usuarioId String
   usuario   Usuario          @relation("ParticipanteInventario", fields: [usuarioId], references: [id])
-  rol       String           @default("VERIFICADOR") // RESPONSABLE, VERIFICADOR, OBSERVADOR
+  rol       String           @default("INVENTARIADOR") // INVENTARIADOR (personal inventariador para Anexo 7)
   activo    Boolean          @default(true)
   createdAt DateTime         @default(now())
+  updatedAt DateTime         @default(now()) @updatedAt
+
+  // Auditoría: quién agregó/removió
+  agregadoPorId      String?
+  agregadoPorNombre  String?  // Nombre completo de quien agregó
+  removidoPorId      String?
+  removidoPorNombre  String?  // Nombre completo de quien removió
+  fechaRemovido      DateTime?
 
   @@unique([sesionId, usuarioId])
   @@map("participantes_inventario")

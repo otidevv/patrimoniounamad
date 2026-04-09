@@ -260,13 +260,12 @@ export default function VerificacionPage() {
 
   // Participantes/equipo state
   const [participantes, setParticipantes] = useState<Array<{
-    id: string; rol: string;
+    id: string; rol: string; createdAt: string; agregadoPorNombre: string | null;
     usuario: { id: string; nombre: string; apellidos: string; cargo: string | null; numeroDocumento: string | null }
   }>>([])
   const [loadingParticipantes, setLoadingParticipantes] = useState(false)
   const [docParticipante, setDocParticipante] = useState("")
   const [buscandoParticipante, setBuscandoParticipante] = useState(false)
-  const [rolParticipante, setRolParticipante] = useState("VERIFICADOR")
 
   // Reporte usuarios state
   const [resumenUsuarios, setResumenUsuarios] = useState<ResumenUsuario[]>([])
@@ -376,11 +375,11 @@ export default function VerificacionPage() {
       const res = await fetch(`/api/inventario/sesiones/${sesionId}/participantes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuarioId: dataUser.datos.usuarioId, rol: rolParticipante }),
+        body: JSON.stringify({ usuarioId: dataUser.datos.usuarioId }),
       })
       const data = await res.json()
       if (res.ok) {
-        toast.success(`${dataUser.datos.nombre} ${dataUser.datos.apellidos} agregado como ${rolParticipante.toLowerCase()}`)
+        toast.success(`${dataUser.datos.nombre} ${dataUser.datos.apellidos} agregado como personal inventariador`)
         setDocParticipante("")
         cargarParticipantes()
       } else {
@@ -1670,25 +1669,15 @@ export default function VerificacionPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-3 sm:p-4 pt-0 space-y-4">
-              {/* Agregar participante */}
+              {/* Agregar personal inventariador */}
               <div className="flex flex-col sm:flex-row gap-2">
                 <Input
-                  placeholder="DNI del participante..."
+                  placeholder="DNI del personal inventariador..."
                   value={docParticipante}
                   onChange={(e) => setDocParticipante(e.target.value.replace(/\D/g, "").slice(0, 8))}
                   maxLength={8}
                   className="font-mono max-w-[200px]"
                 />
-                <Select value={rolParticipante} onValueChange={setRolParticipante}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="RESPONSABLE">Responsable</SelectItem>
-                    <SelectItem value="VERIFICADOR">Verificador</SelectItem>
-                    <SelectItem value="OBSERVADOR">Observador</SelectItem>
-                  </SelectContent>
-                </Select>
                 <Button
                   onClick={agregarParticipante}
                   disabled={buscandoParticipante || docParticipante.length !== 8}
@@ -1718,7 +1707,7 @@ export default function VerificacionPage() {
                         <TableHead className="text-xs">Nombre</TableHead>
                         <TableHead className="hidden sm:table-cell text-xs">DNI</TableHead>
                         <TableHead className="hidden sm:table-cell text-xs">Cargo</TableHead>
-                        <TableHead className="text-xs">Rol</TableHead>
+                        <TableHead className="hidden sm:table-cell text-xs">Agregado por</TableHead>
                         <TableHead className="text-xs w-[40px]"></TableHead>
                       </TableRow>
                     </TableHeader>
@@ -1737,10 +1726,13 @@ export default function VerificacionPage() {
                           <TableCell className="hidden sm:table-cell text-xs py-2">
                             {p.usuario.cargo || "—"}
                           </TableCell>
-                          <TableCell className="py-2">
-                            <Badge variant="outline" className="text-[10px]">
-                              {p.rol}
-                            </Badge>
+                          <TableCell className="hidden sm:table-cell text-xs py-2 text-muted-foreground">
+                            {p.agregadoPorNombre || "—"}
+                            {p.createdAt && (
+                              <div className="text-[10px]">
+                                {new Date(p.createdAt).toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                              </div>
+                            )}
                           </TableCell>
                           <TableCell className="py-2">
                             <Button

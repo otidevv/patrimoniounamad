@@ -17,7 +17,11 @@ export async function GET(
 
     const participantes = await prisma.participanteInventario.findMany({
       where: { sesionId: id, activo: true },
-      include: {
+      select: {
+        id: true,
+        rol: true,
+        createdAt: true,
+        agregadoPorNombre: true,
         usuario: {
           select: { id: true, nombre: true, apellidos: true, cargo: true, numeroDocumento: true },
         },
@@ -32,7 +36,8 @@ export async function GET(
   }
 }
 
-// POST: Agregar participante a la sesión
+
+// POST: Agregar participante (personal inventariador) a la sesión
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -45,11 +50,13 @@ export async function POST(
 
     const { id } = await params
     const body = await request.json()
-    const { usuarioId, rol } = body
+    const { usuarioId } = body
 
     if (!usuarioId) {
       return NextResponse.json({ error: "Se requiere el ID del usuario" }, { status: 400 })
     }
+
+    const nombreCompleto = `${session.nombre} ${session.apellidos}`
 
     // Verificar que no esté duplicado
     const existente = await prisma.participanteInventario.findUnique({
@@ -61,7 +68,15 @@ export async function POST(
         // Reactivar
         const updated = await prisma.participanteInventario.update({
           where: { id: existente.id },
-          data: { activo: true, rol: rol || "VERIFICADOR" },
+          data: {
+            activo: true,
+            rol: "INVENTARIADOR",
+            agregadoPorId: session.id,
+            agregadoPorNombre: nombreCompleto,
+            removidoPorId: null,
+            removidoPorNombre: null,
+            fechaRemovido: null,
+          },
           include: { usuario: { select: { id: true, nombre: true, apellidos: true, cargo: true, numeroDocumento: true } } },
         })
         return NextResponse.json({ participante: updated })
@@ -73,7 +88,9 @@ export async function POST(
       data: {
         sesionId: id,
         usuarioId,
-        rol: rol || "VERIFICADOR",
+        rol: "INVENTARIADOR",
+        agregadoPorId: session.id,
+        agregadoPorNombre: nombreCompleto,
       },
       include: {
         usuario: { select: { id: true, nombre: true, apellidos: true, cargo: true, numeroDocumento: true } },
@@ -87,7 +104,7 @@ export async function POST(
   }
 }
 
-// DELETE: Quitar participante (desactivar)
+// DELETE: Quitar participante (desactivar) con registro de quién removió
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -105,9 +122,16 @@ export async function DELETE(
       return NextResponse.json({ error: "Se requiere participanteId" }, { status: 400 })
     }
 
+    const nombreCompleto = `${session.nombre} ${session.apellidos}`
+
     await prisma.participanteInventario.update({
       where: { id: participanteId },
-      data: { activo: false },
+      data: {
+        activo: false,
+        removidoPorId: session.id,
+        removidoPorNombre: nombreCompleto,
+        fechaRemovido: new Date(),
+      },
     })
 
     return NextResponse.json({ message: "Participante removido" })

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
+import { FirmaModal } from "@/components/firma-peru/firma-modal"
 import {
   FolderPlus,
   Upload,
@@ -164,6 +165,27 @@ export default function RepositorioPage() {
 
   // Carpetas expandidas
   const [carpetasExpandidas, setCarpetasExpandidas] = useState<Set<string>>(new Set())
+
+  // Firma Perú — modal
+  const [firmaModalOpen, setFirmaModalOpen] = useState(false)
+  const [archivosFirmar, setArchivosFirmar] = useState<{ id: string; nombre: string; url: string }[]>([])
+
+  const abrirFirmaModal = (archivo: Archivo) => {
+    setArchivosFirmar([{ id: archivo.id, nombre: archivo.nombre, url: archivo.url }])
+    setFirmaModalOpen(true)
+  }
+
+  const handleFirmaSuccess = useCallback(() => {
+    toast.success("Documento firmado digitalmente con éxito")
+    fetchData()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Escuchar cancelación
+  useEffect(() => {
+    const handleCancel = () => toast.info("Firma cancelada por el usuario")
+    window.addEventListener("firma-peru-cancel", handleCancel)
+    return () => window.removeEventListener("firma-peru-cancel", handleCancel)
+  }, [])
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -735,9 +757,9 @@ export default function RepositorioPage() {
                           {formatFileSize(archivo.tamanio)}
                         </span>
                         {archivo.firmado && (
-                          <Badge variant="outline" className="mt-1 text-[10px] sm:text-xs">
+                          <Badge variant="outline" className="mt-1 text-[10px] sm:text-xs text-green-700 border-green-300">
                             <CheckCircle className="mr-1 h-2 w-2 sm:h-3 sm:w-3 text-green-500" />
-                            Firmado
+                            Firmado {archivo.fechaFirma && new Date(archivo.fechaFirma).toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "2-digit" })}
                           </Badge>
                         )}
                         {searchTerm && archivo.carpeta && (
@@ -780,9 +802,7 @@ export default function RepositorioPage() {
                             <DropdownMenuSeparator />
                             {!archivo.firmado && (
                               <DropdownMenuItem
-                                onClick={() => {
-                                  toast.info("Firma Perú estará disponible próximamente")
-                                }}
+                                onClick={() => abrirFirmaModal(archivo)}
                                 className="text-blue-600"
                               >
                                 <PenTool className="mr-2 h-4 w-4" />
@@ -1155,6 +1175,14 @@ export default function RepositorioPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Modal de Firma Digital */}
+      <FirmaModal
+        isOpen={firmaModalOpen}
+        onClose={() => setFirmaModalOpen(false)}
+        archivos={archivosFirmar}
+        onSuccess={handleFirmaSuccess}
+      />
     </div>
   )
 }

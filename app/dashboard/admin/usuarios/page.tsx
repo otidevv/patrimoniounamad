@@ -12,9 +12,9 @@ import {
   ChevronsUpDown,
   ChevronLeft,
   ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
   Edit,
+  Eye,
+  EyeOff,
   FileDown,
   FileSpreadsheet,
   FileText,
@@ -221,6 +221,7 @@ export default function UsuariosPage() {
   // Modal de resetear contraseña
   const [resetPasswordModal, setResetPasswordModal] = useState(false)
   const [newPassword, setNewPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [selectedUserId, setSelectedUserId] = useState("")
 
   // Búsqueda de DNI
@@ -782,59 +783,56 @@ export default function UsuariosPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Usuario</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Rol</TableHead>
-                      <TableHead>Sede</TableHead>
-                      <TableHead>Dependencia</TableHead>
-                      <TableHead>Contrato</TableHead>
-                      <TableHead>Estado</TableHead>
-                      <TableHead className="w-[100px]">Acciones</TableHead>
+                      <TableHead className="text-xs">Usuario</TableHead>
+                      <TableHead className="text-xs hidden lg:table-cell">Email</TableHead>
+                      <TableHead className="text-xs">Rol</TableHead>
+                      <TableHead className="text-xs hidden xl:table-cell">Sede</TableHead>
+                      <TableHead className="text-xs">Dependencia</TableHead>
+                      <TableHead className="text-xs hidden lg:table-cell">Contrato</TableHead>
+                      <TableHead className="text-xs">Estado</TableHead>
+                      <TableHead className="text-xs w-[60px]">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {usuarios.map((usuario) => (
                       <TableRow key={usuario.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="size-10">
+                        <TableCell className="py-2">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="size-8 shrink-0">
                               {usuario.foto && <AvatarImage src={usuario.foto} />}
-                              <AvatarFallback className="bg-[#1e3a5f] text-white">
+                              <AvatarFallback className="bg-[#1e3a5f] text-white text-xs">
                                 {getInitials(usuario.nombre, usuario.apellidos)}
                               </AvatarFallback>
                             </Avatar>
-                            <div>
-                              <p className="font-medium">
+                            <div className="min-w-0">
+                              <p className="font-medium text-sm truncate max-w-[180px]">
                                 {usuario.nombre} {usuario.apellidos}
                               </p>
                               {usuario.numeroDocumento && (
-                                <p className="text-sm text-muted-foreground">
-                                  {TIPOS_DOCUMENTO.find(t => t.value === usuario.tipoDocumento)?.label || usuario.tipoDocumento}: {usuario.numeroDocumento}
+                                <p className="text-[11px] text-muted-foreground">
+                                  {usuario.tipoDocumento}: {usuario.numeroDocumento}
                                 </p>
                               )}
+                              <p className="lg:hidden text-[11px] text-muted-foreground truncate max-w-[180px]">{usuario.email}</p>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>{usuario.email}</TableCell>
-                        <TableCell>{getRolBadge(usuario.rol)}</TableCell>
-                        <TableCell>
-                          {usuario.sede?.nombre || (
-                            <span className="text-muted-foreground">-</span>
-                          )}
+                        <TableCell className="hidden lg:table-cell text-xs py-2 max-w-[180px] truncate">{usuario.email}</TableCell>
+                        <TableCell className="py-2">{getRolBadge(usuario.rol)}</TableCell>
+                        <TableCell className="hidden xl:table-cell text-xs py-2 max-w-[120px] truncate">
+                          {usuario.sede?.nombre || <span className="text-muted-foreground">-</span>}
                         </TableCell>
-                        <TableCell>
-                          {usuario.dependencia?.nombre || (
-                            <span className="text-muted-foreground">-</span>
-                          )}
+                        <TableCell className="text-xs py-2 max-w-[160px] truncate">
+                          {usuario.dependencia?.siglas || usuario.dependencia?.nombre || <span className="text-muted-foreground">-</span>}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden lg:table-cell py-2">
                           {(() => {
                             const contratoStatus = getContratoStatus(usuario.fechaFin)
                             if (!contratoStatus) {
-                              return <span className="text-muted-foreground text-sm">Sin fecha</span>
+                              return <span className="text-muted-foreground text-xs">Sin fecha</span>
                             }
                             return (
-                              <Badge variant="outline" className={contratoStatus.color}>
+                              <Badge variant="outline" className={`${contratoStatus.color} text-[10px]`}>
                                 {contratoStatus.status === "vencido" && <AlertTriangle className="size-3 mr-1" />}
                                 {contratoStatus.status === "por_vencer" && <Calendar className="size-3 mr-1" />}
                                 {contratoStatus.status === "vigente" && <Check className="size-3 mr-1" />}
@@ -843,24 +841,24 @@ export default function UsuariosPage() {
                             )
                           })()}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-2">
                           {usuario.activo ? (
-                            <Badge variant="outline" className="text-green-600 border-green-600">
+                            <Badge variant="outline" className="text-green-600 border-green-600 text-[10px]">
                               <Check className="size-3 mr-1" />
                               Activo
                             </Badge>
                           ) : (
-                            <Badge variant="outline" className="text-red-600 border-red-600">
+                            <Badge variant="outline" className="text-red-600 border-red-600 text-[10px]">
                               <X className="size-3 mr-1" />
                               Inactivo
                             </Badge>
                           )}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-2">
                           {(permisos.editar || permisos.eliminar) && (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
                                   <MoreHorizontal className="size-4" />
                                 </Button>
                               </DropdownMenuTrigger>
@@ -1072,72 +1070,38 @@ export default function UsuariosPage() {
                 ))}
               </div>
 
-              {/* Paginación responsive */}
+              {/* Paginación */}
               {pagination.total > 0 && (
-                <div className="flex flex-col gap-4 px-2 py-4 sm:flex-row sm:items-center sm:justify-between mt-4 pt-4 border-t">
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-sm text-muted-foreground">
-                    <span>
-                      Mostrando {(pagination.page - 1) * pagination.limit + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} de {pagination.total}
-                    </span>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-4 py-3 border-t mt-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Mostrar</span>
                     <Select
                       value={String(pagination.limit)}
-                      onValueChange={(value) => {
-                        setPagination((prev) => ({ ...prev, limit: Number(value), page: 1 }))
-                      }}
+                      onValueChange={(value) => setPagination((prev) => ({ ...prev, limit: Number(value), page: 1 }))}
                     >
-                      <SelectTrigger className="h-8 w-[70px]">
+                      <SelectTrigger className="h-8 w-[70px] text-xs">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="5">5</SelectItem>
                         <SelectItem value="10">10</SelectItem>
                         <SelectItem value="20">20</SelectItem>
                         <SelectItem value="50">50</SelectItem>
+                        <SelectItem value="100">100</SelectItem>
                       </SelectContent>
                     </Select>
-                    <span>por página</span>
+                    <span className="text-xs text-muted-foreground">de {pagination.total} usuarios</span>
                   </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setPagination((prev) => ({ ...prev, page: 1 }))}
-                      disabled={pagination.page === 1}
-                    >
-                      <ChevronsLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
-                      disabled={pagination.page === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <span className="px-3 text-sm">
-                      Página {pagination.page} de {pagination.totalPages || 1}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
-                      disabled={pagination.page >= pagination.totalPages}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setPagination((prev) => ({ ...prev, page: prev.totalPages }))}
-                      disabled={pagination.page >= pagination.totalPages}
-                    >
-                      <ChevronsRight className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  {(pagination.totalPages || 1) > 1 && (
+                    <div className="flex items-center gap-1">
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={pagination.page <= 1} onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}>
+                        <ChevronLeft className="size-4" />
+                      </Button>
+                      <span className="text-sm px-2 min-w-[60px] text-center">{pagination.page} / {pagination.totalPages || 1}</span>
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={pagination.page >= pagination.totalPages} onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}>
+                        <ChevronRight className="size-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </>
@@ -1378,19 +1342,21 @@ export default function UsuariosPage() {
                       variant="outline"
                       role="combobox"
                       aria-expanded={openDependenciaPopover}
-                      className="w-full justify-between font-normal"
+                      className="w-full justify-between font-normal overflow-hidden"
                       disabled={!formData.sedeId}
                     >
-                      {formData.dependenciaId
-                        ? dependenciasFiltradas.find((dep) => dep.id === formData.dependenciaId)?.nombre ||
-                          dependenciasFiltradas.find((dep) => dep.id === formData.dependenciaId)?.siglas
-                        : formData.sedeId
-                        ? "Buscar dependencia..."
-                        : "Primero selecciona sede"}
+                      <span className="truncate">
+                        {formData.dependenciaId
+                          ? dependenciasFiltradas.find((dep) => dep.id === formData.dependenciaId)?.siglas ||
+                            dependenciasFiltradas.find((dep) => dep.id === formData.dependenciaId)?.nombre
+                          : formData.sedeId
+                          ? "Buscar dependencia..."
+                          : "Primero selecciona sede"}
+                      </span>
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-full p-0" align="start">
+                  <PopoverContent className="w-[--radix-popover-trigger-width] max-w-[calc(100vw-2rem)] p-0" align="start">
                     <Command>
                       <CommandInput placeholder="Buscar dependencia..." />
                       <CommandList>
@@ -1411,7 +1377,11 @@ export default function UsuariosPage() {
                             />
                             Sin asignar
                           </CommandItem>
-                          {dependenciasFiltradas.map((dep) => (
+                          {[...dependenciasFiltradas].sort((a, b) => {
+                            if (a.id === formData.dependenciaId) return -1
+                            if (b.id === formData.dependenciaId) return 1
+                            return 0
+                          }).map((dep) => (
                             <CommandItem
                               key={dep.id}
                               value={`${dep.siglas} ${dep.nombre}`}
@@ -1426,8 +1396,8 @@ export default function UsuariosPage() {
                                   formData.dependenciaId === dep.id ? "opacity-100" : "opacity-0"
                                 )}
                               />
-                              <span className="font-medium">{dep.siglas}</span>
-                              <span className="ml-2 text-muted-foreground truncate">{dep.nombre}</span>
+                              <span className="font-medium shrink-0">{dep.siglas}</span>
+                              <span className="ml-2 text-muted-foreground truncate min-w-0">{dep.nombre}</span>
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -1520,14 +1490,26 @@ export default function UsuariosPage() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="newPassword">Nueva Contraseña</Label>
-              <Input
-                id="newPassword"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
-                minLength={6}
-              />
+              <div className="relative">
+                <Input
+                  id="newPassword"
+                  type={showPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Mínimo 6 caracteres"
+                  minLength={6}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full w-10 hover:bg-transparent"
+                  onClick={() => setShowPassword((v) => !v)}
+                >
+                  {showPassword ? <EyeOff className="size-4 text-muted-foreground" /> : <Eye className="size-4 text-muted-foreground" />}
+                </Button>
+              </div>
             </div>
           </div>
           <DialogFooter className="flex-col sm:flex-row gap-2">
@@ -1537,6 +1519,7 @@ export default function UsuariosPage() {
                 setResetPasswordModal(false)
                 setNewPassword("")
                 setSelectedUserId("")
+                setShowPassword(false)
               }}
               className="w-full sm:w-auto"
             >

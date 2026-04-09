@@ -49,6 +49,13 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface MiAsignacion {
   id: string
@@ -101,7 +108,7 @@ interface HistorialItem {
   observaciones: string | null
 }
 
-const ITEMS_POR_PAGINA = 15
+const OPCIONES_POR_PAGINA = [10, 20, 50, 100]
 
 export default function MisBienesAsignadosPage() {
   const [bienes, setBienes] = useState<MiBien[]>([])
@@ -109,7 +116,13 @@ export default function MisBienesAsignadosPage() {
   const [loading, setLoading] = useState(true)
   const [busqueda, setBusqueda] = useState("")
   const [paginaActual, setPaginaActual] = useState(1)
+  const [porPagina, setPorPagina] = useState(10)
   const [seleccionados, setSeleccionados] = useState<Set<string>>(new Set())
+  // Paginación recibidas/enviadas
+  const [pagRecibidas, setPagRecibidas] = useState(1)
+  const [porPagRecibidas, setPorPagRecibidas] = useState(10)
+  const [pagEnviadas, setPagEnviadas] = useState(1)
+  const [porPagEnviadas, setPorPagEnviadas] = useState(10)
   const [transferenciasRecibidas, setTransferenciasRecibidas] = useState<Transferencia[]>([])
   const [transferenciasEnviadas, setTransferenciasEnviadas] = useState<Transferencia[]>([])
   const [aceptandoAsignacion, setAceptandoAsignacion] = useState<string | null>(null)
@@ -180,13 +193,29 @@ export default function MisBienesAsignadosPage() {
       (b.marcaSiga || "").toLowerCase().includes(busqueda.toLowerCase())
     ), [bienes, busqueda])
 
-  const totalPaginas = Math.ceil(bienesFiltrados.length / ITEMS_POR_PAGINA)
+  const totalPaginas = Math.max(1, Math.ceil(bienesFiltrados.length / porPagina))
   const bienesPaginados = bienesFiltrados.slice(
-    (paginaActual - 1) * ITEMS_POR_PAGINA,
-    paginaActual * ITEMS_POR_PAGINA
+    (paginaActual - 1) * porPagina,
+    paginaActual * porPagina
   )
 
-  useEffect(() => { setPaginaActual(1); setSeleccionados(new Set()) }, [busqueda])
+  useEffect(() => { setPaginaActual(1); setSeleccionados(new Set()) }, [busqueda, porPagina])
+
+  // Paginación recibidas
+  const totalPagRecibidas = Math.max(1, Math.ceil(transferenciasRecibidas.length / porPagRecibidas))
+  const recibidasPaginadas = transferenciasRecibidas.slice(
+    (pagRecibidas - 1) * porPagRecibidas,
+    pagRecibidas * porPagRecibidas
+  )
+  useEffect(() => { setPagRecibidas(1) }, [porPagRecibidas])
+
+  // Paginación enviadas
+  const totalPagEnviadas = Math.max(1, Math.ceil(transferenciasEnviadas.length / porPagEnviadas))
+  const enviadasPaginadas = transferenciasEnviadas.slice(
+    (pagEnviadas - 1) * porPagEnviadas,
+    pagEnviadas * porPagEnviadas
+  )
+  useEffect(() => { setPagEnviadas(1) }, [porPagEnviadas])
 
   const pendientesRecibidas = transferenciasRecibidas.filter((t) => t.estado === "PENDIENTE")
   const asignacionesPendientes = misAsignaciones.filter((a) => a.estado === "ENVIADO")
@@ -487,21 +516,32 @@ export default function MisBienesAsignadosPage() {
                 </div>
 
                 {/* Paginación */}
-                <div className="flex items-center justify-between px-4 py-3 border-t">
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    {seleccionados.size > 0 ? `${seleccionados.size} seleccionado(s) — ` : ""}
-                    {bienesFiltrados.length} bien(es)
-                  </p>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-4 py-3 border-t">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Mostrar</span>
+                    <Select value={String(porPagina)} onValueChange={(v) => setPorPagina(Number(v))}>
+                      <SelectTrigger className="h-8 w-[70px] text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {OPCIONES_POR_PAGINA.map((n) => (
+                          <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <span className="text-xs text-muted-foreground">
+                      de {bienesFiltrados.length} bienes
+                      {seleccionados.size > 0 && ` (${seleccionados.size} seleccionados)`}
+                    </span>
+                  </div>
                   {totalPaginas > 1 && (
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" disabled={paginaActual === 1} onClick={() => setPaginaActual((p) => p - 1)}>
-                        <ChevronLeft className="h-4 w-4" />
+                    <div className="flex items-center gap-1">
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={paginaActual <= 1} onClick={() => setPaginaActual((p) => p - 1)}>
+                        <ChevronLeft className="size-4" />
                       </Button>
-                      <span className="text-xs sm:text-sm text-muted-foreground">
-                        {paginaActual} / {totalPaginas}
-                      </span>
-                      <Button variant="outline" size="sm" disabled={paginaActual === totalPaginas} onClick={() => setPaginaActual((p) => p + 1)}>
-                        <ChevronRight className="h-4 w-4" />
+                      <span className="text-sm px-2 min-w-[60px] text-center">{paginaActual} / {totalPaginas}</span>
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={paginaActual >= totalPaginas} onClick={() => setPaginaActual((p) => p + 1)}>
+                        <ChevronRight className="size-4" />
                       </Button>
                     </div>
                   )}
@@ -536,7 +576,7 @@ export default function MisBienesAsignadosPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {transferenciasRecibidas.map((t) => (
+                      {recibidasPaginadas.map((t) => (
                         <TableRow key={t.id}>
                           <TableCell className="font-mono text-xs py-2">{t.codigoPatrimonial}</TableCell>
                           <TableCell className="max-w-[150px] truncate text-sm py-2">
@@ -571,6 +611,33 @@ export default function MisBienesAsignadosPage() {
                     </TableBody>
                   </Table>
                 </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-4 py-3 border-t">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Mostrar</span>
+                    <Select value={String(porPagRecibidas)} onValueChange={(v) => setPorPagRecibidas(Number(v))}>
+                      <SelectTrigger className="h-8 w-[70px] text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {OPCIONES_POR_PAGINA.map((n) => (
+                          <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <span className="text-xs text-muted-foreground">de {transferenciasRecibidas.length} recibidas</span>
+                  </div>
+                  {totalPagRecibidas > 1 && (
+                    <div className="flex items-center gap-1">
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={pagRecibidas <= 1} onClick={() => setPagRecibidas((p) => p - 1)}>
+                        <ChevronLeft className="size-4" />
+                      </Button>
+                      <span className="text-sm px-2 min-w-[60px] text-center">{pagRecibidas} / {totalPagRecibidas}</span>
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={pagRecibidas >= totalPagRecibidas} onClick={() => setPagRecibidas((p) => p + 1)}>
+                        <ChevronRight className="size-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           )}
@@ -601,7 +668,7 @@ export default function MisBienesAsignadosPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {transferenciasEnviadas.map((t) => (
+                      {enviadasPaginadas.map((t) => (
                         <TableRow key={t.id}>
                           <TableCell className="font-mono text-xs py-2">{t.codigoPatrimonial}</TableCell>
                           <TableCell className="max-w-[150px] truncate text-sm py-2">
@@ -620,6 +687,33 @@ export default function MisBienesAsignadosPage() {
                       ))}
                     </TableBody>
                   </Table>
+                </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-4 py-3 border-t">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Mostrar</span>
+                    <Select value={String(porPagEnviadas)} onValueChange={(v) => setPorPagEnviadas(Number(v))}>
+                      <SelectTrigger className="h-8 w-[70px] text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {OPCIONES_POR_PAGINA.map((n) => (
+                          <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <span className="text-xs text-muted-foreground">de {transferenciasEnviadas.length} enviadas</span>
+                  </div>
+                  {totalPagEnviadas > 1 && (
+                    <div className="flex items-center gap-1">
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={pagEnviadas <= 1} onClick={() => setPagEnviadas((p) => p - 1)}>
+                        <ChevronLeft className="size-4" />
+                      </Button>
+                      <span className="text-sm px-2 min-w-[60px] text-center">{pagEnviadas} / {totalPagEnviadas}</span>
+                      <Button variant="outline" size="icon" className="h-8 w-8" disabled={pagEnviadas >= totalPagEnviadas} onClick={() => setPagEnviadas((p) => p + 1)}>
+                        <ChevronRight className="size-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

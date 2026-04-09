@@ -35,7 +35,15 @@
       "WebFetch(domain:blog.labtag.com)",
       "Bash(npx next:*)",
       "Bash(npm run:*)",
-      "Bash(ls -d /c/Apache24/htdocs/patrimoniounamad/prisma/migrations/*/)"
+      "Bash(ls -d /c/Apache24/htdocs/patrimoniounamad/prisma/migrations/*/)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
+      "Bash(xargs grep:*)",
+      "Bash(mkdir -p \"D:/sistemas unamad/patrimoniounamad/app/api/firma-peru/lote/[codigo]/descargar\")",
+      "Bash(mkdir -p \"D:/sistemas unamad/patrimoniounamad/app/api/firma-peru/lote/[codigo]/cargar\")",
+      "Bash(ls:*)",
+      "Bash(cp \"D:/sistemas unamad/seguimientotesis/public/images/firma_horizontal.png\" \"D:/sistemas unamad/patrimoniounamad/public/images/firma_horizontal.png\")",
+      "Bash(cp \"D:/sistemas unamad/seguimientotesis/public/images/firma_horizontal.png\" \"D:/sistemas unamad/patrimoniounamad/public/images/firma_vertical.png\")",
+      "Bash(\"C:\\\\Program Files\\\\7-Zip\\\\7z.exe\" --help)"
     ]
   }
 }

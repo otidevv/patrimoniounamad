@@ -46,9 +46,8 @@ export async function GET(
       return NextResponse.json({ error: "Sesión no encontrada" }, { status: 404 })
     }
 
-    // Participantes como inventariadores
+    // Todos los participantes activos son personal inventariador
     const inventariadores = sesion.participantes
-      .filter((p) => p.rol === "VERIFICADOR" || p.rol === "RESPONSABLE")
       .map((p) => `${p.usuario.apellidos} ${p.usuario.nombre}`.toUpperCase())
 
     // Dos modos: desde SIGA (empleadoFinal) o desde verificaciones (dniResponsable)
