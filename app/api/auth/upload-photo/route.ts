@@ -1,36 +1,21 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
 import { prisma } from "@/lib/prisma"
 import { writeFile, mkdir } from "fs/promises"
 import path from "path"
+import { getSession } from "@/lib/auth"
 
 export const runtime = "nodejs"
 
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  email: string
-  nombre: string
-  apellidos: string
-  rol: string
-  dependenciaId: string | null
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get("auth-token")?.value
+    const session = await getSession()
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json(
         { error: "No autenticado" },
         { status: 401 }
       )
     }
-
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
 
     const formData = await request.formData()
     const file = formData.get("foto") as File | null
@@ -66,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     // Generar nombre único para el archivo
     const extension = file.name.split(".").pop()?.toLowerCase() || "jpg"
-    const fileName = `${decoded.id}-${Date.now()}.${extension}`
+    const fileName = `${session.id}-${Date.now()}.${extension}`
     const filePath = path.join(uploadDir, fileName)
 
     // Guardar archivo
@@ -79,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     // Actualizar usuario en la base de datos
     await prisma.usuario.update({
-      where: { id: decoded.id },
+      where: { id: session.id },
       data: {
         foto: fotoUrl,
       },

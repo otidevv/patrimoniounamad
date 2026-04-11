@@ -1,35 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  rol: string      // Código del rol (ej: "ADMIN")
-  rolId: string    // ID del rol
-}
+import { getSession } from "@/lib/auth"
 
 // Verificar si el usuario tiene permiso de editar usuarios
 async function verifyEditPermission(): Promise<boolean> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")?.value
-
-  if (!token) return false
+  const session = await getSession()
+  if (!session) return false
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-    let rolId = decoded.rolId
+    let rolId = session.rolId
 
     // Admin siempre tiene acceso
-    if (decoded.rol === "ADMIN") return true
+    if (session.rol === "ADMIN") return true
 
     // Si no hay rolId en el token (tokens antiguos), buscar por código
     if (!rolId) {
       const rol = await prisma.rol.findUnique({
-        where: { codigo: decoded.rol }
+        where: { codigo: session.rol }
       })
       if (rol) {
         rolId = rol.id

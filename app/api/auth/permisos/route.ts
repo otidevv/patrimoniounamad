@@ -1,20 +1,7 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
 import { prisma } from "@/lib/prisma"
 import { Modulo } from "@prisma/client"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  email: string
-  nombre: string
-  apellidos: string
-  rol: string      // Código del rol (ej: "ADMIN")
-  rolId: string    // ID del rol
-  dependenciaId: string | null
-}
+import { getSession } from "@/lib/auth"
 
 type PermisosMap = Record<string, {
   ver: boolean
@@ -27,19 +14,17 @@ type PermisosMap = Record<string, {
 // GET - Obtener permisos del usuario actual
 export async function GET() {
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get("auth-token")?.value
+    const session = await getSession()
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json(
         { error: "No autenticado" },
         { status: 401 }
       )
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-    const rolCodigo = decoded.rol
-    let rolId = decoded.rolId
+    const rolCodigo = session.rol
+    let rolId = session.rolId
 
     // Si no hay rolId en el token (tokens antiguos), buscar por código
     if (!rolId) {

@@ -1,17 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
 import { TipoDocumento } from "@prisma/client"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  rol: string      // Código del rol (ej: "ADMIN")
-  rolId: string    // ID del rol
-}
+import { getSession, type UserPayload } from "@/lib/auth"
 
 interface PermisosModulo {
   ver: boolean
@@ -22,19 +13,16 @@ interface PermisosModulo {
 }
 
 async function verifyUserWithPermission(accion: keyof PermisosModulo = "ver"): Promise<{ user: UserPayload; permisos: PermisosModulo } | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")?.value
-
-  if (!token) return null
+  const session = await getSession()
+  if (!session) return null
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-    let rolId = decoded.rolId
+    let rolId = session.rolId
 
     // Admin siempre tiene todos los permisos
-    if (decoded.rol === "ADMIN") {
+    if (session.rol === "ADMIN") {
       return {
-        user: decoded,
+        user: session,
         permisos: { ver: true, crear: true, editar: true, eliminar: true, reportes: true }
       }
     }
@@ -42,7 +30,7 @@ async function verifyUserWithPermission(accion: keyof PermisosModulo = "ver"): P
     // Si no hay rolId en el token (tokens antiguos), buscar por código
     if (!rolId) {
       const rol = await prisma.rol.findUnique({
-        where: { codigo: decoded.rol }
+        where: { codigo: session.rol }
       })
       if (rol) {
         rolId = rol.id
@@ -64,7 +52,7 @@ async function verifyUserWithPermission(accion: keyof PermisosModulo = "ver"): P
     }
 
     return {
-      user: decoded,
+      user: session,
       permisos: {
         ver: permiso.ver,
         crear: permiso.crear,

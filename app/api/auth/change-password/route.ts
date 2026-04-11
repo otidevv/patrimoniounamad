@@ -1,33 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/prisma"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  email: string
-  nombre: string
-  apellidos: string
-  rol: string
-  dependenciaId: string | null
-}
+import { getSession } from "@/lib/auth"
 
 export async function PUT(request: NextRequest) {
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get("auth-token")?.value
+    const session = await getSession()
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json(
         { error: "No autenticado" },
         { status: 401 }
       )
     }
-
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
     const body = await request.json()
 
     const { currentPassword, newPassword } = body
@@ -47,7 +32,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const user = await prisma.usuario.findUnique({
-      where: { id: decoded.id },
+      where: { id: session.id },
       select: {
         id: true,
         password: true,
@@ -73,7 +58,7 @@ export async function PUT(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(newPassword, 12)
 
     await prisma.usuario.update({
-      where: { id: decoded.id },
+      where: { id: session.id },
       data: {
         password: hashedPassword,
       },

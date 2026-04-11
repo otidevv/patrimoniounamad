@@ -1,34 +1,21 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
 import { prisma } from "@/lib/prisma"
 import { Modulo } from "@prisma/client"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  rol: string
-  rolId: string
-}
+import { getSession } from "@/lib/auth"
 
 // Verificar permisos del módulo ROLES_PERMISOS
 async function verifyRolesPermission(accion: "ver" | "crear" | "editar" | "eliminar" = "ver"): Promise<boolean> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")?.value
-
-  if (!token) return false
+  const session = await getSession()
+  if (!session) return false
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-
     // Admin siempre tiene acceso
-    if (decoded.rol === "ADMIN") return true
+    if (session.rol === "ADMIN") return true
 
     // Obtener permisos del módulo ROLES_PERMISOS
     const permiso = await prisma.permisoRol.findFirst({
       where: {
-        rolId: decoded.rolId,
+        rolId: session.rolId,
         modulo: "ROLES_PERMISOS"
       }
     })

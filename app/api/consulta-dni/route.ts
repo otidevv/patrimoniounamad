@@ -1,27 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import jwt from "jsonwebtoken"
-
-const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
-
-interface UserPayload {
-  id: string
-  rol: string
-}
-
-async function verifyAuth(): Promise<UserPayload | null> {
-  const cookieStore = await cookies()
-  const token = cookieStore.get("auth-token")?.value
-
-  if (!token) return null
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as UserPayload
-    return decoded
-  } catch {
-    return null
-  }
-}
+import { getSession } from "@/lib/auth"
 
 interface DatosReniec {
   id: number
@@ -38,7 +16,7 @@ interface DatosReniec {
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await verifyAuth()
+    const user = await getSession()
     if (!user) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 })
     }
