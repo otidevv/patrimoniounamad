@@ -625,25 +625,42 @@ export default function DocumentoDetallePage({
                   documento.destinos.some(
                     (d) => d.dependenciaDestinoId === documento.usuarioActual.dependenciaId
                   ) && (
-                    <div className="mt-4 p-4 rounded-lg border-2 border-dashed border-green-300 bg-green-50">
-                      <p className="text-sm text-green-800 mb-3">
-                        Al aceptar, confirmas que recibes los {documento.transferencias.filter(t => t.estado === "PENDIENTE").length} bien(es)
-                        listados y quedan bajo tu responsabilidad.
-                      </p>
-                      <Button
-                        className="w-full bg-green-600 hover:bg-green-700"
-                        onClick={handleAceptarTransferencia}
-                        disabled={aceptandoTransferencia}
-                      >
-                        {aceptandoTransferencia ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          <PackageCheck className="mr-2 h-4 w-4" />
-                        )}
-                        {aceptandoTransferencia
-                          ? "Procesando..."
-                          : `Aceptar Transferencia (${documento.transferencias.filter(t => t.estado === "PENDIENTE").length} bienes)`}
-                      </Button>
+                    <div className={`mt-4 p-4 rounded-lg border-2 border-dashed ${destinatarioFirmo && documento.estado !== "BORRADOR" ? "border-green-300 bg-green-50" : "border-amber-300 bg-amber-50"}`}>
+                      {destinatarioFirmo && documento.estado !== "BORRADOR" ? (
+                        <>
+                          <p className="text-sm text-green-800 mb-3">
+                            Al aceptar, confirmas que recibes los {documento.transferencias.filter(t => t.estado === "PENDIENTE").length} bien(es)
+                            listados y quedan bajo tu responsabilidad.
+                          </p>
+                          <Button
+                            className="w-full bg-green-600 hover:bg-green-700"
+                            onClick={handleAceptarTransferencia}
+                            disabled={aceptandoTransferencia}
+                          >
+                            {aceptandoTransferencia ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <PackageCheck className="mr-2 h-4 w-4" />
+                            )}
+                            {aceptandoTransferencia
+                              ? "Procesando..."
+                              : `Aceptar Transferencia (${documento.transferencias.filter(t => t.estado === "PENDIENTE").length} bienes)`}
+                          </Button>
+                        </>
+                      ) : (
+                        <div className="flex items-start gap-2">
+                          <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="text-sm font-medium text-amber-800">
+                              Firma digital requerida
+                            </p>
+                            <p className="text-sm text-amber-700 mt-1">
+                              Debe firmar digitalmente el acta antes de aceptar la transferencia de los {documento.transferencias.filter(t => t.estado === "PENDIENTE").length} bien(es).
+                              Use el botón &quot;Firmar Digitalmente&quot; en el panel de acciones.
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
               </CardContent>

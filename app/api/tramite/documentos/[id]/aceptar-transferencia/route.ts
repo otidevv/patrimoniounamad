@@ -58,6 +58,24 @@ export async function POST(request: Request, { params }: Params) {
       )
     }
 
+    // Verificar que el destinatario haya firmado el acta antes de aceptar
+    if (documento.tipoDocumento.codigo === "ACTA-ENT") {
+      const firmaDestinatario = await prisma.documentoHistorial.findFirst({
+        where: {
+          documentoId: id,
+          accion: "FIRMADO",
+          usuarioId: user.id,
+        },
+      })
+
+      if (!firmaDestinatario) {
+        return NextResponse.json(
+          { message: "Debe firmar digitalmente el acta antes de aceptar la transferencia" },
+          { status: 400 }
+        )
+      }
+    }
+
     // Aceptar todas las transferencias pendientes
     const ahora = new Date()
     for (const transferencia of documento.transferencias) {
