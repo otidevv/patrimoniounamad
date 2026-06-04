@@ -103,6 +103,13 @@ interface BienVerificado {
   valorSiga: number | null
 }
 
+interface AsignacionPendiente {
+  id: string
+  estado: string
+  sesion: { codigo: string; nombre: string }
+  _count: { verificaciones: number }
+}
+
 interface Dependencia {
   id: string
   codigo: string
@@ -191,6 +198,8 @@ export default function NuevoDocumentoPage() {
   const [estadosPorBien, setEstadosPorBien] = useState<Record<string, string>>({})
   const [paginaBienes, setPaginaBienes] = useState(1)
   const [porPaginaBienes, setPorPaginaBienes] = useState(10)
+  // Asignaciones de inventario enviadas pero aún no aceptadas por el usuario
+  const [asignacionesPendientes, setAsignacionesPendientes] = useState<AsignacionPendiente[]>([])
 
   useEffect(() => {
     fetchTiposDocumento()
@@ -248,10 +257,34 @@ export default function NuevoDocumentoPage() {
     }
   }
 
+  // Cargar asignaciones de inventario que están enviadas (ENVIADO) pero el
+  // usuario aún no acepta. Esos bienes no aparecen en el acta hasta aceptarlos.
+  const fetchAsignacionesPendientes = async () => {
+    try {
+      const response = await fetch("/api/inventario/asignaciones?mis=true")
+      if (response.ok) {
+        const data = await response.json()
+        const pendientes: AsignacionPendiente[] = (data.asignaciones || []).filter(
+          (a: AsignacionPendiente) => a.estado === "ENVIADO"
+        )
+        setAsignacionesPendientes(pendientes)
+      }
+    } catch (error) {
+      console.error("Error al cargar asignaciones pendientes:", error)
+    }
+  }
+
+  // Total de bienes en asignaciones pendientes de aceptar
+  const totalBienesPendientes = asignacionesPendientes.reduce(
+    (acc, a) => acc + (a._count?.verificaciones || 0),
+    0
+  )
+
   // Efecto: cargar bienes cuando se activa modo acta
   useEffect(() => {
     if (esActaEntrega && bienesVerificados.length === 0) {
       fetchBienesVerificados()
+      fetchAsignacionesPendientes()
       // Agregar un destinatario principal automaticamente si no hay
       if (destinatarios.filter(d => !d.esCopia).length === 0) {
         addDestinatario(false)
@@ -635,6 +668,29 @@ export default function NuevoDocumentoPage() {
           {/* Sección condicional: PDF upload o Selector de bienes */}
           {esActaEntrega ? (
             /* === MODO ACTA: Selector de bienes verificados === */
+            <>
+            {asignacionesPendientes.length > 0 && (
+              <Alert className="border-amber-300 bg-amber-50">
+                <AlertCircle className="h-4 w-4 !text-amber-600" />
+                <AlertDescription>
+                  <p className="font-medium text-amber-900">
+                    Tienes {totalBienesPendientes} bien{totalBienesPendientes !== 1 ? "es" : ""} pendiente{totalBienesPendientes !== 1 ? "s" : ""} de aceptar
+                    {" "}en {asignacionesPendientes.length} asignación{asignacionesPendientes.length !== 1 ? "es" : ""} de inventario.
+                  </p>
+                  <p className="text-amber-700">
+                    Esos bienes no aparecerán abajo hasta que los aceptes. Acéptalos para poder transferirlos en el acta de entrega.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="h-auto p-0 font-medium text-amber-800 underline"
+                    onClick={() => router.push("/dashboard/patrimonio/mis-bienes-asignados")}
+                  >
+                    Ir a Mis Bienes Asignados →
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
             <Card className="border-orange-300">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -833,6 +889,7 @@ export default function NuevoDocumentoPage() {
                 )}
               </CardContent>
             </Card>
+            </>
           ) : (
             /* === MODO NORMAL: Upload de PDF === */
             <Card className="border-primary/50">
