@@ -1,0 +1,452 @@
+================================================================================
+ SISTEMA DE GESTIÓN DE PATRIMONIO - SIGA PATRIMONIO UNAMAD
+ Universidad Nacional Amazónica de Madre de Dios
+ PROCESOS DEL SISTEMA
+================================================================================
+ Documento generado: 2026-06-01
+ Stack: Next.js 16 (App Router) · React 19 · PostgreSQL (Prisma) · NextAuth
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ ÍNDICE DE MÓDULOS / PROCESOS
+--------------------------------------------------------------------------------
+ 1.  Autenticación y control de acceso
+ 2.  Administración (usuarios, roles y permisos)
+ 3.  Catálogos (sedes y dependencias)
+ 4.  Gestión de bienes patrimoniales
+ 5.  Inventario físico
+ 6.  Asignación de bienes a responsables
+ 7.  Transferencia de bienes entre personas
+ 8.  Bienes sobrantes
+ 9.  Generación de etiquetas y códigos de barras
+ 10. Trámite documentario
+ 11. Firma digital (Firma Perú)
+ 12. Repositorio personal de documentos
+ 13. Generación de actas de entrega
+ 14. Integración con SIGA
+ 15. Reportes y documentos
+ 16. Notificaciones
+ 17. Configuración del usuario y del sistema
+
+
+================================================================================
+ 1. AUTENTICACIÓN Y CONTROL DE ACCESO
+================================================================================
+
+ Proceso 1.1 — Inicio de sesión local
+   1. El usuario ingresa correo institucional (@unamad.edu.pe) y contraseña.
+   2. El sistema valida credenciales contra la base de datos (NextAuth).
+   3. Si son correctas, genera la sesión y redirige al Dashboard.
+   4. Si falla, muestra error y permanece en /login.
+
+ Proceso 1.2 — Inicio de sesión con Google
+   1. El usuario elige "Iniciar sesión con Google".
+   2. Se autentica con su cuenta institucional Google.
+   3. Si el usuario es nuevo o le falta información, se redirige a
+      "Completar perfil".
+
+ Proceso 1.3 — Completar perfil (primer ingreso)
+   1. El usuario registra datos faltantes: nombre, apellidos, tipo y número
+      de documento, cargo, teléfono, sede y dependencia.
+   2. Se guarda y se habilita el acceso completo al sistema.
+
+ Proceso 1.4 — Recuperación de contraseña
+   1. El usuario solicita restablecimiento desde "¿Olvidó su contraseña?".
+   2. El sistema genera un token con vencimiento y lo envía por correo.
+   3. El usuario abre el enlace, valida el token y define una nueva contraseña.
+   4. El token se marca como usado (un solo uso).
+
+ Proceso 1.5 — Cambio de contraseña (sesión activa)
+   1. Desde el perfil, el usuario ingresa la contraseña actual y la nueva.
+   2. El sistema valida y actualiza la credencial.
+
+ Proceso 1.6 — Cierre de sesión
+   1. El usuario pulsa "Cerrar Sesión".
+   2. Se invalida la sesión y se redirige a /login.
+
+ Control de acceso transversal:
+   - Cada menú/módulo se muestra según los permisos del rol del usuario.
+   - El rol ADMIN ve y opera todos los módulos.
+   - Permisos por módulo: ver, crear, editar, eliminar, reportes.
+
+
+================================================================================
+ 2. ADMINISTRACIÓN (USUARIOS, ROLES Y PERMISOS)
+================================================================================
+
+ Proceso 2.1 — Gestión de usuarios
+   1. El administrador crea/edita/desactiva usuarios.
+   2. Asigna rol, sede, dependencia, cargo y fechas de inicio/fin de contrato.
+   3. Puede consultar datos de DNI (servicio externo) para autocompletar.
+   4. Puede restablecer la contraseña de cualquier usuario.
+
+ Proceso 2.2 — Gestión de roles
+   1. El administrador crea roles (código, nombre, color, descripción).
+   2. Los roles de sistema (esSistema=true) no pueden eliminarse.
+
+ Proceso 2.3 — Asignación de permisos
+   1. Por cada rol y módulo se definen permisos: ver, crear, editar,
+      eliminar, reportes.
+   2. Los cambios se reflejan inmediatamente en los menús visibles.
+
+ Proceso 2.4 — Panel de administración del sistema
+   - Consulta de estado/parámetros generales del sistema.
+
+
+================================================================================
+ 3. CATÁLOGOS (SEDES Y DEPENDENCIAS)
+================================================================================
+
+ Proceso 3.1 — Gestión de sedes
+   1. Registro de sedes (código, nombre, dirección, ciudad, contacto).
+   2. Activación/desactivación de sedes.
+
+ Proceso 3.2 — Gestión de dependencias
+   1. Registro de unidades orgánicas (rectorado, vicerrectorado, facultad,
+      escuela, oficina, dirección, unidad).
+   2. Estructura jerárquica (dependencia padre → hijas).
+   3. Cada dependencia pertenece a una sede.
+
+
+================================================================================
+ 4. GESTIÓN DE BIENES PATRIMONIALES
+================================================================================
+
+ Entidad "Bien": código patrimonial de 12 dígitos, código SBN, descripción,
+ marca, modelo, serie, color, dimensiones, estado y situación, valores,
+ fechas de adquisición/alta, catálogo, dependencia y ubicación.
+
+   Estado del bien: NUEVO, BUENO, REGULAR, MALO, MUY_MALO, CHATARRA.
+   Situación: EN_USO, EN_DESUSO, BAJA, TRANSFERIDO, FALTANTE, SOBRANTE.
+
+ Proceso 4.1 — Mis bienes
+   - El usuario consulta los bienes patrimoniales que tiene asignados.
+
+ Proceso 4.2 — Buscar bien
+   1. Búsqueda por código patrimonial, descripción u otros criterios.
+   2. La consulta se cruza con la información de SIGA.
+   3. Se muestra ficha del bien con sus datos y estado.
+
+ Proceso 4.3 — Mis verificaciones
+   - El usuario consulta los bienes que ha verificado en inventarios.
+
+
+================================================================================
+ 5. INVENTARIO FÍSICO
+================================================================================
+
+ Entidad "Sesión de inventario": código (INV-AAAA-NNN), alcance (sede,
+ dependencia, ubicación, centro de costo SIGA), fechas, responsable y
+ estadísticas de avance.
+
+   Estados de la sesión:
+     PROGRAMADA → EN_PROCESO → (PAUSADA) → FINALIZADA
+     en cualquier punto puede pasar a CANCELADA.
+
+ Proceso 5.1 — Programar sesión de inventario
+   1. El responsable crea la sesión definiendo alcance y fecha programada.
+   2. Se cargan los bienes esperados según SIGA (totalBienesSiga).
+   3. Estado inicial: PROGRAMADA.
+
+ Proceso 5.2 — Registrar participantes (personal inventariador)
+   1. Se agregan los inventariadores que firmarán el Anexo 7.
+   2. Se audita quién agregó/removió a cada participante.
+
+ Proceso 5.3 — Ejecución del inventario (verificación de bienes)
+   1. Se inicia la sesión → estado EN_PROCESO (fechaInicio).
+   2. El verificador escanea/ingresa cada código patrimonial
+      (dispositivo: móvil, pistola lectora o manual).
+   3. El sistema trae datos del bien desde SIGA (cache de descripción,
+      marca, serie, responsable, ubicación, valor, etc.).
+   4. El verificador registra el resultado físico:
+        - ENCONTRADO: el bien está en su ubicación.
+        - REUBICADO: existe pero en otra ubicación.
+        - NO_ENCONTRADO: faltante.
+        - SOBRANTE: hallado sin registro en SIGA.
+   5. Registra estado físico (BUENO/REGULAR/MALO/INOPERATIVO/CHATARRA),
+      situación (Uso/Desuso), ubicación real, responsable actual (DNI y
+      nombres), observaciones y foto como evidencia.
+   6. Un bien solo puede verificarse una vez por sesión.
+   7. Las estadísticas de la sesión se actualizan automáticamente
+      (verificados, encontrados, reubicados, no encontrados, sobrantes).
+
+ Proceso 5.4 — Pausar / reanudar sesión
+   - La sesión puede pasar a PAUSADA y volver a EN_PROCESO.
+
+ Proceso 5.5 — Finalizar o cancelar sesión
+   - FINALIZADA: se cierra la sesión (fechaFin) y queda disponible para
+     reportes y generación de Anexo 7.
+   - CANCELADA: se anula la sesión.
+
+ Proceso 5.6 — Historial de verificaciones
+   - Trazabilidad de cada verificación y sus cambios.
+
+
+================================================================================
+ 6. ASIGNACIÓN DE BIENES A RESPONSABLES
+================================================================================
+
+ Entidad "Asignación de inventario": agrupa los bienes verificados que
+ corresponden a una persona (usuario del sistema o externo por DNI).
+
+   Estados (workflow):
+     PENDIENTE → ENVIADO → ACEPTADO  → CERRADO
+                         → RECHAZADO → (revisión) → ENVIADO ...
+
+ Proceso 6.1 — Construcción de la asignación
+   1. El verificador agrupa los bienes verificados bajo una persona
+      (estado PENDIENTE: aún edita/agrega bienes).
+
+ Proceso 6.2 — Envío al usuario
+   1. El verificador envía la asignación para revisión (estado ENVIADO,
+      fechaEnvio).
+
+ Proceso 6.3 — Respuesta del usuario asignado
+   - ACEPTADO: el usuario confirma que los bienes son suyos.
+   - RECHAZADO: el usuario observa; el verificador debe revisar y reenviar.
+   - El usuario puede dejar observaciones (observacionesUsuario).
+
+ Proceso 6.4 — Cierre
+   - Cuando ambas partes están conformes, la asignación pasa a CERRADO
+     (fechaCierre). Queda como registro definitivo del inventario.
+
+
+================================================================================
+ 7. TRANSFERENCIA DE BIENES ENTRE PERSONAS
+================================================================================
+
+ Permite que un bien verificado cambie de responsable.
+
+   Estados: PENDIENTE → ACEPTADA / RECHAZADA.
+
+ Proceso 7.1 — Solicitud de transferencia
+   1. El remitente (DNI/nombre) inicia la transferencia de un bien
+      (verificación) indicando destinatario y motivo.
+   2. Estado inicial: PENDIENTE (fechaSolicitud).
+
+ Proceso 7.2 — Respuesta del destinatario
+   - ACEPTADA: se crea la verificación destino para que el bien aparezca
+     en la lista del nuevo responsable. Puede vincularse un acta de entrega.
+   - RECHAZADA: el destinatario rechaza con observaciones.
+
+ Proceso 7.3 — Acta de entrega vinculada
+   - La transferencia puede asociarse a un documento de acta del módulo
+     de trámite documentario (ver Proceso 13).
+
+
+================================================================================
+ 8. BIENES SOBRANTES
+================================================================================
+
+ Proceso 8.1 — Registro de bien sobrante
+   1. Durante el inventario, si se halla un bien sin registro en SIGA,
+      se registra como sobrante.
+   2. Datos: descripción, marca, modelo, serie, color, estado físico,
+      ubicación, posible código antiguo, foto y observaciones.
+   3. Queda asociado a la sesión y a quién lo registró.
+
+
+================================================================================
+ 9. GENERACIÓN DE ETIQUETAS Y CÓDIGOS DE BARRAS
+================================================================================
+
+ Proceso 9.1 — Generar etiquetas
+   1. El usuario selecciona los bienes a etiquetar.
+   2. El sistema genera etiquetas con código de barras del código
+      patrimonial.
+   3. Se imprimen para el rotulado físico (apoya el escaneo en inventario).
+
+
+================================================================================
+ 10. TRÁMITE DOCUMENTARIO
+================================================================================
+
+ Entidad "Documento de trámite": tipo (Oficio, Memorándum, Resolución, etc.),
+ correlativo único por tipo y año, asunto, contenido, folios, dependencia de
+ origen, remitente, prioridad, fechas y archivos adjuntos.
+
+   Estados del documento:
+     BORRADOR → ENVIADO → RECIBIDO → DERIVADO
+                                   → OBSERVADO → ATENDIDO → ARCHIVADO
+
+   Prioridad: BAJA, NORMAL, ALTA, URGENTE.
+   Tipo de firma: DIGITAL, ESCANEADO, NINGUNA.
+
+ Proceso 10.1 — Crear documento (nuevo)
+   1. El remitente registra tipo, correlativo, año, asunto, contenido,
+      folios, prioridad y fecha límite.
+   2. Define dependencia de origen y destinos.
+   3. Adjunta archivos (subida directa o desde el repositorio personal).
+   4. Estado inicial: BORRADOR.
+
+ Proceso 10.2 — Definir destinos
+   1. Se agregan uno o más destinos (dependencia y, opcionalmente,
+      destinatario específico).
+   2. Cada destino puede ser principal o copia (CC).
+   3. Un documento no puede ir dos veces al mismo destino.
+
+ Proceso 10.3 — Firmar documento (opcional según tipo)
+   - Firma DIGITAL (Firma Perú, ver Proceso 11) o ESCANEADO (PDF con firma
+     manuscrita). Se registra fecha y datos de firma.
+
+ Proceso 10.4 — Enviar documento
+   1. El remitente envía el documento (estado ENVIADO, fechaEnvio).
+   2. Cada destino queda con estado de recepción PENDIENTE.
+   3. Se notifica a los destinatarios.
+
+ Proceso 10.5 — Bandeja de salida
+   - El remitente consulta los documentos que ha emitido y su estado de
+     recepción en cada destino.
+
+ Proceso 10.6 — Bandeja de entrada y recepción
+   1. El destinatario ve los documentos pendientes de recibir.
+   2. Al recibir, el destino pasa a RECIBIDO (fecha y receptor) y el
+      documento a RECIBIDO. Puede rechazarse (RECHAZADO) con observación.
+
+ Proceso 10.7 — Derivar documento
+   1. El receptor reenvía el documento a otra dependencia (estado DERIVADO).
+   2. Se genera un nuevo destino y se notifica.
+
+ Proceso 10.8 — Observar / Atender / Archivar
+   - OBSERVADO: documento con observaciones pendientes.
+   - ATENDIDO: documento procesado o respondido.
+   - ARCHIVADO: documento finalizado y archivado.
+
+ Proceso 10.9 — Trazabilidad (historial)
+   - Cada acción (CREADO, EDITADO, ENVIADO, RECIBIDO, DERIVADO, OBSERVADO,
+     ATENDIDO, ARCHIVADO, FIRMADO, ANULADO) se registra con usuario,
+     dependencia, estado anterior/nuevo, IP y fecha.
+
+ Proceso 10.10 — Mis documentos
+   - Vista personal de los documentos creados/recibidos por el usuario.
+
+ Proceso 10.11 — Gestión de tipos de documento
+   - Administración de tipos (código, nombre, prefijo del correlativo y si
+     requiere firma).
+
+ Proceso 10.12 — Aceptar transferencia vinculada
+   - Cuando un documento es un acta de transferencia de bienes, el
+     destinatario puede aceptar la transferencia desde el documento.
+
+
+================================================================================
+ 11. FIRMA DIGITAL (FIRMA PERÚ)
+================================================================================
+
+ Proceso 11.1 — Firmar documento con Firma Perú
+   1. El usuario abre el documento/PDF a firmar.
+   2. El sistema prepara los argumentos y carga el archivo a firmar (lote).
+   3. Se invoca el cliente de Firma Perú (token/certificado del firmante).
+   4. Se descarga el PDF firmado y se registra hash, fecha y datos de firma.
+   5. El documento queda con tipoFirma = DIGITAL.
+
+
+================================================================================
+ 12. REPOSITORIO PERSONAL DE DOCUMENTOS
+================================================================================
+
+ Proceso 12.1 — Organización de archivos
+   1. El usuario crea carpetas y subcarpetas (con color y descripción).
+   2. Sube archivos PDF a su repositorio personal.
+
+ Proceso 12.2 — Reutilización en trámites
+   - Un PDF del repositorio puede adjuntarse a un documento de trámite.
+   - Se conserva el vínculo (qué trámites usan cada archivo).
+
+ Proceso 12.3 — Firma y verificación
+   - Los archivos pueden marcarse como firmados y guardan hash SHA256 para
+     verificación de integridad.
+
+
+================================================================================
+ 13. GENERACIÓN DE ACTAS DE ENTREGA
+================================================================================
+
+ Proceso 13.1 — Generar acta
+   1. A partir de transferencias de bienes se genera un acta de entrega
+      (documento de trámite).
+   2. El acta vincula las transferencias correspondientes.
+   3. Puede firmarse (Firma Perú o escaneada) y enviarse por el flujo de
+      trámite documentario.
+
+
+================================================================================
+ 14. INTEGRACIÓN CON SIGA
+================================================================================
+
+ El sistema consume datos del SIGA (Sistema Integrado de Gestión
+ Administrativa) como fuente oficial del patrimonio.
+
+ Proceso 14.1 — Consulta de bienes SIGA
+   - Obtiene el inventario de bienes por dependencia/centro de costo para
+     búsquedas y para precargar sesiones de inventario.
+
+ Proceso 14.2 — Consulta de dependencias SIGA
+   - Sincroniza/relaciona las dependencias del sistema con los centros de
+     costo de SIGA.
+
+   Nota: al verificar un bien se cachean sus datos de SIGA en la
+   verificación, de modo que el inventario conserva el estado del momento.
+
+
+================================================================================
+ 15. REPORTES Y DOCUMENTOS
+================================================================================
+
+ Proceso 15.1 — Reportes de patrimonio
+   - Estadísticas y listados de bienes por estado, situación, dependencia.
+
+ Proceso 15.2 — Reportes de inventario
+   - Avance de la sesión, encontrados/faltantes/sobrantes, reporte por
+     usuarios y generación del Anexo 7 (acta de inventario físico con
+     el personal inventariador).
+
+ Proceso 15.3 — Documentos / dashboard
+   - El Dashboard muestra estadísticas globales del sistema.
+
+
+================================================================================
+ 16. NOTIFICACIONES
+================================================================================
+
+ Proceso 16.1 — Notificaciones del sistema
+   - Se generan ante eventos clave: documento recibido, derivado, observado,
+     atendido, firmado o recordatorios.
+   - Pueden enviarse por correo y marcarse como leídas.
+
+
+================================================================================
+ 17. CONFIGURACIÓN DEL USUARIO Y DEL SISTEMA
+================================================================================
+
+ Proceso 17.1 — Perfil de usuario
+   - Edición de datos personales, foto y consulta de información de cargo.
+
+ Proceso 17.2 — Preferencias del usuario
+   - Tema (claro/oscuro/sistema), idioma, vista compacta, notificaciones
+     por correo/push y opciones de visualización.
+
+ Proceso 17.3 — Configuración del sistema
+   - Parámetros generales gestionados por el administrador.
+
+
+================================================================================
+ RESUMEN DE FLUJOS PRINCIPALES (ALTO NIVEL)
+================================================================================
+
+ INVENTARIO FÍSICO:
+   Programar sesión → Registrar inventariadores → Verificar bienes
+   (escaneo + resultado) → Asignar a responsables (envío/aceptación) →
+   Resolver faltantes/sobrantes/transferencias → Finalizar → Anexo 7 / Reportes
+
+ TRÁMITE DOCUMENTARIO:
+   Crear (BORRADOR) → Firmar → Enviar (ENVIADO) → Recibir (RECIBIDO) →
+   Derivar/Observar/Atender → Archivar   [con trazabilidad e historial]
+
+ TRANSFERENCIA DE BIEN:
+   Solicitar (PENDIENTE) → Aceptar/Rechazar → (Acta de entrega + Firma)
+
+================================================================================
+ FIN DEL DOCUMENTO
+================================================================================
