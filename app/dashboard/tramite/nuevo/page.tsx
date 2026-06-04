@@ -94,6 +94,9 @@ interface TipoDocumento {
 
 interface BienVerificado {
   id: string
+  // "verificado" = VerificacionBien existente; "siga" = bien de SIGA sin registro
+  // (id sintético "siga:CODIGO", se materializa al generar el acta)
+  origen: "verificado" | "siga"
   codigoPatrimonial: string
   descripcionSiga: string | null
   marcaSiga: string | null
@@ -234,26 +237,71 @@ export default function NuevoDocumentoPage() {
   const tipoSeleccionadoObj = tiposDocumento.find((t) => t.id === formData.tipoDocumentoId)
   const esActaEntrega = tipoSeleccionadoObj?.codigo === "ACTA-ENT"
 
-  // Cargar bienes verificados cuando se selecciona tipo ACTA-ENT
+  // Cargar bienes disponibles para transferir cuando se selecciona tipo ACTA-ENT.
+  // Combina dos fuentes: (1) verificaciones de inventario aceptadas (con id real,
+  // limit=500 igual que "Mis Bienes Asignados"), y (2) bienes asignados en SIGA
+  // por DNI (sin registro interno; se materializan al generar el acta).
+  // Se deduplica por código patrimonial (gana el verificado, que ya es transferible).
   const fetchBienesVerificados = async () => {
     setLoadingBienes(true)
     try {
-      // limit=500 para mostrar todos los bienes asignados (igual que la página
-      // "Mis Bienes Asignados"); sin este parámetro la API limita a 20.
-      const response = await fetch("/api/inventario/verificaciones?misbienes=true&limit=500")
-      if (response.ok) {
-        const data = await response.json()
-        const bienes: BienVerificado[] = data.verificaciones || []
-        setBienesVerificados(bienes)
-        // Inicializar estados con el estadoFisico de cada verificación
-        const estados: Record<string, string> = {}
-        for (const b of bienes) {
-          estados[b.id] = (b.estadoFisico || "BUENO").toLowerCase()
+      const [resVerif, resSiga] = await Promise.all([
+        fetch("/api/inventario/verificaciones?misbienes=true&limit=500"),
+        fetch("/api/patrimonio/mis-bienes"),
+      ])
+
+      const bienes: BienVerificado[] = []
+
+      // (1) Bienes verificados/aceptados de inventario
+      if (resVerif.ok) {
+        const data = await resVerif.json()
+        for (const v of data.verificaciones || []) {
+          bienes.push({
+            id: v.id,
+            origen: "verificado",
+            codigoPatrimonial: v.codigoPatrimonial,
+            descripcionSiga: v.descripcionSiga ?? null,
+            marcaSiga: v.marcaSiga ?? null,
+            modeloSiga: v.modeloSiga ?? null,
+            serieSiga: v.serieSiga ?? null,
+            estadoFisico: v.estadoFisico ?? null,
+            valorSiga: v.valorSiga ?? null,
+          })
         }
-        setEstadosPorBien(estados)
       }
+
+      // Códigos ya cubiertos por una verificación (para no duplicar con SIGA)
+      const codigosVerificados = new Set(bienes.map((b) => b.codigoPatrimonial))
+
+      // (2) Bienes asignados en SIGA por DNI (los que aún no tienen verificación)
+      if (resSiga.ok) {
+        const dataSiga = await resSiga.json()
+        for (const s of dataSiga.bienes || []) {
+          if (!s?.codigo_patrimonial) continue
+          if (codigosVerificados.has(s.codigo_patrimonial)) continue
+          bienes.push({
+            id: `siga:${s.codigo_patrimonial}`,
+            origen: "siga",
+            codigoPatrimonial: s.codigo_patrimonial,
+            descripcionSiga: s.descripcion ?? null,
+            marcaSiga: s.marca ?? null,
+            modeloSiga: s.modelo ?? null,
+            serieSiga: s.serie ?? null,
+            estadoFisico: null,
+            valorSiga: s.valor_neto ?? null,
+          })
+        }
+      }
+
+      setBienesVerificados(bienes)
+      // Inicializar estados con el estadoFisico de cada bien
+      const estados: Record<string, string> = {}
+      for (const b of bienes) {
+        estados[b.id] = (b.estadoFisico || "BUENO").toLowerCase()
+      }
+      setEstadosPorBien(estados)
     } catch (error) {
-      console.error("Error al cargar bienes verificados:", error)
+      console.error("Error al cargar bienes:", error)
     } finally {
       setLoadingBienes(false)
     }
@@ -483,13 +531,27 @@ export default function NuevoDocumentoPage() {
       const estados = idsSeleccionados.map((id) => estadosPorBien[id] || "bueno")
       const estadoGeneral = estados.every((e) => e === estados[0]) ? estados[0] : "bueno"
 
+      // Separar verificaciones existentes (id real) de bienes de SIGA (id "siga:CODIGO").
+      // Los de SIGA se envían con sus datos para materializarlos en el backend.
+      const verificacionIds = idsSeleccionados.filter((id) => !id.startsWith("siga:"))
+      const bienesSiga = bienesVerificados
+        .filter((b) => b.origen === "siga" && bienesSeleccionados.has(b.id))
+        .map((b) => ({
+          codigoPatrimonial: b.codigoPatrimonial,
+          descripcion: b.descripcionSiga,
+          marca: b.marcaSiga,
+          modelo: b.modeloSiga,
+          serie: b.serieSiga,
+        }))
+
       const payload = {
         tipoDocumentoId: formData.tipoDocumentoId,
         correlativo: formData.correlativo,
         anio: formData.anio,
         destinatarioId: destPrincipal.destinatarioId,
         dependenciaDestinoId: destPrincipal.dependenciaId,
-        verificacionIds: idsSeleccionados,
+        verificacionIds,
+        bienesSiga,
         motivo: formData.observaciones || null,
         estadoConservacion: estadoGeneral,
       }
@@ -702,7 +764,7 @@ export default function NuevoDocumentoPage() {
                       Bienes a Transferir *
                     </CardTitle>
                     <CardDescription>
-                      Selecciona los bienes verificados que deseas transferir. El PDF se genera automáticamente.
+                      Selecciona los bienes a transferir (verificados en inventario o asignados en SIGA). El PDF se genera automáticamente.
                     </CardDescription>
                   </div>
                   {bienesSeleccionados.size > 0 && (
@@ -749,7 +811,7 @@ export default function NuevoDocumentoPage() {
                     <Package className="h-12 w-12 text-muted-foreground/50" />
                     <p className="mt-2 text-muted-foreground">
                       {bienesVerificados.length === 0
-                        ? "No tienes bienes verificados disponibles para transferir"
+                        ? "No tienes bienes disponibles para transferir (ni verificados en inventario ni asignados en SIGA)"
                         : "No se encontraron bienes con ese criterio"}
                     </p>
                   </div>
@@ -805,7 +867,18 @@ export default function NuevoDocumentoPage() {
                                 {(paginaBienes - 1) * porPaginaBienes + idx + 1}
                               </TableCell>
                               <TableCell className="font-mono text-xs py-2 whitespace-nowrap">
-                                {bien.codigoPatrimonial}
+                                <div className="flex items-center gap-1.5">
+                                  {bien.codigoPatrimonial}
+                                  {bien.origen === "siga" && (
+                                    <Badge
+                                      variant="outline"
+                                      className="h-4 border-blue-300 px-1 py-0 font-sans text-[9px] text-blue-600"
+                                      title="Bien de SIGA — se registrará al generar el acta"
+                                    >
+                                      SIGA
+                                    </Badge>
+                                  )}
+                                </div>
                               </TableCell>
                               <TableCell className="text-xs py-2 max-w-[200px]">
                                 <span className="line-clamp-2">{bien.descripcionSiga || "-"}</span>

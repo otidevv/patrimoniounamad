@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server"
 import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import {
+  excluirSesionesSistema,
+  excluirVerificacionesSistema,
+} from "@/lib/inventario-sistema"
 
 export async function GET() {
   try {
@@ -28,42 +32,43 @@ export async function GET() {
       sesionesRecientes,
     ] = await Promise.all([
       // Total de sesiones
-      prisma.sesionInventario.count(),
+      prisma.sesionInventario.count({ where: excluirSesionesSistema }),
       // Sesiones en proceso
       prisma.sesionInventario.count({
-        where: { estado: "EN_PROCESO" },
+        where: { estado: "EN_PROCESO", ...excluirSesionesSistema },
       }),
       // Sesiones programadas (pendientes de iniciar)
       prisma.sesionInventario.count({
-        where: { estado: "PROGRAMADA" },
+        where: { estado: "PROGRAMADA", ...excluirSesionesSistema },
       }),
       // Sesiones finalizadas
       prisma.sesionInventario.count({
-        where: { estado: "FINALIZADA" },
+        where: { estado: "FINALIZADA", ...excluirSesionesSistema },
       }),
       // Total de verificaciones
-      prisma.verificacionBien.count(),
+      prisma.verificacionBien.count({ where: excluirVerificacionesSistema }),
       // Verificaciones encontradas
       prisma.verificacionBien.count({
-        where: { resultado: "ENCONTRADO" },
+        where: { resultado: "ENCONTRADO", ...excluirVerificacionesSistema },
       }),
       // Verificaciones no encontradas
       prisma.verificacionBien.count({
-        where: { resultado: "NO_ENCONTRADO" },
+        where: { resultado: "NO_ENCONTRADO", ...excluirVerificacionesSistema },
       }),
       // Verificaciones reubicadas
       prisma.verificacionBien.count({
-        where: { resultado: "REUBICADO" },
+        where: { resultado: "REUBICADO", ...excluirVerificacionesSistema },
       }),
       // Verificaciones sobrantes
       prisma.verificacionBien.count({
-        where: { resultado: "SOBRANTE" },
+        where: { resultado: "SOBRANTE", ...excluirVerificacionesSistema },
       }),
       // Total de dependencias
       prisma.dependencia.count(),
       // Sesiones recientes (últimas 5)
       prisma.sesionInventario.findMany({
         take: 5,
+        where: excluirSesionesSistema,
         orderBy: { createdAt: "desc" },
         include: {
           responsable: {

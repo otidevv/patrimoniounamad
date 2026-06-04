@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { PREFIJO_SESION_SISTEMA } from "@/lib/inventario-sistema"
 
 // GET: Listar sesiones de inventario
 export async function GET(request: NextRequest) {
@@ -23,7 +24,10 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit
 
     // Construir filtros
-    const where: Record<string, unknown> = {}
+    const where: Record<string, unknown> = {
+      // Excluir sesiones internas del sistema (transferencias directas)
+      NOT: { codigo: { startsWith: PREFIJO_SESION_SISTEMA } },
+    }
 
     if (estado) {
       where.estado = estado

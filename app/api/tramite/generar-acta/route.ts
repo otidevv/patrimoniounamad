@@ -4,6 +4,16 @@ import path from "path"
 import { prisma } from "@/lib/prisma"
 import { getSession } from "@/lib/auth"
 import { generarActaEntregaPDF } from "@/lib/generar-acta-entrega"
+import { codigoSesionTransferenciaDirecta } from "@/lib/inventario-sistema"
+
+// Bien proveniente de SIGA seleccionado en el acta (no tiene VerificacionBien)
+interface BienSigaActa {
+  codigoPatrimonial: string
+  descripcion?: string | null
+  marca?: string | null
+  modelo?: string | null
+  serie?: string | null
+}
 
 // POST: Generar Acta de Entrega de Bien + crear transferencias + crear documento tramite
 export async function POST(request: Request) {
@@ -21,6 +31,7 @@ export async function POST(request: Request) {
       destinatarioId, // ID del usuario destinatario
       dependenciaDestinoId, // ID de la dependencia destino
       verificacionIds, // Array de IDs de bienes verificados a transferir
+      bienesSiga, // Array de bienes de SIGA (sin VerificacionBien) a materializar
       motivo,
       estadoConservacion,
     } = body
@@ -33,7 +44,10 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!verificacionIds?.length) {
+    const verificacionIdsEntrada: string[] = Array.isArray(verificacionIds) ? verificacionIds : []
+    const bienesSigaEntrada: BienSigaActa[] = Array.isArray(bienesSiga) ? bienesSiga : []
+
+    if (verificacionIdsEntrada.length === 0 && bienesSigaEntrada.length === 0) {
       return NextResponse.json(
         { message: "Debe seleccionar al menos un bien para transferir" },
         { status: 400 }
@@ -82,10 +96,105 @@ export async function POST(request: Request) {
       )
     }
 
+    // IDs finales de verificaciones a transferir (los seleccionados + los
+    // materializados a partir de bienes de SIGA).
+    const verificacionIdsFinal: string[] = [...verificacionIdsEntrada]
+
+    // Materializar los bienes de SIGA: crear su VerificacionBien auto-aceptada
+    // dentro de la sesión interna del usuario, para poder transferirlos.
+    if (bienesSigaEntrada.length > 0) {
+      const numeroDocRemitente = remitente.numeroDocumento || ""
+
+      // Sesión interna del usuario (oculta de listados y métricas)
+      const codigoSesion = codigoSesionTransferenciaDirecta(user.id)
+      let sesionSistema = await prisma.sesionInventario.findUnique({
+        where: { codigo: codigoSesion },
+      })
+      if (!sesionSistema) {
+        sesionSistema = await prisma.sesionInventario.create({
+          data: {
+            codigo: codigoSesion,
+            nombre: "Transferencias directas desde SIGA",
+            descripcion: "Sesión interna del sistema. No editar.",
+            estado: "EN_PROCESO",
+            responsableId: user.id,
+            fechaProgramada: new Date(),
+          },
+        })
+      }
+
+      // Asignación del propio usuario (auto-aceptada) en la sesión interna
+      let asignacionPropia = await prisma.asignacionInventario.findUnique({
+        where: {
+          sesionId_numeroDocumento: {
+            sesionId: sesionSistema.id,
+            numeroDocumento: numeroDocRemitente,
+          },
+        },
+      })
+      if (!asignacionPropia) {
+        asignacionPropia = await prisma.asignacionInventario.create({
+          data: {
+            sesionId: sesionSistema.id,
+            usuarioId: user.id,
+            tipoDocumento: "DNI",
+            numeroDocumento: numeroDocRemitente,
+            nombres: remitente.nombre,
+            // Guardamos los apellidos completos sin intentar separarlos (no es
+            // fiable; los apellidos paternos peruanos suelen tener dos palabras).
+            apellidoPaterno: remitente.apellidos || "",
+            apellidoMaterno: null,
+            estado: "ACEPTADO",
+            fechaRespuestaUsuario: new Date(),
+          },
+        })
+      }
+
+      // Crear/recuperar la VerificacionBien de cada bien de SIGA
+      for (const s of bienesSigaEntrada) {
+        if (!s?.codigoPatrimonial) continue
+
+        const existente = await prisma.verificacionBien.findUnique({
+          where: {
+            sesionId_codigoPatrimonial: {
+              sesionId: sesionSistema.id,
+              codigoPatrimonial: s.codigoPatrimonial,
+            },
+          },
+          select: { id: true },
+        })
+        if (existente) {
+          verificacionIdsFinal.push(existente.id)
+          continue
+        }
+
+        const nueva = await prisma.verificacionBien.create({
+          data: {
+            sesionId: sesionSistema.id,
+            asignacionId: asignacionPropia.id,
+            codigoPatrimonial: s.codigoPatrimonial,
+            descripcionSiga: s.descripcion || null,
+            marcaSiga: s.marca || null,
+            modeloSiga: s.modelo || null,
+            serieSiga: s.serie || null,
+            resultado: "ENCONTRADO",
+            responsableReal: `${remitente.nombre} ${remitente.apellidos}`.trim(),
+            dniResponsableActual: numeroDocRemitente || null,
+            nombresResponsableActual: remitente.nombre,
+            apellidosResponsableActual: remitente.apellidos,
+            verificadorId: user.id,
+            dispositivoTipo: "SIGA",
+          },
+          select: { id: true },
+        })
+        verificacionIdsFinal.push(nueva.id)
+      }
+    }
+
     // Obtener los bienes verificados
     const verificaciones = await prisma.verificacionBien.findMany({
       where: {
-        id: { in: verificacionIds },
+        id: { in: verificacionIdsFinal },
       },
       include: {
         asignacion: { select: { estado: true } },
@@ -99,8 +208,23 @@ export async function POST(request: Request) {
       )
     }
 
-    // Validar que no haya transferencias pendientes
+    // Validar cada bien antes de transferir
     for (const v of verificaciones) {
+      // El bien debe estar actualmente bajo la responsabilidad del remitente.
+      // (Evita transferir un bien ya entregado: tras aceptar una transferencia,
+      // el dniResponsableActual cambia al destinatario, pero SIGA puede seguir
+      // listándolo bajo el remitente.)
+      if (
+        remitente.numeroDocumento &&
+        v.dniResponsableActual !== remitente.numeroDocumento
+      ) {
+        return NextResponse.json(
+          { message: `El bien ${v.codigoPatrimonial} ya no está bajo tu responsabilidad y no puede transferirse` },
+          { status: 400 }
+        )
+      }
+
+      // No debe tener otra transferencia pendiente de respuesta
       const pendiente = await prisma.transferenciaBien.findFirst({
         where: { verificacionId: v.id, estado: "PENDIENTE" },
       })
