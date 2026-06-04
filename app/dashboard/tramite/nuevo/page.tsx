@@ -238,7 +238,9 @@ export default function NuevoDocumentoPage() {
   const fetchBienesVerificados = async () => {
     setLoadingBienes(true)
     try {
-      const response = await fetch("/api/inventario/verificaciones?misbienes=true")
+      // limit=500 para mostrar todos los bienes asignados (igual que la página
+      // "Mis Bienes Asignados"); sin este parámetro la API limita a 20.
+      const response = await fetch("/api/inventario/verificaciones?misbienes=true&limit=500")
       if (response.ok) {
         const data = await response.json()
         const bienes: BienVerificado[] = data.verificaciones || []
