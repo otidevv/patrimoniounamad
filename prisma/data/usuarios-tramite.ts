@@ -1,7 +1,7 @@
 // ARCHIVO GENERADO AUTOMÁTICAMENTE - NO EDITAR A MANO
-// Fuente: dump MySQL del sistema de trámite (tabla `users`)
+// Fuente: dump MySQL del sistema de trámite (tablas `users`, `empleados`, `dependencias`)
 // Regenerar con: node prisma/parse-tramite-users.cjs "<ruta-al-dump>.sql"
-// Total de usuarios: 1886
+// Total de usuarios: 1886 | con dependencia: 675
 
 export interface UsuarioTramite {
   rolOrigenId: number | null
@@ -12,6 +12,10 @@ export interface UsuarioTramite {
   email: string
   password: string
   estado: number
+  /** Código de dependencia (= codigo en Patrimonio); null si no se pudo resolver */
+  dependenciaCodigo: string | null
+  /** Cargo según el registro de empleado activo; null si no hay */
+  cargo: string | null
   createdAt: string | null
   updatedAt: string | null
 }
@@ -26,6 +30,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "josecortijo2000@hotmail.com",
     "password": "$2y$10$Kfl0gUCbcsbCIe7ZI/LRpOLQ9lC6ZkjSxvxeWtDV7OknBcgl8rMVG",
     "estado": 1,
+    "dependenciaCodigo": "UTD",
+    "cargo": "PRUEBA",
     "createdAt": "2021-01-01 05:00:00",
     "updatedAt": "2026-03-12 15:54:49"
   },
@@ -38,6 +44,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lequispe@unamad.edu.pe",
     "password": "$2y$10$lvJ79aha7dIjweMeCf0/TeAw.6JQF/JvTH8FVA80Wwl.7AhCmO7Ha",
     "estado": 1,
+    "dependenciaCodigo": "USRT-OTI",
+    "cargo": "ANALISTA",
     "createdAt": "2022-08-05 19:47:00",
     "updatedAt": "2026-01-09 16:06:22"
   },
@@ -50,6 +58,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhonoriof@unamad.edu.pe",
     "password": "$2y$10$lUBmuZgCFE5Ds1Q3T08TRuxUiCvSW7u90/RtqTsAwT.2rR1BL2R1u",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "ESPECIALISTA EN BASE DE DATOS",
     "createdAt": "2022-08-05 19:49:40",
     "updatedAt": "2025-09-10 13:51:43"
   },
@@ -62,6 +72,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ICAIRO@UNAMAD.EDU.PE",
     "password": "$2y$10$Hs/YlAo9J8r3gUudh2ri8exynpQSGarmC6YtvVGelHuhfb5vhE6qy",
     "estado": 1,
+    "dependenciaCodigo": "UFMU",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-08 16:37:37",
     "updatedAt": "2026-03-24 14:17:16"
   },
@@ -74,6 +86,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eholgado@unamad.edu.pe",
     "password": "$2y$10$fgY697zNntpzEn/30oDaIuMd/KsioEoqxo0dzGTBwR8hsgK5D8Mzq",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-08 19:32:06",
     "updatedAt": "2026-03-12 15:25:24"
   },
@@ -86,6 +100,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yhalire1234@gmail.com",
     "password": "$2y$10$KagEEx8vOLX58avbI6WGQObh/01bNmbImVrpoAcMKhF6U3/3Bz3uu",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-08-08 19:44:54",
     "updatedAt": "2023-10-01 13:10:22"
   },
@@ -98,6 +114,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nhuamany@unamad.edu.pe",
     "password": "$2y$10$a2Mls30cfkIOCbW1c86k4ua9uxqT9LKLJ.a2tq.JVduy7ndOhK2DC",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "ASISTENTE INFORMATICO",
     "createdAt": "2022-08-08 20:37:53",
     "updatedAt": "2025-07-07 15:48:35"
   },
@@ -110,6 +128,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jzavaleta@unamad.edu.pe",
     "password": "$2y$10$sfJrKP988YRNROABh/oqe.GNhSc1dgz4wnKJ1W9hX.Nq4CtlF0J.q",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "ASISTENTE TÉCNICO",
     "createdAt": "2022-08-10 13:11:54",
     "updatedAt": "2025-07-09 20:09:37"
   },
@@ -122,6 +142,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "talvarez@unamad.edu.pe",
     "password": "$2y$10$uhPtVZuZv44Qt1ZftEOJ.OcQXs7z2QS7X/iyqQqYVOR7KD7odbY5u",
     "estado": 1,
+    "dependenciaCodigo": "DADCP",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:04:39",
     "updatedAt": "2022-08-10 20:04:39"
   },
@@ -134,6 +156,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lalvarez@unamad.edu.pe",
     "password": "$2y$10$3AUuO4jnSpbnZqmuep3Sz.qpVN0N4t8k7bLgygdENOkW/gwdkEjFi",
     "estado": 1,
+    "dependenciaCodigo": "VRA",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:05:06",
     "updatedAt": "2022-09-29 14:16:05"
   },
@@ -146,6 +170,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aarias@unamad.edu.pe",
     "password": "$2y$10$QN1hfuE0tBWl7zLeJF8vLOKIDjQguBMmQAeZJ0oFhQVsvuMcTPuUC",
     "estado": 1,
+    "dependenciaCodigo": "DPSEC",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:05:30",
     "updatedAt": "2022-10-10 14:43:58"
   },
@@ -158,6 +184,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marredondo@unamad.edu.pe",
     "password": "$2y$10$n7fn6SMk0yRVWhGfm.c1T.FoX7xnLU6QDX2nCw7ZMp9uAxCY7S53G",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:06:04",
     "updatedAt": "2022-08-10 20:06:04"
   },
@@ -170,6 +198,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "zhuachacam@unamad.edu.pe",
     "password": "$2y$10$fkR3ZDKwszBWorBHloZFVuMSpfOlxEfoYXI3iNCcoELQ4ult/9INi",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:06:27",
     "updatedAt": "2024-04-24 20:58:52"
   },
@@ -182,6 +212,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cmendez@unamad.edu.pe",
     "password": "$2y$10$lhPFtGNKBMqm9UPzC0JaZOHE6oEY981IyVIwzPbv.plp21f/.7Ixe",
     "estado": 1,
+    "dependenciaCodigo": "INI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:07:04",
     "updatedAt": "2023-01-17 20:08:18"
   },
@@ -194,6 +226,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cmerma@unamad.edu.pe",
     "password": "$2y$10$8Fzyg65SwwUtFIBZnYHMjuO0Ugy6dAR1lQ1vGKy38Tr4MAwueJYYe",
     "estado": 1,
+    "dependenciaCodigo": "UTD",
+    "cargo": "RESPONSABLE DE LA UNIDAD DE TRAMITE DOCUMENTARIO",
     "createdAt": "2022-08-10 20:07:30",
     "updatedAt": "2023-12-20 14:18:41"
   },
@@ -206,6 +240,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "socola@unamad.edu.pe",
     "password": "$2y$10$Mb4xxf/OzPRS/1ntqEk04OlIq4iwLARowA53Tl3/rkwPIjW4Dv1lC",
     "estado": 1,
+    "dependenciaCodigo": "OCRI",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:08:06",
     "updatedAt": "2022-08-10 20:08:06"
   },
@@ -218,6 +254,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nvelasquez@unamad.edu.pe",
     "password": "$2y$10$lpOGuJITTpkqeERuksMtN.WCeQJXghvFV/r4hOt0N4QA3luazKD06",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:08:54",
     "updatedAt": "2025-03-07 13:16:23"
   },
@@ -230,6 +268,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mduenas@unamad.edu.pe",
     "password": "$2y$10$ZFBjmPAI9ryeN4LoMBPDGerZT7zs/wA3CsOPEEZyGDrTuighgovYe",
     "estado": 0,
+    "dependenciaCodigo": "FCE",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:09:14",
     "updatedAt": "2023-01-17 14:04:41"
   },
@@ -242,6 +282,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yiconema@unamad.edu.pe",
     "password": "$2y$10$mqnEFy2ptnl65cJKYVBHC.8fDg1UI1rZQs/CdAFr/84h/jDfieOUG",
     "estado": 1,
+    "dependenciaCodigo": "FCE",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:09:30",
     "updatedAt": "2022-08-10 20:09:30"
   },
@@ -254,6 +296,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tsuri@unamad.edu.pe",
     "password": "$2y$10$TPIZoTDQws2.5HBMdOZnLeVh4TtCU6AgeDaUvwZLUKhbn2GL0fRTG",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:09:46",
     "updatedAt": "2023-01-06 15:59:09"
   },
@@ -266,6 +310,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kaparicio@unamad.edu.pe",
     "password": "$2y$10$e3uEhACVPgP5Iw0Y5At/Vu5piJ5n9xOtFHuGy8wbH36/3A95Yiz2O",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:10:05",
     "updatedAt": "2023-08-10 17:07:25"
   },
@@ -278,6 +324,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ebarbaran@unamad.edu.pe",
     "password": "$2y$10$sUPD/CRynql2oIKPZIMNEOAiOkQ6knouVydXyC5KCOBFpEAKTPhmS",
     "estado": 1,
+    "dependenciaCodigo": "VRA",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:10:20",
     "updatedAt": "2022-08-10 20:10:20"
   },
@@ -290,6 +338,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcollazos@unamad.edu.pe",
     "password": "$2y$10$mueZ/k9/HdEQvtoITVvZt.cygnv9vTgR..ecqmKczuLLAYrr/zT6a",
     "estado": 1,
+    "dependenciaCodigo": "DAEN",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:11:56",
     "updatedAt": "2026-03-12 20:12:01"
   },
@@ -302,6 +352,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lperez@unamad.edu.pe",
     "password": "$2y$10$2b29Qa.TZOhEQSn.9umx3uqwiVNZxNM1WRWgAwvVHZFEOUDHVtm3S",
     "estado": 1,
+    "dependenciaCodigo": "DDA-INI",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:12:15",
     "updatedAt": "2022-10-11 20:11:33"
   },
@@ -314,6 +366,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bbermudez@unamad.edu.pe",
     "password": "$2y$10$cYZgq0RYR1XDTQjO5gv9r.4oUbKxam0kuISrFfs6055tMQejUmQNC",
     "estado": 1,
+    "dependenciaCodigo": "DAIFYMA",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:12:41",
     "updatedAt": "2024-04-05 14:23:56"
   },
@@ -326,6 +380,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mburga@unamad.edu.pe",
     "password": "$2y$10$hlMv4HSd9u6A2b9EU3w9d.MYNc/tn5SLAFVHz5/OHTa18a97rlOpa",
     "estado": 1,
+    "dependenciaCodigo": "DAIA",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:13:02",
     "updatedAt": "2022-08-10 20:13:02"
   },
@@ -338,6 +394,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "schalco@unamad.edu.pe",
     "password": "$2y$10$2DrJXyo5GtK92p51w4trlOtE5Ri30ZchimpcSsfn28B/M9SniO5Nq",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:13:35",
     "updatedAt": "2022-10-04 17:07:51"
   },
@@ -350,6 +408,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "achuquimamani@unamad.edu.pe",
     "password": "$2y$10$sbn27vJHGKicadgQT4dRHeZAQc9tPU4ZDggJ76q6UwIhnrT286S0i",
     "estado": 1,
+    "dependenciaCodigo": "DAE",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:13:53",
     "updatedAt": "2024-01-03 13:14:54"
   },
@@ -362,6 +422,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mescobedo@unamad.edu.pe",
     "password": "$2y$10$8xV7kMRJvS0XC/IB3k71kOKo596qGM2DjS3t5SPIZDkcB9vYBJyga",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "OPERADOR ADMINISTRATIVO DOCUMENTARIO",
     "createdAt": "2022-08-10 20:14:09",
     "updatedAt": "2025-01-20 15:02:03"
   },
@@ -374,6 +436,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mguzmanv@unamad.edu.pe",
     "password": "$2y$10$3E.BWR3JAfiGuvTiCVWi9.3YTDRIHctfwGqBqZXAduArYxx9yJuZy",
     "estado": 1,
+    "dependenciaCodigo": "DAA",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:14:35",
     "updatedAt": "2024-01-15 20:20:40"
   },
@@ -386,6 +450,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gtamayo@unamad.edu.pe",
     "password": "$2y$10$jSgbLgS2jN1PWnKOdVYsyOwyLIIUujpCSA7wTSlQSZ0gRZQho4Mva",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-08-10 20:15:03",
     "updatedAt": "2022-09-29 14:18:08"
   },
@@ -398,6 +464,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gvillarroelo@unamad.edu.pe",
     "password": "$2y$10$VPqGGQqy4pYXmUfX2WUBleHePT1xXMK87OFN6.o3lbdvtbRI3rxge",
     "estado": 1,
+    "dependenciaCodigo": "DAISI",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:15:23",
     "updatedAt": "2022-10-06 13:17:21"
   },
@@ -410,6 +478,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ybellido@unamad.edu.pe",
     "password": "$2y$10$JeDDlVsq1GRBfFIf89Xfke9fXoymQ2GC1zIaWi8Z8FvzjqPe5K1xK",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "DIRECTORA (E)",
     "createdAt": "2022-08-10 20:15:53",
     "updatedAt": "2024-05-13 14:30:49"
   },
@@ -422,6 +492,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cchullo@unamad.edu.pe",
     "password": "$2y$10$d7petBw9cG.d0MCiuXYCfeQgYvoFFrP4Q1ZXoxtpZJ4H0.XtdyicG",
     "estado": 1,
+    "dependenciaCodigo": "UAC",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 20:16:10",
     "updatedAt": "2025-04-04 15:52:50"
   },
@@ -434,6 +506,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sheredia@unamad.edu.pe",
     "password": "$2y$10$Y8FvpdqjZRfLCaEInP8s8.6wq0TH6scG1suThIJelxUewt7TjNLCe",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "COORDINADOR",
     "createdAt": "2022-08-10 20:16:26",
     "updatedAt": "2026-03-19 15:41:28"
   },
@@ -446,6 +520,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dhuayanca@unamad.edu.pe",
     "password": "$2y$10$iFWWGiPbiANcwSnk9mLVlu3IrvxSEudNzYkNFH8WlA.uJLiHhd226",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "DIRECTORA",
     "createdAt": "2022-08-10 20:16:46",
     "updatedAt": "2023-09-12 13:36:11"
   },
@@ -458,6 +534,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "glira@unamad.edu.pe",
     "password": "$2y$10$JRTQpmlM3cH0y0.ASPBeM.Y0P3d7uoxczDf.Q7zUZBzrp7xIZJKIu",
     "estado": 1,
+    "dependenciaCodigo": "UPFCE",
+    "cargo": "DIRECTORA",
     "createdAt": "2022-08-10 20:20:43",
     "updatedAt": "2025-05-28 15:09:31"
   },
@@ -470,6 +548,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hpinedo@unamad.edu.pe",
     "password": "$2y$10$H7BMuYfw2k0hKAF3dzFoiuqBm1M4FfOUmKEO.AWyWX36kAVAmAQj6",
     "estado": 1,
+    "dependenciaCodigo": "FI",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:21:14",
     "updatedAt": "2024-08-01 13:26:49"
   },
@@ -482,6 +562,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mrios@unamad.edu.pe",
     "password": "$2y$10$VATqu/4kAtgmtFqfBpXCNetQyY9CmFg8OeJjHP4W/OfC6y9Oi0.4.",
     "estado": 1,
+    "dependenciaCodigo": "DPSEC",
+    "cargo": "APOYO",
     "createdAt": "2022-08-10 20:21:46",
     "updatedAt": "2023-08-24 19:23:37"
   },
@@ -494,6 +576,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rterrazas@unamad.edu.pe",
     "password": "$2y$10$Q3Ybj/0.KsKpa0S8UZ1YLO0LMLQCBXhD3xQNA29Vzar9YQmnmi0XG",
     "estado": 1,
+    "dependenciaCodigo": "DIPROBYS",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:28:32",
     "updatedAt": "2024-03-27 15:25:10"
   },
@@ -506,6 +590,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "atorres@unamad.edu.pe",
     "password": "$2y$10$MQLdvIUr5xThYU7x6c02NO1TSXraBn3rE1htHaWNjVA1Q86P8iJq2",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO III",
     "createdAt": "2022-08-10 20:29:00",
     "updatedAt": "2026-02-24 13:30:45"
   },
@@ -518,6 +604,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "avizcarra@unamad.edu.pe",
     "password": "$2y$10$3ivLu3UIQU.UzY8Kg6F0tOXhl3.n/dYGUtoFbqCpoRJchJTisxuKm",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "DIRECTOR (E)",
     "createdAt": "2022-08-10 20:30:07",
     "updatedAt": "2022-10-18 16:03:10"
   },
@@ -530,6 +618,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "czambrano@unamad.edu.pe",
     "password": "$2y$10$tWpvdqhcRcT69SGLfX210.ErkrAbVc2bZZyaHk/v6MVp8KE8IIMfS",
     "estado": 1,
+    "dependenciaCodigo": "UT",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 20:33:01",
     "updatedAt": "2026-04-09 16:40:36"
   },
@@ -542,6 +632,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "midiaz@unamad.edu.pe",
     "password": "$2y$10$TiIKYcv0BpbVLtwLXB2RVuzvukiMo7ZxF8BcD2okiRmZNzTdcQnG.",
     "estado": 0,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:33:19",
     "updatedAt": "2024-08-19 12:38:01"
   },
@@ -554,6 +646,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jgarate@unamad.edu.pe",
     "password": "$2y$10$SNl5oEarvSSfsJuXcjXZVutNmSY4hjTptCdzYccfX5WhUEFRoU4Ka",
     "estado": 1,
+    "dependenciaCodigo": "EPIFYMA",
+    "cargo": "DOCENTE",
     "createdAt": "2022-08-10 20:33:50",
     "updatedAt": "2023-03-22 22:28:49"
   },
@@ -566,6 +660,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fhuaman@unamad.edu.pe",
     "password": "$2y$10$3H/mMOvAco9TyIlN5lX4Luwi.9fLCPeQf0tbAWYY6q/RVkFF4yQOq",
     "estado": 1,
+    "dependenciaCodigo": "CSST",
+    "cargo": "PRESIDENTE",
     "createdAt": "2022-08-10 20:34:16",
     "updatedAt": "2025-02-07 14:27:41"
   },
@@ -578,6 +674,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cmamanil@unamad.edu.pe",
     "password": "$2y$10$/xvJrbdEAs8XPp/r0PQgh.zhwpo3JA6cIXiVe1iwHLYep6VquGYa2",
     "estado": 1,
+    "dependenciaCodigo": "SICHS",
+    "cargo": "SECRETARIA DE INSTRUCCION",
     "createdAt": "2022-08-10 20:35:31",
     "updatedAt": "2022-10-04 19:21:42"
   },
@@ -590,6 +688,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hmamani@unamad.edu.pe",
     "password": "$2y$10$QKU89jhEkPuZ0KWkhbf06.rgCxmWB3zS87cwsKF/zeNyxlFHcLYd6",
     "estado": 1,
+    "dependenciaCodigo": "OCII",
+    "cargo": "ESPECIALISTA",
     "createdAt": "2022-08-10 20:35:53",
     "updatedAt": "2023-03-13 18:05:06"
   },
@@ -602,6 +702,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ftineo@unamad.edu.pe",
     "password": "$2y$10$eTeHXIHjkX6B2rR8jH5sMeQdF2qiHt9UJlNit5/P0y4cDSmgkA2.S",
     "estado": 1,
+    "dependenciaCodigo": "DPSEC",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:36:11",
     "updatedAt": "2023-08-14 21:42:09"
   },
@@ -614,6 +716,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dcueva@unamad.edu.pe",
     "password": "$2y$10$de.BYE9FbW7zfEwBRwirz.V3o2jOPJRxHE1L0GYu2FJdfXb75V8wG",
     "estado": 1,
+    "dependenciaCodigo": "VIV-FOR",
+    "cargo": "ADMINISTRADOR",
     "createdAt": "2022-08-10 20:36:31",
     "updatedAt": "2022-08-10 20:36:31"
   },
@@ -626,6 +730,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jpacaya@unamad.edu.pe",
     "password": "$2y$10$1jExBHCEgUF8/3gSRCaite4eu.fbD1/GcJhOaZXBD7Wuqq.1Zlbcy",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-08-10 20:38:03",
     "updatedAt": "2025-05-05 21:02:01"
   },
@@ -638,6 +744,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gpanduro@unamad.edu.pe",
     "password": "$2y$10$T1L2lWLD5we9AF6JJ4Odoec5Zqc5m/NGEXEr3jW1PVouTEslEHcz2",
     "estado": 1,
+    "dependenciaCodigo": "EPG",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:39:16",
     "updatedAt": "2025-03-07 16:46:17"
   },
@@ -650,6 +758,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kroca@unamad.edu.pe",
     "password": "$2y$10$2bKvLEGoez0rUc77iln.NOKPIFCoDon99P6ACRd1m32glTYtDAqIy",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "JEFE DE OFICINA",
     "createdAt": "2022-08-10 20:39:37",
     "updatedAt": "2023-08-18 13:48:58"
   },
@@ -662,6 +772,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sruiz@unamad.edu.pe",
     "password": "$2y$10$mfJp35FQTUxUqvAzY5e2O.vjNJ.SOWZRGBauTwhmaU6dqxT.qO1Ta",
     "estado": 1,
+    "dependenciaCodigo": "UT",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:39:53",
     "updatedAt": "2022-10-11 13:31:45"
   },
@@ -674,6 +786,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lsilvay@unamad.edu.pe",
     "password": "$2y$10$DtxI3u/06AexxRVUlz63yuZb9htcQgTCgZBfoinuZnzda1UpHBu2W",
     "estado": 1,
+    "dependenciaCodigo": "UFE-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:40:23",
     "updatedAt": "2025-02-18 13:08:35"
   },
@@ -686,6 +800,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gvalencia@unamad.edu.pe",
     "password": "$2y$10$mT2aLZpiNx0vwoFRceg5uu.2wXQS2y06muhYEGp8bWm4lHea9tSt6",
     "estado": 1,
+    "dependenciaCodigo": "UGC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:40:57",
     "updatedAt": "2022-08-10 20:40:57"
   },
@@ -698,6 +814,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yvargas@unamad.edu.pe",
     "password": "$2y$10$ltsgGCI1zrDxLOjOwZd/F.K0jP6oqjRhP7nHZNI.BXEzDjbVMXEwy",
     "estado": 0,
+    "dependenciaCodigo": "EPISI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:41:27",
     "updatedAt": "2025-02-25 17:58:57"
   },
@@ -710,6 +828,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "emancilla@unamad.edu.pe",
     "password": "$2y$10$ZkNUu9tQt3hZoNBdEEirMuUueIvV4d4xp9WmKdvUr6g80aXVPBLj2",
     "estado": 1,
+    "dependenciaCodigo": "UT",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:41:31",
     "updatedAt": "2022-08-10 20:41:31"
   },
@@ -722,6 +842,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "karpitam@unamad.edu.pe",
     "password": "$2y$10$uByyR5S28K9srqLqZlqbw.TatFcGWiYLFLP3xgIwhEr9X1bSSwlWK",
     "estado": 1,
+    "dependenciaCodigo": "DAA",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-08-10 20:41:58",
     "updatedAt": "2022-10-26 15:23:33"
   },
@@ -734,6 +856,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "msara@unamad.edu.pe",
     "password": "$2y$10$8Qz0CRu7fF2bEfRGLUNmPe8d/s01DJYq7D3e/e4aO1ajTwYt1dnQ6",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:42:18",
     "updatedAt": "2024-08-08 16:11:30"
   },
@@ -746,6 +870,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "renatocq@unamad.edu.pe",
     "password": "$2y$10$6vTQ9dY8j4rrQEYxAeXKPO0biHJYC8VRjmVgiEI.ruxMMjhqaDi3m",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-08-10 20:42:30",
     "updatedAt": "2023-10-19 17:54:05"
   },
@@ -758,6 +884,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "samamqui@unamad.edu.pe",
     "password": "$2y$10$PXYwa5cN.SJ.q0KBSLmj/./Moiff.FlZNsy51AMXMhRHBAnURYOS2",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:42:49",
     "updatedAt": "2022-12-02 13:15:13"
   },
@@ -770,6 +898,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mccaria@unamad.edu.pe",
     "password": "$2y$10$XLSl4XUqrtT12tucjbIUEuZbqeZhJAROM6gtOqxMwyjBXoph0Luhi",
     "estado": 1,
+    "dependenciaCodigo": "UEDD",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-08-10 20:43:17",
     "updatedAt": "2025-02-25 19:49:02"
   },
@@ -782,6 +912,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ycuchuyrumih@unamad.edu.pe",
     "password": "$2y$10$nCaIC4x8Xvikfv2xqfP3d./2k/uhwy3WEclfOcbjRB.m1YMfRRZZi",
     "estado": 1,
+    "dependenciaCodigo": "URAA",
+    "cargo": "AA",
     "createdAt": "2022-08-10 20:43:37",
     "updatedAt": "2022-10-26 15:21:45"
   },
@@ -794,6 +926,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mescalantem@unamad.edu.pe",
     "password": "$2y$10$mTtuTGAavFMSI.Kvv.X.tu8jUlYPXAzSplzOSLF21RmTUGzOdnExC",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:44:04",
     "updatedAt": "2024-10-16 15:48:44"
   },
@@ -806,6 +940,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sbaez@unamad.edu.pe",
     "password": "$2y$10$YZKM6.INAygudtOy0c1RBexuVkxMZjW3xgoeG65veKCW6qwUDIjEe",
     "estado": 1,
+    "dependenciaCodigo": "HAG",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:44:06",
     "updatedAt": "2022-10-04 15:44:42"
   },
@@ -818,6 +954,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mfuentesv@unamad.edu.pe",
     "password": "$2y$10$U4KbfUu7wVCZO9MYpsbzwe5HsNh3c2dIqtPoQAlpgOR3s/G2mksVm",
     "estado": 1,
+    "dependenciaCodigo": "FED",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:44:38",
     "updatedAt": "2024-08-20 19:32:19"
   },
@@ -830,6 +968,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mbarrientos@unamad.edu.pe",
     "password": "$2y$10$XzuGd84pVv75rElPhOHdLuQhhVoZGhnP/WEz9yCo4b8DHwD6HipXa",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:44:52",
     "updatedAt": "2022-10-06 15:16:30"
   },
@@ -842,6 +982,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sgonzalesg@unamad.edu.pe",
     "password": "$2y$10$q1INw8IA2kBscTE3bUUileQ0ufbYEXoymcKcuk5HeDQnzuEAewMwS",
     "estado": 1,
+    "dependenciaCodigo": "VRI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:45:08",
     "updatedAt": "2024-06-11 13:03:27"
   },
@@ -854,6 +996,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cherrerag@unamad.edu.pe",
     "password": "$2y$10$jRf.ANcJFHp81gixBbk10uDYdxKbQrnxsocCV92gt00wxaAb.0wx.",
     "estado": 1,
+    "dependenciaCodigo": "DAA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:45:31",
     "updatedAt": "2022-10-26 15:42:05"
   },
@@ -866,6 +1010,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dbermeo@unamad.edu.pe",
     "password": "$2y$10$C1CO.hHANVz0wtOZbm7VbeQGQ6GLrBYjyBaCOtLJespC.2VSeGtta",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 20:45:49",
     "updatedAt": "2024-09-19 19:38:58"
   },
@@ -878,6 +1024,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mherrera@unamad.edu.pe",
     "password": "$2y$10$hW.YtF16p/1hBZkV3IblyukC.xCzp.8LcTWUJne.LzJpkHiRPt2re",
     "estado": 1,
+    "dependenciaCodigo": "UFE",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:45:50",
     "updatedAt": "2023-01-09 19:42:05"
   },
@@ -890,6 +1038,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvargas@unamad.edu.pe",
     "password": "$2y$10$uuDTQQof9fklLYAJne3iUuL9bqQb4vtqpuDy.tBDoHHzDUaWIurpu",
     "estado": 0,
+    "dependenciaCodigo": "EPMVZ",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:47:02",
     "updatedAt": "2024-12-05 14:36:00"
   },
@@ -902,6 +1052,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dcabrera@unamad.edu.pe",
     "password": "$2y$10$S9NNSld1MGx0X4QBgAo9XuIHmOD9Eu0Xl8OTHMb7LOSpiqSU.Tv1.",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "JEFE",
     "createdAt": "2022-08-10 20:47:12",
     "updatedAt": "2022-08-10 20:47:12"
   },
@@ -914,6 +1066,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aleonr@unamad.edu.pe",
     "password": "$2y$10$sYWJ0PIeFDlZZfIOXrzCFuXo9SA/wdPTLszpgnTdrahOURYIQKbri",
     "estado": 1,
+    "dependenciaCodigo": "EPAYNI",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:47:28",
     "updatedAt": "2022-08-10 20:47:28"
   },
@@ -926,6 +1080,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "scairo@unamad.edu.pe",
     "password": "$2y$10$a0vsrVmccfB/Ym4nxXGmdO9B5qqZPEF7/5U/CIZK3/AuAPNta3YL6",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:47:44",
     "updatedAt": "2022-08-10 20:47:44"
   },
@@ -938,6 +1094,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kcampos@unamad.edu.pe",
     "password": "$2y$10$/h4pUlqw9CDX28TS0D9KGOw3Oc2/d.I6eW4PTy8IBA6nT6p/5T9xy",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 20:47:55",
     "updatedAt": "2024-09-13 13:10:58"
   },
@@ -950,6 +1108,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "caguilar@unamad.edu.pe",
     "password": "$2y$10$.COEQxBDcWrKy8fkY.EpIObrDvXnXBpOfkfcEN33fz/308TPOi/Di",
     "estado": 1,
+    "dependenciaCodigo": "EPE",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:48:00",
     "updatedAt": "2026-05-28 20:23:03"
   },
@@ -962,6 +1122,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wlayme@unamad.edu.pe",
     "password": "$2y$10$1OiploGe3TtK0ofILqnt5.cFkV71tWeticPstZbiwYwCBfsoeM1Xu",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "DOCENTE",
     "createdAt": "2022-08-10 20:48:15",
     "updatedAt": "2023-04-19 12:53:26"
   },
@@ -974,6 +1136,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lvelasquez@unamad.edu.pe",
     "password": "$2y$10$86hMws7Ntbs7zQRLCln0..517eezX7PSn9R8fMZvvil.TBSSOQ.nG",
     "estado": 1,
+    "dependenciaCodigo": "EPEN",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:48:30",
     "updatedAt": "2022-10-12 17:01:09"
   },
@@ -986,6 +1150,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wcardenas@unamad.edu.pe",
     "password": "$2y$10$n4Teh9Dj.gJFxnQuAQLC.uB9kJvZyMtn7i1waeQNy/iT5tX3mVWci",
     "estado": 1,
+    "dependenciaCodigo": "DBU",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:48:44",
     "updatedAt": "2023-11-06 13:58:57"
   },
@@ -998,6 +1164,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "orolin@unamad.edu.pe",
     "password": "$2y$10$MsDK0nvumxGIM9iTYkoEruiInncT4nJYkQMU6A0hRlfWqV4qpOtpe",
     "estado": 1,
+    "dependenciaCodigo": "UAC",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 20:48:46",
     "updatedAt": "2022-10-05 20:08:13"
   },
@@ -1010,6 +1178,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mpaucar@unamad.edu.pe",
     "password": "$2y$10$2fvRXReF2UA/94kCUldkH.a44d0I67GYaryd60qjqAL2a8Z/cqsGC",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 20:49:05",
     "updatedAt": "2022-10-17 14:17:00"
   },
@@ -1022,6 +1192,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rdasila67@gmail.com",
     "password": "$2y$10$1GgW6fH7shIGKyeA3q1hUOlxSdL3tO1t4dlodRnycaHohdWKa971m",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:49:21",
     "updatedAt": "2023-11-15 19:52:31"
   },
@@ -1034,6 +1206,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nchavez@unamad.edu.pe",
     "password": "$2y$10$RcQylQdxHMBfyjquQMPRBe4HHuIGwr0EHAfPB4QYnzGuKHqOtPA/y",
     "estado": 1,
+    "dependenciaCodigo": "EPAYNI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:49:22",
     "updatedAt": "2024-06-19 19:58:42"
   },
@@ -1046,6 +1220,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ohuarinda@unamad.edu.pe",
     "password": "$2y$10$gh1nGvSmU853JIPntp7oHOA5e3CIkROIFsiH4W6Qy4cQfx2vSmvkS",
     "estado": 1,
+    "dependenciaCodigo": "SERV-ALIM",
+    "cargo": "RESPONSABLE",
     "createdAt": "2022-08-10 20:49:35",
     "updatedAt": "2023-11-08 13:38:05"
   },
@@ -1058,6 +1234,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gcruzv@unamad.edu.pe",
     "password": "$2y$10$eXH97LYJuK3sqNMb7gWyz.rvFUM6HoHQw6elX8.bmy93BGScJ4DVO",
     "estado": 0,
+    "dependenciaCodigo": "UA",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 20:49:49",
     "updatedAt": "2024-03-07 12:50:33"
   },
@@ -1070,6 +1248,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ejulian@unamad.edu.pe",
     "password": "$2y$10$eC4E.aM0M3.JuMvCISDGK.S.T8QwfdQf6RJrc82aTJBJ9ZjE0GPny",
     "estado": 1,
+    "dependenciaCodigo": "INI",
+    "cargo": "DIRECTOR (E)",
     "createdAt": "2022-08-10 20:49:52",
     "updatedAt": "2022-08-10 20:49:52"
   },
@@ -1082,6 +1262,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "roquispeb@unamad.edu.pe",
     "password": "$2y$10$Uns6Ymv2kuzfEINV/Ze18eJVARh.d4.UIsdZSh4Ox6piRe6uagEmC",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-08-10 20:50:09",
     "updatedAt": "2023-11-27 19:26:02"
   },
@@ -1094,6 +1276,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kimylsung@unamad.edu.pe",
     "password": "$2y$10$tj9ovsNp0vOBloltPCK7k.3K1Vc/lOfQAdxk7m8RJyIPAOTG1gFWq",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "JEFE DE OFICINA",
     "createdAt": "2022-08-10 20:50:15",
     "updatedAt": "2023-11-14 21:11:17"
   },
@@ -1106,6 +1290,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mgrifa@unamad.edu.pe",
     "password": "$2y$10$tTX3WKwfXncRPn3Chp.3LOR52pNlJFlmjfDOVpMB15KOl2sAOyQRm",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 20:51:02",
     "updatedAt": "2022-08-10 20:51:02"
   },
@@ -1118,6 +1304,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rhermoza@unamad.edu.pe",
     "password": "$2y$10$XGMbj7OVyoEP2tHIl2O2Se7lz2RHHSdDoYiL3wI/y0QUvsVTK1wGm",
     "estado": 1,
+    "dependenciaCodigo": "UME",
+    "cargo": "JEFE",
     "createdAt": "2022-08-10 20:51:30",
     "updatedAt": "2025-02-11 13:17:21"
   },
@@ -1130,6 +1318,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "zherrera@unamad.edu.pe",
     "password": "$2y$10$EWHD580Dt7ZeQlxhZv6ka.7GN/nbnkvwEZo2pvZ3I8lFSd8oCGWZS",
     "estado": 0,
+    "dependenciaCodigo": "URH",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 20:52:34",
     "updatedAt": "2024-08-19 12:37:51"
   },
@@ -1142,6 +1332,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhuanccachoque@unamad.edu.pe",
     "password": "$2y$10$ba0J8ZJGvndBLDbftGCwC.lU7.7nI9H4JnTmZMbhdawN68REjZ.kW",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "JEFE",
     "createdAt": "2022-08-10 20:53:13",
     "updatedAt": "2024-03-25 18:07:32"
   },
@@ -1154,6 +1346,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nhuamani@unamad.edu.pe",
     "password": "$2y$10$/AHFbo.mK.6fPe74B10rJeFqEIZgON/tQUAqLDE1tGPj3vC./R3Gm",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:54:21",
     "updatedAt": "2023-08-02 14:53:46"
   },
@@ -1166,6 +1360,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gllancoh@unamad.edu.pe",
     "password": "$2y$10$j3DOTGFDD/pARRvd4evA8exKsgKSiUGYE7ykD4GlWsa0NyUhY9a6C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-08-10 20:55:19",
     "updatedAt": "2022-09-07 19:43:48"
   },
@@ -1178,6 +1374,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "omacedoe@unamad.edu.pe",
     "password": "$2y$10$JSv.HHJwoTACGmputdiBYOlPhMayANsBND6WOjhr4qcSldPJTu56S",
     "estado": 1,
+    "dependenciaCodigo": "STPAD-URH",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-08-10 20:56:42",
     "updatedAt": "2022-10-12 20:02:34"
   },
@@ -1190,6 +1388,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "amontalvan@unamad.edu.pe",
     "password": "$2y$10$xUTi.t8Vbo9h468h2qu.aOJykwMapM.RiJSCICLUDONrYKbhxpmJC",
     "estado": 0,
+    "dependenciaCodigo": "DIE",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-08-10 20:57:06",
     "updatedAt": "2024-03-13 15:21:42"
   },
@@ -1202,6 +1402,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "stomikoc@unamad.edu.pe",
     "password": "$2y$10$Kzalab6lU5m9g9CmKcg.WOTqWhzx9LnPQSKzIHPQ8m3sPaOH3JInm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-08-10 20:57:25",
     "updatedAt": "2022-08-10 20:57:25"
   },
@@ -1214,6 +1416,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hduenas@unamad.edu.pe",
     "password": "$2y$10$b.ns1inb51pW3g3v7JMfxuWZLbvImjS2AqQUGtg4C8KaUbEVPE8La",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "RECTOR",
     "createdAt": "2022-08-10 20:58:26",
     "updatedAt": "2022-08-10 20:58:26"
   },
@@ -1226,6 +1430,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmaquera@unamad.edu.pe",
     "password": "$2y$10$qXSbdmb1Q9iV9qfkC1KeBuRa4lutgz9aKRPvBLA0OPTLT7jI3uoWe",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "RECTOR",
     "createdAt": "2022-08-10 20:58:49",
     "updatedAt": "2022-12-21 20:30:44"
   },
@@ -1238,6 +1444,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lalmanza@unamad.edu.pe",
     "password": "$2y$10$KJ7FJRQEesmzGrUdsjUxiumPPpKEQTtfBbZrmHhc3EqDpQW037RNe",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "RECTOR (E)",
     "createdAt": "2022-08-10 20:59:13",
     "updatedAt": "2026-02-27 13:22:15"
   },
@@ -1250,6 +1458,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "caraujo@unamad.edu.pe",
     "password": "$2y$10$SbocgQlmwjB1hMa3R9zyZ.EypIdNAzvuwfEidLWtZawETfF96R.Ii",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "RESPONSABLE",
     "createdAt": "2022-08-10 21:00:54",
     "updatedAt": "2026-05-25 15:36:33"
   },
@@ -1262,6 +1472,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lsuyo@unamad.edu.pe",
     "password": "$2y$10$vnlIkELUmlvQ3aYoRS/gHeIQqi/PgbmqZOx0zLKcgGh/2cKCywaau",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-08-10 21:01:37",
     "updatedAt": "2022-10-06 13:15:41"
   },
@@ -1274,6 +1486,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "egutierrezp@unamad.edu.pe",
     "password": "$2y$10$caccEuxi8LUDQrXIeNjsBeiSG..LmaPXyBYZZzmmw/V4FwZg1wySu",
     "estado": 1,
+    "dependenciaCodigo": "URAA",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:01:58",
     "updatedAt": "2026-05-07 01:01:57"
   },
@@ -1286,6 +1500,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fkuaquira@unamad.edu.pe",
     "password": "$2y$10$o1Gfu0eoPlLFLgqqQIamG.65ZQuvKR797mcT0ICtPnBU1LW.00Cpq",
     "estado": 1,
+    "dependenciaCodigo": "OCRI",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:03:22",
     "updatedAt": "2024-03-21 14:00:53"
   },
@@ -1298,6 +1514,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmiranda@unamad.edu.pe",
     "password": "$2y$10$SLjh9QvFrUm0M0yS2roh.O7sPZnBkJnLuObWhJ7fcOBhwDZ8NBKHm",
     "estado": 1,
+    "dependenciaCodigo": "EQUIPO TECNICO",
+    "cargo": "PRESIDENTE",
     "createdAt": "2022-08-10 21:03:52",
     "updatedAt": "2024-07-24 17:16:58"
   },
@@ -1310,6 +1528,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gisevargas@unamad.edu.pe",
     "password": "$2y$10$yV72p7XL1y28ogB28Hq8quiFHo.U5QTSl8VQM6hsf4DTnOORNy2sW",
     "estado": 1,
+    "dependenciaCodigo": "DIE",
+    "cargo": "ESPECIALISTA IV",
     "createdAt": "2022-08-10 21:04:44",
     "updatedAt": "2025-04-03 21:10:07"
   },
@@ -1322,6 +1542,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cchacacanta@unamad.edu.pe",
     "password": "$2y$10$BGnxHtSYFPZrY9eqW5WvMuUsoFQZ/CbieohE/X4fhIMiLwlEPa7Hu",
     "estado": 1,
+    "dependenciaCodigo": "UGT",
+    "cargo": "RESPONSABLE DE UNIDAD",
     "createdAt": "2022-08-10 21:09:14",
     "updatedAt": "2024-02-13 20:04:15"
   },
@@ -1334,6 +1556,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jsanchez@unamad.edu.pe",
     "password": "$2y$10$HxOKCpUYhKHO0N.07M.wzewelbzIonS79urd9itYxNnnncwRvfK2W",
     "estado": 0,
+    "dependenciaCodigo": "UTD",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-08-10 21:10:14",
     "updatedAt": "2023-01-10 16:12:22"
   },
@@ -1346,6 +1570,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cgonzales@unamad.edu.pe",
     "password": "$2y$10$z2f4CCtLfAwRg48Gw0LdKeKrZKmHLuJMZL8899I0d7u2p/r5xpnSC",
     "estado": 1,
+    "dependenciaCodigo": "URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 21:13:08",
     "updatedAt": "2023-09-18 13:36:13"
   },
@@ -1358,6 +1584,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gcorrea@unamad.edu.pe",
     "password": "$2y$10$ADZKQtTy.A24sN4TerUyfeJcJ7OmsBdGd9sLBcpDTwHORVg9MnjJC",
     "estado": 1,
+    "dependenciaCodigo": "EPG",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:15:13",
     "updatedAt": "2025-09-04 16:23:41"
   },
@@ -1370,6 +1598,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wcaviedes@unamad.edu.pe",
     "password": "$2y$10$VU39GNMNtPSNRmifTr7kx.BTvULuL7bx6CBmKzkAPDq2UVWpbhweu",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:16:23",
     "updatedAt": "2022-08-10 21:16:23"
   },
@@ -1382,6 +1612,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vmego@unamad.edu.pe",
     "password": "$2y$10$T1DOqU46wuywR59Jsc4mfeUzU1X/VOs5tBbM9wDyvpf3qqFMzNLBq",
     "estado": 1,
+    "dependenciaCodigo": "CIIDIOMAS",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:16:52",
     "updatedAt": "2026-01-15 17:18:23"
   },
@@ -1394,6 +1626,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lrodriguez@unamad.edu.pe",
     "password": "$2y$10$V/KxqeGfU8NgAyPnaM/lnOCXJtCzvPRulv9ppGYQYJXo2boIPw34a",
     "estado": 1,
+    "dependenciaCodigo": "ULI",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:18:22",
     "updatedAt": "2026-03-31 17:49:29"
   },
@@ -1406,6 +1640,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ngallegos@unamad.edu.pe",
     "password": "$2y$10$jr8pfQLwDr5K6ygDCBdnzeaHee8Lffadp93LkiBx7DD0.mBB24yPa",
     "estado": 1,
+    "dependenciaCodigo": "DIGI",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:18:50",
     "updatedAt": "2025-10-07 15:17:46"
   },
@@ -1418,6 +1654,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcastillo@unamad.edu.pe",
     "password": "$2y$10$ES6tqyPUEL7vML1bcWjwCOZOy2nB43fVQDH5JGeen6NRstOUbPoMK",
     "estado": 1,
+    "dependenciaCodigo": "FCE",
+    "cargo": "DECANO",
     "createdAt": "2022-08-10 21:19:39",
     "updatedAt": "2024-01-17 14:59:16"
   },
@@ -1430,6 +1668,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wlavilla@unamad.edu.pe",
     "password": "$2y$10$f9AfEqz28SK7Stc9rc38iOZoIA46XU4cuO2FtHkbzb4kOgIZ6dQD.",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:21:00",
     "updatedAt": "2024-05-15 17:02:36"
   },
@@ -1442,6 +1682,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "skuentas@unamad.edu.pe",
     "password": "$2y$10$bzS9oLaaC8YhcaY.qgnPsedVQgeddsGE0YPRLtGoDfOGvhczVU9lm",
     "estado": 1,
+    "dependenciaCodigo": "DADCP",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:21:53",
     "updatedAt": "2025-11-11 20:25:40"
   },
@@ -1454,6 +1696,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gechegaray@unamad.edu.pe",
     "password": "$2y$10$bP2F1eF25oDx9B6745w5Guc1Gb9Wv3oucwIUWS18r0cvxjW7ABPmO",
     "estado": 1,
+    "dependenciaCodigo": "DAE",
+    "cargo": "DOCENTE",
     "createdAt": "2022-08-10 21:23:02",
     "updatedAt": "2024-06-28 13:31:05"
   },
@@ -1466,6 +1710,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mhuamani@unamad.edu.pe",
     "password": "$2y$10$dNXBMcDVTmmu1SNqXfrgL.y5KWbM9.oJXkUE0YL2F..qbIpUEtI1y",
     "estado": 0,
+    "dependenciaCodigo": "FED",
+    "cargo": "DIRECTORA",
     "createdAt": "2022-08-10 21:23:52",
     "updatedAt": "2024-05-31 19:43:39"
   },
@@ -1478,6 +1724,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lcutipa@unamad.edu.pe",
     "password": "$2y$10$6ahrJXOZgvzVbm7U9lJHLu7LDPA2L1.yceQ.bZHd4o6k.ecnwkH9a",
     "estado": 1,
+    "dependenciaCodigo": "DAEN",
+    "cargo": "DIRECTORA",
     "createdAt": "2022-08-10 21:24:35",
     "updatedAt": "2025-02-06 12:42:03"
   },
@@ -1490,6 +1738,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcajo@unamad.edu.pe",
     "password": "$2y$10$NjUSggj6i.XjolC4v7h1eeVHIbEitNm.iEYseHTziiGD0q./98o9q",
     "estado": 1,
+    "dependenciaCodigo": "DAIA",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:25:47",
     "updatedAt": "2024-12-23 16:32:33"
   },
@@ -1502,6 +1752,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pazpolli@unamad.edu.pe",
     "password": "$2y$10$OMxsnDDpwenQ3T.RmGoFheaOf3lbZJh1TMJPJtCEtq55b9NAvey8W",
     "estado": 1,
+    "dependenciaCodigo": "DAIFYMA",
+    "cargo": "PROFESOR PRINCIPAL DE",
     "createdAt": "2022-08-10 21:26:07",
     "updatedAt": "2025-12-22 16:33:35"
   },
@@ -1514,6 +1766,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nulloa@unamad.edu.pe",
     "password": "$2y$10$.HrZhi4Smzbk6U2hlYV2fuTWZhXURl9yAN7HG3EWYn1MMyFCNglcG",
     "estado": 1,
+    "dependenciaCodigo": "CEDCPEINGM",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:26:33",
     "updatedAt": "2022-12-13 22:39:44"
   },
@@ -1526,6 +1780,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "heydy@unamad.edu.pe",
     "password": "$2y$10$/oCIfipQNjp3vZ6AaNDRG.lZgirQls1u0GtZUcrd60JISvWC7AXiS",
     "estado": 0,
+    "dependenciaCodigo": "TH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-08-10 21:32:22",
     "updatedAt": "2023-03-14 20:16:26"
   },
@@ -1538,6 +1794,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lvierap@unamad.edu.pe",
     "password": "$2y$10$PLkTcOtILJG1PhjCHihaSuErO4zZ9FzSVbgVbmBQdvp2BVKZRDuRe",
     "estado": 1,
+    "dependenciaCodigo": "URH",
+    "cargo": "AUXILIAR ADMISTRATIVO",
     "createdAt": "2022-08-10 21:33:57",
     "updatedAt": "2022-10-17 13:00:13"
   },
@@ -1550,6 +1808,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mchavez@unamad.edu.pe",
     "password": "$2y$10$JbeKiUYFjOEBwM2W6lCl0uHUVcjicBN3qltugdHg6EVN2oud56jO.",
     "estado": 1,
+    "dependenciaCodigo": "DIPROBYS",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-08-10 21:35:33",
     "updatedAt": "2022-08-10 21:35:33"
   },
@@ -1562,6 +1822,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "evizcarra@unamad.edu.pe",
     "password": "$2y$10$tJWiEeesd59mIecJkKkwde9IY4Qbfke1AVSOKOvie6XevpTdmfbSW",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-08-15 16:39:02",
     "updatedAt": "2025-05-20 16:12:57"
   },
@@ -1574,6 +1836,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cjara@unamad.edu.pe",
     "password": "$2y$10$j4YuWZOIWqa4CQv1/JDszu6S60Gg6vlJCgEUOLrX9SDXa97PUXcC6",
     "estado": 1,
+    "dependenciaCodigo": "USRT-OTI",
+    "cargo": "ESPECIALISTA REDES",
     "createdAt": "2022-08-16 13:47:22",
     "updatedAt": "2026-01-27 20:29:39"
   },
@@ -1586,6 +1850,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "psicopedagogia@unamad.edu.pe",
     "password": "$2y$10$5SRZQEoi3ne6KevBXjgQaesNAjIsaDgyE6oNfr8mtpN9oAn9hg8de",
     "estado": 1,
+    "dependenciaCodigo": "USSP",
+    "cargo": "PSICOPEDAGOGICO",
     "createdAt": "2022-08-19 14:56:23",
     "updatedAt": "2025-08-27 14:40:44"
   },
@@ -1598,6 +1864,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jose@cortijo.pe",
     "password": "$2y$10$8kNLoIbOijp85knO9DrX5OCYMPd0xdAPn1Z/zfh30fYoSrX3ecxxu",
     "estado": 0,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-08-23 17:53:23",
     "updatedAt": "2023-06-01 14:04:48"
   },
@@ -1610,6 +1878,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vanessa@unamad.edu.pe",
     "password": "$2y$10$BOba/HAu0DmCvW715y3mQelUN6wXcc.tZv20.NIvzNqXnbBhsCo0G",
     "estado": 0,
+    "dependenciaCodigo": "OCII",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-09-07 15:59:52",
     "updatedAt": "2023-07-27 21:36:03"
   },
@@ -1622,6 +1892,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "karagon@unamad.edu.pe",
     "password": "$2y$10$48Pp3tyfa8A6lhf7D/jjdeSL9xhIGEOBG5In5nA1BtM.gAdB7b.TS",
     "estado": 1,
+    "dependenciaCodigo": "VRI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-09-07 16:24:33",
     "updatedAt": "2025-10-03 12:46:09"
   },
@@ -1634,6 +1906,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vfernandez@unamad.edu.pe",
     "password": "$2y$10$u0x0A6FqlQpef94.hdxSOeCqAXzeErkM3N8yiEPTX247CxxvG3pQe",
     "estado": 1,
+    "dependenciaCodigo": "EPMVZ",
+    "cargo": "DIRECTOR ENCARGADO",
     "createdAt": "2022-09-07 16:48:52",
     "updatedAt": "2024-01-11 15:39:48"
   },
@@ -1646,6 +1920,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ssilverc@unamad.edu.pe",
     "password": "$2y$10$RLIUI.qlZpgXSNI6Yb67xuXG1BGuhcXFxyRi/qTw84bePYf5128IG",
     "estado": 1,
+    "dependenciaCodigo": "VRA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-09-29 14:22:47",
     "updatedAt": "2022-11-09 20:56:48"
   },
@@ -1658,6 +1934,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lzevallosy@unamad.edu.pe",
     "password": "$2y$10$0FHKhWVnpsbctchLomozV.7rX05gWS944JNVlLHCTCj8syJfYF9bm",
     "estado": 1,
+    "dependenciaCodigo": "VRA",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-09-29 14:25:19",
     "updatedAt": "2022-09-29 14:25:19"
   },
@@ -1670,6 +1948,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rosalindatri@unamad.edu.pe",
     "password": "$2y$10$Ry.vCe5S2U6v5ca48QD7TOlS8wZXUn4PXi6wMbVku.o8qzGo3.jZq",
     "estado": 1,
+    "dependenciaCodigo": "FI",
+    "cargo": "APOYO SISTEMA DE TRAMITE",
     "createdAt": "2022-09-29 14:29:03",
     "updatedAt": "2024-08-01 13:27:03"
   },
@@ -1682,6 +1962,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "faviles@unamad.edu.pe",
     "password": "$2y$10$kkJBi9IEq5uF4Hd2o9MgZ.YcqA58ACczw3SpVo3/7v/Fy3Skwv8nq",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-09-29 14:31:00",
     "updatedAt": "2023-09-15 19:55:21"
   },
@@ -1694,6 +1976,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmontesinosc@unamad.edu.pe",
     "password": "$2y$10$JcRpuZjgyPzy4ybPvzuG0OUW0FKw.qIi/LXkxlNw0jEOV560cfmy2",
     "estado": 1,
+    "dependenciaCodigo": "EPMVZ",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-09-29 14:33:57",
     "updatedAt": "2022-09-29 14:33:57"
   },
@@ -1706,6 +1990,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ohuamanh@unamad.edu.pe",
     "password": "$2y$10$ZY2jqdvb5I5dY3lJlUoqH.i.6Ann/C07g7y1hlbeYWBKi8/MSwX6K",
     "estado": 0,
+    "dependenciaCodigo": "UTD",
+    "cargo": "JEFE",
     "createdAt": "2022-09-29 14:35:39",
     "updatedAt": "2023-01-10 16:11:04"
   },
@@ -1718,6 +2004,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "andrealves_2396@hotmail.com",
     "password": "$2y$10$ms6abTyOMhGxWBspRo6fbu3vr/WOAA3LaeIq7yHvEEtEmzAQ7vCzG",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-09-29 14:49:36",
     "updatedAt": "2023-05-09 17:15:23"
   },
@@ -1730,6 +2018,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jkuno@unamad.edu.pe",
     "password": "$2y$10$KwUzEJVvbOqkI2LuzuBQROLgW.l4drXu6Hq4r77rg5TsAXihb7I06",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-09-29 15:19:26",
     "updatedAt": "2023-11-15 20:04:02"
   },
@@ -1742,6 +2032,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "amirandaf@unamad.edu.pe",
     "password": "$2y$10$mHthzhV2oAqgTuIZqilxYOnuZi7DeSPgiizm85VXiT8JEc1Hy3niC",
     "estado": 1,
+    "dependenciaCodigo": "EQUIPO TECNICO",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-09-30 14:14:21",
     "updatedAt": "2022-09-30 14:14:21"
   },
@@ -1754,6 +2046,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcasas@unamad.edu.pe",
     "password": "$2y$10$DL85LyRikE6Fvm4sEOhxT.yYLheQfETpr.eYmoidYY4ubw7veEWSG",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2022-09-30 14:21:23",
     "updatedAt": "2022-09-30 14:21:23"
   },
@@ -1766,6 +2060,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "miberos@unamad.edu.pe",
     "password": "$2y$10$rJrzfIw8b71ER.y4LU6U1.j/qjG.TSmc65HLGzUHuZgHZy0PlMrUO",
     "estado": 1,
+    "dependenciaCodigo": "FCE",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-09-30 14:26:54",
     "updatedAt": "2023-12-30 20:55:59"
   },
@@ -1778,6 +2074,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ggaonam@unamad.edu.pe",
     "password": "$2y$10$NC6dzjE.33h1ipUo1Siua.pqRmDCFOR.JLyeqKaTSPh1.CmsMBq0W",
     "estado": 1,
+    "dependenciaCodigo": "OCRI",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-09-30 14:29:05",
     "updatedAt": "2023-02-28 21:10:58"
   },
@@ -1790,6 +2088,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kquispec@unamad.edu.pe",
     "password": "$2y$10$r8Ol.gVe5zaXm4BTvsdRy.WpFKAaGwzYAxvANSINoq8zMCS5qyCOG",
     "estado": 1,
+    "dependenciaCodigo": "FED",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-09-30 14:30:48",
     "updatedAt": "2026-05-16 14:49:33"
   },
@@ -1802,6 +2102,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marizol.mafia1996@gmail.com",
     "password": "$2y$10$alikUb7r5GcWksXjaaeel.t5QbnxNp6k3wwVNm6hWykHNrt/2bxkq",
     "estado": 1,
+    "dependenciaCodigo": "EP-B",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-03 19:35:39",
     "updatedAt": "2025-12-12 17:22:35"
   },
@@ -1814,6 +2116,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "reginaramirezrios@gmail.com",
     "password": "$2y$10$KsWuLwGBXuX.v8zZpTn8hel9VyTCA.0kYNViknVB8AthqeCiFRUoa",
     "estado": 1,
+    "dependenciaCodigo": "EPDCP",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-10-04 13:40:01",
     "updatedAt": "2022-10-04 13:40:01"
   },
@@ -1826,6 +2130,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ritalauraup@gmail.com",
     "password": "$2y$10$8soELl86KZ7Szdct1q2sx.5Y9RPSM7.EKZehn8P7fMpgrcRZ/2pam",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-04 19:17:24",
     "updatedAt": "2023-12-29 18:58:13"
   },
@@ -1838,6 +2144,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ilenef@unamad.edu.pe",
     "password": "$2y$10$C2JhVA.mGDIZPSefK0UnquTqV3DlF5sItLcF6xulxZB0cSdQot18a",
     "estado": 1,
+    "dependenciaCodigo": "SICHS",
+    "cargo": "SECRETARIA ALTERNA",
     "createdAt": "2022-10-05 15:24:01",
     "updatedAt": "2022-10-05 15:24:01"
   },
@@ -1850,6 +2158,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "threisy.pa@gmail.com",
     "password": "$2y$10$9FbNJZWUERvck2c1kPSITOwIfEFdDMQ.xCP2CnqWTT1LpW0K3S.Xi",
     "estado": 1,
+    "dependenciaCodigo": "EPG",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-05 15:36:47",
     "updatedAt": "2025-09-24 15:42:31"
   },
@@ -1862,6 +2172,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "briggittecadenas@unamad.edu.pe",
     "password": "$2y$10$M.bkjoojX6FhshR5/G/JEeNElbcpDcCDynLncN4Iyo/FJiWIVR9qe",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-05 16:31:35",
     "updatedAt": "2025-03-20 15:59:07"
   },
@@ -1874,6 +2186,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dyaruizj@gmail.com",
     "password": "$2y$10$Txso67RBbfI/mS.kYhq0ceFIhbUQqGbu0tJKXKh1g4NzdZ6tqUzrm",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-06 13:00:31",
     "updatedAt": "2023-10-17 13:58:25"
   },
@@ -1886,6 +2200,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hertjaneth86@hotmail.com",
     "password": "$2y$10$T0ebkKNjcYNSxNKbfBMhJebZdyIq6iYLtlJ0XjURi69FdoHxI4tYm",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-10-06 13:05:48",
     "updatedAt": "2022-10-06 13:05:48"
   },
@@ -1898,6 +2214,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcolquehuanca@unamad.edu.pe",
     "password": "$2y$10$Ja/LammepXBrnqYE7qdGl.qMnzHt424FGbP7eCxdyjs6DrR5CNknm",
     "estado": 1,
+    "dependenciaCodigo": "EPIA",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-06 14:40:38",
     "updatedAt": "2025-04-14 14:55:20"
   },
@@ -1910,6 +2228,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "inesz@unamad.edu.pe",
     "password": "$2y$10$gxj8w5nCC4kFzmyiXPlLN.H4OuBwEV8vKaTWCeQXM4QwLAC7Iokii",
     "estado": 1,
+    "dependenciaCodigo": "FED",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-10-06 14:41:15",
     "updatedAt": "2022-12-13 20:08:59"
   },
@@ -1922,6 +2242,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ybaez@unamad.edu.pe",
     "password": "$2y$10$LxBtvaoh/LO0.8v./q3X4e55PUrrqFHGIwBuU3hLD7DJocp.5Bh2q",
     "estado": 0,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2022-10-06 15:17:50",
     "updatedAt": "2024-03-26 17:46:34"
   },
@@ -1934,6 +2256,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "chuillcapuma@unamad.edu.pe",
     "password": "$2y$10$JrkDznYI9/YJpCqK5laLgO0AYsBiLkw3KAtebs/BFIJcqRFDROwWW",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "COORDINADORA",
     "createdAt": "2022-10-06 15:18:57",
     "updatedAt": "2026-01-06 17:03:18"
   },
@@ -1946,6 +2270,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "huejro.efo@gmail.com",
     "password": "$2y$10$tDDhfBkf6EToULB6IvfTMeq8D2IvXx19nE7cNF9YX1v4FzzDrAUs6",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-06 15:20:04",
     "updatedAt": "2022-10-10 16:18:48"
   },
@@ -1958,6 +2284,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marcosr@unamad.edu.pe",
     "password": "$2y$10$MsjJ2.ANf0xuA3uXjIzboe9K3ygkFCGFKhhHHziWs9XtoL5Wm3dFa",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2022-10-06 15:20:47",
     "updatedAt": "2022-10-06 15:20:47"
   },
@@ -1970,6 +2298,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rruiz@unamad.edu.pe",
     "password": "$2y$10$n15nNtQIgJSzTrHd4HfNLupHjhGVmKO/Vi9T7eC964j6XDk.ZQyFW",
     "estado": 1,
+    "dependenciaCodigo": "UPFCE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-06 16:52:04",
     "updatedAt": "2026-03-31 16:25:01"
   },
@@ -1982,6 +2312,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dir_epcfma@unamad.edu.pe",
     "password": "$2y$10$1TgaBDtsy28BRUjIZ3MMb.QkfoaQYIDpaIaOdeMt82o7L.jjp1zSS",
     "estado": 0,
+    "dependenciaCodigo": "EPIFYMA",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-06 16:52:34",
     "updatedAt": "2023-01-05 19:48:54"
   },
@@ -1994,6 +2326,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lroque@unamad.edu.pe",
     "password": "$2y$10$HpNcHtWb3MEAJE0I3cydduT3jN8EcGAKdhNagQT3Dl2ihhypTBv8S",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-10-06 17:45:32",
     "updatedAt": "2023-01-09 17:11:12"
   },
@@ -2006,6 +2340,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nsoncco@unamad.edu.pe",
     "password": "$2y$10$t5STpifZTEciaD.2PX2p6.KNcKgFHXL.bOir0KmROjFMql93DeVaG",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "ESPECIALISTA",
     "createdAt": "2022-10-06 17:47:23",
     "updatedAt": "2022-10-06 17:47:23"
   },
@@ -2018,6 +2354,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pvalenciav@unamad.edu.pe",
     "password": "$2y$10$g15gM5vN.9AQKKS5ZkAmq.3V2pm4.uf72Ud4tiihoXqWLfiycWbfW",
     "estado": 1,
+    "dependenciaCodigo": "CIIDIOMAS",
+    "cargo": "ESPECIALISTA INFORMATICO",
     "createdAt": "2022-10-06 19:50:31",
     "updatedAt": "2022-10-06 19:50:31"
   },
@@ -2030,6 +2368,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ffloresc@unamad.edu.pe",
     "password": "$2y$10$unMdu4SeDqSvABNM0EL3ieIChTSPH5DQ.RAm/ZEIg/8h4TQgA4NKa",
     "estado": 1,
+    "dependenciaCodigo": "CIIDIOMAS",
+    "cargo": "ESPECIALISTA INFORMATICO",
     "createdAt": "2022-10-06 20:04:12",
     "updatedAt": "2022-10-06 20:04:12"
   },
@@ -2042,6 +2382,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rayalag@unamad.edu.pe",
     "password": "$2y$10$I2cYJvgOrK5uNVIDqhzqJOB.JhTxeOd/iq5Y.GiuV/jtTPSfOxTUa",
     "estado": 1,
+    "dependenciaCodigo": "USSP",
+    "cargo": "JEFE",
     "createdAt": "2022-10-06 20:18:16",
     "updatedAt": "2025-09-23 15:38:17"
   },
@@ -2054,6 +2396,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bvargas@unamad.edu.pe",
     "password": "$2y$10$h9dK4m9tQImBu/tCFeTmR.TvKsKcet38Jute8VwFlmkcpoDM31I5q",
     "estado": 1,
+    "dependenciaCodigo": "USSP",
+    "cargo": "PSICOLOGA",
     "createdAt": "2022-10-06 20:21:29",
     "updatedAt": "2025-08-26 19:27:19"
   },
@@ -2066,6 +2410,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rpacheco@unamad.edu.pe",
     "password": "$2y$10$s7D/tGJZsQb94/eNzhid7Om7IgA/PozzJi7hJfcljbjFo.SBI403i",
     "estado": 1,
+    "dependenciaCodigo": "ASIST-SOC",
+    "cargo": "ADMINISTRATIVO",
     "createdAt": "2022-10-06 20:24:22",
     "updatedAt": "2022-12-06 12:50:27"
   },
@@ -2078,6 +2424,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yenyleza@gmail.com",
     "password": "$2y$10$Geglcdn047eKbDRqq.f.QuSISdij5tyQZk/yvvCzO6P6q/XWsTEjy",
     "estado": 1,
+    "dependenciaCodigo": "UFSYLP",
+    "cargo": "AUXILIAR ADMISTRATIVO",
     "createdAt": "2022-10-06 20:43:11",
     "updatedAt": "2022-10-06 20:43:11"
   },
@@ -2090,6 +2438,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alvaroasad@gmail.com",
     "password": "$2y$10$APZNCPYANEEPZxnh0zGBR.cYSYdA8G7FPsa/i3RmwaMRMlhFUPSK2",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-06 20:45:20",
     "updatedAt": "2022-10-06 20:45:20"
   },
@@ -2102,6 +2452,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cmendoza@unamad.edu.pe",
     "password": "$2y$10$YKmFwRPxq7Zr7qsLWzhJWuxHbz64.nj6hHfNSX86mhh3SagfPaj5O",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "ASISTENTE SOCIAL",
     "createdAt": "2022-10-06 20:56:18",
     "updatedAt": "2022-10-06 20:56:18"
   },
@@ -2114,6 +2466,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "egutierrezm@unamad.edu.pe",
     "password": "$2y$10$H0eagJEKHGL1g50tid29RugZXUvzZWvoFWXS1mCgOGn40TCtRM.lO",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-06 21:27:42",
     "updatedAt": "2023-05-04 15:54:41"
   },
@@ -2126,6 +2480,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kellyh@unamad.edu.pe",
     "password": "$2y$10$p/vV.ApyJQcCJ6FCbrfGJOBQXzmlJhtZJQFWXr6RgbqICghCL5XKe",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-10-10 13:10:08",
     "updatedAt": "2022-10-10 13:10:08"
   },
@@ -2138,6 +2494,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rlgonzalesc@unamad.edu.pe",
     "password": "$2y$10$oFI1eog9sae3lxiXE.rwY.y76TrSnWUFugw/EuQ100k66yGmZv8Fi",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "CONCILIADOR DE PROYECTOS DE INVERSION",
     "createdAt": "2022-10-10 14:26:48",
     "updatedAt": "2025-07-24 21:03:14"
   },
@@ -2150,6 +2508,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "khuacho@unamad.edu.pe",
     "password": "$2y$10$bewRBk3OX/oikNRCk4EE5O3vcEJMgFHFIYSxz4tDdCmI7J4xczD3y",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2022-10-10 14:31:18",
     "updatedAt": "2026-03-12 12:56:52"
   },
@@ -2162,6 +2522,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mlaurel@unamad.edu.pe",
     "password": "$2y$10$g8RMc4JVNDnfnr542YQ.2.mpQ9510WC4l0v5FvHy4z/9rH/.DNXEi",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "CONTADOR IV",
     "createdAt": "2022-10-10 14:34:10",
     "updatedAt": "2026-06-11 16:35:06"
   },
@@ -2174,6 +2536,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maydafh04@gmail.com",
     "password": "$2y$10$0J0rlzaYEk8ApSntvvmEoO54f.vc4kIMgU1GUG38mp0CXFE4qTHuO",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "INTEGRACION CONTABLE",
     "createdAt": "2022-10-10 14:38:01",
     "updatedAt": "2023-12-19 19:52:09"
   },
@@ -2186,6 +2550,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "thuamani@unamad.edu.pe",
     "password": "$2y$10$rCNhBHovu81xcx0tnl4ES.qPsq4WMsCmcpkQ0gXKLn6ynMXQS0hWq",
     "estado": 1,
+    "dependenciaCodigo": "DIPROBYS",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-10 14:47:14",
     "updatedAt": "2026-03-25 21:02:20"
   },
@@ -2198,6 +2564,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jjmorales@unamad.edu.pe",
     "password": "$2y$10$yQtyipvFDvj80xIHmJweTuBd38YGIunLUhTiA9iZ/zaRPmqAvkYOK",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2022-10-10 15:04:04",
     "updatedAt": "2023-03-02 13:43:45"
   },
@@ -2210,6 +2578,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eduardof@unamad.edu.pe",
     "password": "$2y$10$SB45b.WOFJFwZ5VNJMRk0OMI/i28dMLtvzJjE0cGNHGEek.wcs1qq",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-10 16:17:20",
     "updatedAt": "2022-10-10 16:21:01"
   },
@@ -2222,6 +2592,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kcordovac15@unamad.edu.pe",
     "password": "$2y$10$4OiQG7f0iAvAl.Yeg2BkUOFw7DwTykp0lRF/PPWZgpZWm6gW5Kwnq",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-10-10 19:13:56",
     "updatedAt": "2022-10-10 19:13:56"
   },
@@ -2234,6 +2606,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ihuamani@unamad.edu.pe",
     "password": "$2y$10$H8S5FYa2bbb/Y.k8B4SeXu.pCIPb5JA9c7ZN4v2i.RHzepWjhE686",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2022-10-10 19:15:25",
     "updatedAt": "2023-05-17 16:16:06"
   },
@@ -2246,6 +2620,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ruthpezodelcastillo@outlook.com",
     "password": "$2y$10$uo3nBlSZ7Gvo8nU5sTr.V.2STtWFig8yZPfvxc4DmykX4klhpIEne",
     "estado": 1,
+    "dependenciaCodigo": "EPMVZ",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-10-11 13:18:07",
     "updatedAt": "2022-10-11 13:18:07"
   },
@@ -2258,6 +2634,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mjara@unamad.edu.pe",
     "password": "$2y$10$HBxE0It92RB2w3HI3ensH.RWGQOecrekZy6bQwuK2D.0b1Z/en7Fy",
     "estado": 1,
+    "dependenciaCodigo": "DIE",
+    "cargo": "AUXILIAR ADMINISTRAIVO",
     "createdAt": "2022-10-11 17:00:30",
     "updatedAt": "2022-10-11 17:18:50"
   },
@@ -2270,6 +2648,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmendivil@unamad.edu.pe",
     "password": "$2y$10$lcXnp/4xg0TRPIPIWcN5RekR7hGbNEPO2d8s4vtdTmYByqL/A7U2y",
     "estado": 0,
+    "dependenciaCodigo": "UF",
+    "cargo": "ESPECIALISTA",
     "createdAt": "2022-10-11 19:38:15",
     "updatedAt": "2023-02-07 19:08:13"
   },
@@ -2282,6 +2662,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nhugoc@unamad.edu.pe",
     "password": "$2y$10$/TbYflQy8PzMTc7LxHNKper69DoZsVEeI4k6kSOsFH1e9rp9im3WG",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "FORMULADORA DE PROYECTOS",
     "createdAt": "2022-10-11 19:38:49",
     "updatedAt": "2024-03-04 19:47:30"
   },
@@ -2294,6 +2676,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fquincho@unamad.edu.pe",
     "password": "$2y$10$ZeXsFXL.1IuAA8HzJGZuuO//pYNfe7HjJkZUiSwlIDz6VQhqaEhFu",
     "estado": 0,
+    "dependenciaCodigo": "UF",
+    "cargo": "ESPECIALISTA",
     "createdAt": "2022-10-11 19:39:05",
     "updatedAt": "2023-02-07 19:09:52"
   },
@@ -2306,6 +2690,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "arellanomariaines41@gmail.com",
     "password": "$2y$10$scGNDiU9p.rAjOjiz.aOouUgfisQmxDR40F3Lp5f2CFokFLCCxJHy",
     "estado": 0,
+    "dependenciaCodigo": "UA",
+    "cargo": "LOCADOR",
     "createdAt": "2022-10-11 20:36:34",
     "updatedAt": "2023-06-01 20:34:28"
   },
@@ -2318,6 +2704,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "karinsara-95@hotmail.com",
     "password": "$2y$10$qNinuKg24.Yb3S0FqyXcr.KlapH3yAg0LjfwfQtFC1ooRpxTwnDfe",
     "estado": 1,
+    "dependenciaCodigo": "ALC",
+    "cargo": "RESPONSABLE",
     "createdAt": "2022-10-11 20:45:15",
     "updatedAt": "2025-03-07 13:41:27"
   },
@@ -2330,6 +2718,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "charlesbtd.gar@gmail.com",
     "password": "$2y$10$YHbcoBhzLgn28kWBJgj4zukjh4.vw./qQp/xlvwourLgcf32tUpbG",
     "estado": 0,
+    "dependenciaCodigo": "UA",
+    "cargo": "ESPECIALISTA CONTRATACIONES DEL ESTADO",
     "createdAt": "2022-10-11 20:54:17",
     "updatedAt": "2025-02-05 19:23:33"
   },
@@ -2342,6 +2732,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leticiaaneldelgadova@gmail.com",
     "password": "$2y$10$MFa6IAA1amkrvkSQ58hHsuxiFLO5sAWa3wdAIASs4awwgAOepEp1y",
     "estado": 0,
+    "dependenciaCodigo": "OGAC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-11 21:02:55",
     "updatedAt": "2023-02-08 14:31:26"
   },
@@ -2354,6 +2746,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dlquispel@unamad.edu.pe",
     "password": "$2y$10$8qBlD9qX/qoErDvyPneXDOBANx/rvziONt.USzu6KVFVLMoAnbwN.",
     "estado": 1,
+    "dependenciaCodigo": "LAB-INF",
+    "cargo": "ASISTENTE ESTADISTICO",
     "createdAt": "2022-10-12 13:28:57",
     "updatedAt": "2022-10-12 13:28:57"
   },
@@ -2366,6 +2760,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmadueno@unamad.edu.pe",
     "password": "$2y$10$H.CzMO3.1PUOba24RorDn.VPefqISi1QDlmBNXkUvEmbsNTTcV6/a",
     "estado": 1,
+    "dependenciaCodigo": "DAMVZ",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-12 14:50:02",
     "updatedAt": "2025-11-07 14:19:13"
   },
@@ -2378,6 +2774,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Oci@unamad.edu.pe",
     "password": "$2y$10$2J9ycACo2vdjOYteR/etcubrFNhwVjELdIithVMhsR16Ex5njbGza",
     "estado": 1,
+    "dependenciaCodigo": "OCI",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-12 15:27:26",
     "updatedAt": "2022-10-12 15:27:26"
   },
@@ -2390,6 +2788,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sharon19.echevarria@gmail.com",
     "password": "$2y$10$MDw.Eu.rJB24bbuHezv3uut0d.Huc8YdguH0xJACceT3BP/u5wsfG",
     "estado": 1,
+    "dependenciaCodigo": "FCSB",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2022-10-12 16:50:04",
     "updatedAt": "2023-02-13 14:51:34"
   },
@@ -2402,6 +2802,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "moblitas@unamad.edu.pe",
     "password": "$2y$10$rH4UhsfqD3lGkJr6qAvSP.4tV.pbL7DoUEQr1K1oHIEOZ1rSKT.Wm",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "SUPERVISOR",
     "createdAt": "2022-10-12 17:53:35",
     "updatedAt": "2022-10-12 17:53:35"
   },
@@ -2414,6 +2816,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesadepartes.dir_epd@unamad.edu.pe",
     "password": "$2y$10$lgCT1R7x6B2c5VhZhK5xROdT.9PoDO/pOA7yf03Nma590GtLI1bzi",
     "estado": 1,
+    "dependenciaCodigo": "EPDCP",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-12 21:08:57",
     "updatedAt": "2022-10-12 21:08:57"
   },
@@ -2426,6 +2830,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rherrera@unamad.edu.pe",
     "password": "$2y$10$gD.YnQ/nK8nm5w83js18LuQXgM1Iyn1kKZzq3O8S44usgpqWTHRCO",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-13 15:09:55",
     "updatedAt": "2022-12-21 20:30:57"
   },
@@ -2438,6 +2844,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alexanderg@unamad.edu.pe",
     "password": "$2y$10$jesz8FCRXrOg70SEZhI2hO/MBnLIwcvKuzLATP9dvC8rzPkT/JawC",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-14 15:38:42",
     "updatedAt": "2023-03-02 13:44:36"
   },
@@ -2450,6 +2858,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rgarcia@unamad.edu.pe",
     "password": "$2y$10$WQtYDWxXNehKOW.VawGIe.QGXL63Ny9dRDpyacJCbazDPyVAa65zm",
     "estado": 1,
+    "dependenciaCodigo": "DAMVZ",
+    "cargo": "DOCENTE",
     "createdAt": "2022-10-17 13:41:50",
     "updatedAt": "2024-09-12 13:28:41"
   },
@@ -2462,6 +2872,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jamado@unamad.edu.pe",
     "password": "$2y$10$INKuuNDb9c1P1w.aDQBou.YIUuhjiFBdN8LEBNbxy6QoM6lcPT0r6",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "RESIDENTE DE OBRA",
     "createdAt": "2022-10-17 14:46:25",
     "updatedAt": "2022-10-17 14:46:25"
   },
@@ -2474,6 +2886,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lfvaldivia@unamad.edu.pe",
     "password": "$2y$10$TXYUh.RrzLvkgLpvAErFceJYhzMrpmqv08RzsBkxMK9coxJFLEUNm",
     "estado": 1,
+    "dependenciaCodigo": "USEBT",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-18 19:51:59",
     "updatedAt": "2022-10-18 19:53:08"
   },
@@ -2486,6 +2900,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "RHUAMANN@UNAMAD.EDU.PE",
     "password": "$2y$10$PQ3qDb7X6nINKCH.b2kheuwQgdAoGzgpBlEvYXznWNw4XjFk3GCZm",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "AA",
     "createdAt": "2022-10-18 20:41:13",
     "updatedAt": "2026-03-06 21:24:17"
   },
@@ -2498,6 +2914,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fduenas@unamad.edu.pe",
     "password": "$2y$10$.OntEGF4WOWzg4H3gmtyYuUvWDywWYOTGxNx8Cm3eJL4GDppyq6iO",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-18 21:12:27",
     "updatedAt": "2024-09-12 15:13:26"
   },
@@ -2510,6 +2928,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mipuma@unamad.edu.pe",
     "password": "$2y$10$75ylUszxIl6W7MV5kCZ6fee.44JKD7Zf8NhdlbpV7U.1WqGqiA1Qq",
     "estado": 1,
+    "dependenciaCodigo": "EPDCP",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-18 21:54:57",
     "updatedAt": "2022-10-18 22:26:17"
   },
@@ -2522,6 +2942,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marienriquezmancilla@gmail.com",
     "password": "$2y$10$L4yNV9iiDjVHh2mtkUY4d.At5agDdFSX7dDa03Bet8R3.sKL.OpX6",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "AA",
     "createdAt": "2022-10-19 13:01:18",
     "updatedAt": "2024-11-13 16:53:09"
   },
@@ -2534,6 +2956,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jannisborrero02@hotmail.com",
     "password": "$2y$10$VahyzJrc2im0ezt.SPuuA.1wBhuVpnXiQp0VREkO6GJsT.fERnPRy",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "COTIZADORA",
     "createdAt": "2022-10-19 13:16:56",
     "updatedAt": "2022-10-19 13:16:56"
   },
@@ -2546,6 +2970,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mgavidia@unamad.edu.pe",
     "password": "$2y$10$oFMDEMccILcO/.y3w.p6/es2FjiX3q14408ZsiCP0N.raLPOl8MI6",
     "estado": 1,
+    "dependenciaCodigo": "DAE",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-10-19 13:41:03",
     "updatedAt": "2025-11-11 15:08:35"
   },
@@ -2558,6 +2984,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "avargasq@unamad.edu.pe",
     "password": "$2y$10$.8UAY9cKsOtsi2bLPllDTO.a8diR1uP0lcEAH7z4YgAf/86XwPhfK",
     "estado": 1,
+    "dependenciaCodigo": "CEINFO",
+    "cargo": "COORDINADOR",
     "createdAt": "2022-10-19 13:57:23",
     "updatedAt": "2025-12-30 14:16:23"
   },
@@ -2570,6 +2998,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dlaricoa@unamad.edu.pe",
     "password": "$2y$10$ygOfm3HYnJk9cYgg1GcX/uDsn/DDKDA2KmX/bIR1r0yrFD.jKwDlS",
     "estado": 1,
+    "dependenciaCodigo": "UEDD",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-19 13:57:47",
     "updatedAt": "2022-10-19 13:57:47"
   },
@@ -2582,6 +3012,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dlopez@unamad.edu.pe",
     "password": "$2y$10$P//ma6MgsK0trHiHyKHrNu9HqRhMMzlXFnEE4dUHAB5Q2.SZbc/Vm",
     "estado": 1,
+    "dependenciaCodigo": "URAA",
+    "cargo": "JEFE",
     "createdAt": "2022-10-19 13:58:07",
     "updatedAt": "2024-10-15 17:23:26"
   },
@@ -2594,6 +3026,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jjancco@unamad.edu.pe",
     "password": "$2y$10$nYeu5t7QWLcR.x0O11CWVuoJbxdy0lm4t8BL8gKTM1x72.GHWg4bG",
     "estado": 1,
+    "dependenciaCodigo": "DAA",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-19 13:58:33",
     "updatedAt": "2026-04-16 14:06:29"
   },
@@ -2606,6 +3040,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tccamaq@unamad.edu.pe",
     "password": "$2y$10$TLlpgArEnZIF7elYOwfHXuQwEZ/m7azfrfMeksPB4tJkHFtkRv6Zy",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "PROGRAMADOR",
     "createdAt": "2022-10-19 13:58:54",
     "updatedAt": "2024-03-27 12:48:10"
   },
@@ -2618,6 +3054,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "zidgarth@unamad.edu.pe",
     "password": "$2y$10$/VvE99xkFkteBSjf57fYauMoQ2UQqQGKnddE.2ZlYGLCqCoWaFEp2",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "COORDINADOR",
     "createdAt": "2022-10-19 13:59:15",
     "updatedAt": "2026-05-11 16:08:00"
   },
@@ -2630,6 +3068,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jccamac@unamad.edu.pe",
     "password": "$2y$10$pFo7IIv4POpJ50rvgtrrX.JxqrlH0lBFAJBJ5ZJQWj2DQJIH5Fk1y",
     "estado": 0,
+    "dependenciaCodigo": "DAA",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-19 13:59:41",
     "updatedAt": "2023-03-15 21:18:34"
   },
@@ -2642,6 +3082,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "apenam@unamad.edu.pe",
     "password": "$2y$10$Whr7NK5h4W3lmiCHNyD8euoAQQBl1XOGgdZx2BJS4fl0sD66rmb9e",
     "estado": 1,
+    "dependenciaCodigo": "UDP-OTI",
+    "cargo": "PROGRAMADOR JUNIOR",
     "createdAt": "2022-10-19 14:00:11",
     "updatedAt": "2026-01-09 16:33:12"
   },
@@ -2654,6 +3096,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vcasanovao@unamad.edu.pe",
     "password": "$2y$10$IM9Mnk71BDVmVdcITbB93.tJ1eXkJ0jnfYuBeTzss.nS3/8PtM2he",
     "estado": 1,
+    "dependenciaCodigo": "UEDD",
+    "cargo": "RESPONSABLE",
     "createdAt": "2022-10-19 14:00:31",
     "updatedAt": "2024-09-30 13:52:39"
   },
@@ -2666,6 +3110,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "edilsonc@unamad.edu.pe",
     "password": "$2y$10$jLwciq3DRdNqpIO5y0HKnO9L.LWrZ7Zg5IoALKcX/RrjJvFw3YHfC",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-20 20:10:39",
     "updatedAt": "2022-10-20 20:10:39"
   },
@@ -2678,6 +3124,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "brendamq0880@gmail.com",
     "password": "$2y$10$IpH3FVyBtiN0deZFqUnctuZf39FOcoQAOAPxQb8ZJaJciaI7eodq.",
     "estado": 1,
+    "dependenciaCodigo": "CTIMH",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-10-21 14:44:25",
     "updatedAt": "2026-06-01 15:31:20"
   },
@@ -2690,6 +3138,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lesipe_89@outlook.com",
     "password": "$2y$10$NanpYAMhOoQ2142t5bNf2eFPqlsphrmDnkWLG73lagwk0Ot7VGQBW",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-26 13:59:36",
     "updatedAt": "2022-10-26 13:59:36"
   },
@@ -2702,6 +3152,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ccinthiah@unamad.edu.pe",
     "password": "$2y$10$JwtYU.K9fylFRIejZpwLKuRnDFNYBRsUDG5XxKCLssU738qRLKBRK",
     "estado": 1,
+    "dependenciaCodigo": "DAA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-10-26 15:41:26",
     "updatedAt": "2022-10-26 15:53:36"
   },
@@ -2714,6 +3166,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yturpog@unamad.edu.pe",
     "password": "$2y$10$90RRDwRXz5PlK.pI2L31tORALhgoxE.y7Y72GGDIKVBX0ZKOKC5RO",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "PRACTICANTE",
     "createdAt": "2022-11-03 13:37:27",
     "updatedAt": "2023-01-09 12:54:48"
   },
@@ -2726,6 +3180,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "miriam.sumarang@unamad.edu.pe",
     "password": "$2y$10$kuOajIuEKZ641xMAFqJ6vOJuiW9D6g27973D5y23L90IY80ekCpXi",
     "estado": 1,
+    "dependenciaCodigo": "DAMVZ",
+    "cargo": "SECRETARIA",
     "createdAt": "2022-11-04 16:18:46",
     "updatedAt": "2022-11-04 16:18:46"
   },
@@ -2738,6 +3194,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "agutirrezc@unamad.edu.pe",
     "password": "$2y$10$VCiLNjylHNvyMdOX0dwMPOQuaR6a5bX9xKzF6RcBlnXj4CzkPze22",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-11-04 22:05:17",
     "updatedAt": "2022-11-04 22:13:10"
   },
@@ -2750,6 +3208,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "agutierrezc@unamad.edu.pe",
     "password": "$2y$10$5tlds1U4VtELr5F7TrKaEO07REuk1fX7jRvKiVi20IUxqsLhMsPYO",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-11-04 22:08:34",
     "updatedAt": "2022-11-04 22:13:10"
   },
@@ -2762,6 +3222,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "servicioalimentario@unamad.edu.pe",
     "password": "$2y$10$tn7M2Ourt6aQNe3f4mTeru0Df9aWY/S0FM26eg9Sx4MTbJuWvM1.m",
     "estado": 1,
+    "dependenciaCodigo": "SERV-ALIM",
+    "cargo": "RESPONSABLE",
     "createdAt": "2022-11-07 16:29:44",
     "updatedAt": "2023-07-26 13:33:59"
   },
@@ -2774,6 +3236,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nquispe@unamad.edu.pe",
     "password": "$2y$10$VRKu8Am18P8ZWLrN5coRIe4iyvoLHYjSKlVGWtOEcWXhuEEWU7Vzu",
     "estado": 1,
+    "dependenciaCodigo": "SER-FARM",
+    "cargo": "ADMINISTRATIVO",
     "createdAt": "2022-11-08 13:15:30",
     "updatedAt": "2026-06-12 14:40:55"
   },
@@ -2786,6 +3250,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "camau@unamad.edu.pe",
     "password": "$2y$10$9MrvRWTiemdZzXDv8XkI0.6NQXG6m6VOlGkZgZ8yl.A66Jsgf7qkK",
     "estado": 1,
+    "dependenciaCodigo": "SER-TRI",
+    "cargo": "ADMINISTRATIVO",
     "createdAt": "2022-11-08 13:18:39",
     "updatedAt": "2024-04-16 19:58:26"
   },
@@ -2798,6 +3264,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ecapcha@unamad.edu.pe",
     "password": "$2y$10$F.HCg72o2/Q4zqkKYqQK8OR2CbSBXTBNe93P5D5c5ClFv7Ck8v2va",
     "estado": 1,
+    "dependenciaCodigo": "CEINFO",
+    "cargo": "DIRECTOR",
     "createdAt": "2022-11-08 15:29:08",
     "updatedAt": "2023-03-06 20:38:32"
   },
@@ -2810,6 +3278,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "choquegonza@unamad.edu.pe",
     "password": "$2y$10$ONMGPHIgijtj4UvR.n5dD.tBg1qtbC5r1NqUwXaQqZbkAfjqcrDz6",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-11-11 13:35:34",
     "updatedAt": "2022-11-11 13:35:34"
   },
@@ -2822,6 +3292,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "huanca27yuli@gmail.com",
     "password": "$2y$10$K.UUZvihH.Y2UJuw4kPcIOsHmpigygtkPbAQqjdSuuJQQefv42zmy",
     "estado": 1,
+    "dependenciaCodigo": "OCN",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2022-11-11 17:20:28",
     "updatedAt": "2025-02-06 14:58:16"
   },
@@ -2834,6 +3306,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcalloq@unamad.edu.pe",
     "password": "$2y$10$/PjmhgCLlVruqrsLuOjuKeaC9sSLiOiwa9zPixCTTozubQdOkfV5C",
     "estado": 1,
+    "dependenciaCodigo": "EPDCP",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2022-11-14 16:03:54",
     "updatedAt": "2022-11-14 16:03:54"
   },
@@ -2846,6 +3320,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "edw-02@outlook.com",
     "password": "$2y$10$NieWiBKXqDH5ZG3zdAMR0.si3NNGiXNMOn2v8EpllFBC4BwZGqE5G",
     "estado": 0,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-11-17 16:46:16",
     "updatedAt": "2023-01-10 16:55:39"
   },
@@ -2858,6 +3334,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "candy.huamang@unamad.edu.pe",
     "password": "$2y$10$hUaJEOFPA5A1SN861GNvoORnFLotKvLXdir.HJZlEgk5pnfAXpfQO",
     "estado": 1,
+    "dependenciaCodigo": "USO",
+    "cargo": "DIRECTORA",
     "createdAt": "2022-11-18 12:38:28",
     "updatedAt": "2022-11-18 12:38:28"
   },
@@ -2870,6 +3348,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "casasdelavegasofia@gmail.com",
     "password": "$2y$10$U3YipMGTgGgcHluT5qGMUOFhYaSC9NYuWuNyx.oRw4HXAhBxXfIu6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-11-18 13:32:21",
     "updatedAt": "2022-11-18 16:53:57"
   },
@@ -2882,6 +3362,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhquispe@unamad.edu.pe",
     "password": "$2y$10$g0if2mePQYUM3xyCqBUY8uea8QrVrXLOvEgUGZU3BOlBId8aV48fC",
     "estado": 1,
+    "dependenciaCodigo": "CEPI",
+    "cargo": "PRESIDENTE",
     "createdAt": "2022-11-23 15:19:24",
     "updatedAt": "2022-11-23 15:19:24"
   },
@@ -2894,6 +3376,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fatima.f.ore.rengifo@gmail.com",
     "password": "$2y$10$E6tRpVmXjYg7KY0ch3YrH.Cv5UDlS8/nifWYc5WQWtto9GY7MQQnq",
     "estado": 1,
+    "dependenciaCodigo": "CEPI",
+    "cargo": "ASISTENTE",
     "createdAt": "2022-11-23 15:22:33",
     "updatedAt": "2022-11-23 15:22:33"
   },
@@ -2906,6 +3390,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "patrickmartinhs@gmail.com",
     "password": "$2y$10$7p0iJetvoFfqHQ6iRcXWzu/UWjKMUQCiidH1ukRsngAPdaqTkhZmq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-11-28 22:10:31",
     "updatedAt": "2022-11-28 22:27:50"
   },
@@ -2918,6 +3404,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ajgarciagarrafa25@gmail.com",
     "password": "$2y$10$ZPE9mAHYn0MD0fT7ykEUoe.FCkyndeGH42MJRAfDPbNFcVQ6zxGP.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-11-28 22:51:58",
     "updatedAt": "2022-11-28 22:53:01"
   },
@@ -2930,6 +3418,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mormachea@unamad.edu.pe",
     "password": "$2y$10$ofYo/z0mYDTp9p/mhkJsduWMFZUVRW3xv5wF2FOtTkhos5ndU1.9C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-11-29 03:30:45",
     "updatedAt": "2024-10-31 14:48:30"
   },
@@ -2942,6 +3432,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "igutierrezm@congreso.gob.pe",
     "password": "$2y$10$qPLa3nfGedzCVzGw2ULhaedhwxaS/nbHOT1ofraZ24TjTFOIadWkC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-11-30 15:17:33",
     "updatedAt": "2023-10-18 17:57:02"
   },
@@ -2954,6 +3446,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "silver120693@gmail.com",
     "password": "$2y$10$NDFUHhJIdmV7P05Prr3H9eaAlaSUIJNL.GFe7T5g5pP5UsBJa27.u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-11-30 21:05:06",
     "updatedAt": "2022-11-30 21:05:06"
   },
@@ -2966,6 +3460,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcnavarro@unamad.edu.pe",
     "password": "$2y$10$ovpf6mI5s6vZ.bs5vfo5r.l0QLeDEFw1wgGD2oy5fnwIeibCoL5fW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-13 22:38:57",
     "updatedAt": "2026-01-16 15:03:58"
   },
@@ -2978,6 +3474,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@chanintec.com",
     "password": "$2y$10$iNdDfkJJki8d7H7oW0hkxOwA1Ag9TmlLGibuvFy3idbhZUlpybjTa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-15 22:56:16",
     "updatedAt": "2022-12-15 22:56:16"
   },
@@ -2990,6 +3488,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "negocioscorp2@chanintec.com",
     "password": "$2y$10$9diuMEg8Vyc4zHms8/nwnOt2dktuBQrF8Hn9HZXZLmEC/3yjENuTq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-16 15:28:17",
     "updatedAt": "2022-12-16 15:28:47"
   },
@@ -3002,6 +3502,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ac9214969@gmail.com",
     "password": "$2y$10$Ms/Mctm/S6/UrbCT8u2Rsu9qkEo5/agtCHCXVhdaLohiLpgAd3Loi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-21 20:05:30",
     "updatedAt": "2023-09-27 23:30:36"
   },
@@ -3014,6 +3516,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vargasrobert770@gmail.com",
     "password": "$2y$10$nVVC/GATut5z9jVTQtir/eXimbRGplpr14qCTqfNu/m6ZUn/m/ujm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-26 18:20:50",
     "updatedAt": "2022-12-26 18:22:49"
   },
@@ -3026,6 +3530,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pvalerb@yahoo.com",
     "password": "$2y$10$KxQ4ugZKyzCZXs.LgE6Hvuh28jI/ufbwlSxU5nKgMioXfRCcWbcBW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-28 15:08:17",
     "updatedAt": "2022-12-28 15:08:41"
   },
@@ -3038,6 +3544,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "municipioinambari@hotmail.com",
     "password": "$2y$10$NobDIVyTlZTk9ncMQWRUY.JZN0C7QKrkzxNrbsP9qFv6wdau6MwQ.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-28 15:34:51",
     "updatedAt": "2022-12-28 15:35:29"
   },
@@ -3050,6 +3558,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacion@osce.gob.pe",
     "password": "$2y$10$u0StWu8VSpMaOXPuY3lFy.awclJMXbuMWZJJCtlRI8tP28G2bND7K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-28 16:51:08",
     "updatedAt": "2023-07-31 14:31:15"
   },
@@ -3062,6 +3572,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcotrina@osce.gob.pe",
     "password": "$2y$10$eUJ0FOFaGKsE408PkphYJexngbnGwYFHXZ8CIl2woOTj596TfrsLO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2022-12-29 15:33:12",
     "updatedAt": "2022-12-29 15:33:40"
   },
@@ -3074,6 +3586,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "edwinmullisacacruz@gmail.com",
     "password": "$2y$10$aSm3HA0I.6iEYEBZ6o5iNeowwhK9pQxOUTzQ0a1FGSSWLmbGVBTgq",
     "estado": 0,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-02 13:12:14",
     "updatedAt": "2023-01-06 15:21:03"
   },
@@ -3086,6 +3600,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abarrajhonatan@gmail.com",
     "password": "$2y$10$nXa0VhxRxB0WVIbopZRKqePnz.bmeFWtUYUOyPNCBPx02rZwbpxM.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-03 16:29:12",
     "updatedAt": "2023-01-03 16:29:12"
   },
@@ -3098,6 +3614,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "apantigozo22@unamad.edu.pe",
     "password": "$2y$10$5xBLfZbRcId5ti42l66aLOIZ19cWwQ8GEUq.Dsdt6Ul9egSmKop8m",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "ESP. EN BASE DE DATOS",
     "createdAt": "2023-01-03 20:46:04",
     "updatedAt": "2023-06-02 20:32:34"
   },
@@ -3110,6 +3628,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dedalossolutions@outlook.com",
     "password": "$2y$10$OwOJPZ68kV4BH6JxtO18HeuxzFQwX9nP2JjZk45f1CnnFy/K5dJfq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-04 14:32:12",
     "updatedAt": "2023-01-04 14:32:12"
   },
@@ -3122,6 +3642,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dedalossolutions@gmail.com",
     "password": "$2y$10$rCOeVRGuQCTIwdXgLXzQNuCDYdg53qP6iao6ACqydLLrVaScGWVgC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-04 14:35:12",
     "updatedAt": "2023-01-04 14:35:54"
   },
@@ -3134,6 +3656,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "phuamanq@unamad.edu.pe",
     "password": "$2y$10$7ej2LThIEs3KgIJxA05q0Oz3hCfGwJPVdIM6tpG2BlCeIsvkfKqnm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-04 16:34:20",
     "updatedAt": "2023-01-04 16:36:58"
   },
@@ -3146,6 +3670,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jynuma@unamad.edu.pe",
     "password": "$2y$10$pNoqS4AmATYz3Sr8XQ1Pru.feG5MDVfUaJs.cRODfDt4evrpREtFu",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-01-04 17:16:17",
     "updatedAt": "2025-01-25 16:16:31"
   },
@@ -3158,6 +3684,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jenriquez@unamad.edu.pe",
     "password": "$2y$10$DIOM5FeAh.y2PKH4uzXAQ.tAl4QgF.JnC9XQKAJNI2Cr08Um9kYwO",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "COORDINADOR FUNCIONAL",
     "createdAt": "2023-01-04 17:42:00",
     "updatedAt": "2024-01-25 16:29:33"
   },
@@ -3170,6 +3698,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "puertomaldonado@rree.gob.pe",
     "password": "$2y$10$jTMWyFhr6RWBl0aN4IoUmeiwEpnhQkA3GgLTeaccwAkDfz1Tsf8/K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-04 22:20:34",
     "updatedAt": "2023-01-04 22:24:58"
   },
@@ -3182,6 +3712,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lcrucinta@unamad.edu.pe",
     "password": "$2y$10$uxy9BlW1uVUofE96mbPeVeFiTmhGa9J2eQGIfBpUKhDa9vYv3IfPa",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "ESP. EN BASE DE DATOS",
     "createdAt": "2023-01-05 13:49:39",
     "updatedAt": "2024-04-04 13:31:51"
   },
@@ -3194,6 +3726,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "juanjorodriguez19@hotmail.com",
     "password": "$2y$10$Y7qD0MUf4G0Aa7j5Mj.SJutGmzAcDvCf/5xRTzkqjQReuBAEVs9g6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-05 19:07:58",
     "updatedAt": "2023-01-09 19:15:07"
   },
@@ -3206,6 +3740,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mgarcia@unamad.edu.pe",
     "password": "$2y$10$oeXUCPo96F9QuMb5tvMtleXixFU74p256HwE.BDoLw5/9PuV3Xipu",
     "estado": 1,
+    "dependenciaCodigo": "DAIFYMA",
+    "cargo": "DOCENTE",
     "createdAt": "2023-01-05 19:36:27",
     "updatedAt": "2025-06-12 17:14:30"
   },
@@ -3218,6 +3754,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones@servir.gob.pe",
     "password": "$2y$10$LiQc0wWV9CN.tBNNqT2q5uZrlScjTR1UuXLEaftajxU4LszlcHlCm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-05 20:18:12",
     "updatedAt": "2023-01-05 20:18:46"
   },
@@ -3230,6 +3768,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dramos@unamad.edu.pe",
     "password": "$2y$10$Fwr3mT76vszObxH8/mYAGueEh7IjF6MJFLn2EqUVBY7.Ia6h4GJai",
     "estado": 1,
+    "dependenciaCodigo": "EPISI",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-01-06 13:53:08",
     "updatedAt": "2024-02-14 17:26:08"
   },
@@ -3242,6 +3782,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvargasm@unamad.edu.pe",
     "password": "$2y$10$0ksxIil73uas3N/0a0ydV.y.laADXxwxeje0aByK4P4KJPsNAqnci",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2023-01-09 12:59:19",
     "updatedAt": "2025-03-11 19:24:21"
   },
@@ -3254,6 +3796,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dguevara@unamad.edu.pe",
     "password": "$2y$10$X5u3NGY6uGtFNDxWN.jy5OR1/X.8JWxvv67QjgXe1a5bUABFR0D6S",
     "estado": 1,
+    "dependenciaCodigo": "DBU",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-01-09 13:20:57",
     "updatedAt": "2024-03-07 12:43:03"
   },
@@ -3266,6 +3810,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bsulla@unamad.edu.pe",
     "password": "$2y$10$xM71Zl7hU72S3akWy2LJ/eU/.QOSAgg0fQobzuUJTxaPvJckmITfi",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "JEFE OPP",
     "createdAt": "2023-01-09 20:03:36",
     "updatedAt": "2025-04-08 18:16:19"
   },
@@ -3278,6 +3824,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ECABEZAS@OSCE.GOB.PE",
     "password": "$2y$10$k9Mg1k5cyAHr2WI5GmMzJ.Eq./mdX5fTCyAS0KhJIjjC8ajmvhlBm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-09 20:25:10",
     "updatedAt": "2023-01-09 20:25:47"
   },
@@ -3290,6 +3838,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcornejo@digital.gob.pe",
     "password": "$2y$10$GSONPAj86ml1JqQ5mf0AnuDQkcC..b9FqV/slKBh7fpuXL1tcZDCW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-10 08:19:21",
     "updatedAt": "2023-01-10 08:20:01"
   },
@@ -3302,6 +3852,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ahuaman@unamad.edu.pe",
     "password": "$2y$10$wunV/XiqWCXjWQ0nEV7oMO1mdC//mGhoNlXHRolyjhS4Jh5peXzYO",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-01-10 15:54:04",
     "updatedAt": "2024-12-10 17:01:21"
   },
@@ -3314,6 +3866,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "luisrk_93@hotmail.com",
     "password": "$2y$10$z8QJ.DgoCCtjcewI0cv7IePfaOeaG/Nozh/.vpvxKG7.83Md8T2oa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-10 15:56:13",
     "updatedAt": "2023-01-10 16:19:38"
   },
@@ -3326,6 +3880,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sventura@unamad.edu.pe",
     "password": "$2y$10$LvLNslBeQnK5G91ThNi7xuYEUCimxnT2Zm9AVfjt5h26YkowYjLVO",
     "estado": 1,
+    "dependenciaCodigo": "TH",
+    "cargo": "ASISTENTE ADMINISTRATIVA",
     "createdAt": "2023-01-10 16:09:03",
     "updatedAt": "2023-09-26 22:21:01"
   },
@@ -3338,6 +3894,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eherediam@unamad.edu.pe",
     "password": "$2y$10$50zSAecFNGPk/wxd0cSXI.SY4EeOy/Pbo6BxGrsUhP8jS78FgO22i",
     "estado": 1,
+    "dependenciaCodigo": "OGAC",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-01-10 17:55:06",
     "updatedAt": "2024-01-26 20:02:46"
   },
@@ -3350,6 +3908,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "irado@unamad.edu.pe",
     "password": "$2y$10$PAA/fDvPdVPn0Fv7CMVTeOn0LZwP8NCkp6286MqOf3hekn7WL4hES",
     "estado": 1,
+    "dependenciaCodigo": "UME",
+    "cargo": "JEFE",
     "createdAt": "2023-01-10 19:34:47",
     "updatedAt": "2023-01-10 19:34:47"
   },
@@ -3362,6 +3922,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "KALE_PERU@HOTMAIL.COM",
     "password": "$2y$10$GkqHlmkEi65E/FPv20Vu6em0RaisufWMXhuwQWJwqAlw4CtTDSCo6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-10 21:29:53",
     "updatedAt": "2026-01-09 23:25:03"
   },
@@ -3374,6 +3936,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmarins@unamad.edu.pe",
     "password": "$2y$10$5C9oIJj5tCooyBX5gI7nB.N/kzVHIvsJ4RkXuRNtSHyMnoXlzbgBa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-10 22:37:30",
     "updatedAt": "2023-01-11 04:36:07"
   },
@@ -3386,6 +3950,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "AFERNANDEZ@CONTRALORIA.GOB.PE",
     "password": "$2y$10$2JpsY1UDNmjWrorTpgv8qORqlb8TTESS3WwkF5ObbcpgLBH5P7mfu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-12 17:11:38",
     "updatedAt": "2023-01-12 17:15:06"
   },
@@ -3398,6 +3964,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jose.cozo.cuentas@gmail.com",
     "password": "$2y$10$8RzeqAQtZF/3Dl36PBJmvu5.pxXRiULSKZQBGGuV0ZJaNgXjmBODq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-12 20:31:23",
     "updatedAt": "2023-01-12 20:32:59"
   },
@@ -3410,6 +3978,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "NOTIFICACIONESMP@SERNANP.GOB.PE",
     "password": "$2y$10$QrBvQZzPLC5MnFWGa8FuZu4gnbmCicZO9viODSa.89apyGl3T.X/G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-12 21:10:27",
     "updatedAt": "2023-01-12 21:11:27"
   },
@@ -3422,6 +3992,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yquispe@unamad.edu.pe",
     "password": "$2y$10$KcWnexQymulfV206PGiVnOmARK5i4bOvUY1P8q/QyNn.FpnBo6lcm",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-01-16 14:39:40",
     "updatedAt": "2023-01-16 14:39:40"
   },
@@ -3434,6 +4006,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abpenag@unamad.edu.pe",
     "password": "$2y$10$VuMSkW/jInvxHrgU8tzeI.jMdPb8AxbgnXIe5HBsc1HEZw/1ffISG",
     "estado": 1,
+    "dependenciaCodigo": "UME",
+    "cargo": "DIRECTOR ( E)",
     "createdAt": "2023-01-16 14:47:11",
     "updatedAt": "2023-10-03 13:05:27"
   },
@@ -3446,6 +4020,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fquispe@unamad.edu.pe",
     "password": "$2y$10$NdoW3EX2nvb2rq1Y93IrBemwXRRKWDWjRw.Oz0ADBJd0PdT4FIlRK",
     "estado": 1,
+    "dependenciaCodigo": "URI",
+    "cargo": "ESP. ADMINISTRATIVO",
     "createdAt": "2023-01-16 16:24:16",
     "updatedAt": "2023-01-16 16:24:16"
   },
@@ -3458,6 +4034,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MTAIPEC@UNAMAD.EDU.PE",
     "password": "$2y$10$4Mv5O0cCwvmC4yqN4EGd9OtmNmsoqud6i33KWwoqqZKIa9Zb5WJZi",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-01-16 19:20:23",
     "updatedAt": "2023-03-27 12:20:46"
   },
@@ -3470,6 +4048,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "galarcon@unamad.edu.pe",
     "password": "$2y$10$5Vxvt9RAG1rrE0aSgvyjnePM5lfFKaNyMKWiS41DjgWlrRqaYV3ue",
     "estado": 1,
+    "dependenciaCodigo": "DAIFYMA",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-01-17 17:06:12",
     "updatedAt": "2024-08-02 17:58:07"
   },
@@ -3482,6 +4062,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jachatam@unamad.edu.pe",
     "password": "$2y$10$wHgNKuBn0JxWrcoOtOORBOCJaSH8EONrHBJFsLIWfGNpbAMwE3gGq",
     "estado": 1,
+    "dependenciaCodigo": "DAA",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-01-18 12:44:55",
     "updatedAt": "2023-04-05 23:08:27"
   },
@@ -3494,6 +4076,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "richardhuamansurco@gmail.com",
     "password": "$2y$10$gCHODYMn2YCf.Gd5aUWd9Oc5cw/bwUf4ZhriHIaQ.Xv1fN0HQPW5S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-18 21:45:44",
     "updatedAt": "2023-01-18 21:48:12"
   },
@@ -3506,6 +4090,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jasminf939@gmail.com",
     "password": "$2y$10$.QqOTW.DcsYeUWQujEGaRujQZTu6rTWri.WuTPjAZjpkzvjv1Xpr2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-19 15:26:12",
     "updatedAt": "2023-01-19 15:26:12"
   },
@@ -3518,6 +4104,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maragonq@unamad.edu.pe",
     "password": "$2y$10$IWGK7aOexMXeYzaEySf8ceNP43V.OWXCrSbpyK1NH5vyxPgRN2RE2",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-01-24 13:17:52",
     "updatedAt": "2023-02-28 12:30:32"
   },
@@ -3530,6 +4118,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lisvascairo@gmail.com",
     "password": "$2y$10$RXsmqaBLs8UD7OEmJodoxOjtnvgid5.vseeklVDlMcvXxOdy8I0pO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-25 15:19:01",
     "updatedAt": "2023-04-25 14:41:49"
   },
@@ -3542,6 +4132,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "huallpagonzalesy@gmail.com",
     "password": "$2y$10$4iG9ICVYbYhdUDLF6ivJSOrfVlhZA9wyI4n41vz1iqXU99ODFiT0i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-30 15:03:34",
     "updatedAt": "2023-01-30 15:04:31"
   },
@@ -3554,6 +4146,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "angela.bolivar.bolivia@gmail.com",
     "password": "$2y$10$4Cq9Ld9XO7HKb4T4gUim6eYN.xPEerNiX/FnoFmE.yutKrlBbl/Oe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-30 16:21:03",
     "updatedAt": "2023-01-30 16:21:26"
   },
@@ -3566,6 +4160,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aalarcon@sunafil.gob.pe",
     "password": "$2y$10$WAsNsb1o4WJ14KrAifOxTeQSCjwOTijx3Lb7CfkrVMh6ZS4vfDT..",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-01-30 22:41:59",
     "updatedAt": "2023-01-30 22:44:11"
   },
@@ -3578,6 +4174,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mrosalesr@unamad.edu.pe",
     "password": "$2y$10$qoPeKkn4Kid8vxakov8RKe2DzHyWiVdcR2u1hhUI8rKEaqDBrm5pG",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "SUPERVISORA O INSPECTOR DE OBRA",
     "createdAt": "2023-02-03 17:01:59",
     "updatedAt": "2023-02-03 17:05:58"
   },
@@ -3590,6 +4188,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "epuma@unamad.edu.pe",
     "password": "$2y$10$e.u2cx1QF5aRKNukrVBv5eh619VAjWD7muJvPh4U47pmzJB0Ak/RO",
     "estado": 1,
+    "dependenciaCodigo": "USRT-OTI",
+    "cargo": "SOPORTE INFORMATICO",
     "createdAt": "2023-02-03 19:41:41",
     "updatedAt": "2024-03-25 13:23:59"
   },
@@ -3602,6 +4202,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "evelynsoliscutipa@gmail.com",
     "password": "$2y$10$SfQ1dItQQpOBuRVXjsTp2O6QXtyq54EbWLh97VEF/aaIZmrMjnxIi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-06 14:54:12",
     "updatedAt": "2023-02-06 15:06:31"
   },
@@ -3614,6 +4216,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesadepartesvirtual@ceplan.gob.pe",
     "password": "$2y$10$0OsstBMjGp1uw4Mz2Eiqj.AqCKVLYYtqBym66cefeNepOLyN13iKS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-06 17:32:42",
     "updatedAt": "2023-02-06 17:33:11"
   },
@@ -3626,6 +4230,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Vitoraul.educare@gmail.com",
     "password": "$2y$10$4WFHk8.hg6fBvDhvPipjFei7fDd2X0f2KU7mLrjZWxOINsLp6ksOO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-06 23:37:03",
     "updatedAt": "2023-02-07 00:09:41"
   },
@@ -3638,6 +4244,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mflores@unamad.edu.pe",
     "password": "$2y$10$Ye6uxX9Husei9a6YB4o.fOoiOZkNDNRDaO3oBPlMuYMwEZZHgwGIi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-07 15:08:02",
     "updatedAt": "2026-01-25 16:39:20"
   },
@@ -3650,6 +4258,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ldelgadov@unamad.edu.pe",
     "password": "$2y$10$WG.7QvhvMtY/pQ6VqHCcoOeGhrndaM7OXtnmwInTIVJDTkWkXjPXK",
     "estado": 1,
+    "dependenciaCodigo": "OGAC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-02-08 14:30:00",
     "updatedAt": "2023-02-08 14:30:14"
   },
@@ -3662,6 +4272,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "squecano@unamad.edu.pe",
     "password": "$2y$10$/XOuRC02vkyPd27hcaKOMuuB56FtDdlLvoEUQKgGiadUzj7Oit5Aa",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-02-08 15:00:04",
     "updatedAt": "2023-02-08 15:00:04"
   },
@@ -3674,6 +4286,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "waira90@hotmail.com",
     "password": "$2y$10$5KATFn86iY2w5IWz64VGEOoFOGBgabaGgUg0sxqm7NGoLsUiXxB8e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-08 17:03:30",
     "updatedAt": "2023-02-08 17:05:12"
   },
@@ -3686,6 +4300,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jgregory00191@gmail.com",
     "password": "$2y$10$l7.KlOl9OiWFcsZTAv0xxuciDFFK8ViKN5iHocVoWiBJH/8pgZCZi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-09 17:43:39",
     "updatedAt": "2023-02-09 17:44:13"
   },
@@ -3698,6 +4314,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eduardojose_833@hotmail.com",
     "password": "$2y$10$1f/30k2mXX/WmaQI3TpczeoZdyMCftAJSIWEAYf7R3FVrHriUNvDm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-09 19:21:42",
     "updatedAt": "2023-02-09 20:27:23"
   },
@@ -3710,6 +4328,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lcespedes@sutran.gob.pe",
     "password": "$2y$10$CmaxWqnEh/F8CPTDMI5sNO914NHwd2DHURPy7Gs9HrTRqorBCX3Ya",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-13 20:50:27",
     "updatedAt": "2023-02-13 20:51:16"
   },
@@ -3722,6 +4342,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eliasquiritavera@gmail.com",
     "password": "$2y$10$PBH4VySdBrpn8F39FCiHd.Q3aQpNj3NmTNj/qk4H5.EoRPR7q.JEm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-13 21:13:21",
     "updatedAt": "2023-02-14 00:14:17"
   },
@@ -3734,6 +4356,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cafae.mef2018@gmail.com",
     "password": "$2y$10$U9aCA4RgsUzd4xbcuhChUeDgqavpoqAH6BxFd.1WwOWiVxAAH7xR.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-14 19:05:24",
     "updatedAt": "2023-02-14 19:14:03"
   },
@@ -3746,6 +4370,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lotsuka@unamad.edu.pe",
     "password": "$2y$10$hCFoE38OQ1VY5NGhH8I1KejlkhUXvFSz80ynJEderAMBiMKGw9DyW",
     "estado": 1,
+    "dependenciaCodigo": "ALC",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-02-15 12:40:55",
     "updatedAt": "2023-02-15 12:40:55"
   },
@@ -3758,6 +4384,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "RPIZARRO@PCM.GOB.PE",
     "password": "$2y$10$SUT2X2QVlcY4kcAG3g.r8eMi5yjziJr9KTMioT6yKMGcydZ26ayJu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-15 22:27:26",
     "updatedAt": "2024-10-16 20:13:55"
   },
@@ -3770,6 +4398,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "22230003@unamad.edu.pe",
     "password": "$2y$10$TbwcFtcTyWgifww.365wSOGao9thtfeNdcf/R7wr70PBBRe0lwFCC",
     "estado": 1,
+    "dependenciaCodigo": "EPED",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-02-20 17:57:31",
     "updatedAt": "2023-02-20 17:57:31"
   },
@@ -3782,6 +4412,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeriadigital@serfor.gob.pe",
     "password": "$2y$10$WP5yyHfdUuMZtV.83R81qezWQudZQ/DwXkX1mBjqPBGmT2NHuFeee",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-21 15:10:54",
     "updatedAt": "2024-07-16 01:31:45"
   },
@@ -3794,6 +4426,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "proyectos@consorcio-digital.com",
     "password": "$2y$10$eVYJgjsziOdQ1.eIi2DMveW73WUQfFlUyeb9o.u3RhhGdxptvrUie",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-21 22:20:09",
     "updatedAt": "2023-02-21 22:21:33"
   },
@@ -3806,6 +4440,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "susanachiaodar@gmail.com",
     "password": "$2y$10$jKs6nS1vraUTAMfstLesLOx/tkJR3/7xJAH.zOZ2Br0Xgrdr1YSJi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-22 15:02:05",
     "updatedAt": "2023-02-22 15:02:24"
   },
@@ -3818,6 +4454,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CMUNOZA@CONTRALORIA.GOB.PE",
     "password": "$2y$10$L9UaEwFLdJ74hWHIPtzo3uhvJ6KuNpYQ0/DaAANPhW07oqvCeb7xK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-28 14:52:50",
     "updatedAt": "2023-02-28 15:00:20"
   },
@@ -3830,6 +4468,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "DECIMONOTIFICADOR@MTC.GOB.PE",
     "password": "$2y$10$KIHdFEHJRAs/12gGbuuMjehH87ZaVWqCQIrqvme9cioAGsxNIIvo.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-02-28 16:58:34",
     "updatedAt": "2023-02-28 16:59:17"
   },
@@ -3842,6 +4482,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rbalarezo@unamad.edu.pe",
     "password": "$2y$10$9tlXrkM4xf0LqAmYyvctHubVUN77n5FB8H2n08SV.bOL3smIerDnO",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVA",
     "createdAt": "2023-03-01 14:17:27",
     "updatedAt": "2023-03-01 14:17:27"
   },
@@ -3854,6 +4496,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacionesacal@contraloria.gob.pe",
     "password": "$2y$10$2VMie4cQBJRovIAopHyVrOd7N.q162z4Z0mD3xVqT5P5IvC9TIZ1a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-01 16:44:12",
     "updatedAt": "2023-03-01 16:56:02"
   },
@@ -3866,6 +4510,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "INGSOIVELLEON@gmail.com",
     "password": "$2y$10$IQWJPxH6AYqs2TEmPabWY.avx/CmAxBkoIeHxJnWVWriz4.B2qv6K",
     "estado": 0,
+    "dependenciaCodigo": "UF",
+    "cargo": "FORMULADOR DE PROYECTOS DE INVERSIÓN",
     "createdAt": "2023-03-02 15:37:13",
     "updatedAt": "2023-07-05 13:34:23"
   },
@@ -3878,6 +4524,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ericsonlopezcu@gmail.com",
     "password": "$2y$10$LNhfsvXO7yVuK5gqwcKdK.wP/HrMuK4Vm.EhlNKLsSgbqP895XlDu",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "FORMULADOR DE PROYECTOS DE INVERSIÓN",
     "createdAt": "2023-03-02 15:37:32",
     "updatedAt": "2023-07-05 13:29:28"
   },
@@ -3890,6 +4538,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ancat31.19@gmail.com",
     "password": "$2y$10$tPU5bz3U3FPQO4Wy.q9BtufqrcHBg1tancVtEd0yNuubeqUEn65be",
     "estado": 0,
+    "dependenciaCodigo": "UF",
+    "cargo": "FORMULADOR DE PROYECTOS DE INVERSIÓN",
     "createdAt": "2023-03-02 15:37:52",
     "updatedAt": "2023-07-05 13:36:43"
   },
@@ -3902,6 +4552,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "achillihuani@unamad.edu.pe",
     "password": "$2y$10$g0e9nj45qWqbPDvpoH7PKuTrYXiaGgCOF20KknKGlN63pBorPpV2m",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "OPERADOR ADMINISTRATIVO",
     "createdAt": "2023-03-03 13:30:50",
     "updatedAt": "2023-03-03 13:30:50"
   },
@@ -3914,6 +4566,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erosales@unamad.edu.pe",
     "password": "$2y$10$3lcsSb.f0iVuHbheZOVYOurTrDXUPj2LPjcPmtJMNShJwrIhn1VY6",
     "estado": 1,
+    "dependenciaCodigo": "EPIFYMA",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-03-03 14:03:36",
     "updatedAt": "2025-12-15 14:28:39"
   },
@@ -3926,6 +4580,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "avega290490@gmail.com",
     "password": "$2y$10$oU4HJZ/33vcSfQgKXymcpe/m/umKC07EY89F6TyNpT4g5k8NpDvDS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-03 19:41:50",
     "updatedAt": "2023-03-03 19:42:44"
   },
@@ -3938,6 +4594,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "racuafrank2@gmail.com",
     "password": "$2y$10$hfOl04FIPMs6EvxgQcD5Ou7nfQsEHlJxXoWetkpWa6oM/V6CxLxG2",
     "estado": 1,
+    "dependenciaCodigo": "SICHS",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-03-03 20:46:17",
     "updatedAt": "2023-11-23 16:14:27"
   },
@@ -3950,6 +4608,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones@ana.gob.pe",
     "password": "$2y$10$dZlYdbfahrHpgplKe2x2wO4kRhmdRjOmGKXRqpGaoYL599riqINne",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-03 21:59:07",
     "updatedAt": "2023-06-27 19:10:13"
   },
@@ -3962,6 +4622,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "crojas@unamad.edu.pe",
     "password": "$2y$10$CJf/AIaGPTAip9UT/3a7NunUyc/PoiItfiXyHU/k7cVUq5viV4E/K",
     "estado": 1,
+    "dependenciaCodigo": "CEPRE",
+    "cargo": "ESPECIALISTA  INFORMÁTICA",
     "createdAt": "2023-03-07 16:55:57",
     "updatedAt": "2024-05-27 21:07:52"
   },
@@ -3974,6 +4636,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fclaudio@unamad.edu.pe",
     "password": "$2y$10$XvfBTd3N2sf/an6/ulIDTuLgxZbIFiDQbKBUToDc1y5f44pMFxs7C",
     "estado": 1,
+    "dependenciaCodigo": "EPDCP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-03-07 19:52:16",
     "updatedAt": "2023-03-07 19:52:16"
   },
@@ -3986,6 +4650,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nenciso@unamad.edu.pe",
     "password": "$2y$10$TpHQnsJupWwy1CGDOIRyBuWL33p2dgYUE5YL6/Y5PJuo8ZMjdiIei",
     "estado": 1,
+    "dependenciaCodigo": "USSP",
+    "cargo": "PSICOPEDAGOGA",
     "createdAt": "2023-03-08 12:57:39",
     "updatedAt": "2023-03-08 12:57:39"
   },
@@ -3998,6 +4664,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "consuelo.gomezsilva@crisol.com.pe",
     "password": "$2y$10$bAwOK.gUH2lsnV9UkLNWl.mVxDeSNRzOmvqhyShYcUolkT3O4weFu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-08 17:03:32",
     "updatedAt": "2023-03-08 17:25:03"
   },
@@ -4010,6 +4678,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jamoros@contraloria.gob.pe",
     "password": "$2y$10$x82b79E6fwfN/hV0Cnxxme0G6ozbzCBfYTsfY77e0HL0VtzwqdVF6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-08 21:33:29",
     "updatedAt": "2023-03-08 21:40:23"
   },
@@ -4022,6 +4692,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "djarap@unamad.edu.pe",
     "password": "$2y$10$P48tm/h2AZrVg3dbrU6R5u58w6QmsLCOVfJid2yIf4qNNok1BOxHW",
     "estado": 1,
+    "dependenciaCodigo": "CEU",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-03-09 20:24:00",
     "updatedAt": "2023-03-09 20:24:00"
   },
@@ -4034,6 +4706,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mruiz@unamad.edu.pe",
     "password": "$2y$10$vNLjyfqxnAr3wsGrF3vXp.XBNUHPROB839QIgZkD3hKGoqlX5II8q",
     "estado": 1,
+    "dependenciaCodigo": "DAMVZ",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2023-03-10 13:56:09",
     "updatedAt": "2023-03-13 12:33:21"
   },
@@ -4046,6 +4720,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smontalvor@unamad.edu.pe",
     "password": "$2y$10$y5bpXrdQnSHz.XKof3Y9/eB1i2O7/50qa2aQY3X76hSwiap4QhX5u",
     "estado": 1,
+    "dependenciaCodigo": "OCII",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-03-13 18:02:50",
     "updatedAt": "2023-05-19 15:46:09"
   },
@@ -4058,6 +4734,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ecobrayani@gmail.com",
     "password": "$2y$10$LKPhDufre40Xryq9suiq0.HwYqXPMFJQEuOZU31hyt3yB6xIAJeIy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-14 14:16:32",
     "updatedAt": "2023-03-14 14:16:32"
   },
@@ -4070,6 +4748,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bcontreras@unamad.edu.pe",
     "password": "$2y$10$bfj0ZRA9FtjPQUDjxcm9mehfneCHNm977.KsIsV/QAOgRIGEIxKzK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-14 14:22:22",
     "updatedAt": "2023-03-14 14:25:27"
   },
@@ -4082,6 +4762,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smart.government21@gmail.com",
     "password": "$2y$10$91cuKtF..2jEr5CnPjNcb.y7jpCQPzO65O/xkUq4mqflkWiMTYRwe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-16 02:29:43",
     "updatedAt": "2025-07-05 01:35:36"
   },
@@ -4094,6 +4776,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ASIERRA@MINEDU.GOB.PE",
     "password": "$2y$10$C9eWZvIJBDF.tBUVC4UqduTohTGCLZ0tB7RwIU70YQcyFaxeKcK9u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-16 19:21:16",
     "updatedAt": "2025-08-21 02:50:04"
   },
@@ -4106,6 +4790,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "scondorif@unamad.edu.pe",
     "password": "$2y$10$P9NgRVDM/8ED2h8KfeQMH..mW1WpKr7nZQEQcGQpXKHdEbXkb0cS2",
     "estado": 1,
+    "dependenciaCodigo": "USEBT",
+    "cargo": "AA",
     "createdAt": "2023-03-21 18:13:06",
     "updatedAt": "2023-03-21 18:13:06"
   },
@@ -4118,6 +4804,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cristyam.tasayco1510@gmail.com",
     "password": "$2y$10$QbAk0YnwnrhSMKpGYdb3aucoqieiOHTN4MdXOVQpVnoR.0Xb4e2g6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-23 17:06:56",
     "updatedAt": "2023-03-23 17:09:41"
   },
@@ -4130,6 +4818,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tramitevirtual@munilaspiedras.gob.pe",
     "password": "$2y$10$nDN0.SrWZHXR/Cr6hLW/2uuI3GxLxKOsVH4p96oR1PKuKSPWh.r/2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-24 22:46:19",
     "updatedAt": "2023-03-24 22:46:19"
   },
@@ -4142,6 +4832,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "roxana.calderonb@inabif.gob.pe",
     "password": "$2y$10$2yV/fzHxAaJO9q1AW22r5.ZwUwbiQJCQUTlcOthQsYE5sqzeIERSa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-25 04:03:49",
     "updatedAt": "2023-03-25 04:06:00"
   },
@@ -4154,6 +4846,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CORRESPONDENCIA@PERUCOMPRAS.GOB.PE",
     "password": "$2y$10$uRm7Pwt3xRxQmyAEHhc0iO2m0zTRtv7CB.dIOZB1NvLTFJvhbvHCe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-29 18:37:31",
     "updatedAt": "2023-09-08 22:54:53"
   },
@@ -4166,6 +4860,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jluiscollazosguerra@gmail.com",
     "password": "$2y$10$T6pKRMftqzlichJiqz/lSetTiH2Xy0zTvatnYH5KcJcdNGVhldO/a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-30 14:34:09",
     "updatedAt": "2023-03-30 14:34:58"
   },
@@ -4178,6 +4874,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "presidencia@unaj.edu.pe",
     "password": "$2y$10$ZbEZFHr1GYzqKcep7K5YTunwAN7WMHW/6mVG.UGa0BvZHGW6bi1Xy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-30 20:48:53",
     "updatedAt": "2023-03-30 20:55:38"
   },
@@ -4190,6 +4888,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "julio.marquezeirl2015@gmail.com",
     "password": "$2y$10$90RezdPSJe78qjI0TbK/eO7jvusJWHoX108DedNU/IZT.0ZKr9PqG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-30 22:03:33",
     "updatedAt": "2023-03-30 22:04:17"
   },
@@ -4202,6 +4902,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "VERONICA.AVALOS@AZCHEMICAL.PE",
     "password": "$2y$10$0oqmoli/6ckhHhRbPuNMG.xemWRdgwJ035NP2rPSntmnCoVsk7fH6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-03-31 21:39:35",
     "updatedAt": "2023-03-31 21:40:20"
   },
@@ -4214,6 +4916,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dfalcon@unamad.edu.pe",
     "password": "$2y$10$YJDgUdJD.B.ePjE6x2lb7Ok9RJ.Gkhf4FluzooQzrY9XZ5Wa/TkY.",
     "estado": 1,
+    "dependenciaCodigo": "URI",
+    "cargo": "ASISTENTE",
     "createdAt": "2023-04-03 13:18:20",
     "updatedAt": "2025-10-03 19:04:28"
   },
@@ -4226,6 +4930,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "esaenz.esnap@gmail.com",
     "password": "$2y$10$dwybY4zLxfGO2lMTnG2Dt.g/KzkeOXTlX08aYbblIxqk25wg4HCfu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-03 22:29:36",
     "updatedAt": "2023-08-16 21:28:32"
   },
@@ -4238,6 +4944,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacioncorreoelectronico@pronabec.gob.pe",
     "password": "$2y$10$3EBVUFUdArxTWQTI0rPvjuXXllde5XFWrBzeMnNxkYOMX/fLYcd9q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-05 00:00:59",
     "updatedAt": "2024-11-04 17:50:08"
   },
@@ -4250,6 +4958,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gmsaen1@mapfre.com.pe",
     "password": "$2y$10$hEuL8whzivyNkggK5Dah/eR/GXoFgJXKyljX9AVsyyToV0zgvC6Q.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-07 13:48:20",
     "updatedAt": "2023-04-07 13:48:42"
   },
@@ -4262,6 +4972,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gerenciaecofumigaciones@hotmail.com",
     "password": "$2y$10$CeFqUWkBhAQ7ugcIHTB.0ucPBpHRevNeB6ziJvvUev.SBxNuW8S9i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-10 17:46:13",
     "updatedAt": "2023-04-10 17:51:50"
   },
@@ -4274,6 +4986,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "irvincontrerasr@gmail.com",
     "password": "$2y$10$a4N8hU.kF/bqbLKwbJYtH.IwDfA6R75xNOAUQgXynTMNy3lL9aZPO",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "PROGRAMADOR",
     "createdAt": "2023-04-10 20:09:48",
     "updatedAt": "2023-06-01 14:04:11"
   },
@@ -4286,6 +5000,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvaldezp21-1an@unamad.edu.pe",
     "password": "$2y$10$iBlfLCqvZ8XAFIdcP0Y0HuAQTkNOJb5ShfzUh5.sP8DI5ox6iRqwK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-12 14:45:27",
     "updatedAt": "2023-04-12 14:54:02"
   },
@@ -4298,6 +5014,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "escueladealtadireccionperu@gmail.com",
     "password": "$2y$10$9ZFwnnyAZSgV/MDrbSOxVOeRjM/t1.7HElBFJjxVNHO2zkAyCJ2WW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-12 17:39:25",
     "updatedAt": "2023-04-12 17:39:52"
   },
@@ -4310,6 +5028,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cguillenf@unamad.edu.pe",
     "password": "$2y$10$bE8uI1LEwGYGqQKHaEk8mOkDepEh6cy9JN1VJMvTO1PVxTma93qm2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-14 18:02:21",
     "updatedAt": "2023-04-14 18:02:21"
   },
@@ -4322,6 +5042,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gmontiell@unamad.edu.pe",
     "password": "$2y$10$RYKSUqCihXtU7wEbxMdsR.CuFy1Jqwrb/g3wdU6FepPrDuIfGGA6.",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-04-17 12:45:45",
     "updatedAt": "2024-02-20 20:18:53"
   },
@@ -4334,6 +5056,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bsanchezr@unamad.edu.pe",
     "password": "$2y$10$pHSmkG7fsP73Ey9kbAtTLOVVJ6T8cNue1s.B.oOvWeto5qRHmc.qG",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2023-04-17 16:25:47",
     "updatedAt": "2023-04-17 16:25:47"
   },
@@ -4346,6 +5070,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sofiatacuribaez@gmail.com",
     "password": "$2y$10$rVuc8KYwrNaCz9Pabvsj6.da/RG3gZgd7rLgDQ73lMN47mIwKG8VO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-17 19:50:02",
     "updatedAt": "2023-04-17 19:50:58"
   },
@@ -4358,6 +5084,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rhuillcame@unamad.edu.pe",
     "password": "$2y$10$CL3k3AdVIk1uqBrW6Ci9AemRq8t/WSnl1zUIOE5U8OUdbqTY1ZEdO",
     "estado": 1,
+    "dependenciaCodigo": "DIPROBYS",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-04-17 20:47:09",
     "updatedAt": "2024-03-12 20:28:47"
   },
@@ -4370,6 +5098,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jacob.rojas@qw.gob.pe",
     "password": "$2y$10$x/djSBvSfsgi0CS/puaZSuBUFJmT8J60XJy0Wpgnnijuv/SJ9kOX6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-18 14:20:17",
     "updatedAt": "2023-08-25 21:03:07"
   },
@@ -4382,6 +5112,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cmamaniv@unamad.edu.pe",
     "password": "$2y$10$BrFLGdDzQKWw5/1Q8rVSM.cjCxNAshv3NesDmNTes53mH2mnxdLuG",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "RESPONSABLE DE PROCESOS DE SELECCION",
     "createdAt": "2023-04-20 22:05:49",
     "updatedAt": "2023-04-20 22:05:49"
   },
@@ -4394,6 +5126,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "desarrollosostenible@uni.edu.pe",
     "password": "$2y$10$hLVrO4UFaMkxihsyP5CvFuT.Reu/hiWhA1W7jO9j29DOLdajwGKiS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-21 15:18:44",
     "updatedAt": "2023-04-21 15:19:11"
   },
@@ -4406,6 +5140,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones01@minam.gob.pe",
     "password": "$2y$10$c4r8TR/HCmq8P7tnC9S6/Ohy.srBPtDSaIexejib0HpKmODttGiy.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-21 15:31:49",
     "updatedAt": "2023-04-21 15:43:15"
   },
@@ -4418,6 +5154,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones@minam.gob.pe",
     "password": "$2y$10$QitD36dozZIO34mMTtJkIOj2nGVnl9PhAYenIcl6tensNL7QhMdYK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-21 15:33:59",
     "updatedAt": "2023-04-27 15:24:47"
   },
@@ -4430,6 +5168,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "spolanco@unamad.edu.pe",
     "password": "$2y$10$R3.sQGOmLo4..qPRQPZRIOTl1R0p5Dcphki18gtZU58BRLb5Mc.1K",
     "estado": 1,
+    "dependenciaCodigo": "DU",
+    "cargo": "DIRECTORA",
     "createdAt": "2023-04-21 20:47:35",
     "updatedAt": "2024-06-06 14:25:27"
   },
@@ -4442,6 +5182,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mhuillca@unamad.edu.pe",
     "password": "$2y$10$Ed/WcTWaWycz504.qKNFyuv0USwBpvHn8r.SpsdyilwQfxC7vg.YG",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "FORMULADOR DE PROYECTOS",
     "createdAt": "2023-04-25 21:19:47",
     "updatedAt": "2024-08-14 17:15:00"
   },
@@ -4454,6 +5196,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventasstarball@gmail.com",
     "password": "$2y$10$Qcgg6p8Q6D6ASQoi.Ob0MOYBWz/5IvLv2VGjI.5PfNut0jMZ/ppRO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-25 22:52:03",
     "updatedAt": "2023-04-25 23:05:05"
   },
@@ -4466,6 +5210,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "car.ayvar@gmail.com",
     "password": "$2y$10$Prqt3emSsOXq95jIrJKgZOSQOfVC4d0WG9o9LuOOGEq184lifunqq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-26 18:27:35",
     "updatedAt": "2023-04-26 18:27:51"
   },
@@ -4478,6 +5224,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "oscaralfonsoroquecondori@gmail.com",
     "password": "$2y$10$k9VBOvVDVWOWWiwXmuuUGOe17jWP2OMGJO8VZtzDjIH47nC8Dfvn6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-27 15:42:25",
     "updatedAt": "2023-04-27 15:43:13"
   },
@@ -4490,6 +5238,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "drimari@contraloria.gob.pe",
     "password": "$2y$10$i7ww571F7PBVVOz489JcNucX5c1BposirhPUb7fwrydkZgWjw4jPS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-04-27 17:49:27",
     "updatedAt": "2023-04-27 17:51:57"
   },
@@ -4502,6 +5252,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mbarzola@agrorural.gob.pe",
     "password": "$2y$10$moIpJB6u80NzGqfCLF4Pw.jFXkDH0WoNnT9RHcXsEC0JIvsRtIOem",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-03 20:44:25",
     "updatedAt": "2023-05-03 20:52:01"
   },
@@ -4514,6 +5266,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ereina@osce.gob.pe",
     "password": "$2y$10$zontX9yvTQKjO1.2NY1NleJSrxLnoQ2kxhcJTADtvsijpSB3ePnFG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-04 16:19:15",
     "updatedAt": "2023-05-04 16:20:24"
   },
@@ -4526,6 +5280,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marthallaja27@gmail.com",
     "password": "$2y$10$uOh5kiVSgkCvKJHg6rhzSu1Qh5Iwq2PsXsf14Ngx5LFFV4gcp62ue",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-04 21:19:24",
     "updatedAt": "2023-05-04 21:22:18"
   },
@@ -4538,6 +5294,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacionesentidades@onp.gob.pe",
     "password": "$2y$10$bBPeu/Uow.YB8n5X61tJJuvRVrMei1m837mZMXbECbo8u0rgLjLO.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-05 01:21:45",
     "updatedAt": "2023-05-05 01:24:27"
   },
@@ -4550,6 +5308,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "oespinoza@congreso.gob.pe",
     "password": "$2y$10$Nm.vU9.47xx56.W/e361g.4KR8QQNe59N1xYU6FtRersC1dnfnxIe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-05 14:56:27",
     "updatedAt": "2023-05-05 14:58:12"
   },
@@ -4562,6 +5322,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ireneanaya2020@gmail.com",
     "password": "$2y$10$52whSRJONpfzFEsBdW/0yew8VLucpelzF01QE9QrmwA3ExNdugss.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-08 14:32:27",
     "updatedAt": "2023-05-08 14:33:11"
   },
@@ -4574,6 +5336,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "silvattitoc@gmail.com",
     "password": "$2y$10$Bv4x7vYMgEs3ScoaeHnGaeNxaA83oRQnDDvAvuNhj.BOTajrEDm/6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-09 15:39:34",
     "updatedAt": "2023-05-09 15:43:12"
   },
@@ -4586,6 +5350,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erodriguez@contraloria.gob.pe",
     "password": "$2y$10$1xuUWtn5qBBoMAxxnUXUz.cdL9bIdhDOz/6nHuf07h.hS5divVPm6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-10 15:52:09",
     "updatedAt": "2023-05-10 15:59:54"
   },
@@ -4598,6 +5364,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "patricia915409@gmail.com",
     "password": "$2y$10$l8AMBbkcsaGGi2S9rULx5u1HY6JSkxCzA1RUtXnL/4DbkdKhPZyma",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-11 17:32:17",
     "updatedAt": "2023-05-11 17:32:48"
   },
@@ -4610,6 +5378,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "LMUNOZR@UNAMAD.EDU.PE",
     "password": "$2y$10$rs1pGs4N9U4oXol2iBPkMeXk2yBxA6ZDelfuft.1HBQov.z4hi19q",
     "estado": 1,
+    "dependenciaCodigo": "CEPRE",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-05-11 17:41:34",
     "updatedAt": "2023-07-27 18:08:56"
   },
@@ -4622,6 +5392,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kzeaj@unamad.edu.pe",
     "password": "$2y$10$IpKzohHz.Ci4Huac57ysqeR7lal.mMCLOqsKB1w2Qpfl3AMA8CBFW",
     "estado": 1,
+    "dependenciaCodigo": "EPP",
+    "cargo": "SUPLENTE",
     "createdAt": "2023-05-15 15:54:59",
     "updatedAt": "2023-05-15 15:54:59"
   },
@@ -4634,6 +5406,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sip_05@pcm.gob.pe",
     "password": "$2y$10$YrHmETS7xAIrpdl2cmbiUuj5d30yIoM1AiYG3ZAdtUWR0wRPO8URS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-17 21:54:33",
     "updatedAt": "2023-05-17 21:55:07"
   },
@@ -4646,6 +5420,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "capacitatec.net@gmail.com",
     "password": "$2y$10$eudwmY3GSHUpoLnfKWGoS.XEIs/99j6CCnkW9pyIAvCkZmphqjk1m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-18 20:47:58",
     "updatedAt": "2023-05-18 20:48:28"
   },
@@ -4658,6 +5434,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "e_fpurt@hotmail.com",
     "password": "$2y$10$iicREs3eG1z5yA4A.03fPOHjOePM6HOHr7UqsFVrFWK0FxyEC7jna",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-25 01:44:13",
     "updatedAt": "2023-05-25 01:47:14"
   },
@@ -4670,6 +5448,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cruzciri@unamad.edu.pe",
     "password": "$2y$10$8tl9qJyJKWhmVjczJ1afUuB4iYlpD/bCCXpitj10SrmkId4QS1MFq",
     "estado": 1,
+    "dependenciaCodigo": "FCSB",
+    "cargo": "DECANO",
     "createdAt": "2023-05-25 13:43:36",
     "updatedAt": "2025-04-01 20:10:24"
   },
@@ -4682,6 +5462,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mellaniehuaman@gmail.com",
     "password": "$2y$10$4ipOiPbHDoRtUMhB6lWyw.dYr2U4YVp75lyZszwlwL2Rbr4sJJ1C2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-28 21:10:34",
     "updatedAt": "2023-05-28 21:10:55"
   },
@@ -4694,6 +5476,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "afpuro@unamad.edu.pe",
     "password": "$2y$10$0SbGXATpWkT5dscLV1uQheq7bPJy936UoqH98z9UyZYzMQdGEQn4y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-30 21:55:10",
     "updatedAt": "2023-06-10 20:23:42"
   },
@@ -4706,6 +5490,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fidel.urbano@unmsm.edu.pe",
     "password": "$2y$10$5TsO9k5PYZn1l0VW3AnglOSPIv2vOUYfy6UPk2si9k0zMyemt53Fa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-30 23:38:10",
     "updatedAt": "2024-12-13 14:18:10"
   },
@@ -4718,6 +5504,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones.dtaip@minjus.gob.pe",
     "password": "$2y$10$stFoQL5yMRmiTxdu9jV3xOVlDNObcd9nhWQysZwfwgWusUxlTsv5q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-31 17:20:28",
     "updatedAt": "2023-05-31 17:20:28"
   },
@@ -4730,6 +5518,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asalas.antaip@gmail.com",
     "password": "$2y$10$aoUZ878TaSSPb/220KUH..RwEsiM4dJdAx7r0olE3r8hqmgUNdG/e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-31 18:53:12",
     "updatedAt": "2023-05-31 18:53:32"
   },
@@ -4742,6 +5532,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "imagen@unh.edu.pe",
     "password": "$2y$10$Qf03rcgjsQE.NnM/TrdCI.ivLYTanXrvTujERq/Hftkm.w11rl2Am",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-05-31 22:53:44",
     "updatedAt": "2023-05-31 22:54:06"
   },
@@ -4754,6 +5546,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ezapata@contraloria.gob.pe",
     "password": "$2y$10$ut0/Hh8eo2v3dNeFMMFb8uNkEYdQ4SUE/gLQilruYErSKqcHQ02jK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-01 17:51:31",
     "updatedAt": "2023-06-01 17:55:41"
   },
@@ -4766,6 +5560,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mfigueroa@unamad.edu.pe",
     "password": "$2y$10$SO3vdG/vCw9s3bHGf/Qxk.WL5ULnyShgFzF00qsypJmZTI6Aygp8q",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "LOCADOR",
     "createdAt": "2023-06-01 20:35:13",
     "updatedAt": "2023-06-01 20:35:13"
   },
@@ -4778,6 +5574,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lrivera@mimp.gob.pe",
     "password": "$2y$10$p3zqUp8.J3UU16/toPIxtekXki8LOntXa2cDEBA6YfII6WcyNnnIS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-02 17:25:30",
     "updatedAt": "2023-06-02 17:27:37"
   },
@@ -4790,6 +5588,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "informes-cafae@mef.gob.pe",
     "password": "$2y$10$/1pISnqjW9UOnHr9nYid1er4BMv.QvDvMMCVC8ju883v65dhnssuC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-02 19:50:24",
     "updatedAt": "2023-06-02 19:50:57"
   },
@@ -4802,6 +5602,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rectorado@unasam.edu.pe",
     "password": "$2y$10$oBElGLdKPj6O/dDfM9Nqo.1EREAx9AgmhOAhfvB1WcRXjw/9Cdkxm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-05 20:21:49",
     "updatedAt": "2023-06-06 13:13:49"
   },
@@ -4814,6 +5616,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmanihuari@unamad.edu.pe",
     "password": "$2y$10$beqPLUbpNxRFQ9ss3ULytu/UMp4kyjqNOAu.XbBWpbmhbhjIQWffi",
     "estado": 1,
+    "dependenciaCodigo": "USO",
+    "cargo": "ASISTENTE",
     "createdAt": "2023-06-07 15:38:49",
     "updatedAt": "2023-07-25 15:35:47"
   },
@@ -4826,6 +5630,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gbenites@unamad.edu.pe",
     "password": "$2y$10$JhOr2vebll2QivAMOgw4tOpi6p14MyfcCuWE/CRnWBGZJGvm5wpRW",
     "estado": 1,
+    "dependenciaCodigo": "DIPROBYS",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-06-07 16:00:19",
     "updatedAt": "2023-06-12 23:45:03"
   },
@@ -4838,6 +5644,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ENRIQUE.SALDIVAR@SERVINFORMACION.COM",
     "password": "$2y$10$8Owq.KoU3bAaYkAf4Tq4VudE3PmsaUOeSByOmVCUimnJhtOKfIlme",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-08 14:36:43",
     "updatedAt": "2023-09-11 11:59:58"
   },
@@ -4850,6 +5658,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeria@conadisperu.gob.pe",
     "password": "$2y$10$lHWP4MdMIi.UMAff7Nc87ej/McjITmWsveRLGrPOy3KHcCgvvq5fO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-09 14:19:55",
     "updatedAt": "2025-11-18 21:00:55"
   },
@@ -4862,6 +5672,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "estengie2306@gmail.com",
     "password": "$2y$10$3TXZkWNysT1OMZ8JbxvGd.qL1sc4Fm5wTuZnyiOeExbXx0UtxQvdS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-09 19:35:29",
     "updatedAt": "2023-06-09 19:35:50"
   },
@@ -4874,6 +5686,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcorrales@unamad.edu.pe",
     "password": "$2y$10$T2b9Zzg9GWAhnGU2FxtLEOzhyYWj2TMpIOh3yDF7KSQeuHfTEg9FO",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2023-06-12 13:54:28",
     "updatedAt": "2023-06-12 13:54:28"
   },
@@ -4886,6 +5700,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aacunac@unamad.edu.pe",
     "password": "$2y$10$918Px24hTBjDLNVsGZ3AReY4PpInnTu/v.q44Lc.kun6AICJHBlE2",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "TECNICO ADMINISTRATIVO II",
     "createdAt": "2023-06-13 12:29:58",
     "updatedAt": "2026-01-08 16:50:32"
   },
@@ -4898,6 +5714,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "or73ga_es@live.com",
     "password": "$2y$10$ZGWh.dHkdOcrNvQ4PzrBpuhyQNAkmVqetyCBHQsusJqXrQgyrnQNe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-14 16:36:43",
     "updatedAt": "2023-06-14 16:36:43"
   },
@@ -4910,6 +5728,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lui158@hotmail.com",
     "password": "$2y$10$.QBlQZHD4JDdfmWIFNngeuqJV18dLaFXLfxyoaK/SWCu0m.QW/dE2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-14 20:18:26",
     "updatedAt": "2023-06-14 20:19:23"
   },
@@ -4922,6 +5742,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jrazuri@sunat.gob.pe",
     "password": "$2y$10$MN.3rTf/oep.1m6LRNwnlu3W4lM0IAxMc79BhIVodJdsMRIE63/UW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-14 21:31:02",
     "updatedAt": "2023-06-15 16:34:35"
   },
@@ -4934,6 +5756,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "clcdap_temp05@produce.gob.pe",
     "password": "$2y$10$icZZkKB3jRsLsaJY6oYLLOj6FhNGD.TKXF/hK9UJjq2gPQszaFSwK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-14 21:51:05",
     "updatedAt": "2023-06-14 21:54:47"
   },
@@ -4946,6 +5770,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fendupphistorica@gmail.com",
     "password": "$2y$10$vmMTy9X4M61BidcUD7zhAOKHND6MmwObechpyqlplj.WsSbHpNIra",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-15 16:18:23",
     "updatedAt": "2025-07-14 15:33:53"
   },
@@ -4958,6 +5784,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mguevara@unamad.edu.pe",
     "password": "$2y$10$5iPZAjI0reSgYQ9FFdiKxush69SOIst1u/BaB15FRpzBTK9Ew/qXu",
     "estado": 1,
+    "dependenciaCodigo": "EPP",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-06-15 17:08:54",
     "updatedAt": "2025-03-18 21:02:19"
   },
@@ -4970,6 +5798,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mtorres@qubitsconsulting.com",
     "password": "$2y$10$B/0lnnWOiOaDKM7C9Y.Ze.Jp8tSqq120w0CG5NjqzokO2kp/5UuDS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-16 19:32:32",
     "updatedAt": "2023-06-16 19:32:54"
   },
@@ -4982,6 +5812,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@bioterraperu.com",
     "password": "$2y$10$qDnADNxcs.e7endMI5hDLufIrLL1P7V4.TWwdmlnioCMWtiGoId/y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-16 19:41:12",
     "updatedAt": "2023-06-16 19:42:11"
   },
@@ -4994,6 +5826,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "egamarra@trabajo.gob.pe",
     "password": "$2y$10$X72hDKbqSBzR/mtHIjOzCuGPM1bxtQOdf6KfroueQzgGjkP.DKmti",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-16 20:10:33",
     "updatedAt": "2023-06-16 20:11:36"
   },
@@ -5006,6 +5840,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcaballero-prov@trabajo.gob.pe",
     "password": "$2y$10$BueXM9WbhgAyux4QIFJJnuEX221I8BIm.s7f.kgcLbSwIRu1wK/3y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-19 17:00:45",
     "updatedAt": "2023-06-19 17:01:28"
   },
@@ -5018,6 +5854,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maramburu@contraloria.gob.pe",
     "password": "$2y$10$E0HItrG79dZrG6Pwjkm3JOeqR8rr4OxRP2D/8mt5LAWrPynvv2VQe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-19 18:35:52",
     "updatedAt": "2023-06-19 18:38:32"
   },
@@ -5030,6 +5868,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jalpaca@unamad.edu.pe",
     "password": "$2y$10$3XpIpPbg/c2k9HnMlV/SL.HRQV4L/gElCFZ4b.zWu8zxO931gRNf.",
     "estado": 1,
+    "dependenciaCodigo": "DADCP",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-06-19 21:12:45",
     "updatedAt": "2026-02-04 14:58:47"
   },
@@ -5042,6 +5882,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kornix85@hotmail.com",
     "password": "$2y$10$S44xckkdojk58PuEWP1eh.KX.LyC8LFrSlocnHLfSqh8vy0ujaU1W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-21 17:21:32",
     "updatedAt": "2023-06-21 17:26:36"
   },
@@ -5054,6 +5896,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gvillalta@unamad.edu.pe",
     "password": "$2y$10$aTIN/N.igrSnetkFh7WXQOMCO9t35KEuhsKKohVWoKnjQVr3OX4HK",
     "estado": 1,
+    "dependenciaCodigo": "UGC",
+    "cargo": "TÉCNICO INFORMÁTICO",
     "createdAt": "2023-06-21 20:09:44",
     "updatedAt": "2025-09-08 13:25:50"
   },
@@ -5066,6 +5910,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lenny123sc_@gamil.com",
     "password": "$2y$10$bauLXS831iUNYfeV0dgyb..c8vn4FsBUyowlMbRuM9WYniAlLKkuu",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "PRACTICAS",
     "createdAt": "2023-06-22 13:33:26",
     "updatedAt": "2023-06-22 13:33:26"
   },
@@ -5078,6 +5924,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ruizvm@wfu.edu",
     "password": "$2y$10$DzvNC5S1z438C5Alxp08SeDej0gI30MXvS53FyVDH3rEb6vZCiDCm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-22 18:29:01",
     "updatedAt": "2023-06-22 18:29:35"
   },
@@ -5090,6 +5938,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bernalkimberlit@gmail.com",
     "password": "$2y$10$oiI1XC8ZrxDAZfTC.e/JZeYX3ALukW490d5EZ8SE7dTC6DwwZx6zS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-24 15:23:03",
     "updatedAt": "2023-06-24 15:23:03"
   },
@@ -5102,6 +5952,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smamanic@unamad.edu.pe",
     "password": "$2y$10$.81.I2KqvEMA2x6MIgKw9.Er32rpiE3WRpG20UfOaMTjKC0uOPTNa",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "TECNICO ADMINISTRATIVO II",
     "createdAt": "2023-06-26 14:47:42",
     "updatedAt": "2025-07-08 14:09:21"
   },
@@ -5114,6 +5966,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "guesenia.chavez@inabif.gob.pe",
     "password": "$2y$10$bj6JLplmyX4eaUzzQH/n7OZI1.cn4VaQORaclZlVSWWrxr66XdO0y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-27 01:54:34",
     "updatedAt": "2023-06-27 01:55:14"
   },
@@ -5126,6 +5980,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vega64@gmail.com",
     "password": "$2y$10$FGlhThOoG6.z2GmGPSiVDum5.viFkIse2GQXwv3BWuHBHOL0WECuq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-27 20:25:28",
     "updatedAt": "2023-06-27 20:25:28"
   },
@@ -5138,6 +5994,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "veganeyde@gmail.com",
     "password": "$2y$10$Ud55I230CF8t4mDOMv/91.72WWhmlIJHnq2uT4eFqTALL6e8trk6u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-06-27 20:28:09",
     "updatedAt": "2023-06-27 21:28:03"
   },
@@ -5150,6 +6008,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sleon@unamad.edu.pe",
     "password": "$2y$10$wHHmkvek9jIxJzDi5oWoe.E7dByHWTnigX1nkWWM/k1AUQ2ZyePJa",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "FORMULADOR DE PROYECTOS DE INVERSIÓN",
     "createdAt": "2023-07-05 13:35:08",
     "updatedAt": "2023-07-05 13:35:08"
   },
@@ -5162,6 +6022,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ahuaypar@unamad.edu.pe",
     "password": "$2y$10$NTtU/WpoxZjgoly6mGg22eVBa0gdDgipoWWew7Tg9QWrQZ/nTvQxm",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "FORMULADOR DE PROYECTOS DE INVERSIÓN",
     "createdAt": "2023-07-05 13:37:35",
     "updatedAt": "2023-07-05 13:37:35"
   },
@@ -5174,6 +6036,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "recupero2.claro@avalperu.com",
     "password": "$2y$10$cdDhqBgiunbGPKfOmedwW.9fwUKxDI2AfOnZ3jlB9q1Eqq.GmtESW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-06 15:41:51",
     "updatedAt": "2023-07-06 15:44:54"
   },
@@ -5186,6 +6050,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mhuaman@caritasmadrededios.org",
     "password": "$2y$10$WD5LZtsmtv5IFi.N5KR9neJ78xV52UQUZWyB.wKrqBeK9B.ASDAnu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-06 17:11:10",
     "updatedAt": "2023-07-06 17:12:29"
   },
@@ -5198,6 +6064,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alfaro.maria.2022@gmail.com",
     "password": "$2y$10$NtR6y9PukIWBJN0KO1QUAu/hhmWuRLYpdNGQqbUFRAs4mM4tUtKoe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-06 20:09:56",
     "updatedAt": "2023-07-06 20:10:44"
   },
@@ -5210,6 +6078,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FELMARC@GMAIL.COM",
     "password": "$2y$10$M26kRVSotv4wo1gDn2PJ/e.7Y3lyANpjKOhzADEPYISkoyYka.OL.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-06 20:23:46",
     "updatedAt": "2023-07-06 20:25:50"
   },
@@ -5222,6 +6092,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "logistica@wwfperu.org",
     "password": "$2y$10$dKG.0Dy3ri0XA7ftsrTDD.bpdzZPCJl8mH8OSQXOE0ya1FKvibvnO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-10 21:05:33",
     "updatedAt": "2023-07-10 21:09:23"
   },
@@ -5234,6 +6106,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carisantacruzlauralizbeth@gmail.com",
     "password": "$2y$10$LA/8vTOwzLoqPoSk0VICEeGP0b7s3JZVmRkjQNKH1TMLmHl0A1Eo6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-10 21:27:41",
     "updatedAt": "2023-07-10 21:28:07"
   },
@@ -5246,6 +6120,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rnoaa@unamad.edu.pe",
     "password": "$2y$10$mTbYw/UGaVeBXP7VfT88oOMrafGDw69A8.HlIfIQJJX8XshbdbDqe",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-07-13 21:03:33",
     "updatedAt": "2023-07-13 21:03:33"
   },
@@ -5258,6 +6134,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kcondorir@unamad.edu.pe",
     "password": "$2y$10$1.oa8M/DtWbfcuP4YFsAa.rvDkwup8agUoXqZUV9s39ltzsm1bpS6",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE ADMINISTRATIVA",
     "createdAt": "2023-07-13 21:04:00",
     "updatedAt": "2023-07-13 21:57:24"
   },
@@ -5270,6 +6148,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mozajef.17@gmail.com",
     "password": "$2y$10$DqMGB1/grDvmqZz/0s9iZesMMKBLfBXK9p3goE74Ww76ZStIG0U1G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-14 13:26:10",
     "updatedAt": "2023-07-18 06:41:27"
   },
@@ -5282,6 +6162,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smunoz@sunafil.gob.pe",
     "password": "$2y$10$NT0E3BZglEQKuTxGd9DJquAHbXelxPbL/wgShH.TEkXavB7K/9ZNS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-14 17:27:54",
     "updatedAt": "2023-07-14 17:56:46"
   },
@@ -5294,6 +6176,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "verificaciones@lacaja.com.pe",
     "password": "$2y$10$cZhADw.dhweHM5BevBEhAene98DUdd6Kzx3uWZUc6NkU18oqBERFq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-14 22:43:37",
     "updatedAt": "2025-10-30 21:32:43"
   },
@@ -5306,6 +6190,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "armotrading@gmail.com",
     "password": "$2y$10$mn7RQWlhq29I0/sqgEDpZeahMtUuuFyXAoA65oEKxjOHRviu0/urK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-16 20:50:58",
     "updatedAt": "2025-06-03 20:31:33"
   },
@@ -5318,6 +6204,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcenriquez@unamad.edu.pe",
     "password": "$2y$10$ELLfG5YBDRxXuE52Tdrux.ozXqkz8mvQCgvyBgAMMusSH8JBpspxm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-17 15:18:31",
     "updatedAt": "2023-10-16 20:54:35"
   },
@@ -5330,6 +6218,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "menriquez@unamad.edu.pe",
     "password": "$2y$10$0nkWwHb0ETfzHltJfMbUOuLCqWwVlXxvy/8shRpadz.E5gBjy94oy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-17 15:47:31",
     "updatedAt": "2023-07-17 15:47:31"
   },
@@ -5342,6 +6232,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "22241007@unamad.edu.pe",
     "password": "$2y$10$7g0CWe//orzVwi/WRWVyHO6JxjLb.jkqjFti7yCqtYNypOI0DXWUi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-17 17:15:59",
     "updatedAt": "2023-07-17 17:17:22"
   },
@@ -5354,6 +6246,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rparhuayq13@unamad.edu.pe",
     "password": "$2y$10$lB99V5hZbpIDX2LEE7fJV.mgKJvkQDVeXNKUoazXi/EXWhjMK1H1.",
     "estado": 0,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-07-17 20:56:16",
     "updatedAt": "2024-08-20 21:02:49"
   },
@@ -5366,6 +6260,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "evera@unamad.edu.pe",
     "password": "$2y$10$8MPrvDeAqrj3b/.ZaPpp7eZAq9D8eUS8DpCZhRv0rad41lUAGoKu6",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2023-07-18 17:34:13",
     "updatedAt": "2023-12-04 16:12:06"
   },
@@ -5378,6 +6274,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lucyr_1976@hotmail.com",
     "password": "$2y$10$I7yZD2h3lqv6woThGZqs.ej/mZ5oAwoktpL9GjPaGla3SxJzszHta",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-20 20:09:38",
     "updatedAt": "2023-07-20 20:11:29"
   },
@@ -5390,6 +6288,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lsalinasc@sunat.gob.pe",
     "password": "$2y$10$c74Zq2J8krNTcc5D4BXEieWsBDufrAOqz2Eb0RqHLqPT30KNEFmdy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-21 14:10:06",
     "updatedAt": "2023-07-21 14:27:06"
   },
@@ -5402,6 +6302,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mdhuaman@gmail.com",
     "password": "$2y$10$L2guQ5z0TQwHvft4gmztfO7UObL.W2nHpaKWKzBEaCiOluOR4LGgW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-21 18:11:50",
     "updatedAt": "2023-07-21 18:12:35"
   },
@@ -5414,6 +6316,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvasquesm@unamad.edu.pe",
     "password": "$2y$10$UFm23Zzx9Qs.NHP/c9Vx6O.22V5inNwP7bW7lYY92jmDeZWWuHGgu",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "PERSONAL CUC",
     "createdAt": "2023-07-25 13:08:44",
     "updatedAt": "2024-08-02 13:22:10"
   },
@@ -5426,6 +6330,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rfigueredo@projectnet.com.pe",
     "password": "$2y$10$PE.MzTX/2xlem.gbnIYp3e1LrjPQ6hIwLQMOCvVjPF.kDT7NyB4aC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-26 17:29:55",
     "updatedAt": "2023-07-26 17:30:19"
   },
@@ -5438,6 +6344,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asimoni@conservacionamazonica.org",
     "password": "$2y$10$ffG7Z8oD.vaMlRA9npIyquP9CORlrsM4vqbOqE80I9NIZd5DBs70q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-07-31 20:10:21",
     "updatedAt": "2023-07-31 20:10:21"
   },
@@ -5450,6 +6358,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rositalilibethguerra1990@gmail.com",
     "password": "$2y$10$3DhXmPSbJHoyIKIGWnL1buFzxU9nlceGOrEZY.aiWBfLzzwcn.S6y",
     "estado": 1,
+    "dependenciaCodigo": "DBU",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-08-01 13:48:26",
     "updatedAt": "2024-12-04 15:56:17"
   },
@@ -5462,6 +6372,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gpena@midagri.gob.pe",
     "password": "$2y$10$J09kXXOnvvZAhdPbX3JGgeQ.5lYRQZjupDTDppPKT0iiRqN3LyHEe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-01 16:12:05",
     "updatedAt": "2023-08-01 16:12:45"
   },
@@ -5474,6 +6386,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "importacioneshaulson2@gmail.com",
     "password": "$2y$10$xaJ07z8EQd9EBTyf.3Fh0.f0RkNnSBMXBTIqEaz.45PRuwOCeFvwO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-01 20:38:12",
     "updatedAt": "2023-08-01 20:38:32"
   },
@@ -5486,6 +6400,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sajipilares@gmail.com",
     "password": "$2y$10$hbsPgaFY3uE5Arswtno.nOZpo1vxtJVNiXkpBC1R83wiU7ioDm5FG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-01 21:08:47",
     "updatedAt": "2023-08-01 21:09:58"
   },
@@ -5498,6 +6414,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mercedes-1394@hotmail.com",
     "password": "$2y$10$QruGGOcZ2RtsM1G7319DV.S9GnYGVnDFZA1VyZkIuAoDxrJDYuKIi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-02 22:56:33",
     "updatedAt": "2023-08-02 22:58:33"
   },
@@ -5510,6 +6428,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nledesma@contraloria.gob.pe",
     "password": "$2y$10$Qe1uIn24AkD3jJS/rLZV3.lzQ5cGCY4mNa0neyyp3WDGQDOhlzoW.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-07 23:11:25",
     "updatedAt": "2023-08-07 23:13:37"
   },
@@ -5522,6 +6442,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jorgequillemamani@gmail.com",
     "password": "$2y$10$yQKWttHCWLYKmCvDS2a6guHofDGxbAFHc.Ikttjjc7kJ3U.jACi7y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-08 17:46:43",
     "updatedAt": "2023-08-08 17:46:43"
   },
@@ -5534,6 +6456,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vhuamanm@unamad.edu.pe",
     "password": "$2y$10$draXcoNAL2R77oBD/D6ZQOU15dEqONO1c6imgJYte0GWMjW.XuTkS",
     "estado": 1,
+    "dependenciaCodigo": "CTIMH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-08-10 15:08:30",
     "updatedAt": "2023-08-10 17:24:18"
   },
@@ -5546,6 +6470,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ayep100@hotmail.com",
     "password": "$2y$10$9cWsFnatJ9Ov3LXMDdVFce9l0SmHxn4/dWSfML3RVZC.6XQho0h5q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-11 16:14:03",
     "updatedAt": "2023-10-26 22:17:21"
   },
@@ -5558,6 +6484,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jpillaca29@gmail.com",
     "password": "$2y$10$tOLbg2lXpI3zA7eFzr/0r.O4EsabpLjzEalHGFPQlXpuXvOmyqULS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-14 19:37:31",
     "updatedAt": "2023-08-14 19:38:27"
   },
@@ -5570,6 +6498,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rh8331994@gmail.com",
     "password": "$2y$10$T3LKYMCE5uDhy7Ij1BkT5.5hZQAj1DsKYsuVbRWL3UmssLLDAg6wK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-16 12:36:25",
     "updatedAt": "2023-08-16 12:37:35"
   },
@@ -5582,6 +6512,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ingcabezas90@gmail.com",
     "password": "$2y$10$6TaRGerk0SqJ1yko6tGLSO4cYOOj/jWBU5ejYb82sj65FPni22bw.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-17 12:56:35",
     "updatedAt": "2023-08-24 15:18:04"
   },
@@ -5594,6 +6526,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ediaz@unamad.edu.pe",
     "password": "$2y$10$dJ2pE0QFyGBAzrcg2ar00.wCwWvxXcNPStGIPWVeYiLkuZjELxR1e",
     "estado": 1,
+    "dependenciaCodigo": "DIE",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-08-17 17:41:35",
     "updatedAt": "2025-07-17 19:55:39"
   },
@@ -5606,6 +6540,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alexanderhc@unamad.edu.pe",
     "password": "$2y$10$42NzH.vXCQD6Ei.dKM33CegwtK4S77xMisTPQn/7KAYxYcJjbDeQq",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-08-18 13:46:04",
     "updatedAt": "2023-08-31 15:15:00"
   },
@@ -5618,6 +6554,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "synthiaquispeyanccay@gmail.com",
     "password": "$2y$10$OOWZKm2voUPuzITCphc7/eWAnsOUpnzCpb8nCnnpDA6hyvwlOUxPi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-21 17:16:40",
     "updatedAt": "2023-08-21 17:18:10"
   },
@@ -5630,6 +6568,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JGUTIERREZF@PJ.GOB.PE",
     "password": "$2y$10$k4RIJI5E5kG2bE0M.XIQDOyfHQvYFGBaEyGz.xf0r2qdtI2h/Axt.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-22 17:10:19",
     "updatedAt": "2024-12-23 17:10:08"
   },
@@ -5642,6 +6582,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesadepartes@empleabilidad.gob.pe",
     "password": "$2y$10$1PrnaqTFU5hI1R8XLtIG/.v9QwcoCnTkILy8U2.JI3clrf/GEPRBy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-25 14:22:16",
     "updatedAt": "2023-08-25 14:22:50"
   },
@@ -5654,6 +6596,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mancomu.vallesagradodelosincas@gmail.com",
     "password": "$2y$10$vWd/RaZ6as.KOBhadL3Y8esJD94cewhKb8sj3msE1hm.Kqn3FUnue",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-25 20:48:45",
     "updatedAt": "2023-08-25 20:49:42"
   },
@@ -5666,6 +6610,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jorgefarfan314@gmail.com",
     "password": "$2y$10$28PrVMA/YHL9kIavwXep3e.tNfNrJgQW.vFpaTDfLB01l4oKTvWhq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-29 17:24:55",
     "updatedAt": "2023-08-29 17:25:22"
   },
@@ -5678,6 +6624,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "janeth.acuna.a@uni.edu.pe",
     "password": "$2y$10$cMuYmR9PT6DiGJi6A1Hnb.AADxrHkHPasnj2MFydmvTfHwAuiU91K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-08-29 19:29:31",
     "updatedAt": "2023-08-29 19:30:22"
   },
@@ -5690,6 +6638,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sip_04@pcm.gob.pe",
     "password": "$2y$10$ToPWz6DU6vqz9Br09cnwTOPw9EfWgmlvvey5HSH5g2tMTdNObZ4NO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-01 17:10:19",
     "updatedAt": "2023-09-01 17:11:33"
   },
@@ -5702,6 +6652,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "insumec22@hotmail.com",
     "password": "$2y$10$UJvF0DY1Uypj7pWSV80lReOW7amHfEJKoqK0UN3BDSwmGoHefNqXu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-04 01:58:39",
     "updatedAt": "2023-09-04 02:01:15"
   },
@@ -5714,6 +6666,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesadepartesoci@sunedu.gob.pe",
     "password": "$2y$10$doHyo3tlphZFDNiHkX4Jb.5rNwwDOk2Xzx1OTB.DHTNllH6a71umO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-04 16:06:52",
     "updatedAt": "2023-09-04 16:07:33"
   },
@@ -5726,6 +6680,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yesenia@unamad.edu.pe",
     "password": "$2y$10$jgw3db0diKapkku9mXuMRezxU9clmiAIVSxxOCplqDktyFRbV0//m",
     "estado": 1,
+    "dependenciaCodigo": "OCII",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-09-04 20:22:55",
     "updatedAt": "2023-11-27 21:09:09"
   },
@@ -5738,6 +6694,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ANALISTAGOBIERNOCLARO6@COBRANZASINTEGRALES.COM",
     "password": "$2y$10$GkqBIggLWLJI0JlX0/ifaOL1tBZkOcV6bGtSRoMB88pGdCjs8NKMW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-05 13:44:20",
     "updatedAt": "2023-09-05 13:44:54"
   },
@@ -5750,6 +6708,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "visitafuncionario@unamad.edu.pe",
     "password": "$2y$10$dmXJzALqkmzrx3JDgV.tJuEoza0jM7paMRVYgA3tXKzAu/fWCdWGu",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "GARITA",
     "createdAt": "2023-09-06 14:08:41",
     "updatedAt": "2023-09-06 16:05:29"
   },
@@ -5762,6 +6722,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeria@osinfor.gob.pe",
     "password": "$2y$10$cToHMSLGMzK9muv/KHlsy.W1PUphDA6LbjCIoD646RTlM8PM6hAP6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-06 16:43:45",
     "updatedAt": "2024-11-05 15:14:22"
   },
@@ -5774,6 +6736,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhuayhua@unamad.edu.pe",
     "password": "$2y$10$jB.TxS319IB.8PoViEKbHO/OcHmsKnrtdPybygs/viV5GTvoXZZAe",
     "estado": 1,
+    "dependenciaCodigo": "ALC",
+    "cargo": "JEFE",
     "createdAt": "2023-09-06 21:24:51",
     "updatedAt": "2023-09-06 21:26:37"
   },
@@ -5786,6 +6750,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pentagono.group@hotmail.com",
     "password": "$2y$10$0Uio8x95QVDEKCiljFfvxOXPfdUrWCHvy4wUQvDKT6ri3DxLhOn6O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-09 00:38:57",
     "updatedAt": "2023-09-09 00:39:12"
   },
@@ -5798,6 +6764,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "diplomados_especializaciones@outlook.com",
     "password": "$2y$10$ue4z/xid.vbMBmsHeGc9pennly85zidEDV.yKqCY7CixiyEDLDbZm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-09 00:45:48",
     "updatedAt": "2023-09-09 00:47:45"
   },
@@ -5810,6 +6778,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmartinez@unamad.edu.pe",
     "password": "$2y$10$YVhnPLeJSDKKNiQx2W1hkuQCAdtmn1SWXtMzAWaogzTOuh/GZYLtG",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "AUXILIAR",
     "createdAt": "2023-09-12 13:18:25",
     "updatedAt": "2023-11-22 15:29:49"
   },
@@ -5822,6 +6792,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rdioses@unamad.edu.pe",
     "password": "$2y$10$s8suSneFxLAvBPLoBNuvR..SSkBdLCyIy0PWfrFiv5L/SBZHRgh8K",
     "estado": 1,
+    "dependenciaCodigo": "INI",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-09-14 20:08:44",
     "updatedAt": "2023-09-14 20:08:44"
   },
@@ -5834,6 +6806,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "arcos_2004@yahoo.es",
     "password": "$2y$10$xEiFySCkUMDDkDux8ViOv.XYkgCA/dwUD7Ns7I3UWel715VzGkwqm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-18 21:54:59",
     "updatedAt": "2023-09-18 21:58:58"
   },
@@ -5846,6 +6820,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "inhouse3@icel.pe",
     "password": "$2y$10$G7dKlT2hhmci0Y9FvqXR6.sFx.OouIf.wV6BzBIgkqTBongbz.lJi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-18 22:23:02",
     "updatedAt": "2023-09-18 22:23:22"
   },
@@ -5858,6 +6834,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rosmeryalataturpo@gmail.com",
     "password": "$2y$10$VNRDIhu63lXlI1hD9oZhz.G8KX3Ff169fwlqCICV6J3xrJUlL2bYK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-19 14:18:46",
     "updatedAt": "2023-09-19 14:19:51"
   },
@@ -5870,6 +6848,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "enviocorrespondencia@mef.gob.pe",
     "password": "$2y$10$2rePxn0CKYeq2sGlPWl2me/yNUBEraSXo4yqvXczEYmJWM7jQdDvm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-19 15:42:09",
     "updatedAt": "2023-09-19 15:42:56"
   },
@@ -5882,6 +6862,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "psanjines@congreso.gob.pe",
     "password": "$2y$10$DL7fLtgl.oIYMMfNNk0dfuZxNYLLzS0oK0/GANjQMYkcldpfu5ZIS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-19 17:51:58",
     "updatedAt": "2023-09-19 17:53:23"
   },
@@ -5894,6 +6876,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "srodo@reprodata.com.pe",
     "password": "$2y$10$jpuMsewuDjdxYZ.Q8CPbBOHmluf/BozAahFqN43R2tXU0GLsr8uki",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-19 21:11:10",
     "updatedAt": "2023-09-19 21:16:51"
   },
@@ -5906,6 +6890,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "inabif.udif_co13@outlook.es",
     "password": "$2y$10$/yM5nmdWQ7OQCAPlhWKvtuHwlAls6BHcBpexMiWFz3n2EmQdWVUO.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-21 22:18:20",
     "updatedAt": "2023-09-21 22:18:20"
   },
@@ -5918,6 +6904,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "inabif.udif_co13@inabif.gob.pe",
     "password": "$2y$10$xDMg8Zq4ApgEcryHynQJ/elAk0nDcLzORh45r.d//0jcg0Xqewz7K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-21 22:21:40",
     "updatedAt": "2023-09-21 22:23:01"
   },
@@ -5930,6 +6918,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yparedes@unamad.edu.pe",
     "password": "$2y$10$LZKCueExa8ZTWIJDNowmPuY4ObgK2Iq/6YnQlNC2RTARe78fS80O2",
     "estado": 1,
+    "dependenciaCodigo": "DAE",
+    "cargo": "RESPONSABLE",
     "createdAt": "2023-09-25 17:57:32",
     "updatedAt": "2024-05-10 16:53:44"
   },
@@ -5942,6 +6932,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abc@gmail.com",
     "password": "$2y$10$2lwptgJ6YTT7veEgtpdrNO7KinS4QDVUfWNAjDHk3QLhIr8dKLrA6",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "PROGRAMADOR",
     "createdAt": "2023-09-27 15:12:10",
     "updatedAt": "2024-08-02 13:22:29"
   },
@@ -5954,6 +6946,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FENDUPPHISTORICA@GAMIL.COM",
     "password": "$2y$10$5uLhOWl/Y8pM0JL9XV84qu2uX3whC06Yu8W/IzQYkE8SPzJciuMUy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-09-29 12:05:48",
     "updatedAt": "2023-09-29 12:05:48"
   },
@@ -5966,6 +6960,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rperezs@unamad.edu.pe",
     "password": "$2y$10$lgfBtlvelNfXwgRahO2unuiRm0EefRfy.y5xAktG/w7l9RpHGZ4nS",
     "estado": 1,
+    "dependenciaCodigo": "DAISI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-09-29 13:59:40",
     "updatedAt": "2023-09-29 13:59:40"
   },
@@ -5978,6 +6974,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carrerakaty7@gmail.com",
     "password": "$2y$10$XXSJWXcbDRZ6PVYbtF1vPuEb9EBd0cm.P7iaVRVDaYmicBS0E3tKq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-01 19:02:10",
     "updatedAt": "2023-10-01 19:03:16"
   },
@@ -5990,6 +6988,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mbellidop@unamad.edu.pe",
     "password": "$2y$10$sa5GC00Uk1dSm3DUKoMqg.1fwKIGreDOtxsh5j2yVvh3Ui1gJaU06",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-01 19:14:26",
     "updatedAt": "2023-10-01 19:16:24"
   },
@@ -6002,6 +7002,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nsakata@chsalternativo.org",
     "password": "$2y$10$PU/F.Ca6.JWsBjd207tgCuojNXJdQIJQEZQ/vT6HjWyRoYXjxo.xu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-02 22:26:00",
     "updatedAt": "2023-10-02 22:26:00"
   },
@@ -6014,6 +7016,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eclopez@cultura.gob.pe",
     "password": "$2y$10$6NgoREmQ7YxN3uodsM24PO1pz6n5KhzgotK/AUycommEq.PMAb7jK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-03 22:01:03",
     "updatedAt": "2023-10-03 22:27:32"
   },
@@ -6026,6 +7030,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "atencionalcliente@ir-peru.com",
     "password": "$2y$10$oY1gbs6FBTQdVtfG9pkuR.G1Zj3mDi724vNQWPQgWQoeQ3T3tmwYK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-05 13:33:52",
     "updatedAt": "2023-10-05 13:34:38"
   },
@@ -6038,6 +7044,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MGONZALES@PROINVERSION.GOB.PE",
     "password": "$2y$10$fB7MuvFaXot4sP.h1UDLxuhSfdQfU/05Mm2jUS0CXTgz5Iq3jqAvS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-05 16:00:32",
     "updatedAt": "2023-10-05 16:01:29"
   },
@@ -6050,6 +7058,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ccaceres@unamad.edu.pe",
     "password": "$2y$10$GiIM5XMPPm/yV2T0G69kP.LT75LfC7okjLCOORewcUgvs.0PfPveq",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2023-10-05 19:49:32",
     "updatedAt": "2023-10-16 12:59:03"
   },
@@ -6062,6 +7072,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "subccppuno@gmail.com",
     "password": "$2y$10$37h176aX.98uVqIvW9F8jOBaInpILRKN5NNNi0/hlo0rjj0Jd9RYu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-06 18:35:51",
     "updatedAt": "2023-10-06 18:36:31"
   },
@@ -6074,6 +7086,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dayquipac@unamad.edu.pe",
     "password": "$2y$10$nMIclVv3FdWMY9crkNYgieUAwhzBzeVmdkonVxgidQVteBQwmkjpm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-10 14:50:32",
     "updatedAt": "2023-10-10 14:51:19"
   },
@@ -6086,6 +7100,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vbautista@unamad.edu.pe",
     "password": "$2y$10$zUAnUbneqfPLT53mp3czBusEXNnQARhiibki61sFGS3REs3YUXsFK",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "CONSERJE",
     "createdAt": "2023-10-10 17:22:03",
     "updatedAt": "2023-10-10 17:22:03"
   },
@@ -6098,6 +7114,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rossystefany94@gmail.com",
     "password": "$2y$10$4Yz3H.KC22245YaKseU.BuGH6qflO4i6NP0a8DgERMlDEZQ6SEkAW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-11 14:21:14",
     "updatedAt": "2023-10-11 14:27:39"
   },
@@ -6110,6 +7128,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lholgado@unamad.edu.pe",
     "password": "$2y$10$rQYtgl49PR695B6iggvjTuCWu.JY8v.k3podhXPgmDkqb2odxx62a",
     "estado": 1,
+    "dependenciaCodigo": "CTINGCIV",
+    "cargo": "PRESIDENTE",
     "createdAt": "2023-10-11 14:33:46",
     "updatedAt": "2024-11-14 16:10:31"
   },
@@ -6122,6 +7142,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "disuiza@unamad.edu.pe",
     "password": "$2y$10$OJxdc1/C5je9R70SshzlTeDbamJ.dDV7FnyfQn.8pg48XXPMsfHNi",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE NOMBRADO - INGENIERIA DE SISTEMAS",
     "createdAt": "2023-10-11 14:37:55",
     "updatedAt": "2023-11-23 17:11:15"
   },
@@ -6134,6 +7156,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "edadparequipa@gmail.com",
     "password": "$2y$10$6ss1.dxyMdnzPCbVioi9z.zR6CBZkwfOYpCgSBWtibP7srYoXesGO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-11 15:53:06",
     "updatedAt": "2023-10-11 15:54:09"
   },
@@ -6146,6 +7170,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "palderetev@unamad.edu.pe",
     "password": "$2y$10$YtLwBSNrwG0bvghZdlpZT.cPIdgRDDtuLMhGkAFs8z8.GBHk6rzQK",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-10-11 16:45:50",
     "updatedAt": "2023-12-07 14:30:05"
   },
@@ -6158,6 +7184,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "teresa_arimuya@prevenirperu.com",
     "password": "$2y$10$EjFFPEGP/R4sSgiGgdF4GutsbaBjQVKB6QoAtHSzxoVjCVdkyd5Ba",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-11 20:58:42",
     "updatedAt": "2023-10-11 21:00:47"
   },
@@ -6170,6 +7198,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FCORDOVA@UNAMAD.EDU.PE",
     "password": "$2y$10$YdbseSDxOOOvAJgnHDwdY.c8mGSRrJbwyDZ8yoP0ABzvVc7xoy/BG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-12 14:34:07",
     "updatedAt": "2023-10-12 14:34:07"
   },
@@ -6182,6 +7212,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "drodriguez@unamad.edu.pe",
     "password": "$2y$10$dKOy4dz9.R5WQUe2nMM4Reb37nrlIOZYLlIQ5v9hVnzsz83toQJE6",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2023-10-12 17:36:51",
     "updatedAt": "2024-07-15 15:20:01"
   },
@@ -6194,6 +7226,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmiro@unamad.edu.pe",
     "password": "$2y$10$oe.fPjy7FWFYBfLtrvEOtefdif0QnBSLUMLjdubz7RyBLa4QfyixS",
     "estado": 1,
+    "dependenciaCodigo": "EPIFYMA",
+    "cargo": "DOCENTE",
     "createdAt": "2023-10-12 20:41:36",
     "updatedAt": "2026-01-20 15:28:43"
   },
@@ -6206,6 +7240,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "apoyosg@concytec.gob.pe",
     "password": "$2y$10$rrlgXHvOCwMHlaj3UM/ObOLu01BWaGs2fOwJQxAK6/dTLqf1OMKqa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-12 22:21:05",
     "updatedAt": "2023-10-12 22:21:46"
   },
@@ -6218,6 +7254,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lolarte@contraloria.gob.pe",
     "password": "$2y$10$p/gMFlq.KQOaFRJZTWY50OSCVPxFGxCtZsogd5opLQURULq7k1yFC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-14 01:40:22",
     "updatedAt": "2024-01-26 16:06:11"
   },
@@ -6230,6 +7268,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "quisansandrojavier@gmail.com",
     "password": "$2y$10$EwaMQfmKVi324TirI.3kxuJea6LDOS65QP0z.N5USwLTSDCaycBNC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-15 00:44:39",
     "updatedAt": "2023-10-15 00:44:39"
   },
@@ -6242,6 +7282,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "quisasandrojavier@gmail.com",
     "password": "$2y$10$DKEJHeEewMZDb1VTPSaDq.e8oTILvyKxOV3oBZfiAgLWunE6SX3VG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-15 00:48:38",
     "updatedAt": "2023-10-15 00:48:54"
   },
@@ -6254,6 +7296,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aduenasd@unamad.edu.pe",
     "password": "$2y$10$UfSSgI9cmO.OQARj6xi3guHdeWyXn2VKZbaTPiaD8Fg9ieVFjEFxC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-16 15:37:05",
     "updatedAt": "2025-02-11 21:05:51"
   },
@@ -6266,6 +7310,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "LPITA@CONGRESO.GOB.PE",
     "password": "$2y$10$7C29pWf8Dwv.IOhGwHprUezcoREjOpKys5rGjflBMibot1EfGbh4G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-16 23:25:58",
     "updatedAt": "2023-10-16 23:25:58"
   },
@@ -6278,6 +7324,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "msalcedo@congreso.gob.pe",
     "password": "$2y$10$XAdYGkMXRTm8RBjLnnrl9OqIXruHTavQG4Vr6Ca0NBcDR9R4ATuWS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-16 23:49:52",
     "updatedAt": "2023-10-16 23:50:27"
   },
@@ -6290,6 +7338,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gsaguilarc@unamad.edu.pe",
     "password": "$2y$10$pu63Fh2T3Z6vUqlwMotBJOzLnHBfMQGncH6FbyOLkO0dq5ySUxDLu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-18 14:29:38",
     "updatedAt": "2023-10-18 14:29:38"
   },
@@ -6302,6 +7352,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ojarav@unamad.edu.pe",
     "password": "$2y$10$qnZxmUu1kUhLb8n8ejBXH.e5OTwIJLncYkf09Z.FmaEHOeioYYija",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-18 14:33:47",
     "updatedAt": "2023-10-18 14:33:47"
   },
@@ -6314,6 +7366,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CTRANSPORTES@CONGRESO.GOB.PE",
     "password": "$2y$10$J/WvqTiLDL4cAQ9myudnye3CpEKrIZ/gSzFrY4nkq9KarNhjEqgqW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-18 17:24:51",
     "updatedAt": "2023-10-18 17:24:51"
   },
@@ -6326,6 +7380,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvergarah@congreso.gob.pe",
     "password": "$2y$10$1/vpdHRlq04iuKck59Q93O2TUo5vfI86tm77QBCdReETPoQglwvAS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-18 17:31:50",
     "updatedAt": "2023-10-18 17:31:50"
   },
@@ -6338,6 +7394,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fe-postgrado@unamad.edu.pe",
     "password": "$2y$10$dlI.r.bG3ZguT4XvJ/QgEup1G1PNbBWwWys6nPzU9fDhfo5T4NGme",
     "estado": 1,
+    "dependenciaCodigo": "EPP",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-10-18 21:17:20",
     "updatedAt": "2025-01-06 13:42:48"
   },
@@ -6350,6 +7408,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcarrasco@osinfor.gob.pe",
     "password": "$2y$10$MZyCKWCTDsIv4VxKsPqmp.Rm5hgA5J2SZCgliHhMosDGKaBwn29va",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-18 22:09:11",
     "updatedAt": "2023-10-18 22:09:11"
   },
@@ -6362,6 +7422,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "98franzuer@gmail.com",
     "password": "$2y$10$LcvhsySo.p8hZtzRrY3QFuzG7pDOsVOJAKn5.KeaaWCAnVb/UYpIW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-18 23:05:21",
     "updatedAt": "2023-10-20 19:29:33"
   },
@@ -6374,6 +7436,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eagurtoa@unamad.edu.pe",
     "password": "$2y$10$Tu0qTb9RAdOANJ2ReGzy3uCoDT/2QBtGKJDX7Dv7cs2J4j384cLm.",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "SEGURIDAD",
     "createdAt": "2023-10-19 17:55:24",
     "updatedAt": "2023-10-19 17:55:24"
   },
@@ -6386,6 +7450,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jwquispe@unamad.edu.pe",
     "password": "$2y$10$BevIzTjAOOrGLguuJzBTeOab2CK0h7hqKF6aoWBnLBIll6b37pZ6a",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2023-10-20 15:33:49",
     "updatedAt": "2026-05-05 14:31:29"
   },
@@ -6398,6 +7464,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "molivera@unamad.edu.pe",
     "password": "$2y$10$aYXiD8gxlDtrG3Y5M4oDA.SIgG55nd3M0jM1PGsB4apIAmZVf3Lv.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-20 18:24:54",
     "updatedAt": "2023-10-20 18:26:52"
   },
@@ -6410,6 +7478,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hmoreno@gmail.com",
     "password": "$2y$10$Pu7jifjk/vuzdr2rmz4LIOvqldqjH2TV00./E4aY.xzFcO.RIta9a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-24 13:48:49",
     "updatedAt": "2023-10-24 13:48:49"
   },
@@ -6422,6 +7492,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hmoreno@conservacionamazonica.org",
     "password": "$2y$10$WUfkjL.18SNyO30n5pD78.WFdtaPjFFErW52J5iBs2IQHHVApRUaW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-24 13:54:49",
     "updatedAt": "2023-10-24 13:54:49"
   },
@@ -6434,6 +7506,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cflorez@unamad.edu.pe",
     "password": "$2y$10$ZoXpFQ4sTgkmZc4PwuskjOOdcPHqcSTNSpEdZpYq5Ay9k6sYUZPKa",
     "estado": 1,
+    "dependenciaCodigo": "UT",
+    "cargo": "TECNICO ADMINISTRATIVO II",
     "createdAt": "2023-10-24 14:45:18",
     "updatedAt": "2023-10-24 14:45:18"
   },
@@ -6446,6 +7520,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yyanqui@unamad.edu.pe",
     "password": "$2y$10$dTC96JNKOtQbM6tSOLWVHOF4Bi3YE2lI67Tbdct5RDoIb51UBJbhG",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "SEGURIDAD",
     "createdAt": "2023-10-24 15:00:55",
     "updatedAt": "2023-10-24 15:00:55"
   },
@@ -6458,6 +7534,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jchujutallif@unamad.edu.pe",
     "password": "$2y$10$nMjAg/WW2//3HK4LC6k/s.IPxtGEqwCBTl3.2US3YuRca4oKMI6Kq",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2023-10-24 15:45:57",
     "updatedAt": "2024-09-30 17:20:57"
   },
@@ -6470,6 +7548,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mhuallahuam@unamad.edu.pe",
     "password": "$2y$10$oHvDmcIi9LfHpjfxF7AW7Omg2SaFgf2FbpbMhmBsP83iiCHSyUgQW",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2023-10-24 15:48:31",
     "updatedAt": "2023-10-24 15:48:31"
   },
@@ -6482,6 +7562,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mquispe@unamad.edu.pe",
     "password": "$2y$10$vGHEDtbCQ4MRp2XUzPvJ/eQLwI5fcSYPofavmPD9/LlAXlJleoYlW",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "JEFA",
     "createdAt": "2023-10-25 15:41:47",
     "updatedAt": "2023-10-25 22:43:18"
   },
@@ -6494,6 +7576,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvelez_arana@hotmail.com",
     "password": "$2y$10$eLvhleDvwOJR6OFPVoFBV.w6aV2RzRoSn6iz/wvWDhvs1FBlByzNq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-26 03:01:53",
     "updatedAt": "2023-10-26 03:17:34"
   },
@@ -6506,6 +7590,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yarangalidia@unamad.edu.pe",
     "password": "$2y$10$DBPkOU6R9pK4BsiwPjVoOeeL21sTWLStyJo.3RqBUv4RjGV16iFkS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-26 14:53:56",
     "updatedAt": "2024-03-13 15:55:37"
   },
@@ -6518,6 +7604,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "osbelmora@unamad.edu.pe",
     "password": "$2y$10$Aai3/fSnj5qVKFPKqydZ1OrN31m7wUKhagjWsdnqApmEbYuzobQl2",
     "estado": 1,
+    "dependenciaCodigo": "EPISI",
+    "cargo": "DOCENTE",
     "createdAt": "2023-10-28 03:10:55",
     "updatedAt": "2023-10-31 15:33:44"
   },
@@ -6530,6 +7618,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "antuanetcasilla@gmail.com",
     "password": "$2y$10$kE94b7mtAmgevrQDZEyRWOsoSgO6JHH00ZnKxRy7H8xSAWclp0Ddq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-28 21:46:51",
     "updatedAt": "2023-10-28 21:48:51"
   },
@@ -6542,6 +7632,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "psanjoseol@hotmail.com",
     "password": "$2y$10$aIo0kP.RMkCn6N8Q5lWF0uhszlDEtGZfkjPIbDLul/mVjhi6E3e2S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-30 16:24:48",
     "updatedAt": "2023-10-30 16:24:48"
   },
@@ -6554,6 +7646,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cloya@unamad.edu.pe",
     "password": "$2y$10$2jbSEA59WxfE7Z2X4FWDAeOsLXEid4ZGBUJXO7reRYDGig4PtZNui",
     "estado": 1,
+    "dependenciaCodigo": "DAEN",
+    "cargo": "DOCENTE",
     "createdAt": "2023-10-30 17:12:06",
     "updatedAt": "2025-06-06 17:08:07"
   },
@@ -6566,6 +7660,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tlazo@unamad.edu.pe",
     "password": "$2y$10$bRJzPVEulTW/khA1FZ0DMek1pZS42Ab8MDSE4Xq06MOBmStE9BqRO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-30 17:52:32",
     "updatedAt": "2023-10-30 17:54:31"
   },
@@ -6578,6 +7674,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lurbina@unamad.edu.pe",
     "password": "$2y$10$rHirn4lt5HKK6d1gdAVVW.V/l6XkqHmTwd/2ONfUdHCzqCiuw/6zW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-10-31 17:14:05",
     "updatedAt": "2026-05-21 14:03:44"
   },
@@ -6590,6 +7688,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ihuamantupac@unamad.edu.pe",
     "password": "$2y$10$lR0MCPc1.lOB5ufOZYFXkunpFHv/Qw4sT47hFJYWyL8RIexUaXjGS",
     "estado": 1,
+    "dependenciaCodigo": "EP-B",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-10-31 19:49:40",
     "updatedAt": "2026-04-18 22:23:43"
   },
@@ -6602,6 +7702,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dreategui@unaaa.edu.pe",
     "password": "$2y$10$iy0qp1hMMW2lNCFWqoIj5ezFnPFBCPa9nnW4x7TtdiVSeMENUPXvq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-02 13:49:21",
     "updatedAt": "2023-11-02 13:50:51"
   },
@@ -6614,6 +7716,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeriadigital@senace.gob.pe",
     "password": "$2y$10$E2FJosYRa4mMtaQrql1n/OOatB5NkFm559FiUkHQghmhoOa23tOm6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-02 15:00:02",
     "updatedAt": "2023-11-02 15:02:29"
   },
@@ -6626,6 +7730,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pmontalvan@unamad.edu.pe",
     "password": "$2y$10$ks30GHIdU3J7EPRJsgaUu..aCgkoG7Exc0yG/G2CHmV87fh8Epw.a",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE ORDINARIO",
     "createdAt": "2023-11-03 15:01:43",
     "updatedAt": "2024-03-15 14:36:08"
   },
@@ -6638,6 +7744,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcusi@unamad.edu.pe",
     "password": "$2y$10$dIe1kP7YKyp/LRFLXeOb7eaNcanIltPL07nZ.QRddA.e8PbtHHbUq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-03 15:55:41",
     "updatedAt": "2023-12-20 17:52:45"
   },
@@ -6650,6 +7758,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "econdorin@unamad.edu.pe",
     "password": "$2y$10$3kx4WyNLEiGDO.4bJbcLOOnQqUC0iEtqBR6NhQ8mSDLGG6BkxB4ou",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2023-11-03 15:58:30",
     "updatedAt": "2024-03-19 15:33:28"
   },
@@ -6662,6 +7772,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "INFO@ADEHPERU.ORG",
     "password": "$2y$10$gy5FBKgPYdiacsqIrbjmE.fGQANnYDoOvFpIgROqFu3pdSW.MbXpi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-03 20:01:52",
     "updatedAt": "2023-11-03 20:01:52"
   },
@@ -6674,6 +7786,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nespejo@unamad.edu.pe",
     "password": "$2y$10$TvG2j5Rs7F25BBHj2NTXjOSI4qLW4xT8ptkztZgypp3UJvq3BBlH6",
     "estado": 1,
+    "dependenciaCodigo": "EPEN",
+    "cargo": "DIRECTORA",
     "createdAt": "2023-11-06 16:17:57",
     "updatedAt": "2024-01-26 14:09:08"
   },
@@ -6686,6 +7800,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rperez@unamad.edu.pe",
     "password": "$2y$10$IEH.Nffnpfdp62TFSQ8LI.OI3nrdFHp5wgL4gaf.PVuB98v2GXyoK",
     "estado": 1,
+    "dependenciaCodigo": "EPAYNI",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-06 18:04:47",
     "updatedAt": "2026-04-21 14:37:08"
   },
@@ -6698,6 +7814,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "malatrista@unamad.edu.pe",
     "password": "$2y$10$/CM6EZJ9U.Fx8LahOi2Aou1Xm6O/VfKisCncnyQI1larJaPFLZCV.",
     "estado": 1,
+    "dependenciaCodigo": "EPISI",
+    "cargo": "DOCENTE",
     "createdAt": "2023-11-06 19:25:44",
     "updatedAt": "2023-11-06 19:25:44"
   },
@@ -6710,6 +7828,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lfigueroat@unamad.edu.pe",
     "password": "$2y$10$PoWjjP0UKKS8ONdBZqaaGeBeWxy.VDxrDNHt7zha3NAJp7hVJm9fG",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "SEGURIDAD",
     "createdAt": "2023-11-07 16:45:41",
     "updatedAt": "2023-11-07 16:45:41"
   },
@@ -6722,6 +7842,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcflores@unamad.edu.pe",
     "password": "$2y$10$3xU3RNupB7s1p1Lxlhxcbu4jt6zFSVC9p4usfA6ESTmEc9nr5PgVO",
     "estado": 1,
+    "dependenciaCodigo": "EPE",
+    "cargo": "DIRECTOR(E)",
     "createdAt": "2023-11-07 17:07:43",
     "updatedAt": "2025-01-16 15:39:22"
   },
@@ -6734,6 +7856,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gerproyectosvegagroup@gmail.com",
     "password": "$2y$10$g3ylVUsdPZYDJetXEqO0b.hJLAUfyvEeFIIWsMzPQ8OXeuhug/1me",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-07 21:58:18",
     "updatedAt": "2023-11-07 21:59:10"
   },
@@ -6746,6 +7870,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhonurdanegui4@gmail.com",
     "password": "$2y$10$RtM12nNw8NQFGXHA9K3GK.QgXZlqZAuPo0XFVV3/sR1XSW0v4Ogea",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-07 22:28:51",
     "updatedAt": "2023-11-07 22:29:14"
   },
@@ -6758,6 +7884,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "millamatty7890@gmail.com",
     "password": "$2y$10$SkmNZVhbQBQCIERR7.hcDe.Br8xtB2i0AZccwOBg/gUuTHDIk4rsm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-08 16:32:18",
     "updatedAt": "2025-02-18 14:10:27"
   },
@@ -6770,6 +7898,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmserrano@unamad.edu.pe",
     "password": "$2y$10$ynWAyBhNVQP4.o904cSM/Oz2mhbnUvO7U7nwkrhMpdD7Rc6Qj9192",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "DIRECTORA (E)",
     "createdAt": "2023-11-09 16:18:48",
     "updatedAt": "2026-01-26 17:25:16"
   },
@@ -6782,6 +7912,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nmaquera@unamad.edu.pe",
     "password": "$2y$10$eKllSn7SHuR7Valjxqx/8.IAb.PobsVnkW4DwFqQHneT4EytDG9NO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-09 17:56:40",
     "updatedAt": "2024-10-18 22:26:45"
   },
@@ -6794,6 +7926,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "antorres@unamad.edu.pe",
     "password": "$2y$10$lD7zvzt.0mmELdz39Gllw.jtVHWC.HLIlD6CWRp3gXkuBtCffB57y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-09 18:01:40",
     "updatedAt": "2026-03-03 17:56:50"
   },
@@ -6806,6 +7940,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yveronica@unamad.edu.pe",
     "password": "$2y$10$5S1OESrbHy1u24Pd7YAFJOGu8vH6AcMXG4QQqBoz9KT08LGhOFqmm",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "DOCENTE",
     "createdAt": "2023-11-09 20:37:22",
     "updatedAt": "2025-09-09 15:15:46"
   },
@@ -6818,6 +7954,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jquille@unamad.edu.pe",
     "password": "$2y$10$VLnivXtWZRub0YG0Z29eDuraWNh3SAkv8LLSvcmt7L6lZS8HLNXwe",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-09 22:12:16",
     "updatedAt": "2026-04-22 14:27:48"
   },
@@ -6830,6 +7968,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "amelendez@unamad.edu.pe",
     "password": "$2y$10$6S.rbGtC/tCA44pokYhbbejc1omuhgY5PjxNbxVfKAPlVOQ7sGz9S",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "DOCENTE",
     "createdAt": "2023-11-10 17:00:52",
     "updatedAt": "2026-01-21 17:01:53"
   },
@@ -6842,6 +7982,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mteves@unamad.edu.pe",
     "password": "$2y$10$75SQoVgsnRKia.4G0BNYY.4jNZPjh8ZwBkcGaRpg3UM9HgKIhC0.C",
     "estado": 1,
+    "dependenciaCodigo": "CTIMH",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-10 21:08:59",
     "updatedAt": "2025-07-25 20:39:18"
   },
@@ -6854,6 +7996,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fflores@unamad.edu.pe",
     "password": "$2y$10$zm0gGJpYjuXVQ1faYLzjw.i6NO1osaqPwVdYv/vVb1jKA6Os.5TXu",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "DOCENTE",
     "createdAt": "2023-11-13 14:46:59",
     "updatedAt": "2023-11-13 15:07:41"
   },
@@ -6866,6 +8010,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesadepartes@bnp.gob.pe",
     "password": "$2y$10$BcEB9NP1WzjY2EwWp0BS8OiyDdjgJAUwokr16e/bqkP.0jAc/yDum",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-13 15:50:33",
     "updatedAt": "2026-03-18 14:07:13"
   },
@@ -6878,6 +8024,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gcruz@unamad.edu.pe",
     "password": "$2y$10$dD6BtNzrGxIfD6lIRYa2zuAZB9x2ySema1BeSDWVuN12axdzFv9xu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-13 16:29:01",
     "updatedAt": "2025-10-30 00:09:53"
   },
@@ -6890,6 +8038,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mgonzales@unamad.edu.pe",
     "password": "$2y$10$eTxB1t1U3jQOIyXCXu98hOkP43.STeNIv/0qBQ8UyUM.56cw5S1He",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-13 17:43:24",
     "updatedAt": "2026-03-06 17:15:39"
   },
@@ -6902,6 +8052,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "daniceto@unamad.edu.pe",
     "password": "$2y$10$5wKeE7W8mB.S15ePM.yqBui1/8zb6QgAjzelTkShLO7DifjSp4tFa",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-11-14 12:44:30",
     "updatedAt": "2023-11-15 13:59:10"
   },
@@ -6914,6 +8066,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "camahualiguzman@gmail.com",
     "password": "$2y$10$biHyrzm79ySdIFbzspSF7.EpuqHVQF0krq0KEk2pNJ0iV21/JUOl.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-14 14:22:26",
     "updatedAt": "2023-11-14 14:22:26"
   },
@@ -6926,6 +8080,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rhuillcac@unamad.edu.pe",
     "password": "$2y$10$wSR3Rq0R7P2JyUmsNq02xOvLtcUXk4Vkwr6IJERObXg7wMqw3am7e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-14 14:53:41",
     "updatedAt": "2023-11-14 14:53:41"
   },
@@ -6938,6 +8094,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcuyal@minedu.gob.pe",
     "password": "$2y$10$gDA7TCQNb9zkwDi7ZlovHOAanFUVwLUrZm1DAU2yCErJObiIE/qee",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-14 17:55:03",
     "updatedAt": "2023-11-14 17:59:32"
   },
@@ -6950,6 +8108,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jiruri@unamad.edu.pe",
     "password": "$2y$10$hA9linNG0DSxxrdFliaq3./h5jUShdrhDrD7qZRabBqEV8DQTfIW2",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-14 21:10:34",
     "updatedAt": "2024-04-16 20:03:49"
   },
@@ -6962,6 +8122,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhuarancab@unamad.edu.pe",
     "password": "$2y$10$sgvydY8MeU.rQA37axjRluHKQRCnr6EmcUu34FxlpmYdjDX.mHdim",
     "estado": 1,
+    "dependenciaCodigo": "UGT",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2023-11-15 13:09:14",
     "updatedAt": "2025-02-24 17:41:56"
   },
@@ -6974,6 +8136,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lilymogrovejo28@gmail.com",
     "password": "$2y$10$MapeebafGejpqYG681XeWuvNYRXM5BYeY2Y78lAbkCJbaPbztusmm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-15 13:31:57",
     "updatedAt": "2023-11-15 16:51:16"
   },
@@ -6986,6 +8150,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marina@unamad.edu.pe",
     "password": "$2y$10$ZmFmLHtiXLENr5BXn68YCeod098/FK/VZn97xJEboL7XH8/Egq/9a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-15 15:18:02",
     "updatedAt": "2023-11-15 15:18:02"
   },
@@ -6998,6 +8164,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nilda02044530@unamad.edu.pe",
     "password": "$2y$10$WWzjGcZ.Nt.BY/j4qfHvK.M5H8lb1iUrnS60hYEMpJhSjlex4QTIa",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "LIMPIEZA",
     "createdAt": "2023-11-15 15:56:20",
     "updatedAt": "2026-01-15 17:26:17"
   },
@@ -7010,6 +8178,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "spaucar@unamad.edu.pe",
     "password": "$2y$10$22ePSZKfZzlHNMntMMtSzeDn3JIq7lqlw0tYlHEjdo5JGavs9Av16",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-15 16:38:16",
     "updatedAt": "2023-11-15 16:40:07"
   },
@@ -7022,6 +8192,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rhito@unamad.edu.pe",
     "password": "$2y$10$HploFJEJ2ANzJWwQCcZsaulMcviFwWLH6ebo/C7zTztMxGB8.aFBy",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2023-11-15 19:55:05",
     "updatedAt": "2025-05-26 21:15:43"
   },
@@ -7034,6 +8206,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cbueno@unamad.edu.pe",
     "password": "$2y$10$UQPBN9xUGLh8mQSkiPHmdO.L8rY5XbtZmNHlZY6NH0/MpmJG6qmxS",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "DIRECTORA",
     "createdAt": "2023-11-15 20:17:08",
     "updatedAt": "2025-11-11 16:47:19"
   },
@@ -7046,6 +8220,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asaucahuasi@unamad.edu.pe",
     "password": "$2y$10$afKizsZdSEhqIeGHUIyufeVp3dxNzED4QLzEkPS.B4aXx8j4zIu/y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-16 17:36:21",
     "updatedAt": "2023-11-16 17:36:21"
   },
@@ -7058,6 +8234,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "karlab@unamad.edu.pe",
     "password": "$2y$10$7ulCuvzxVYiBcM5cJw6WX.TNP2hAylBRo9pQDO7846qX//QohDHgy",
     "estado": 1,
+    "dependenciaCodigo": "UME",
+    "cargo": "ENCARGADA",
     "createdAt": "2023-11-16 20:02:36",
     "updatedAt": "2024-12-19 20:25:03"
   },
@@ -7070,6 +8248,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "richardf@unamad.edu.pe",
     "password": "$2y$10$PVRGnL8Kr3YR2O1E0IbF8OQK8uNqwn8uGt5fJcWDPQLnOkq8BFU5G",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-16 20:54:38",
     "updatedAt": "2024-05-07 15:29:11"
   },
@@ -7082,6 +8262,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mhuamanip@unamad.edu.pe",
     "password": "$2y$10$ZLHkS0JwFytpSYJlKqv.c.AeGlpTmddEitJhn5OHGmGCKz1f5fxba",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "DIRECTORA",
     "createdAt": "2023-11-16 21:18:21",
     "updatedAt": "2026-01-16 16:52:40"
   },
@@ -7094,6 +8276,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mabelz@unamad.edu.pe",
     "password": "$2y$10$ISBMM0hae3dE1drO44ZqGuX5TqDnBY9lIPfO6Q7ABljwqQ1gnWDmG",
     "estado": 1,
+    "dependenciaCodigo": "INI",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-17 16:09:02",
     "updatedAt": "2023-11-17 16:09:02"
   },
@@ -7106,6 +8290,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mdumasr@unamad.edu.pe",
     "password": "$2y$10$XKNrz2o/IGoIGEbAR5L/b.yOzMEI7ofLU6ZmjXKUTp8660P4FP/Wa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-17 19:26:08",
     "updatedAt": "2023-11-17 19:26:08"
   },
@@ -7118,6 +8304,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rpoccohuanca@unamad.edu.pe",
     "password": "$2y$10$BzniFbQ3C7ltmUtS9mhsNezh0EvIyOQ7gWFnh99k6P4AC/tDAa7pC",
     "estado": 1,
+    "dependenciaCodigo": "EP-B",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-11-20 14:27:30",
     "updatedAt": "2024-10-31 17:56:37"
   },
@@ -7130,6 +8318,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jccarita@unamad.edu.pe",
     "password": "$2y$10$1vPr2wxLih2uxR.iyMAMm.UR4qkepwgI6upqozd90Cy2mA8Gu0ks2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-20 16:07:19",
     "updatedAt": "2023-12-28 20:02:42"
   },
@@ -7142,6 +8332,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wsardon@unamad.edu.pe",
     "password": "$2y$10$tg.CKQ8ZJ2tWx1ILngCVqedjXVm789ZS/345mjxe6xgnOVCSF.bT.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-20 16:47:51",
     "updatedAt": "2023-11-20 16:51:35"
   },
@@ -7154,6 +8346,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "oguadalupe@unamad.edu.pe",
     "password": "$2y$10$b7DZdlWot.BTy9ID3rsuY.qMmD3YHYWr2gyb164/N1KE66Us65hFS",
     "estado": 1,
+    "dependenciaCodigo": "DCE",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-20 16:50:25",
     "updatedAt": "2024-05-20 14:08:12"
   },
@@ -7166,6 +8360,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ahuayllasp@unamad.edu.pe",
     "password": "$2y$10$/yXybb3by3f2O5Hg6AGGteA1/szs/Tg3QLsw7/p2ENSIyjMAv5dny",
     "estado": 1,
+    "dependenciaCodigo": "UT",
+    "cargo": "ASISTENTE",
     "createdAt": "2023-11-20 19:31:22",
     "updatedAt": "2023-11-24 14:15:08"
   },
@@ -7178,6 +8374,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ycrespo@unamad.edu.pe",
     "password": "$2y$10$7R1hQP7pjVlcB8IxN4.DtOojlSEi6P4Azp7cdtU0Fv5IWPFAQJlhq",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-21 13:52:10",
     "updatedAt": "2023-11-21 13:52:10"
   },
@@ -7190,6 +8388,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcuseq@unamad.edu.pe",
     "password": "$2y$10$7pQBKOcvRfsLFkoLjjVnyOWsAgVl1DCG2vub0V/isZc3UZj27Po7m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-21 14:54:50",
     "updatedAt": "2023-11-21 14:54:50"
   },
@@ -7202,6 +8402,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dfernandez@unamad.edu.pe",
     "password": "$2y$10$Telv3AcMBzRnQ00bsShcRu8M2BJfsY2CJPsM19gwjo5VHBa6r93l6",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "AA",
     "createdAt": "2023-11-21 15:38:28",
     "updatedAt": "2024-04-17 12:44:45"
   },
@@ -7214,6 +8416,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "acucho@unamad.edu.pe",
     "password": "$2y$10$SriDZEP/EoXEgAEX5jA71.8.qGX0Vekn1BRAQgjur1ngkmWOnYaSO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-21 15:42:18",
     "updatedAt": "2023-11-21 15:44:15"
   },
@@ -7226,6 +8430,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rtiznadoc@unamad.edu.pe",
     "password": "$2y$10$iW/9ETa.IBI7uyi1xGnEF.b6hJZXivGQB/5eJzNid0PUKA.p0w8i.",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE",
     "createdAt": "2023-11-21 16:23:00",
     "updatedAt": "2023-11-24 19:52:47"
   },
@@ -7238,6 +8444,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ncorazaos@unamad.edu.pe",
     "password": "$2y$10$cCEdtMhjlyxgYXq2iMet5Ox3TXds8vUx5apJmj1Vtb3tfiVKYMD1q",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-11-21 16:25:53",
     "updatedAt": "2023-11-23 19:47:24"
   },
@@ -7250,6 +8458,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sloayzal@unamad.edu.pe",
     "password": "$2y$10$1rPuFcPpN/KH3MHHEV.epOgL7jxhl9nkATHCgpnxtMOSEPabl8xJC",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE",
     "createdAt": "2023-11-21 19:47:37",
     "updatedAt": "2023-11-23 15:16:04"
   },
@@ -7262,6 +8472,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "SECRETARIACOESC@MINEDU.GOB.PE",
     "password": "$2y$10$OxWA3KQ5t7LkHv9Zg13j3uucbOkriysGK3zm1F8OyWYVo4Du8zway",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-21 21:08:23",
     "updatedAt": "2023-11-21 21:15:37"
   },
@@ -7274,6 +8486,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jliza@contraloria.gob.pe",
     "password": "$2y$10$ZMqFckEZ4iLUXIOS7j6IpuUHZm2oe6kbtdCOOIpDFzhQHrt/1B4fy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-22 16:01:02",
     "updatedAt": "2023-11-22 16:08:46"
   },
@@ -7286,6 +8500,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "servicios_dnct01@mincetur.gob.pe",
     "password": "$2y$10$KCkMsQzcVsdZhliVXLGgnuqCMB1/Oi1jzvfT7SRx.ndcTfKUH8vPa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-22 23:01:31",
     "updatedAt": "2023-11-22 23:04:13"
   },
@@ -7298,6 +8514,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "arodriguez@unamad.edu.pe",
     "password": "$2y$10$bcSO9fpq.iRAK517PQReUOmqqk4KrjPQymu2QTb1Z8GgUHlvHmUXC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-23 14:04:24",
     "updatedAt": "2026-02-02 16:49:17"
   },
@@ -7310,6 +8528,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mayrita_153@hotmail.com",
     "password": "$2y$10$uUfisyIBhpKVOzaqXTMAD.LQuG3CAFuQGmIw6Ngg0NIEE1TN7.42q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-23 14:15:47",
     "updatedAt": "2023-11-23 14:17:38"
   },
@@ -7322,6 +8542,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ldiazh@unamad.edu.pe",
     "password": "$2y$10$4OxZ9sGTvKXbXpx8vpaoQe0TKr4BWvSkaSxd0IYLfiHrVwT2B8BjO",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2023-11-23 15:28:22",
     "updatedAt": "2024-05-09 16:03:04"
   },
@@ -7334,6 +8556,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fgaray@unamad.edu.pe",
     "password": "$2y$10$jYiw2Ib2BCkteB7QeAfeeunpat1NhyEM2qoaBHNjABhPLr5Eieuha",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-23 15:34:38",
     "updatedAt": "2026-04-01 16:31:00"
   },
@@ -7346,6 +8570,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "minorka0307@gmail.com",
     "password": "$2y$10$XdauoJf4BiOTXjoGqDGB/ulUgh1Gszz0.vuIU2QSw0CVGmV6OA5p6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-28 14:29:08",
     "updatedAt": "2023-11-28 14:31:02"
   },
@@ -7358,6 +8584,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "avelasquez@unamad.edu.pe",
     "password": "$2y$10$soHxb8vP8i7mBX0rfzgke.8v38s.wmN4Md3Q3yff2LMyYcOnFcChy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-28 17:04:14",
     "updatedAt": "2023-11-28 17:04:14"
   },
@@ -7370,6 +8598,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "daranda@ucss.edu.pe",
     "password": "$2y$10$TmZUR1NLit50wXqvywIoz.SXT2Bu0IYidgE/Gm7vY7Ipag93zm1qu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-29 11:23:40",
     "updatedAt": "2023-11-29 11:24:31"
   },
@@ -7382,6 +8612,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "situnamad@unamad.edu.pe",
     "password": "$2y$10$MwUUAYVJvlvh4YuTcJH.G.hjsAIarQ7RGN37cCx2yFe9hokicZFVW",
     "estado": 1,
+    "dependenciaCodigo": "SINTUNAMAD",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-29 17:49:36",
     "updatedAt": "2023-11-30 15:51:45"
   },
@@ -7394,6 +8626,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "achiri@unamad.edu.pe",
     "password": "$2y$10$WLbbl5L/fCj1Ls5nSr6xsO.TntSPDLZLDEAYn1jCr/9H74BM2SfmG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-29 20:41:02",
     "updatedAt": "2026-03-09 15:35:08"
   },
@@ -7406,6 +8640,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sintunamad@unamad.edu.pe",
     "password": "$2y$10$2iRyjOP2mAcs7R8s9xYOL.dYbigFlYImsGR14Pr5v4p0v7i1gGycW",
     "estado": 1,
+    "dependenciaCodigo": "SINTUNAMAD",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-11-30 15:53:39",
     "updatedAt": "2023-11-30 15:58:56"
   },
@@ -7418,6 +8654,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "evilca@unamad.edu.pe",
     "password": "$2y$10$/axmcIIuk3hXrBs31Yh8WOoU4EuC6hLtz.H.91yZm3GG5stFdaG1G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-11-30 16:03:08",
     "updatedAt": "2025-04-02 00:46:53"
   },
@@ -7430,6 +8668,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mllerenap@unamad.edu.pe",
     "password": "$2y$10$E9ifxdQVai3CSU1SFrqd0OPZL6P6DOba9FJNSCoYcbpSH3t8x7CaO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-01 17:20:38",
     "updatedAt": "2024-09-24 17:03:39"
   },
@@ -7442,6 +8682,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@multilimpsac.com",
     "password": "$2y$10$PcM//UQ2S4s2nKyhhJr6.u7wBz2uy3Sy8f0HRQidqp.LdA5yNiDBy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-01 21:20:52",
     "updatedAt": "2023-12-01 21:21:51"
   },
@@ -7454,6 +8696,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lisuizap21-1ia@unamad.edu.pe",
     "password": "$2y$10$d.Fjo5mN6M4UuabOBG7/MOWm1fUtLs/YyvUtJRpABw1vJZcMmFsbe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-03 05:01:08",
     "updatedAt": "2023-12-03 05:04:14"
   },
@@ -7466,6 +8710,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "biturraran@unamad.edu.pe",
     "password": "$2y$10$l.e2gi0TfOzrwEtytC72COB2M14uE9wKhJRLhLvtrp.t2Y8NlhIVO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-04 16:18:39",
     "updatedAt": "2023-12-04 16:18:39"
   },
@@ -7478,6 +8724,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maquispe@unamad.edu.pe",
     "password": "$2y$10$jdsGDoImqbapXLRp7sO0VOMolRLmVByYh2n2V9le0sgrz.N1KZc5C",
     "estado": 1,
+    "dependenciaCodigo": "DACF",
+    "cargo": "DIRECTORA",
     "createdAt": "2023-12-04 16:24:59",
     "updatedAt": "2026-01-15 21:18:26"
   },
@@ -7490,6 +8738,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dszczcpansky@unamad.edu.pe",
     "password": "$2y$10$cGGCGHcYKJGYa9//jBmZYOrY83BwE4j/0br.UXpKsCbXLI4RINjkq",
     "estado": 1,
+    "dependenciaCodigo": "DU",
+    "cargo": "JEFE",
     "createdAt": "2023-12-04 16:40:10",
     "updatedAt": "2025-04-24 15:02:31"
   },
@@ -7502,6 +8752,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marmas@unamad.edu.pe",
     "password": "$2y$10$gzFnjpPbHeSWxRQzx1O0GOfUMLHNNWEOr8VVenBYCks39bXncLqzC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-04 19:59:03",
     "updatedAt": "2023-12-04 19:59:03"
   },
@@ -7514,6 +8766,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eyana-cb@unamad.edu.pe",
     "password": "$2y$10$2FQvtrLya8qeBfozzf2dquGwt0.tNW/vElCemdnWEDCxuevcO2Dsi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-04 20:00:39",
     "updatedAt": "2023-12-04 20:00:39"
   },
@@ -7526,6 +8780,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "htito@unamad.edu.pe",
     "password": "$2y$10$eYKY/rseQ/AU2aNJHH5xnORw1HTiAl3f0bArQX/GT8CqQKJ0Z9ZzW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-04 20:35:17",
     "updatedAt": "2023-12-04 20:35:17"
   },
@@ -7538,6 +8794,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "GEOTAMSAC@GMAIL.COM",
     "password": "$2y$10$aOyE/u9DIoSHE0qX6lyleeHcV1RNZkndNTLQ7DTR9yqH9aBYWHuny",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-05 20:29:28",
     "updatedAt": "2023-12-05 20:29:28"
   },
@@ -7550,6 +8808,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jandresriosc@hotmail.com",
     "password": "$2y$10$vJAX6QNWnyVe52R/1z6alun26PPVC3e/kmdP.lBnos.3ykuLmxocq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-05 20:35:50",
     "updatedAt": "2023-12-05 20:37:30"
   },
@@ -7562,6 +8822,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mchavezm@unamad.edu.pe",
     "password": "$2y$10$xAyotb0TWBRMcQRLWM.HDelddRDeBqyQ5p6248XCKCrSFqz5Drvyq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-06 15:25:09",
     "updatedAt": "2023-12-06 15:25:09"
   },
@@ -7574,6 +8836,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bcona@unamad.edu.pe",
     "password": "$2y$10$R7rFaxyc1PRTOH9Fk88HPOLwu/9FuXTZl8hx/1bYyC9FxgtoyDgPS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-06 15:28:20",
     "updatedAt": "2025-10-01 17:40:24"
   },
@@ -7586,6 +8850,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jtbejarano@unamad.edu.pe",
     "password": "$2y$10$yaMXdo/kTnHAyGeFlt/6TO69Rfgf.RUUEuLerB9uxlAdXBO4lBxHS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-06 15:48:31",
     "updatedAt": "2023-12-06 15:48:31"
   },
@@ -7598,6 +8864,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ezamalloa@unamad.edu.pe",
     "password": "$2y$10$q2VNMx8k3Lcmz7eh8CXCs.4fT4IMoe0HDho9yf30GKWVBVEFusg1q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-06 17:10:58",
     "updatedAt": "2023-12-06 19:17:10"
   },
@@ -7610,6 +8878,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ojacinto@unamad.edu.pe",
     "password": "$2y$10$5tWE7a7Pw8wAcPhz3RdQ8u6o7RamR5wN29iD52ckQMLJEjSKzWsL2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-06 17:17:37",
     "updatedAt": "2023-12-06 17:17:37"
   },
@@ -7622,6 +8892,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cotizaciones@publicity.com",
     "password": "$2y$10$rc/7bRoo8QgwpLCxjK9kpekDJhb3nqeoOTnjKUBFnf8sOubjRpi8y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-06 20:20:13",
     "updatedAt": "2023-12-06 20:20:13"
   },
@@ -7634,6 +8906,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cotizaciones@publicity.com.pe",
     "password": "$2y$10$7o2YvV4aDenfabjScc1eUuCAOLaqhqwHJrPnm9QFIgkj4eQhO9Tae",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-06 20:23:30",
     "updatedAt": "2023-12-06 20:24:00"
   },
@@ -7646,6 +8920,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aparisacaq@unamad.edu.pe",
     "password": "$2y$10$P.aCb1AZ9Y42H4sCl3c7iuYVc1.fD0QGvNHd3W9Zu0GZ17tbp16uO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-07 23:27:39",
     "updatedAt": "2023-12-07 23:29:04"
   },
@@ -7658,6 +8934,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "AZAVALAGA@CONTRALORIA.GOB.PE",
     "password": "$2y$10$H47AN8Gvw.qOz/2YiiZx0.PndORqWc2bqbZZbMPXzCe6bSrimx60K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-09 18:23:04",
     "updatedAt": "2024-03-01 00:22:39"
   },
@@ -7670,6 +8948,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "naquinocultura@gmail.com",
     "password": "$2y$10$4nniLzlVML.iL0psClIRVunc3KvaGmvK1TpQpS81hd43NspwwHALm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-09 23:47:06",
     "updatedAt": "2023-12-09 23:47:06"
   },
@@ -7682,6 +8962,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vanessav@unamad.edu.pe",
     "password": "$2y$10$uzlI0QFO22CQzvrFfsJSbuL/sh7bFDUmYi6DjWkMnf0Ih4nH/41l2",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "SECRETARIA",
     "createdAt": "2023-12-11 20:06:19",
     "updatedAt": "2023-12-11 20:08:07"
   },
@@ -7694,6 +8976,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jahuaytac@unamad.edu.pe",
     "password": "$2y$10$mlCppLq4C7IwnOnvW1bPfent6PwaeYHpgtwb3RLtETvW4y6Cs.19q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-11 20:18:51",
     "updatedAt": "2025-04-16 16:45:48"
   },
@@ -7706,6 +8990,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aromani@unamad.edu.pe",
     "password": "$2y$10$Yn4zzqbZ1/gDqy0KHQlWAe0xCHDerKYB7iThDdJVcrDoKGZ6fsYAO",
     "estado": 1,
+    "dependenciaCodigo": "DDA-INI",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-12-15 17:24:43",
     "updatedAt": "2026-03-02 14:22:10"
   },
@@ -7718,6 +9004,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ylhromani@gmail.com",
     "password": "$2y$10$Bc5qEUkNU48xlln4hsFYi.bcIvVKL8D9j3mLnBzqTFb32wMisWnTS",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "DIRECTOR (E)",
     "createdAt": "2023-12-19 16:02:47",
     "updatedAt": "2025-05-19 22:15:21"
   },
@@ -7730,6 +9018,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tunaunamad2107@gmail.com",
     "password": "$2y$10$iuJWT2l6zcKCn4pMKzbKrOXVZSHaMeJLEDkkfj9sUb/kuOisS/se2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-19 17:12:47",
     "updatedAt": "2023-12-19 17:13:46"
   },
@@ -7742,6 +9032,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aalarcon@unamad.edu.pe",
     "password": "$2y$10$NAdyJrocBKYLVeKI4yJI6eNfj2gLcYPHone/nZ47G6Gjhj1Yq3eU6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-19 19:45:11",
     "updatedAt": "2023-12-19 21:01:33"
   },
@@ -7754,6 +9046,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "presidencia@undc.edu.pe",
     "password": "$2y$10$wd45uO.nCl/jiMkSIOttfOI7imUwVuL3nxa8hUQDuR2XrqkcCueLK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-19 20:17:00",
     "updatedAt": "2023-12-19 20:18:37"
   },
@@ -7766,6 +9060,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvela@unamad.edu.pe",
     "password": "$2y$10$rtidvjbR4I3RQlod2z/GP.UkYMenYCxaiaL4cUNZhls5qtWLBTAWm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-20 15:00:03",
     "updatedAt": "2024-03-01 17:01:17"
   },
@@ -7778,6 +9074,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tvasquez@unamad.edu.pe",
     "password": "$2y$10$Q0yobTv2zgjDTN.VIi2Re.zy1HW21d3XJgfFRc1AVsvvDegWj8Dsy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-20 15:02:34",
     "updatedAt": "2025-03-19 17:07:56"
   },
@@ -7790,6 +9088,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hkcachap@unamad.edu.pe",
     "password": "$2y$10$i0WfbiuJ8.un/QWcH2Xhk.6SqA1axZbK5SpY2N8DY5Z5NwjZ0bU8W",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "SOPORTE",
     "createdAt": "2023-12-20 16:58:56",
     "updatedAt": "2024-06-10 16:03:14"
   },
@@ -7802,6 +9102,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "amaxi@contraloria.gob.pe",
     "password": "$2y$10$xsvIP8o3o4nlBWN.6.UEy.S3CtBgPkKlwzbz7wOhKOKcT4icjbhPu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-20 20:20:26",
     "updatedAt": "2024-04-22 20:40:30"
   },
@@ -7814,6 +9116,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "reduardof@unamad.edu.pe",
     "password": "$2y$10$gDdq0TwWkJsuHRwWF7AP/eRFP0PiwbKSaRByKNsb3UJuOSoHaeB7O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-21 16:02:58",
     "updatedAt": "2024-09-25 19:22:51"
   },
@@ -7826,6 +9130,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cciencia@congreso.gob.pe",
     "password": "$2y$10$b4..YReUmuSP7d0YMwgx6uoXZDh2HFZdLUqu59OGsevoyOjgigFbi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-22 03:46:31",
     "updatedAt": "2024-02-19 20:00:02"
   },
@@ -7838,6 +9144,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcalsin@unamad.edu.pe",
     "password": "$2y$10$DqgKjU5znth2Ae2horFpWuGFfab/zK3ZINm8lDPVTrYY2YK5qrTdm",
     "estado": 1,
+    "dependenciaCodigo": "EPED",
+    "cargo": "DIRECTOR (E)",
     "createdAt": "2023-12-22 13:57:04",
     "updatedAt": "2026-03-13 15:57:35"
   },
@@ -7850,6 +9158,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mdianderas@unamad.edu.pe",
     "password": "$2y$10$rLemIH7Ndk4plLm2DUC.W.a4Z/1f2NdHtz4AK0vh.wDjk/yz03hkq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-22 14:08:03",
     "updatedAt": "2024-11-26 16:49:13"
   },
@@ -7862,6 +9172,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hsolis@unamad.edu.pe",
     "password": "$2y$10$wjP.DdqZf.ucopHeabYJHuVbInYaFDR9I3L.AOm.mn4ppRwCskvMK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-27 14:35:34",
     "updatedAt": "2024-07-02 15:13:09"
   },
@@ -7874,6 +9186,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rsanchez@unamad.edu.pe",
     "password": "$2y$10$4UEDzTu3SDXvVaPV4NVDbOhBIDQED.gqivckpDu0kZeTytCH68DtG",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "DOCENTE",
     "createdAt": "2023-12-27 16:02:39",
     "updatedAt": "2025-06-03 13:39:31"
   },
@@ -7886,6 +9200,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fquispem@unamad.edu.pe",
     "password": "$2y$10$CQUrNAACUUR.jU782qsWq.rJ87oo.dFRxkLnUCwRfkXzh4hW/Ax12",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-27 16:45:21",
     "updatedAt": "2024-08-27 16:23:26"
   },
@@ -7898,6 +9214,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ncalachuac@unamad.edu.pe",
     "password": "$2y$10$NXPAYJf9Hmyu3M3IBPvR9uPsgRYD9142ZD6l.PZEH7gJleOyoH7k.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-27 16:51:33",
     "updatedAt": "2025-09-26 17:50:38"
   },
@@ -7910,6 +9228,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "schacon@unamad.edu.pe",
     "password": "$2y$10$ipanqyYQrhKlLUb.O/j.YuBJ/mC1exoopx5cflV2kd1Y0D1QlS1Qe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-27 20:01:36",
     "updatedAt": "2025-02-18 16:00:29"
   },
@@ -7922,6 +9242,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mdominguezs@unamad.edu.pe",
     "password": "$2y$10$rDa/iWgv6z8rA4LXTaCNfedJ33Y.dpDlWiO1I8yiaPem0NtQlu6s6",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2023-12-27 20:25:47",
     "updatedAt": "2023-12-27 20:25:47"
   },
@@ -7934,6 +9256,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ahuamanim@unamad.edu.pe",
     "password": "$2y$10$Ohy.yUReXQZYrgAPXDqAMOctMH92c6de3EvOO97LAdrJ1KA3lYFKu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-27 21:01:15",
     "updatedAt": "2023-12-27 21:01:15"
   },
@@ -7946,6 +9270,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@ascensoresdelcentro.com",
     "password": "$2y$10$FnkSu4qQfWBmdhRqcMyIXeI4ewVcfRboCBLk6Jm774zlRed575vEa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-27 23:10:58",
     "updatedAt": "2023-12-27 23:11:58"
   },
@@ -7958,6 +9284,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhumpire@unamad.edu.pe",
     "password": "$2y$10$MzjYlVbxsFMxr/xCq0ENLONosYJBUcov61P9sXm0w3Y6swgD4cQQe",
     "estado": 1,
+    "dependenciaCodigo": "DIE",
+    "cargo": "DIRECTOR",
     "createdAt": "2023-12-28 16:36:33",
     "updatedAt": "2024-08-20 16:25:18"
   },
@@ -7970,6 +9298,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mgutierrezf@unamad.edu.pe",
     "password": "$2y$10$a67kOSNbyUyyOLRoIIWB0OOuw.Lah8w7H.RNXLTwmarmIz/a8XWPK",
     "estado": 1,
+    "dependenciaCodigo": "EPAYNI",
+    "cargo": "DOCENTE",
     "createdAt": "2023-12-28 17:46:46",
     "updatedAt": "2023-12-28 17:46:46"
   },
@@ -7982,6 +9312,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smolero@unamad.edu.pe",
     "password": "$2y$10$J839B6Mx5oUbKgbi32CAne9ARq5x3lFP/n/H3ddf5eeJrFnvAj2tO",
     "estado": 1,
+    "dependenciaCodigo": "UGC",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2023-12-28 20:11:04",
     "updatedAt": "2023-12-28 20:11:04"
   },
@@ -7994,6 +9326,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MDRCISNEROS@MPFN.GOB.PE",
     "password": "$2y$10$tmq4/Np0jlVJGnDo5SCDgeWvkj5cY2JYTrtYB8nmKJysv9SRrPP96",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-28 20:22:00",
     "updatedAt": "2023-12-28 20:22:52"
   },
@@ -8006,6 +9340,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sarita19872689@gmail.com",
     "password": "$2y$10$jojyI4VeryK2loglLQDHhOLY9OYX4TvP/aNSZkD9Pc2NlOAlvLYIq",
     "estado": 1,
+    "dependenciaCodigo": "EPEN",
+    "cargo": "DOCENTE",
     "createdAt": "2023-12-28 20:25:12",
     "updatedAt": "2025-12-12 19:38:06"
   },
@@ -8018,6 +9354,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcastro@unamad.edu.pe",
     "password": "$2y$10$g8P/ZNSGxU0sdVeWwav6PeEDwr1dvxosBZYHPtcbjtKucUokd4DB2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-28 20:28:10",
     "updatedAt": "2025-01-07 21:36:09"
   },
@@ -8030,6 +9368,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacionespge@pge.gob.pe",
     "password": "$2y$10$N53.3E6c6aeI36GGSuA1COWzQ1I6y.2r4y0EE8fRdP0XSxP4Tp8UO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-29 14:58:18",
     "updatedAt": "2023-12-29 15:02:33"
   },
@@ -8042,6 +9382,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "squispeq@unamad.edu.pe",
     "password": "$2y$10$1GDL/D9boa55Go5D3xfw5OTxWhc4MBDEuHIfjM9Pt0AemlOZtlcDC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2023-12-29 15:55:20",
     "updatedAt": "2026-03-20 15:02:14"
   },
@@ -8054,6 +9396,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jparicahuaq@unamad.edu.pe",
     "password": "$2y$10$DxSMumEWeRz7/SJPSfdt1eKNeTqneZ71WWXTetvjJPLbscZbajUA6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-03 19:48:18",
     "updatedAt": "2024-03-19 14:07:41"
   },
@@ -8066,6 +9410,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jtevezd@unamad.edu.pe",
     "password": "$2y$10$HRSXWHokCsxlHWgoGd2UsO/mxzkHnEVtUGxmVE.2x6OA2DZf7xaMK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-03 21:05:12",
     "updatedAt": "2024-01-03 21:06:28"
   },
@@ -8078,6 +9424,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "NTARAZONA@UNAMAD.EDU.PE",
     "password": "$2y$10$m8UpsLFffR7QTx8mGFF14ugqrnU3YcdPODgr60AeNNogDIrsOwjea",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-01-04 13:51:45",
     "updatedAt": "2024-01-04 13:55:12"
   },
@@ -8090,6 +9438,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jsillo@unamad.edu.pe",
     "password": "$2y$10$RWTGVOKXwy61Thoh.0ssgeiwu.JknFnqKlh5Vfyh60.h1npcYv26u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-04 17:16:54",
     "updatedAt": "2026-05-20 18:14:44"
   },
@@ -8102,6 +9452,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jbelizario@unamad.edu.pe",
     "password": "$2y$10$nZAF6LIQ5MvGRboGH2FCqe46AOPEIUOALuInnQHcwaMueewCo40Xy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-05 15:58:46",
     "updatedAt": "2025-08-11 14:04:41"
   },
@@ -8114,6 +9466,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "croque@unamad.edu.pe",
     "password": "$2y$10$bqEkH2tLP2pPYoDgRdJ0zeaW5VAL1lAsFbaSHktSQN.9K5qy3y96q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-05 17:09:56",
     "updatedAt": "2024-01-05 17:09:56"
   },
@@ -8126,6 +9480,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maricarmen_yf@icloud.com",
     "password": "$2y$10$2n6UbXV4i8x.mCbnnKpHuOsT5JUAofTjXai/AqPeHAwSN1.OW2MPG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-06 14:02:29",
     "updatedAt": "2024-01-06 14:02:29"
   },
@@ -8138,6 +9494,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "autoridaddetransparencia@minjus.gob.pe",
     "password": "$2y$10$7xLIout/KelL1YSnSSSeS.TeeWXcrDL/xvzEM/B7lhhE5YUHrGlCC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-08 13:57:31",
     "updatedAt": "2024-01-08 13:57:31"
   },
@@ -8150,6 +9508,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ascensoreshitech@gmail.com",
     "password": "$2y$10$9RtnpHOg7C0t1k.tU1XePOuDHH4.2rWas.h8MERc77kU10fR3gCwS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-08 16:20:40",
     "updatedAt": "2025-09-30 21:37:04"
   },
@@ -8162,6 +9522,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rquispe@unamad.edu.pe",
     "password": "$2y$10$31sbqbx/mT1iK2V3kVHlHuWMAMOZme9475NHqvDRzFiCzUcqj/jFy",
     "estado": 1,
+    "dependenciaCodigo": "FI",
+    "cargo": "DECANO",
     "createdAt": "2024-01-08 19:54:26",
     "updatedAt": "2024-02-05 14:44:09"
   },
@@ -8174,6 +9536,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "raragon@unamad.edu.pe",
     "password": "$2y$10$y2GM4ODKAO5epqT6do4a8./PB5gJGkAhbsU554ossqai8e5ntyEjK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-09 19:55:13",
     "updatedAt": "2024-01-09 20:01:09"
   },
@@ -8186,6 +9550,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "chacacanta123@gmail.com",
     "password": "$2y$10$s1.3OVFH/2NxbpThk5WzhuxVujyesoy0l3Sy7xFI10xQKn/ctkraG",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-01-11 13:33:27",
     "updatedAt": "2024-01-11 13:33:27"
   },
@@ -8198,6 +9564,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "23231024@unamad.edu.pe",
     "password": "$2y$10$iIfN6Zwp7G7.TSgRtWZmKun60BZvpKi2YQp3V.QgGUPDegdpjLtEG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-12 19:52:39",
     "updatedAt": "2024-01-12 19:52:39"
   },
@@ -8210,6 +9578,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vhuaman@unamad.edu.pe",
     "password": "$2y$10$zbrhqQfdhmL2gG1be9yQFej8J1r8Pb55WNpoOmTsN2oIpU6Ojd2vC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-12 20:11:40",
     "updatedAt": "2024-01-12 20:11:40"
   },
@@ -8222,6 +9592,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fpumasupa@unamad.edu.pe",
     "password": "$2y$10$hBzHmgIDG7kiGGGbGrWZSeg/zHMWcGSIJP1rwIRWS2zKuUN9EP8La",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-01-12 20:18:20",
     "updatedAt": "2024-01-12 20:18:20"
   },
@@ -8234,6 +9606,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeriavirtual@minjus.gob.pe",
     "password": "$2y$10$gd4ompI9boJ2L1U.TVcjuuuG1mAiKMVNPOmCRidXPDjF7vcm6KqKy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-15 18:37:57",
     "updatedAt": "2024-01-15 18:37:57"
   },
@@ -8246,6 +9620,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lilianalva12@gmail.com",
     "password": "$2y$10$fg3hR/n84vEALvn3RON8EuAfgVVw1fVDrblpePCp4bC29mUl96J9C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-16 16:41:41",
     "updatedAt": "2024-01-16 16:58:49"
   },
@@ -8258,6 +9634,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mbetancurt@unamad.edu.pe",
     "password": "$2y$10$ZvYnfNDJjNIm1a5eHb4yceDa2bcihIwgNS/FKm/Tkmqh3NL/W2Yue",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-17 14:27:29",
     "updatedAt": "2026-05-21 05:23:08"
   },
@@ -8270,6 +9648,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jalfaro@unamad.edu.pe",
     "password": "$2y$10$HwT1IH.elvhDQbAVC2/jtuoFLnLz0P/eA5AoRnVEyrBZu78/RaHRS",
     "estado": 1,
+    "dependenciaCodigo": "DADCP",
+    "cargo": "DIRECTOR (E)",
     "createdAt": "2024-01-17 14:42:49",
     "updatedAt": "2024-01-17 14:42:49"
   },
@@ -8282,6 +9662,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fcruz@congreso.gob.pe",
     "password": "$2y$10$Vmre8BfgJGbUGKK8gfMJBOCzOJcLD8Xur6Ez/v8ZwBhiDxKkRwBMC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-17 16:44:55",
     "updatedAt": "2024-01-17 16:45:52"
   },
@@ -8294,6 +9676,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jackeline.pizarro@inkaterra-asociacion.org",
     "password": "$2y$10$Rbi3ingaMYUuLbdH.7L5puGVmrXA.cN.THKlpJIxkpxS5RLqSz.9W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-17 17:37:59",
     "updatedAt": "2024-01-17 17:39:05"
   },
@@ -8306,6 +9690,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abracusi96@gmail.com",
     "password": "$2y$10$Fj8eoEX9v.z1.82VoZMmqeO1w8cC0ouxYGkAa5J3QT.TPW7kmLooO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-17 19:17:01",
     "updatedAt": "2024-01-17 19:17:01"
   },
@@ -8318,6 +9704,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dcastellon@unamad.edu.pe",
     "password": "$2y$10$Ii5jZI0HwVxjWii60AGg9eUXleru4tjE3ldQKVcTi8wHb2wxi2F8.",
     "estado": 1,
+    "dependenciaCodigo": "URAA",
+    "cargo": ".",
     "createdAt": "2024-01-17 21:21:18",
     "updatedAt": "2026-03-04 21:21:02"
   },
@@ -8330,6 +9718,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhondanilo6@gmail.com",
     "password": "$2y$10$cydDpybIi6VVKPzNvgNSn.3GSh7gV9wKvEE1LGPQ.yIKYS9Zc1wri",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-17 22:06:19",
     "updatedAt": "2024-09-11 01:58:00"
   },
@@ -8342,6 +9732,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "logistica.mesadepartes@unitru.edu.pe",
     "password": "$2y$10$6QdKid7my/Vrd03OSeH1wuZnvSa0DH1r4JBLp1QfyRbQSc.Oz1tA2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-18 15:18:29",
     "updatedAt": "2024-01-18 15:18:46"
   },
@@ -8354,6 +9746,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "williamnic6@hotmail.com",
     "password": "$2y$10$t7NQONyCKHEZiNIZp3l5euPpUxst/GMRBkn16tyiKZgRZDvRU2kQG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-18 17:53:47",
     "updatedAt": "2024-01-18 17:53:47"
   },
@@ -8366,6 +9760,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "corporacion_epsac@hotmail.com",
     "password": "$2y$10$uknXbz/2J0CwW683NS/of.YaCpEA/RfDd19mGjf4CAZTRY8Bw8/.K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-18 20:35:06",
     "updatedAt": "2024-01-18 20:36:10"
   },
@@ -8378,6 +9774,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mruizalvarado14@gmail.com",
     "password": "$2y$10$EA.jX7eVI3fnXVmKbmnUmeIrciQUi4EcfvBd/N4nQBklCHgSGpROS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-19 10:45:09",
     "updatedAt": "2024-01-19 10:45:09"
   },
@@ -8390,6 +9788,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "growth@herostartup.com",
     "password": "$2y$10$Lix4bAwZTknN.3utWgWDR.aEyjsEwP3q.WpleESYXchhn7xMstP7m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-19 17:26:15",
     "updatedAt": "2026-01-22 22:01:13"
   },
@@ -8402,6 +9802,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cvera@unamad.edu.pe",
     "password": "$2y$10$asVF20Px1.k5KeBoeWJnCu2PqYrhHscn2vvSIdceFIBfRVuBp7YoS",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-01-22 17:26:52",
     "updatedAt": "2024-01-24 13:13:03"
   },
@@ -8414,6 +9816,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cgutierrezg@unamad.edu.pe",
     "password": "$2y$10$7Gms9jaV0vPTaJ7YJZMAWewv04kk7pul5EbMG3EbBkM0mUkXY2kGW",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "PLANILLERO DE OBRAS",
     "createdAt": "2024-01-22 19:49:02",
     "updatedAt": "2024-01-22 19:54:26"
   },
@@ -8426,6 +9830,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ychambilla@unamad.edu.pe",
     "password": "$2y$10$PIF/bWpLyeSn/KlZYCCT9eFH3dkMGxXy7M107xuO11Ya/q..cQJBe",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-01-22 20:07:16",
     "updatedAt": "2026-05-14 01:39:23"
   },
@@ -8438,6 +9844,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alopezb@congreso.gob.pe",
     "password": "$2y$10$JXK8UlRAHj.544jLniT3oOaaWcLIJdVsCnsrXe3zv10M9eyFMMe3O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-24 03:37:51",
     "updatedAt": "2024-01-24 03:38:19"
   },
@@ -8450,6 +9858,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "avera@unamad.edu.pe",
     "password": "$2y$10$eF.JZxHiQozuqQo9acaTNuDGuu1wGLri6HlmJCSDTXVH7BQqDUbfW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-24 19:39:19",
     "updatedAt": "2024-01-24 19:39:19"
   },
@@ -8462,6 +9872,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cotizacionesdcpinversiones@gmail.com",
     "password": "$2y$10$bCpEI4d4Dr5UTJwUI6AEhO4rFm45v0KWs2LjOzqF5X9NvaftEJfxK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-24 20:41:06",
     "updatedAt": "2024-01-24 20:41:21"
   },
@@ -8474,6 +9886,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@cuy.com.pe",
     "password": "$2y$10$pGDzsYPDpq4lBUgIdRsvKe7JXuXLqENxwI8op75hvJ6U6rNdZQelK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-25 18:14:47",
     "updatedAt": "2024-01-25 18:15:52"
   },
@@ -8486,6 +9900,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vhuamani@unamad.edu.pe",
     "password": "$2y$10$/Pv/K6IUIO8UCg6lCMH89elC2ogKbU3MwrAl0CDZxHoAJXxZ/kxAC",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-01-26 12:27:08",
     "updatedAt": "2024-01-26 12:28:41"
   },
@@ -8498,6 +9914,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jamamanip@unamad.edu.pe",
     "password": "$2y$10$WQHV7TtGykqaYtfhQa5M9OKI8UEJEK4BCwzG7M90zKdnO7YlQaiBC",
     "estado": 1,
+    "dependenciaCodigo": "VIV-FOR",
+    "cargo": "AGENTE SEGURIDAD",
     "createdAt": "2024-01-26 17:21:12",
     "updatedAt": "2024-06-21 17:05:06"
   },
@@ -8510,6 +9928,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hmelendezc@unamad.edu.pe",
     "password": "$2y$10$KSBghuiBA9H5/Xp4pIyMTu7SNF6u6ibc7f8xTRmgKpJGjiDbnFf7e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-26 17:23:46",
     "updatedAt": "2024-01-26 17:23:46"
   },
@@ -8522,6 +9942,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "etnajimenes@gmail.com",
     "password": "$2y$10$bMFENFiqOBLzKuU3ai156O0Wn0zq35GMbkizGA8VVzGnbUW4JL.x2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-30 16:06:39",
     "updatedAt": "2024-02-02 15:42:49"
   },
@@ -8534,6 +9956,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rchambi@unamad.edu.pe",
     "password": "$2y$10$Xxv7Fuf5qIKhkmIdj/GI2Oq2SNcCnAWZspsnAzn.6Jz8rtmjRUaJC",
     "estado": 1,
+    "dependenciaCodigo": "PPTM",
+    "cargo": "RESPONSABLE",
     "createdAt": "2024-01-30 17:06:25",
     "updatedAt": "2024-01-30 17:06:25"
   },
@@ -8546,6 +9970,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "emaus.trapero@outlook.com",
     "password": "$2y$10$UE0/zVXRnO3Nk7noi4PCKOZ6MV9Ck4ZGJOUYnvz5.gzuTykSnXJ3m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-30 23:01:35",
     "updatedAt": "2024-09-18 16:40:44"
   },
@@ -8558,6 +9984,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rarcav@congreso.gob.pe",
     "password": "$2y$10$oTAmx7pwVUy1n08QrColV.rTZuESVb2YaK34JKjY7suVKGsqyCeJK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-31 04:40:31",
     "updatedAt": "2024-01-31 04:40:55"
   },
@@ -8570,6 +9998,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gerencia.comercial@iworldam.com",
     "password": "$2y$10$YrTEAdGLoSFLxSI/tGucO.wn5bFG9pMuNIc8bnQTKQkkLh6bAoXpW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-01-31 16:03:45",
     "updatedAt": "2024-01-31 16:05:30"
   },
@@ -8582,6 +10012,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Valeska.1805@outlook.es",
     "password": "$2y$10$Xp8im73kuxMU05xYa3Qfy.y/S1JY.BZ.f6aIyhW55y.F2IN/1Pwqy",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-02-01 14:41:56",
     "updatedAt": "2024-02-01 14:41:56"
   },
@@ -8594,6 +10026,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rossanaramos300@hotmail.com",
     "password": "$2y$10$7ms3F3Gcx0AuxgGigg8cseQCCJy3h0WMjdK5TekKwZhPOoMUXIHay",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-02-01 14:47:08",
     "updatedAt": "2024-02-01 14:47:08"
   },
@@ -8606,6 +10040,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aserrudo@unamad.edu.pe",
     "password": "$2y$10$kXKfmi/SHzMVCk5sJRTjW.Cfpg6CKmKbcOcP9jRsQKG0JyIzapDqm",
     "estado": 1,
+    "dependenciaCodigo": "R",
+    "cargo": "CHOFER",
     "createdAt": "2024-02-01 16:09:24",
     "updatedAt": "2024-02-01 16:09:24"
   },
@@ -8618,6 +10054,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sfernandezh@unamad.edu.pe",
     "password": "$2y$10$OZ1Hh.Fw0s/HOG/rHkK9ROQcCVEozwcztycSHUKB2s3ec17S1CtF2",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-02-01 16:42:46",
     "updatedAt": "2024-02-01 16:42:46"
   },
@@ -8630,6 +10068,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "misme@unamad.edu.pe",
     "password": "$2y$10$h3fvOqqnXxV/S2.z2s/wD.52G6v2DVQRUX.pSVYtUZL.8axg1ufNq",
     "estado": 1,
+    "dependenciaCodigo": "UTD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-02-01 21:03:43",
     "updatedAt": "2025-05-08 14:58:08"
   },
@@ -8642,6 +10082,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Carla.pinillos@qlc.edu.pe",
     "password": "$2y$10$pvA/gGuYdRROFaBnUQce0u5KbyXwajlSESyekjVJ9U751DXDmlHbO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-01 22:47:50",
     "updatedAt": "2024-02-01 22:48:26"
   },
@@ -8654,6 +10096,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aleajandrozavalafollano@gmail.com",
     "password": "$2y$10$EL.M0LdDF7UZR6Wgxixp9emikksf2f5DkzzvAgMgrjZEaZ9PHe9bS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-02 04:56:24",
     "updatedAt": "2024-02-02 04:56:24"
   },
@@ -8666,6 +10110,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "amontesinos@unamad.edu.pe",
     "password": "$2y$10$o2SM17zUxXbiYW0fUEoWyOI/.7DxG5FUT5HQGm59gs29tqaW8rNUK",
     "estado": 1,
+    "dependenciaCodigo": "ALC",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-02-02 14:25:14",
     "updatedAt": "2024-02-14 15:15:50"
   },
@@ -8678,6 +10124,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wimin.liang.3101@gmail.com",
     "password": "$2y$10$oZaaJyBr3bxZc2YHgqnu1eqLkU3DqmnVSvUu.bwLJYnodE2WwhCCC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-02 17:15:37",
     "updatedAt": "2024-02-02 17:17:42"
   },
@@ -8690,6 +10138,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "zrubio@unamad.edu.pe",
     "password": "$2y$10$cN9/IozrDCA.2wq2QgIK6OMFSDL6XAyi7mPt29BiLDxa0dOKeRFhO",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-02-05 14:05:19",
     "updatedAt": "2024-02-05 14:05:19"
   },
@@ -8702,6 +10152,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rhuaman@unamad.edu.pe",
     "password": "$2y$10$AixeCMo4MAzHfSODh9nIb.lxURVFODaF7HtupRLD0SmU5Rue3W0c.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-05 16:43:11",
     "updatedAt": "2024-02-05 16:43:11"
   },
@@ -8714,6 +10166,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rllave@unamad.edu.pe",
     "password": "$2y$10$KINXbAhHH3QKFhysdsZIqec2vQ32krxcZsgmDU0sAx.E.Yl6Tw3Xy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-05 16:49:09",
     "updatedAt": "2026-05-18 17:03:19"
   },
@@ -8726,6 +10180,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacenepred@cenepred.gob.pe",
     "password": "$2y$10$dz1ghH.HtC99zXbmJ/u6cOjWCzQr./QNRc78xls5mq6jXpR14S4De",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-06 15:01:54",
     "updatedAt": "2024-02-06 15:03:48"
   },
@@ -8738,6 +10194,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bormachea@unamad.edu.pe",
     "password": "$2y$10$mup/VgfnPdWezGCl5DAy.upuMEZtsI0VZqcryhMfpSQ31mv2rCbsq",
     "estado": 1,
+    "dependenciaCodigo": "EPEN",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-02-06 16:06:32",
     "updatedAt": "2024-02-06 16:06:32"
   },
@@ -8750,6 +10208,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "echani@unamad.edu.pe",
     "password": "$2y$10$hT0d0Yw.l9iSMHT3nI35dO8pY7s0bfRW9cUSkA2Ez2wR5Ti3H1dbK",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-02-06 17:12:54",
     "updatedAt": "2025-09-01 14:47:14"
   },
@@ -8762,6 +10222,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "amlaura@mpfn.gob.pe",
     "password": "$2y$10$DS66rNwmomVsT1yC3Fig5O/haJd0rGWh4sKEwfda/K06TG4ipmBVC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-06 20:39:04",
     "updatedAt": "2024-02-06 20:39:42"
   },
@@ -8774,6 +10236,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jpena@unamad.edu.pe",
     "password": "$2y$10$k4KKuzVdMrkDakLc0ypiEuMsEUNg.1xMh60ZKb5.nhU0nj8IFznIy",
     "estado": 1,
+    "dependenciaCodigo": "CEU",
+    "cargo": "PRESIDENTE",
     "createdAt": "2024-02-07 13:49:39",
     "updatedAt": "2024-03-15 16:12:29"
   },
@@ -8786,6 +10250,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ecordova@unamad.edu.pe",
     "password": "$2y$10$C2Y0RRVZqezlNXMFgTHcWuBbIl7G6WkvgLz03/gJ.Xyjfy/3kQeVu",
     "estado": 0,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-02-07 20:20:31",
     "updatedAt": "2025-01-09 20:32:12"
   },
@@ -8798,6 +10264,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asancheza@defensoria.gob.pe",
     "password": "$2y$10$ZzbB/OYplwN3.ia4RNcK4.5agGoPEewUUa18NEtnmZhzWOKZ8D7KG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-07 20:56:28",
     "updatedAt": "2024-02-07 20:57:35"
   },
@@ -8810,6 +10278,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cvillafarayh@unamad.edu.pe",
     "password": "$2y$10$EMnu36fd8fiPI3O4Fq5gMeh8sZbfwvsP5AD49zVDAK6cXoKs1RZEe",
     "estado": 1,
+    "dependenciaCodigo": "FCE",
+    "cargo": "ASISTENTE",
     "createdAt": "2024-02-08 14:35:11",
     "updatedAt": "2024-02-08 14:35:11"
   },
@@ -8822,6 +10292,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abopalermomo@gmail.com",
     "password": "$2y$10$YMWRPeAaP91yfdn270YuDuSI3irKBB13CxtPd2fnFKSBylHxMT.Di",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-08 20:49:43",
     "updatedAt": "2024-02-08 21:00:54"
   },
@@ -8834,6 +10306,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rocigiv@osiptel.gob.pe",
     "password": "$2y$10$GrOiQNOltjpOiehseXYRjuaxSKWck7xYfMVkwIf9JbpobWM7kqz76",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-09 15:01:58",
     "updatedAt": "2024-02-09 15:01:58"
   },
@@ -8846,6 +10320,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rgivera@osiptel.gob.pe",
     "password": "$2y$10$maIkdtn7.93/juDSDle7HuSbXQz7mub9PbUTtwwpPVlB1rIrQAAN2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-09 15:07:48",
     "updatedAt": "2024-02-09 15:08:25"
   },
@@ -8858,6 +10334,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nicoll.c.rojas@gmail.com",
     "password": "$2y$10$tm5Ys/wQSUrXG8.dsIbJqOCnm4IB1M2Dedvb6as.vzfK8kaTv5ddS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-11 20:38:10",
     "updatedAt": "2024-02-11 20:43:07"
   },
@@ -8870,6 +10348,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "syucras@unamad.edu.pe",
     "password": "$2y$10$r3TNXKWKFSzZ6cZ52OMfhevl0lwAUIhiZYtIVzAd2tyD2wF767V5m",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-02-12 14:59:54",
     "updatedAt": "2024-03-07 14:13:29"
   },
@@ -8882,6 +10362,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yconchas@unamad.edu.pe",
     "password": "$2y$10$K.M4gX2UNKDc7gh4TZukVu22fUNJaKwtnH7KQTz.OCDkZs6h2awUu",
     "estado": 1,
+    "dependenciaCodigo": "CEINFO",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-02-12 17:14:01",
     "updatedAt": "2025-01-08 13:15:49"
   },
@@ -8894,6 +10376,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wramirez@congreso.gob.pe",
     "password": "$2y$10$yVdPuQMp0/2e7tSTLqVg/ezpLY4qJ2oqb7Spou.x8C7B0Gr5sjpPq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-12 21:28:25",
     "updatedAt": "2024-02-12 21:28:56"
   },
@@ -8906,6 +10390,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kathy_mondragon@hotmail.com",
     "password": "$2y$10$QOdOUQbwe1rvEVfAtqYeLezygS9oUmZa1TqfH/NxJjhp6YToc1oQC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-13 13:14:38",
     "updatedAt": "2024-02-13 13:15:33"
   },
@@ -8918,6 +10404,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "presidencia.sgl@gmail.com",
     "password": "$2y$10$WDqxn3gSlbT68GdPwKKMtuMWPoniH0kDAFXL0EgP9bw5hTMy7F8f2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-14 15:21:09",
     "updatedAt": "2024-02-14 15:25:37"
   },
@@ -8930,6 +10418,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lherrera@sunass.gob.pe",
     "password": "$2y$10$TlFLWyv.S3w76NcY2Dzyse.t0YH7Sv21XCvOZuamXs34hWp5dO4P2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-14 20:26:09",
     "updatedAt": "2024-02-14 20:26:35"
   },
@@ -8942,6 +10432,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ursula.gorvenia01@gmail.com",
     "password": "$2y$10$nlRYQTWbf6xgTd9rr9gXk.3CdgrAPjQpoRY5TvfA08M68wMiCBJW.",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-02-15 19:51:24",
     "updatedAt": "2024-03-04 21:13:35"
   },
@@ -8954,6 +10446,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yaquispe@unamad.edu.pe",
     "password": "$2y$10$Sqr0dBRylveSJ8s36OlzJOxmZfxfsQjsNzATQTP8rXMWPsIGxq7ta",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "DOCENTE",
     "createdAt": "2024-02-19 14:23:40",
     "updatedAt": "2024-06-03 21:53:53"
   },
@@ -8966,6 +10460,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "delcastillo@unamad.edu.pe",
     "password": "$2y$10$28prlGaFNtILGSczVqZEhutM00eAEKpr1B7f3CAclPcyA8B3/2Vm2",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2024-02-19 15:31:19",
     "updatedAt": "2024-02-19 15:31:19"
   },
@@ -8978,6 +10474,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cbouroncler@unamad.edu.pe",
     "password": "$2y$10$IsuyaG0v8jcSX2GmFtEIh.thm2JoJnEx.6T9Sklgo3X7nTRW6SaqS",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "JEFE",
     "createdAt": "2024-02-19 20:01:00",
     "updatedAt": "2026-05-06 16:10:44"
   },
@@ -8990,6 +10488,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "diegoalberto.nt@gmail.com",
     "password": "$2y$10$VYVZjBjnIY3ORrokyHa3mOV3KEjGUOSrQfGZF0IqzDpJJ/nvPNqMC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-19 22:36:53",
     "updatedAt": "2024-02-19 22:40:26"
   },
@@ -9002,6 +10502,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aherles@unamad.edu.pe",
     "password": "$2y$10$r.2yXx3JpLxFQohs0cY/duIiUMd0XbakprKcpBnT1f1RhWokiCr4C",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "COORDINADOR",
     "createdAt": "2024-02-22 13:31:13",
     "updatedAt": "2025-05-20 16:12:10"
   },
@@ -9014,6 +10516,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "faticonaq@unamad.edu.pe",
     "password": "$2y$10$LWxRc8ixTsI.F3YimF.Ae..FKgxnRMH7VxiP9tljnn7rG2bQPM1ZW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-22 20:33:26",
     "updatedAt": "2024-06-05 21:06:23"
   },
@@ -9026,6 +10530,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcaceresp@unamad.edu.pe",
     "password": "$2y$10$x2qswTcmJxAN5mYKjpRxv.T621iGC3z0nFcuSWJQ/RZNPiL3cx5Zq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-23 05:27:42",
     "updatedAt": "2026-03-12 14:55:41"
   },
@@ -9038,6 +10544,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jiyin_103@hotmail.com",
     "password": "$2y$10$R7xOzb/N9hZ8jMClfDc4aeo5BkRG74Sne7osgENfQg1x67wPSS0Ja",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-02-23 13:50:19",
     "updatedAt": "2024-02-23 13:50:19"
   },
@@ -9050,6 +10558,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@directorio.pe",
     "password": "$2y$10$oObChLgBVN./VfmeRhkWm.jFgzXZJnN.w7v90H6F0aafBYo7IDraO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-23 18:31:59",
     "updatedAt": "2024-02-23 20:03:26"
   },
@@ -9062,6 +10572,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas.coea1@gmail.com",
     "password": "$2y$10$REIHhMOfHPqIzx3.Fim9AuJ8w1ojGHNS5bAHDzOJqnEDgyD.qJg72",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-23 22:09:15",
     "updatedAt": "2024-02-23 22:09:37"
   },
@@ -9074,6 +10586,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MOBLIDECOR_SAC@HOTMAIL.COM",
     "password": "$2y$10$fJIVhCyvOZ6qLnOCgjRMV.QLP3gR3X5RRm2dD1dxSrWNXaUusR/gu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-24 17:03:38",
     "updatedAt": "2024-02-24 17:05:59"
   },
@@ -9086,6 +10600,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "INFORMES@NOTARIOSCALLAO.ORG.PE",
     "password": "$2y$10$TGr5J3wKWx/2QMsRGJtk2eHEi3aNUDXWYYqGVKy6a9qg5Za.zZb1.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-26 13:52:21",
     "updatedAt": "2024-02-26 13:52:46"
   },
@@ -9098,6 +10614,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gquispeq@unamad.edu.pe",
     "password": "$2y$10$RalBDNcpCu80V.SFEpOyN.LvBpIL2iucKILg5OlXbkFQPGerTA8Sq",
     "estado": 1,
+    "dependenciaCodigo": "OBRA-ENFERMERIA",
+    "cargo": "ASISTENTE",
     "createdAt": "2024-02-26 16:21:56",
     "updatedAt": "2024-02-26 16:21:56"
   },
@@ -9110,6 +10628,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CALATAYUDH@UNAMAD.EDU.PE",
     "password": "$2y$10$ZnNDt9J7s1OORlCLx.IIfu8bRFITtGSP8ndI0F7y1wTzPJCiwqcTy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-28 20:09:03",
     "updatedAt": "2024-02-28 20:14:30"
   },
@@ -9122,6 +10642,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "GCALATAYUD@UNAMAD.EDU.PE",
     "password": "$2y$10$zxXZY4ZzpDMNLKjfSoWKguscJshdPdC5NMTdnPO/7SyKCxTd.bxjm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-28 20:15:02",
     "updatedAt": "2024-02-28 20:15:02"
   },
@@ -9134,6 +10656,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "teffi2513@gmail.com",
     "password": "$2y$10$d6JzciqJs27WlX/nS9UAR.OU9RzImWddMQxlR8dsh/1ISm27fVehG",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-02-29 13:02:23",
     "updatedAt": "2024-02-29 13:02:23"
   },
@@ -9146,6 +10670,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "KLIZARAZO@unamad.edu.pe",
     "password": "$2y$10$pRTd0t4w4MCpjZHLZJtyFuI90Ja6ujkALAg27n206ZwZEQIWwnt.a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-02-29 15:43:52",
     "updatedAt": "2024-02-29 15:43:52"
   },
@@ -9158,6 +10684,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ismenia@unamad.edu.pe",
     "password": "$2y$10$z66u8IFQu903Ra0lnBg07uBVG3tU4VMAVJDVDa2jwHzU2EjF9J7xq",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "SECRETARIA",
     "createdAt": "2024-03-01 16:35:07",
     "updatedAt": "2024-03-01 16:41:19"
   },
@@ -9170,6 +10698,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "legamarra@unamad.edu.pe",
     "password": "$2y$10$wxxj7Cn9LZVeSLWoJKO4zOvlcu4E2OxoBKI9yDivtgCBgv/1gS/4i",
     "estado": 1,
+    "dependenciaCodigo": "VIV-FOR",
+    "cargo": "GUARDIAN",
     "createdAt": "2024-03-04 13:41:08",
     "updatedAt": "2024-03-04 13:41:08"
   },
@@ -9182,6 +10712,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wfranco@unamad.edu.pe",
     "password": "$2y$10$VCpjmjqg1t7mZTLGvQbuQO1mxm2rVx1UnEW9yZbNloZsw83k63Vmy",
     "estado": 1,
+    "dependenciaCodigo": "DAMVZ",
+    "cargo": "DOCENTE",
     "createdAt": "2024-03-04 15:16:35",
     "updatedAt": "2024-08-07 00:47:50"
   },
@@ -9194,6 +10726,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rsernap@unamad.edu.pe",
     "password": "$2y$10$wSLek20dR3.LZm/eKDF4hedo0qcPYBl3qGMXe4mbHfT/iKh5L5EPK",
     "estado": 1,
+    "dependenciaCodigo": "OCII",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-03-04 19:15:50",
     "updatedAt": "2024-12-05 19:30:59"
   },
@@ -9206,6 +10740,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vpareja@unamad.edu.pe",
     "password": "$2y$10$bqRfGyVqvY4GArgyd2N4KeLwrv1f/N9xv0SfFXvdjg5BuYuY0e0nm",
     "estado": 1,
+    "dependenciaCodigo": "OGAC",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-03-04 21:02:25",
     "updatedAt": "2024-03-04 21:02:25"
   },
@@ -9218,6 +10754,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fpastoro@unamad.edu.pe",
     "password": "$2y$10$.RfsDsqEiNXF2EYNTmO4SOrWmJOK7m2hrzu9p8MMlNAJow9Qvz9C.",
     "estado": 0,
+    "dependenciaCodigo": "UPFI",
+    "cargo": "ASISTENTE",
     "createdAt": "2024-03-04 21:05:15",
     "updatedAt": "2024-08-01 17:12:49"
   },
@@ -9230,6 +10768,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "contacto@herostartup.com",
     "password": "$2y$10$H5jkv5LxFy1ghqIoZiQ7T.iJKKcnnFgK82gAfD7zv6RNvaf/.VQ5m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-04 21:45:15",
     "updatedAt": "2024-03-04 21:47:16"
   },
@@ -9242,6 +10782,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ESALLODJ@MPFN.GOB.PE",
     "password": "$2y$10$2mdEwFMkFS4mTHS6T.iopOrbTYMiE6/q/yT/3DwkapMm4moxXDa42",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-04 22:33:22",
     "updatedAt": "2024-03-04 22:34:12"
   },
@@ -9254,6 +10796,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dcanelos@unamad.edu.pe",
     "password": "$2y$10$5oeD9oJJxD8urkBiIF7c.eABw79VG2zqHbh7wRC.MCfr8JhWNC.ve",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-03-05 14:03:00",
     "updatedAt": "2025-10-09 13:21:10"
   },
@@ -9266,6 +10810,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "javierleoningenieros@gmail.com",
     "password": "$2y$10$PJ6TSkX3Vy.Ko4hDjEDutu6X6MIDTsbGdqRSFCBNEyYTnD308HExy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-06 04:01:11",
     "updatedAt": "2024-03-06 04:01:47"
   },
@@ -9278,6 +10824,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kborda@unamad.edu.pe",
     "password": "$2y$10$EVQcyKKmRjBmtrrirDiAGOQOVelWcOpDl2wPkZy1yPodjETBzulOW",
     "estado": 1,
+    "dependenciaCodigo": "USO",
+    "cargo": "MEDICO",
     "createdAt": "2024-03-06 15:37:56",
     "updatedAt": "2024-03-06 15:41:41"
   },
@@ -9290,6 +10838,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sst@unamad.edu.pe",
     "password": "$2y$10$COxwr49sLldMetXzep7SY.iRUQqAqmzAAEssKXliUsfD60GpXCBlu",
     "estado": 1,
+    "dependenciaCodigo": "USO",
+    "cargo": "MEDICO",
     "createdAt": "2024-03-06 15:43:36",
     "updatedAt": "2024-03-06 16:06:30"
   },
@@ -9302,6 +10852,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jrevoredo@unamad.edu.pe",
     "password": "$2y$10$H5WV9jBrqhzK.5FWeA30iOSmW/PouShsZcUfNNZze/KEJLbIe9QG2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-06 16:12:46",
     "updatedAt": "2025-08-12 17:37:15"
   },
@@ -9314,6 +10866,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jbecerra@nextnet.pe",
     "password": "$2y$10$OyMc.bERs/katCjRiYaRvOGztufaNMsJUl.51AroIuOJs7US43JuG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-06 22:55:09",
     "updatedAt": "2024-03-06 22:56:10"
   },
@@ -9326,6 +10880,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "orzo1204@gmial.com",
     "password": "$2y$10$vyzboF6I2yM4JQ3E610X/elk6VLOVi6rmemiwVe18Oq17S2u4T6wu",
     "estado": 0,
+    "dependenciaCodigo": "UEI",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-03-07 13:53:20",
     "updatedAt": "2024-03-11 14:05:01"
   },
@@ -9338,6 +10894,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "orzo1204@gmail.com",
     "password": "$2y$10$0TPP4/MznmtbJx44UMG9PO1zQlQ1uJp2L98j45FM0Zfi/fH4Xlgvy",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-03-07 13:58:03",
     "updatedAt": "2024-03-07 13:58:03"
   },
@@ -9350,6 +10908,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dcalcina@unamad.edu.pe",
     "password": "$2y$10$lLr.TG6eWl9b959sOgRQk.w2wL2/Pv3seqtWVbz1iJ1PkhS1Bg7Le",
     "estado": 1,
+    "dependenciaCodigo": "FED",
+    "cargo": "DECANO",
     "createdAt": "2024-03-07 17:40:47",
     "updatedAt": "2024-03-07 17:40:47"
   },
@@ -9362,6 +10922,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "EQUELOPANA@CULTURA.GOB.PE",
     "password": "$2y$10$/.0Ry.wt584VQhi3N6Ax0.mSoBdb7W02Xnf.xMceDqqvIfKIlhB4m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-07 17:45:04",
     "updatedAt": "2024-03-07 17:45:39"
   },
@@ -9374,6 +10936,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mmedina@minedu.gob.pe",
     "password": "$2y$10$fpJsvooTTTRqwTe2ETxm8e62WSnrY0BhT.k0FBwbTQv5ycsuCnUZu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-07 17:58:00",
     "updatedAt": "2026-02-03 16:46:08"
   },
@@ -9386,6 +10950,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carpio211098@gmail.com",
     "password": "$2y$10$d3Ri8dV2br/e8ZM6HHjLd.jICdQSpFDpmZGS/0tS8yIlgbvdI4lBi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-07 22:30:34",
     "updatedAt": "2024-03-07 22:34:35"
   },
@@ -9398,6 +10964,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcruzch@unamad.edu.pe",
     "password": "$2y$10$sT/HNAKwRve0815yjq0k3eTH4KUwY3OXflM/DiaIQDqEftL7gQhtG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-08 15:59:50",
     "updatedAt": "2025-05-27 16:24:47"
   },
@@ -9410,6 +10978,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "igcinstituto@gmail.com",
     "password": "$2y$10$kDi/P7iuuMFUU9nvfVix/uYF6oHQMh.EIF4gpLOHd3UUGncN7bQdO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-08 21:17:27",
     "updatedAt": "2026-03-02 18:38:32"
   },
@@ -9422,6 +10992,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "saritahc.91@gmail.com",
     "password": "$2y$10$RBdwJxLW1HBEzEFYYXGtHecilZz4cpQj7dpsDxYrRQ0VNWT6XEKri",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-08 23:04:10",
     "updatedAt": "2024-03-08 23:04:24"
   },
@@ -9434,6 +11006,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yukimego12@gmail.com",
     "password": "$2y$10$eoIUKq2Dqgz1REPS3f4jxOOpd4jLXXIf4sv95Xr3vQcX3JPLrWPAG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-11 14:55:31",
     "updatedAt": "2024-03-11 14:56:10"
   },
@@ -9446,6 +11020,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "luquetjose@gmail.com",
     "password": "$2y$10$7CoytdxKgUPR9T0qhDlbKuLcdP29tb/rWacv0UPMZIvCjQ7RQAHcu",
     "estado": 1,
+    "dependenciaCodigo": "SICHS",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-03-11 14:58:47",
     "updatedAt": "2026-02-11 17:10:52"
   },
@@ -9458,6 +11034,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pcharap@unamad.edu.pe",
     "password": "$2y$10$tNty69ojzeB9mYmbdSnkduJb46xNNoHap5OzsJdkbL43ok8g4nuWC",
     "estado": 1,
+    "dependenciaCodigo": "CIIDIOMAS",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-03-12 20:25:56",
     "updatedAt": "2024-03-12 20:29:16"
   },
@@ -9470,6 +11048,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "edu.taven.high@gmail.com",
     "password": "$2y$10$MyUJMauh9fZneec0T7pVuOqv6GNcNafELlYNZM11pFCpZoYSVJnXy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-12 20:52:14",
     "updatedAt": "2024-03-19 22:09:29"
   },
@@ -9482,6 +11062,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcaceres@unamad.edu.pe",
     "password": "$2y$10$2cxiimlDpaJZTEP9dw.V9.RG2yLYH9/.emh.O.es1B730oS35CQc6",
     "estado": 1,
+    "dependenciaCodigo": "DIE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-03-13 15:25:14",
     "updatedAt": "2024-09-04 13:47:58"
   },
@@ -9494,6 +11076,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "coordinacioninterinstitucional@contraloria.gob.pe",
     "password": "$2y$10$iqLni9SdxB8ih.5BWDL6BuXMbWJNR5ZlZmcIU12/lNqauvYOzxkG6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-13 15:44:16",
     "updatedAt": "2024-06-18 19:56:36"
   },
@@ -9506,6 +11090,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "praymeq3006@gmail.com",
     "password": "$2y$10$d2ujX37BeUtsx8J9o/M31OpgVNPl2ElgOJ1M9SKrP2F0MPOn7ZCkC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-13 19:53:28",
     "updatedAt": "2024-03-13 19:55:04"
   },
@@ -9518,6 +11104,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JOSE.SULCA@QW.GOB.PE",
     "password": "$2y$10$csE2eRUNw12Z34w/gL4xveXeIlluBqi5xM77PBtMPkMZGrAa10SpW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-13 22:36:25",
     "updatedAt": "2024-03-13 22:36:42"
   },
@@ -9530,6 +11118,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yquicop@unamad.edu.pe",
     "password": "$2y$10$Y6cEkpqSkPfDNEyZ1hBZ7u9zMIvRiNCmBfuj4j7RlZLeYOOmWbhWy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-14 13:28:39",
     "updatedAt": "2024-03-14 13:29:15"
   },
@@ -9542,6 +11132,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rojitas6119@gmail.com",
     "password": "$2y$10$xbqPoj7PS3AA.HmL.jAaK.BCshn4iGJHOgvF4VAXtdEafFEBG19O2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-14 15:55:40",
     "updatedAt": "2024-03-14 16:05:38"
   },
@@ -9554,6 +11146,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rf74590031@gmil.com",
     "password": "$2y$10$HIoD9Ag/unEidv4HMV/w9ubdvpeXeWLzQFhisog24yWTPA/CcbdCu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-14 16:03:45",
     "updatedAt": "2024-03-14 18:28:47"
   },
@@ -9566,6 +11160,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JOSELUISYANAPAANDRADE@GMAIL.COM",
     "password": "$2y$10$cukJoVVtelsYRjkLqOSjQenvoA7K.CZg25.vWjhtRnFQPANU6AKFe",
     "estado": 1,
+    "dependenciaCodigo": "DBC",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-03-14 16:47:48",
     "updatedAt": "2024-03-20 14:04:47"
   },
@@ -9578,6 +11174,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pjfs_mdd_mesadepartes@mpfn.gob.pe",
     "password": "$2y$10$bNIdyfIIBRONGGJ.47bSM.W5MWfwRWmQum2mKprv/6IzkA3G.Py3W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-14 21:32:18",
     "updatedAt": "2024-03-14 21:32:52"
   },
@@ -9590,6 +11188,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gmontoya@osce.gob.pe",
     "password": "$2y$10$93OOLOYpU41v/xMecZ9ev.YopboK9E52yHBtpqVIVftfudLu3Xilm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-14 22:51:51",
     "updatedAt": "2024-03-14 22:53:08"
   },
@@ -9602,6 +11202,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "andrea_mamani@usmp.pe",
     "password": "$2y$10$LKu1a7tM9ToPD39LvUC8.eVP7/KbbqLqr8ZmA.MsJoirHWRVjRpBq",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-03-15 13:09:21",
     "updatedAt": "2026-04-22 15:20:09"
   },
@@ -9614,6 +11216,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ing.hleon@gmail.com",
     "password": "$2y$10$vuBx5HBNVbt5LYktY.2ZuemxNjMcbdLL.X5bfoq2WucfEyOUgEvwq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-15 22:38:42",
     "updatedAt": "2024-03-15 22:38:42"
   },
@@ -9626,6 +11230,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jparicahua@unamad.edu.pe",
     "password": "$2y$10$kjAP.zi2BZxohzYxOBnE3OUbFXcXsDyeAi4deQhDGyMJUa/Eu77aC",
     "estado": 1,
+    "dependenciaCodigo": "TH",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-03-19 14:09:35",
     "updatedAt": "2025-11-21 15:35:25"
   },
@@ -9638,6 +11244,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dsajami12@gmail.com",
     "password": "$2y$10$MU8gftjWkmiAEFIY5zs2fuAXYnu2HvDHAUYBc0nvMRk2uFTXt3sIi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-19 14:18:54",
     "updatedAt": "2024-03-19 14:20:06"
   },
@@ -9650,6 +11258,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tineoisabel97@gmail.com",
     "password": "$2y$10$28hRhDC18wIlrGZ3SdwnBOQ/IOWsTO4Pq9Cu8QpDyTe8BqLHG.5gG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-19 23:39:17",
     "updatedAt": "2024-03-19 23:39:48"
   },
@@ -9662,6 +11272,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "huillca12@gmail.com",
     "password": "$2y$10$3JNzKf0BhexN2VAYfVSrK.gihwI/s4po1tBgG8C4KUkljI14bSKbq",
     "estado": 1,
+    "dependenciaCodigo": "CTPSICOLOGIA",
+    "cargo": "ASISTENTE",
     "createdAt": "2024-03-20 12:55:19",
     "updatedAt": "2025-06-23 21:15:29"
   },
@@ -9674,6 +11286,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ineicoadm@gmail.com",
     "password": "$2y$10$bBtiE3ozxUz9Iaa05U1ViegNcJ7SCHRrIUTl4.BcwJ3PmWkqxdqFe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-20 21:16:37",
     "updatedAt": "2024-03-20 21:17:32"
   },
@@ -9686,6 +11300,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sespinosa@unamad.edu.pe",
     "password": "$2y$10$0MrldsR7qXqB9NsCdZbUtu3M1f50RlBMXWifC43wgqvbqivJWRIU2",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "DOCENTE",
     "createdAt": "2024-03-21 20:11:11",
     "updatedAt": "2024-03-21 20:11:11"
   },
@@ -9698,6 +11314,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eperezq@unamad.edu.pe",
     "password": "$2y$10$QemDxBWp0sdYxnYA825HmO5tDkVMKouObChL6c9QKswkkfbWhAUHu",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "RESPONSABLE",
     "createdAt": "2024-03-22 20:30:30",
     "updatedAt": "2025-07-22 19:24:26"
   },
@@ -9710,6 +11328,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alcaldia@munitahuamanu.gob.pe",
     "password": "$2y$10$aPLqi4jfbkOKSrCRzydhbOpQv743hZP.OkkrVY.ePbG99M62NS2YG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-22 21:05:53",
     "updatedAt": "2024-03-22 21:46:05"
   },
@@ -9722,6 +11342,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gaviotadeltahuamanu@gmail.com",
     "password": "$2y$10$LVXCi8A7rlSQ0fHuOqdN/Og.w/fLPyh15gXKvECbomZ4Zgbojv3CW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-22 21:30:12",
     "updatedAt": "2024-07-25 06:19:42"
   },
@@ -9734,6 +11356,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jflores@unamad.edu.pe",
     "password": "$2y$10$6jK5YTzK9y0sgnW2nSAw1.4AczNxyQIkPOvOeDM4dT7DZho3C1Wm6",
     "estado": 1,
+    "dependenciaCodigo": "EPMVZ",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-03-25 15:09:46",
     "updatedAt": "2024-12-05 14:36:00"
   },
@@ -9746,6 +11370,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "geralolivos@gmail.com",
     "password": "$2y$10$8HnJBlk1yWrJtMA2QQRZXepFfS7RAPwanv15.AtQ1ZDJGWhVxTOD.",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2024-03-25 15:27:04",
     "updatedAt": "2026-03-31 17:38:46"
   },
@@ -9758,6 +11384,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ccopahuillcaursula27@gmail.com",
     "password": "$2y$10$xP0Mh9RMc7QZMTBzROw3iOj7t/lJOqhf1n0GrOZ/QNdF41.EU2Ez6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-25 21:06:53",
     "updatedAt": "2024-03-25 21:11:18"
   },
@@ -9770,6 +11398,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ccopahuillcaclaudia@gmail.com",
     "password": "$2y$10$cxU2HGlqyjVDeW6cenvgL.QYqs3fKoP1ghSsfxHPajomYx/FAvB2K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-03-25 21:11:13",
     "updatedAt": "2024-03-25 21:11:13"
   },
@@ -9782,6 +11412,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "victor@unamad.edu.pe",
     "password": "$2y$10$uhmye8u1WQBwsnCCFMQsS.81I4x05gl.fyzqEVcjqumZ9m5pG9nVy",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-03-26 15:33:43",
     "updatedAt": "2024-03-26 15:33:43"
   },
@@ -9794,6 +11426,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "olozanoa@unamad.edu.pe",
     "password": "$2y$10$h56Zjv9U7no2JTiJbVgBwOzj4uSXT5KfD08TtzU.JomgTiNMEUrG.",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2024-03-26 16:01:55",
     "updatedAt": "2024-03-26 16:01:55"
   },
@@ -9806,6 +11440,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "itanchiva@unamad.edu.pe",
     "password": "$2y$10$bH2B/.EvOXIn5QVrxIBhQuW2Xq/sxlWXcLpuNXLruzJFYRRYpMlaG",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2024-03-26 16:08:18",
     "updatedAt": "2024-03-26 16:08:18"
   },
@@ -9818,6 +11454,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mtorress@unamad.edu.pe",
     "password": "$2y$10$0RghILgH3wftuwWdpaNEmuHeYAcwPDHe8I8rRiYi89juov2lEL..S",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-03-26 19:45:41",
     "updatedAt": "2024-11-22 15:57:22"
   },
@@ -9830,6 +11468,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leydyvaldiviaramirez_30@hotmail.com",
     "password": "$2y$10$FhBbNfF.ZMvCnjCKCH3LXO/tL3JkeJKyYQ6ozjasC56fnp47vzooS",
     "estado": 1,
+    "dependenciaCodigo": "UPE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-03-26 19:48:03",
     "updatedAt": "2026-03-09 17:30:58"
   },
@@ -9842,6 +11482,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "monicasolano2003@hotmail.com",
     "password": "$2y$10$OUQy.639.eA0q.XlMO4RPO6lVs10nzia1lRrA6v6D3ak3Otri/mJG",
     "estado": 0,
+    "dependenciaCodigo": "UP",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-03-26 19:51:20",
     "updatedAt": "2024-05-02 20:05:05"
   },
@@ -9854,6 +11496,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "myriamg@unamad.edu.pe",
     "password": "$2y$10$VtHqHVdI1JsUKJJ6yI/8neHAtTadMb1qKTlI26Ut.QhpJsjAGFSbe",
     "estado": 1,
+    "dependenciaCodigo": "EPE",
+    "cargo": "SECRETARIA",
     "createdAt": "2024-03-27 12:39:52",
     "updatedAt": "2025-02-11 12:46:58"
   },
@@ -9866,6 +11510,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lmeza@unamad.edu.pe",
     "password": "$2y$10$zwF3hhmorswM7etY2xH8LeL3gOGN8kSZioNc3I6Z59FBwo0fEeoWy",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "DOCENTE",
     "createdAt": "2024-03-27 14:45:22",
     "updatedAt": "2024-03-27 14:45:22"
   },
@@ -9878,6 +11524,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gholguin@unamad.edu.pe",
     "password": "$2y$10$nbUHZ0NcY5dRBIsCkooe1e7PtdbNVgDGyXkxergsOr.6RcUJy8TEK",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2024-03-27 14:55:21",
     "updatedAt": "2024-03-27 14:55:21"
   },
@@ -9890,6 +11538,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "recursos_humanos@unaat.edu.pe",
     "password": "$2y$10$uRjp2Drh07wDSQXZLiYUq.dWEgkQs/wwExM7CyDnoy25BXsSPh4Cq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-01 19:22:41",
     "updatedAt": "2024-04-01 19:24:44"
   },
@@ -9902,6 +11552,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dapaza@unamad.edu.pe",
     "password": "$2y$10$pvHcwCOql2fPHsUBU5MMK.QYJ6YOzm80gEIphxiAzxa4EB.7Xc6Mq",
     "estado": 1,
+    "dependenciaCodigo": "EPISI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-02 19:30:02",
     "updatedAt": "2024-08-27 17:48:26"
   },
@@ -9914,6 +11566,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carispe@unamad.edu.pe",
     "password": "$2y$10$NRiHHj3gac9FUDEqKAjol.zIQRtiwBawbSMPCHG0G/Rr4t3YhmmZe",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-03 13:20:50",
     "updatedAt": "2024-04-03 13:20:50"
   },
@@ -9926,6 +11580,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lsalvatierra@unamad.edu.pe",
     "password": "$2y$10$9LHZjlPI0MQ3wZLLhuEDZ.ktJqUImKKpAQeZ2NrFbveBQk9OmMWOG",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-04-03 14:36:21",
     "updatedAt": "2026-03-25 21:14:10"
   },
@@ -9938,6 +11594,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nquispehuancag@unamad.edu.pe",
     "password": "$2y$10$NmLZJ2mXuSq/lYWk3MUqs.msq41WM0tZCDRMWDt9uW4KlcWtM1J1a",
     "estado": 1,
+    "dependenciaCodigo": "CEU",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-03 14:47:48",
     "updatedAt": "2024-04-03 14:47:48"
   },
@@ -9950,6 +11608,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marguedas@unamad.edu.pe",
     "password": "$2y$10$xecgpdISh.qWB6XB7rUY2OK8lCGPAaY6.E1UPy2c3SlOcPeUgbJFm",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-03 17:45:19",
     "updatedAt": "2024-04-04 13:12:30"
   },
@@ -9962,6 +11622,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tcardenas@unamad.edu.pe",
     "password": "$2y$10$xeQ2ozJG9cRUaPISCLYgtO2Xz8BDNg3ZYzEpd51Rg.73hf0btdZZm",
     "estado": 1,
+    "dependenciaCodigo": "TH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-03 19:47:49",
     "updatedAt": "2024-04-03 19:47:49"
   },
@@ -9974,6 +11636,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nhuallpah@unamad.edu.pe",
     "password": "$2y$10$XflNQIguryPLJntgxLe8t.CD/ltCLyKuGuECjFsjokXLTf1B/BHA6",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-04-03 21:41:29",
     "updatedAt": "2024-04-03 21:41:29"
   },
@@ -9986,6 +11650,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lmfloresl@unamad.edu.pe",
     "password": "$2y$10$Sklt/jiJxqm3Cs/YUtJBOO6bYzM2gHAZQnW6tKJyTwHJtuC8/kVW.",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE SEGURIDAD",
     "createdAt": "2024-04-04 13:35:04",
     "updatedAt": "2026-02-11 19:02:22"
   },
@@ -9998,6 +11664,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jfarfanh@unamad.edu.pe",
     "password": "$2y$10$uidTGCZ1EcWzIfFVBYQqku5HMeyc4l1kQKquxL42KbQKR4DU./8Ra",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-04 16:36:19",
     "updatedAt": "2024-04-04 16:36:19"
   },
@@ -10010,6 +11678,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fyujrap@unamad.edu.pe",
     "password": "$2y$10$V3jGlOAQUsvNM.Deg0lTreYUQuRoCJOoDrBjs1GxDfTbP9pAMxjaO",
     "estado": 1,
+    "dependenciaCodigo": "DAMVZ",
+    "cargo": "DIRECTOR (E)",
     "createdAt": "2024-04-04 16:44:46",
     "updatedAt": "2024-04-04 16:44:46"
   },
@@ -10022,6 +11692,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "altaro1@yahoo.es",
     "password": "$2y$10$MPzB.SPoKFAM8J1gU/AB1exVhjUFZL7JKmiJohiSKbTIu4bkymq9y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-04 18:00:57",
     "updatedAt": "2024-04-04 18:02:10"
   },
@@ -10034,6 +11706,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "srbapoyoadmin1@indecopi.gob.pe",
     "password": "$2y$10$WPm35lPkEmuaQNlsrpP9OeJDeatmt/KNtZ4a5wp2gUcH5TfzOiV/6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-04 21:00:02",
     "updatedAt": "2024-04-04 21:18:33"
   },
@@ -10046,6 +11720,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@perusecurity.com.pe",
     "password": "$2y$10$xcHLi158g/thETgTZoI15ux9KKmD/XsRLZbLJqJ3z6LSs0DEv1Rpi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-05 16:53:57",
     "updatedAt": "2024-04-05 17:01:51"
   },
@@ -10058,6 +11734,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yvilchez@unamad.edu.pe",
     "password": "$2y$10$jupAx9kmJSXA1isGoKvxdeNqL/kzMR2DAv3DV69k4692rkMMMesJu",
     "estado": 1,
+    "dependenciaCodigo": "EPISI",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-04-05 17:59:36",
     "updatedAt": "2024-12-24 13:47:23"
   },
@@ -10070,6 +11748,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ndiazt@congreso.gob.pe",
     "password": "$2y$10$kI59uRLEqUWhL2f06K3PdO952bN576vwKarsiKMAqgDtEpSuIp1Zu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-05 22:47:02",
     "updatedAt": "2024-04-05 22:48:05"
   },
@@ -10082,6 +11762,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erika.cabelllo@econocable.pe",
     "password": "$2y$10$ltxHPwCG8Lp3dKAuz/iRHuaHnmG0RxAofz5K60Xr4LlDzcTL6EI42",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-08 14:46:20",
     "updatedAt": "2024-04-08 14:46:20"
   },
@@ -10094,6 +11776,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erika.cabello@econocable.pe",
     "password": "$2y$10$XD12Jq7skrNLSU1RFGD6kevo9uZavRrShKBnS1oCgbiWcUA3D5KHK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-08 14:48:15",
     "updatedAt": "2024-04-08 14:48:32"
   },
@@ -10106,6 +11790,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmcondorim@unamad.edu.pe",
     "password": "$2y$10$vRyz4isNwiC4p37u9L06IubNyFZ6p4Acoho4sxWsE0z7h8ITTpLf6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-08 16:41:37",
     "updatedAt": "2025-07-01 13:55:10"
   },
@@ -10118,6 +11804,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones@sineace.gob.pe",
     "password": "$2y$10$2ASxeRoGl1Se7N3m9pI0OutY/LLtNay96J4r3TVFDHhHKT/YAHNJK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-09 16:44:42",
     "updatedAt": "2024-04-09 16:45:12"
   },
@@ -10130,6 +11818,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abano82@gmail.com",
     "password": "$2y$10$jD4/w/TGslxmFcWGUYrk..J1X92yCrubPeRsBNzk4HyKZZxsf1YFy",
     "estado": 0,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2024-04-09 17:16:19",
     "updatedAt": "2024-09-30 17:28:22"
   },
@@ -10142,6 +11832,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mlunah@unamad.edu.pe",
     "password": "$2y$10$3QDnoY9.e55Vc1QaGrIDzeuVsy3I1KBqiC28GfK1UOrzMaCwHpQ4m",
     "estado": 1,
+    "dependenciaCodigo": "EPDCP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-10 16:00:28",
     "updatedAt": "2024-11-15 17:13:00"
   },
@@ -10154,6 +11846,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dayanna.zavala@cientifica-andina.com.pe",
     "password": "$2y$10$Tkdds8TlOqf4XPCqEbiV/.gPzlHIgPS1CrAj2Qrv2e0E9OgNOTpSG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-10 16:07:15",
     "updatedAt": "2024-04-10 16:07:15"
   },
@@ -10166,6 +11860,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gestiondocumental@senamhi.gob.pe",
     "password": "$2y$10$ohJaJwR3Lqod/RimuoOvmO2SQzMj6mZJ1dxxfudkufrxhXK5bAJ4C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-11 15:04:02",
     "updatedAt": "2025-08-07 20:40:27"
   },
@@ -10178,6 +11874,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "palomino2111@gmail.com",
     "password": "$2y$10$gdwZH/g03rOGuyT544IU6uSMBsTz4E.HDoBSopSnVWLcvOTTas1ka",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-11 18:58:27",
     "updatedAt": "2024-04-11 18:58:43"
   },
@@ -10190,6 +11888,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "egonzaless@jne.gob.pe",
     "password": "$2y$10$N9icmHK05nIP6L1VSo30re6I.nEqm/NOzPa7MNR0zEjQmaS7XwbwW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-12 14:05:24",
     "updatedAt": "2024-04-12 14:06:15"
   },
@@ -10202,6 +11902,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yfernandez@unamad.edu.pe",
     "password": "$2y$10$ESf6IyhooduYEfnTi1DGmOJWjw89gl.NOUy3odS85TtTcXE7yB/OS",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "RESPONSABLE DE LABORATORIO DE QUIMICA",
     "createdAt": "2024-04-12 17:31:50",
     "updatedAt": "2024-07-22 16:50:48"
   },
@@ -10214,6 +11916,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ipaucar@unamad.edu.pe",
     "password": "$2y$10$t5IR86miORu2wTIFtnj93.czImg0paqu1dDuD2BWyN5O8aYY70c5.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-12 17:37:42",
     "updatedAt": "2026-01-21 22:04:19"
   },
@@ -10226,6 +11930,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mariohize@gmail.com",
     "password": "$2y$10$2EyQnIRr7jVUye.vFOYObed4czG8RDtMBm675XXxLyTSYStuLB.RG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-12 18:30:05",
     "updatedAt": "2024-04-12 18:30:35"
   },
@@ -10238,6 +11944,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "chambi1602@gmail.com",
     "password": "$2y$10$Er2CJ7hZCsfGYz73zd7zbu7W/JP5YLbn1HhKdVknXOVS6OwMntEQ6",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-04-12 19:49:15",
     "updatedAt": "2024-08-23 16:46:28"
   },
@@ -10250,6 +11958,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvgonzaleslope@gmail.com",
     "password": "$2y$10$zM3k/cqlb1yHRsJdKN90HuHrUyl8jNxLuvWP1aVoaelp3pOJypgze",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-12 20:47:27",
     "updatedAt": "2024-04-12 20:47:27"
   },
@@ -10262,6 +11972,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vetfisterapi@gmail.com",
     "password": "$2y$10$nJl7x3IOAn3B4TOEdKfjyu/r7XXwZ/ud/SYeSBniuYyVKF5NQG4cO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-15 18:02:01",
     "updatedAt": "2024-04-15 18:02:43"
   },
@@ -10274,6 +11986,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lmoron@unamad.edu.pe",
     "password": "$2y$10$FERao0BRH45/YUlN7ezXH.CgKh9DjE6eKt9gIL2kUDkZTutGEa1A.",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-04-16 17:27:52",
     "updatedAt": "2024-04-16 19:21:51"
   },
@@ -10286,6 +12000,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "scahuana@unamad.edu.pe",
     "password": "$2y$10$cg0xbl366gz0epz9gYSHiuQ9dXq8OOulMBXlJRgt5E4708LpwuDv.",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2024-04-16 17:29:29",
     "updatedAt": "2024-04-16 19:22:10"
   },
@@ -10298,6 +12014,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tramite@dredmdd.gob.pe",
     "password": "$2y$10$Gg1zHsRs04SEm8D1nvhOTOc48NNNjUsHMEKwsZT1Bvd3D9FlfoIz2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-17 16:05:30",
     "updatedAt": "2024-04-17 16:05:50"
   },
@@ -10310,6 +12028,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "londoneirl@hotmail.com",
     "password": "$2y$10$km4pW2MjRUC4sJ4vQd8MCeb/zCqoWP2z4VuZTTmyYnQsZkikxhRa6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-18 16:23:43",
     "updatedAt": "2024-04-18 16:27:31"
   },
@@ -10322,6 +12042,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hlhuachaca@unamad.edu.pe",
     "password": "$2y$10$cBl3kjfrTFeVFT4bfuo1NOuowQn9f8TIMgpi42Wp38.hofKePLaLu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-18 17:21:45",
     "updatedAt": "2024-04-18 17:21:45"
   },
@@ -10334,6 +12056,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Danvell21@gmail.com",
     "password": "$2y$10$1Et/RL98G9E4o37sy0.CBOoHrMgzQ4INtatIHjXZTMAsjSw/Ne516",
     "estado": 1,
+    "dependenciaCodigo": "ALC",
+    "cargo": "ASISTENCIA TECNICA ADMINISTRATIVA",
     "createdAt": "2024-04-19 17:27:43",
     "updatedAt": "2024-04-22 13:33:53"
   },
@@ -10346,6 +12070,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dayana.mechan@gmail.com",
     "password": "$2y$10$6ZCDVxJdryZIorebrXa6JOQ8STK2L6YYo6BBulDKnMtEwXy/R4icq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-19 17:40:41",
     "updatedAt": "2024-04-19 17:41:44"
   },
@@ -10358,6 +12084,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lsalazar@congreso.gob.pe",
     "password": "$2y$10$Wiz/PI9zftk2w6EVA/W8GuaY/ciHl/7f.G8YSziLjm1RuIFJMCE5m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-22 21:25:56",
     "updatedAt": "2024-04-22 21:26:42"
   },
@@ -10370,6 +12098,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "thidalgo@unamad.edu.pe",
     "password": "$2y$10$ZqXJWTCgPjcVebtHjFtBgORjEDT3ORXjYdepYhibN8aeYXU1L7Bky",
     "estado": 1,
+    "dependenciaCodigo": "DAMVZ",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-04-23 14:35:57",
     "updatedAt": "2024-04-23 14:35:57"
   },
@@ -10382,6 +12112,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ovelapumacayo@gmail.com",
     "password": "$2y$10$qGxVNdgyw8Q3Ap9SUCUySu7IvtMQT64y8JOY2DED9Vmv.ciTu.Sb6",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2024-04-23 15:10:18",
     "updatedAt": "2024-04-23 15:10:18"
   },
@@ -10394,6 +12126,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Msihues@congreso.gob.pe",
     "password": "$2y$10$8agBw4syi6Rba.e9CQecKu7Y/Q9g6w2xeYDV2TZNQj49zWXk8mDJC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-24 21:15:48",
     "updatedAt": "2024-04-24 21:16:44"
   },
@@ -10406,6 +12140,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "esotaes@unamad.edu.pe",
     "password": "$2y$10$DgHnPfOQiGiJDV1j3DcNCe25FQ3PJ2RjZd4eDKxKODmNwmFNMkXYS",
     "estado": 1,
+    "dependenciaCodigo": "FED",
+    "cargo": "DOCENTE",
     "createdAt": "2024-04-25 16:20:16",
     "updatedAt": "2024-04-25 16:20:16"
   },
@@ -10418,6 +12154,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dherreraf@unamad.edu.pe",
     "password": "$2y$10$j4PPfciChLPYtiyvAaJsTOtKIM/dGQ.4.gh2gQruVeXX0MMsj98R.",
     "estado": 0,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-04-25 20:55:43",
     "updatedAt": "2026-01-13 14:06:03"
   },
@@ -10430,6 +12168,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "SUPERVISIONDEOFICIO@OSCE.GOB.PE",
     "password": "$2y$10$WtzxRSRq4WXYaKAyi81MOer/DXBcabS381NXpzph3f1K0Q5SpM3SK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-25 22:58:39",
     "updatedAt": "2024-04-25 22:59:02"
   },
@@ -10442,6 +12182,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ogaciudadano@munilaspiedras.gob.pe",
     "password": "$2y$10$bpL3sJOX6rtDVk1KLyKQW.Fy7hqcHs98GTJd9mm420PdoBAv06K8m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-26 19:41:23",
     "updatedAt": "2024-10-10 20:52:46"
   },
@@ -10454,6 +12196,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jperez@unamad.edu.pe",
     "password": "$2y$10$4l3h2ZyUCNbFZrc1gOlRr.aiEvL5dnKl5ka3ai.EOmx6nV79ngePa",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2024-04-29 14:14:38",
     "updatedAt": "2025-10-23 13:14:12"
   },
@@ -10466,6 +12210,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "angelica.19.91@hotmail.com",
     "password": "$2y$10$IcZ3/kQ0uS0aE2dXj89izuPra1azjLI3catdijbau81CA58GAjx2i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-29 16:10:10",
     "updatedAt": "2024-04-29 16:10:10"
   },
@@ -10478,6 +12224,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "karinc@unamad.edu.pe",
     "password": "$2y$10$rtguA2ZYY9OKr2WulstHFuniBGRZIxQ.Fa2Om1vLLgFYdl9LnnJBa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-29 19:55:52",
     "updatedAt": "2024-04-29 19:57:29"
   },
@@ -10490,6 +12238,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "iris.pajuelo@jnj.gob.pe",
     "password": "$2y$10$zpoBFVcOjevDoULPjtjaKO2SezylUa6XDpQ3JR7dLvxc4x2by/clq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-30 14:03:07",
     "updatedAt": "2024-04-30 14:03:34"
   },
@@ -10502,6 +12252,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "productioneventos21@gmail.com",
     "password": "$2y$10$2GYaw7Pzvx2qqmYuCwZv5ujGc2TUrXp2c0KQ89K40GQX5U28LQRYe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-04-30 21:46:33",
     "updatedAt": "2024-04-30 21:47:40"
   },
@@ -10514,6 +12266,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rguzmanc@unamad.edu.pe",
     "password": "$2y$10$2PwK0VAnJmXK//MbXF9Nz.qsq1VVzOBni2ZcLbbaN9siN8q/YFnRi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-03 00:01:39",
     "updatedAt": "2024-05-03 00:02:31"
   },
@@ -10526,6 +12280,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvillegas@unamad.edu.pe",
     "password": "$2y$10$ZcUuhI.m2vK/3zpHIY7oquMBQq0cg6UsYM3ech8OnZFl2iNKBGpce",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ESPECIALISTA DEPORTIVO",
     "createdAt": "2024-05-03 13:01:11",
     "updatedAt": "2024-05-03 13:01:11"
   },
@@ -10538,6 +12294,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mptambopata@gmail.com",
     "password": "$2y$10$fAT.FEhnrgZ9LLJB/CPmY.hifORjQmL0amv5QbbGeHe1FHLphHU7O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-03 17:22:21",
     "updatedAt": "2024-05-03 17:28:12"
   },
@@ -10550,6 +12308,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacionestaipprimerasala@minjus.gob.pe",
     "password": "$2y$10$qOrx7YnNQpNYnQss4Y2q7eBVncfq8Hx9iM1AKfA0GHuwWw67Y65Pm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-06 14:43:56",
     "updatedAt": "2025-08-22 21:32:09"
   },
@@ -10562,6 +12322,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lespellibar@unamad.edu.pe",
     "password": "$2y$10$V9m1v7HIGTeOSTnqFKPQheyLJmWjSjMSCw7NXamUc.7PbQREUfMkO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-06 15:19:31",
     "updatedAt": "2024-05-06 15:19:31"
   },
@@ -10574,6 +12336,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "framirez@osce.gob.pe",
     "password": "$2y$10$XNFKvlM5POJuB7oiKElkzOIElmJ7IZbqJggR9tyIPL/HleLa.NHyu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-06 15:20:16",
     "updatedAt": "2024-05-06 15:21:14"
   },
@@ -10586,6 +12350,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "christi4ncjc@gmail.com",
     "password": "$2y$10$X/xC2qhnsOwjWfSkKp9OS.FCpQnazfowR0pnS5gdaISlF8uH0eob2",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "RESPONSABLE",
     "createdAt": "2024-05-07 14:04:08",
     "updatedAt": "2024-05-07 14:04:08"
   },
@@ -10598,6 +12364,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asesor4.claro@avalperu.com",
     "password": "$2y$10$hsRd6guJKPncNZcM4wTjauNIKdHgFawtnpWBpOH0UBOnX0WqhQlta",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-07 23:17:41",
     "updatedAt": "2024-05-07 23:19:47"
   },
@@ -10610,6 +12378,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "GREGOIRE.LECLERC@CIRAD.FR",
     "password": "$2y$10$zipQhVAK1mBWViZjpsySRuOYQVBgM4GxqxGmzQnPK37HT9ekarljO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-08 14:18:43",
     "updatedAt": "2024-05-08 15:30:41"
   },
@@ -10622,6 +12392,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "calvarezg@gmail.com",
     "password": "$2y$10$g/OnBpxsm5f4uadKmvMsGOAeD5CqYoOaNg9Q1GenZW4c6wAb1dN9q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-08 21:26:02",
     "updatedAt": "2024-05-08 21:26:02"
   },
@@ -10634,6 +12406,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "calvarezg@unaj.edu.pe",
     "password": "$2y$10$l77JbRCDH3otTiQv4iomm.x3ceJ5NY/BKxCrWLrGHK91Qt.wzh64y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-08 21:32:06",
     "updatedAt": "2024-05-08 21:33:20"
   },
@@ -10646,6 +12420,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FFLOREZS@UNAMAD.EDU.PE",
     "password": "$2y$10$BOKDSXrVM3mM83DQ6fa6v.0DjEhULreLhr5VUIzvxgPP3X45hfzN6",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-05-08 21:56:16",
     "updatedAt": "2026-01-21 21:11:02"
   },
@@ -10658,6 +12434,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "karlagabriela.or@gmail.com",
     "password": "$2y$10$WKOfGHe9Qb.CTwQkLn1WAumuDJLt.MD6xc51pIBEV6cnQIw88m6By",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-09 03:21:16",
     "updatedAt": "2024-05-09 03:37:31"
   },
@@ -10670,6 +12448,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jpuppi@conida.gob.pe",
     "password": "$2y$10$xwINnTE5CRH7U7obyjZ7mev.MYT7eT9dJWXzzmIl4bnmt7/y3eZOK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-09 15:52:09",
     "updatedAt": "2024-05-09 15:54:41"
   },
@@ -10682,6 +12462,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ongsjdios@ongsjdios.org.pe",
     "password": "$2y$10$MSZwiI/QWf/2PufatHArOeGATkTzRXRU7GK2JBlq54eL5AyMF9bG2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-09 23:37:24",
     "updatedAt": "2024-05-09 23:58:05"
   },
@@ -10694,6 +12476,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cyarinj@unamad.edu.pe",
     "password": "$2y$10$gCHV/eWzgU/DA4sIaEwr4uw6CeagEzVjec7l44OFSfx287khM8kRO",
     "estado": 1,
+    "dependenciaCodigo": "DAE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-05-10 16:21:51",
     "updatedAt": "2026-04-01 13:44:48"
   },
@@ -10706,6 +12490,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tribunaltaip@minjus.gob.pe",
     "password": "$2y$10$xu7oK8vPoz0WwYjhcpoqrOwtmYhK8nGGtzCeCKbbGy5tPGCHXf3wG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-10 19:32:26",
     "updatedAt": "2025-08-04 19:23:38"
   },
@@ -10718,6 +12504,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "megalidpam@gmail.com",
     "password": "$2y$10$F.eabUi2ySDm2ajc/OgnzuXWUxmoXuonU.B4kmmu6lLRT8RLnujMa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-13 17:25:30",
     "updatedAt": "2024-05-13 17:55:57"
   },
@@ -10730,6 +12518,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "acondorapa@minsa.gob.pe",
     "password": "$2y$10$eaum/wNePYWekdzMyUfJzeh8MXbhoe0Pv874I4iHTObcLpJbFKHW6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-15 14:44:47",
     "updatedAt": "2026-01-21 19:20:57"
   },
@@ -10742,6 +12532,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvcs_oacp_laho@viviendaext.pe",
     "password": "$2y$10$IOi8A8vEz3dzxCZ6vsWNC.irEGzmfRF1qZyQtHN5w7ERvVbfs5dPu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-15 16:15:54",
     "updatedAt": "2024-05-15 16:17:03"
   },
@@ -10754,6 +12546,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mfarfan@unamad.edu.pe",
     "password": "$2y$10$lE61Z7DDNKqpo0/xDWNG2uN4y0m83BQFbvy4KUAziFLPaeP4u0y8O",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "DOCENTE",
     "createdAt": "2024-05-15 17:12:09",
     "updatedAt": "2024-05-15 17:12:09"
   },
@@ -10766,6 +12560,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "imageninstitucional@unam.edu.pe",
     "password": "$2y$10$IjsN.G2WIOhrse8wWHhEU.sEDH0YWO6YeBbmnMlyzE47HUPSxX.wy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-16 03:32:42",
     "updatedAt": "2025-05-20 02:34:46"
   },
@@ -10778,6 +12574,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sip_11@pcm.gob.pe",
     "password": "$2y$10$3DTVJQlT7cRLZCqZa4EtD.wuY7Kb91q1bwpxX7HnC2w3GdnlCDzOO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-16 17:20:07",
     "updatedAt": "2024-05-16 17:20:39"
   },
@@ -10790,6 +12588,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "psanca@unamad.edu.pe",
     "password": "$2y$10$uEK9AvrbyInRKTza4g6GJOxREOUwyhYD7HWL.Yh7qHpQ8GsLFFbQy",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-05-17 12:59:38",
     "updatedAt": "2025-09-03 17:00:48"
   },
@@ -10802,6 +12602,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "8040878@unamad.edu.pe",
     "password": "$2y$10$TaTbJ69A/O/WHpf8YapJVuA0dOfi.YLyljujr5i2bsuPw6G9HbQDm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-20 00:45:00",
     "updatedAt": "2024-05-20 00:46:48"
   },
@@ -10814,6 +12616,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abarriga@unamad.edu.pe",
     "password": "$2y$10$K.z6WZtq0uv46KPxNjTwd.3R/x7Fsd7KOuJfgkDPPXI/Ont0xlDrG",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2024-05-20 13:40:25",
     "updatedAt": "2024-05-20 13:40:25"
   },
@@ -10826,6 +12630,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "consultor_jeg_02@sis.gob.pe",
     "password": "$2y$10$eJt5VUdyt6.8GjpvXqmut.fuDoeVBFpIaBwIFtUthhiPOcO4XGgUe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-20 21:37:47",
     "updatedAt": "2024-05-20 21:37:47"
   },
@@ -10838,6 +12644,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MUNIBERIA2020@OUTLOOK.COM",
     "password": "$2y$10$Jcb0hfNOvvuypt.WcuGm1edprGFbAHX21svITrja9ujAbpzdx1pgC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-21 13:32:38",
     "updatedAt": "2024-05-21 13:34:12"
   },
@@ -10850,6 +12658,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "consultor_jef_02@sis.gob.pe",
     "password": "$2y$10$3rSdX1u18DskEUl2WcIKxesN.1aI2iSEPqUU37SpZYrewky6N2Q.u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-21 14:12:39",
     "updatedAt": "2024-05-21 14:13:20"
   },
@@ -10862,6 +12672,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "HCUSILAYME@UNAMAD.EDU.PE",
     "password": "$2y$10$0aCiIko4xTFmrUGks3rvAuieBO8fSpUG4VgyYoMzfwo/8B.1ihXtC",
     "estado": 1,
+    "dependenciaCodigo": "UIFCE",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-05-21 16:33:57",
     "updatedAt": "2026-04-28 17:08:18"
   },
@@ -10874,6 +12686,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pzapata@jne.gob.pe",
     "password": "$2y$10$salYESy6/0UUNjJdISHuFOWmynpv7LQj3E5aC1uwNvGAyy3nKwJq.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-21 19:08:45",
     "updatedAt": "2024-05-23 17:24:01"
   },
@@ -10886,6 +12700,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "echulla@unamad.edu.pe",
     "password": "$2y$10$ZZu0lE4hqy0NJnr4lIsxDeLnM3r2ARWNrXezQm7jX1Lgv01jQ62kC",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2024-05-22 14:26:49",
     "updatedAt": "2024-05-22 14:26:49"
   },
@@ -10898,6 +12714,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mbarriga@unamad.edu.pe",
     "password": "$2y$10$T/tOlG5SgvN/qOfkF8AMbeCTOgJ3.M1DLVjdm17cM5Xuk2f4LLbt6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-23 00:32:17",
     "updatedAt": "2024-05-23 00:32:17"
   },
@@ -10910,6 +12728,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jticlla@contraloria.gob.pe",
     "password": "$2y$10$ASlXimBTFxjaGq/3iwC6g.RTrib/ac1U3.uV06ErqK/VKpfDMDHXq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-23 22:44:25",
     "updatedAt": "2024-05-23 22:50:01"
   },
@@ -10922,6 +12742,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "josefinac@unamad.edu.pe",
     "password": "$2y$10$4aOk4JTkUNzK3lSntxpCtO5EHHsEQ9fTGI9TiWczh/dCyfBnVsYXy",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-05-24 14:04:55",
     "updatedAt": "2024-05-24 14:04:55"
   },
@@ -10934,6 +12756,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dlaura@unamad.edu.pe",
     "password": "$2y$10$jAMSunPLG3sbSO21cpjjyuwx57cmdKsmSbzCHUdbfV6aNdqnGqSce",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-05-24 16:51:08",
     "updatedAt": "2026-05-25 14:34:36"
   },
@@ -10946,6 +12770,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ronalpax@hotmail.com",
     "password": "$2y$10$pSnz6YP5sYy6e24AE62i/OvPzqvGgLdRxuXUC1qc/.7oYs2gYDGsW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-24 21:07:28",
     "updatedAt": "2024-05-24 21:07:28"
   },
@@ -10958,6 +12784,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "llescano@unamad.edu.pe",
     "password": "$2y$10$ttUeAXwtg7PhpbZdRutLcuuEMELbgGn8PgWErkISlPgSP0T8FH8cW",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-05-27 16:10:10",
     "updatedAt": "2024-05-27 16:10:10"
   },
@@ -10970,6 +12798,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "servicio.mensaje.pnsu@vivienda.gob.pe",
     "password": "$2y$10$/G4FWjyCyZm16q17xZVj/.IQZQKaUrXCIycn1AjhjaDr6MN9/c.vS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-27 20:01:16",
     "updatedAt": "2024-05-27 20:02:13"
   },
@@ -10982,6 +12812,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wmontes@senasa.gob.pe",
     "password": "$2y$10$sMGinFvtyKgRbWhxG0431eqveXuq1/EoYzISxeUBDBxA6q7SOa9pC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-28 17:23:37",
     "updatedAt": "2024-05-28 17:23:37"
   },
@@ -10994,6 +12826,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "informes@mitso.org",
     "password": "$2y$10$TsMNkCnZujjvGOpzmIjLdOXpGcYUAX/RhPOKYDovOTsY3MiUzxcfK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-30 20:44:38",
     "updatedAt": "2024-05-30 20:45:06"
   },
@@ -11006,6 +12840,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "RGAMARRA@UNAMAD.EDU.PE",
     "password": "$2y$10$4BSP3NRJfE0xXU3Qrp0TWuNVF.wxXPza348adwvz0sdIxp.ZoRl7q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-05-31 14:36:49",
     "updatedAt": "2024-05-31 14:36:49"
   },
@@ -11018,6 +12854,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mpuma@unamad.edu.pe",
     "password": "$2y$10$yg40ldrkHhRZuB5t8U6eUerhwUvmQMB2TMQ2HDcPwdjqEyYdC0d/q",
     "estado": 1,
+    "dependenciaCodigo": "FED",
+    "cargo": "DIRECTORA",
     "createdAt": "2024-05-31 19:43:02",
     "updatedAt": "2024-05-31 19:43:02"
   },
@@ -11030,6 +12868,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cpccdavid1597@gmail.com",
     "password": "$2y$10$h26AwWLolpNDyjSyxcd34.GRtB7TxDWhGtq/9LkiHfFkaWHDYI9Ga",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-03 16:18:46",
     "updatedAt": "2024-06-03 16:20:18"
   },
@@ -11042,6 +12882,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cobranzas@grupolcsac.com",
     "password": "$2y$10$cnUZUi4mj4vVJ0azbyFQk.Bm1FFSXpyEmK6Bkv0SVngBevxIB7QYm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-03 20:18:07",
     "updatedAt": "2024-06-03 20:19:20"
   },
@@ -11054,6 +12896,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tany.martinez.a@gmail.com",
     "password": "$2y$10$VvQw8ITlGiw83nqO6JQya.3uddUU4JIBglXDZCNC7h4fSidcM4hTG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-03 23:35:03",
     "updatedAt": "2024-06-03 23:35:50"
   },
@@ -11066,6 +12910,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wilquicas213@gmail.com",
     "password": "$2y$10$BxU7XD7nNugj.uMu1Jfbsu7jAqRO1ckzyIcnX8pMrGrfnUman8PP.",
     "estado": 1,
+    "dependenciaCodigo": "STPADD",
+    "cargo": "JEFE DE UNIDAD",
     "createdAt": "2024-06-04 13:36:49",
     "updatedAt": "2024-06-11 13:40:32"
   },
@@ -11078,6 +12924,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fzevallos@minedu.gob.pe",
     "password": "$2y$10$l3Ss1g4t7rrUFnoN669x0el0xGWHanzSrmymt/GbOSZppTLFoTzQ.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-04 18:29:41",
     "updatedAt": "2025-07-10 17:50:30"
   },
@@ -11090,6 +12938,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alex.chire@hotmail.com",
     "password": "$2y$10$u4FVxo8B.QtDEuojmrC6VO4A/3q5WfsUDn9rFt5PK8L4C/AP0G3Ve",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-05 01:27:56",
     "updatedAt": "2024-06-05 01:27:56"
   },
@@ -11102,6 +12952,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jdelmazomercado@gmail.com",
     "password": "$2y$10$8nskEctiVmjoaUeOti0aQuU2XX2KNd5iVFUSp6pjnp47riISHf/3q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-05 15:10:51",
     "updatedAt": "2024-06-05 15:11:42"
   },
@@ -11114,6 +12966,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JMENDOZA@UNAMAD.EDU.PE",
     "password": "$2y$10$gcPL4ykCfeSTo8TQyiONB.vXeebj7I4Htl8rFyK/5r53Sf2pSv9/W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-05 21:11:15",
     "updatedAt": "2026-05-26 22:37:15"
   },
@@ -11126,6 +12980,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FLACON.TEC@OUTLOOK.COM",
     "password": "$2y$10$uA5pyOtQKtm0NUy9fhKF..eje/2U3zOK1e0BuBTC8fggahR/YAjOi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-05 22:50:10",
     "updatedAt": "2024-06-05 22:50:10"
   },
@@ -11138,6 +12994,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FALCON.TEC@OUTLOOK.COM",
     "password": "$2y$10$tkeHK/OKp2TMkH5F2OHlVeieqJrptD/rmQKRIya7I44xmcC49uiAa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-05 22:53:36",
     "updatedAt": "2024-06-05 22:54:22"
   },
@@ -11150,6 +13008,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "itello@unamad.edu.pe",
     "password": "$2y$10$T...z4bnWMkbgGEhiUG5COnfSRJxZt0iLaMbVc1A6Z3lVgrouPmOC",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "DOCENTE",
     "createdAt": "2024-06-06 14:27:34",
     "updatedAt": "2026-03-04 23:20:36"
   },
@@ -11162,6 +13022,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "liseth.calderon@gmail.com",
     "password": "$2y$10$60UUl02n1Q00uKr6gvMvF.SbHFrUimuUuhgXfwWahKRbve2m.4d6e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-06 22:12:32",
     "updatedAt": "2024-06-06 22:12:32"
   },
@@ -11174,6 +13036,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "liseth.calderonq@gmail.com",
     "password": "$2y$10$ghx0bbSJpiqel55dMuYbku/NKIlYugUjT.DgNgAk9C4EclaMaEa1W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-06 22:15:03",
     "updatedAt": "2024-06-06 22:15:45"
   },
@@ -11186,6 +13050,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "23121034@unamad.edu.pe",
     "password": "$2y$10$0v209WqC6/AHNHf29wZydejuSS4iulZIPOvhXSKf5SwhQPZBcOssK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-08 18:21:54",
     "updatedAt": "2024-06-08 18:23:18"
   },
@@ -11198,6 +13064,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "capacitacion@midagri.gob.pe",
     "password": "$2y$10$s7moI5.j5pOOayD6DWetheKdNKfMjjg.fbHzJqybeu3Gbd3v6TwQC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-10 15:26:24",
     "updatedAt": "2024-06-10 15:29:37"
   },
@@ -11210,6 +13078,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dejan.perich@undp.org",
     "password": "$2y$10$G1v/HPX.DUMnsPNdIzDAHeAkMzKgVwMbcrNPG0l80ePZyCEHkgV3O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-10 16:05:33",
     "updatedAt": "2024-06-10 16:11:44"
   },
@@ -11222,6 +13092,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "licitaciones.pe@telefonica.com",
     "password": "$2y$10$9.OcTD0VJSfkKulJjYoeJuLLAL5HQQT5aKshWviu8VpBI2ZtiuFGy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-11 16:52:13",
     "updatedAt": "2024-06-11 16:54:29"
   },
@@ -11234,6 +13106,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cl0254435@gmail.com",
     "password": "$2y$10$kLm8ciextLFM9EyZtoPppukR9JUEkoAXje0VTGKm5Ka9NbKpp7vU.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-11 18:23:40",
     "updatedAt": "2024-06-11 18:24:27"
   },
@@ -11246,6 +13120,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leon.eliseo@gmail.com",
     "password": "$2y$10$JnBIaa3PRY11JKMoDxVmUePAyd4qsn0./hKQTO4tlaGBLnRrRC.Ci",
     "estado": 1,
+    "dependenciaCodigo": "UFE",
+    "cargo": "COORDINADOR ENCARGADO",
     "createdAt": "2024-06-12 21:47:08",
     "updatedAt": "2024-08-13 21:55:59"
   },
@@ -11258,6 +13134,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jtuesta@unamad.edu.pe",
     "password": "$2y$10$oCc8Wlxbp/B9GPduitI0lOO50sXGBqJiBtY2J/vEGS.dgaaqKQxv6",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-06-12 22:07:10",
     "updatedAt": "2026-03-23 20:16:18"
   },
@@ -11270,6 +13148,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jrodriguez@remcomunicaciones.com",
     "password": "$2y$10$tBDjAR2v0E1to/27hJ9Y4.DaIA3IR3NwjX.nCP4PpTXPUt3THQxlu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-13 17:26:33",
     "updatedAt": "2024-06-13 17:28:00"
   },
@@ -11282,6 +13162,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dllana@unamad.edu.pe",
     "password": "$2y$10$A7D7SHgppKpqazFqAIlNl.9fRowKvpiTLoIYCOC.sOocsOuUFR9NC",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-06-17 14:09:15",
     "updatedAt": "2026-01-23 00:28:37"
   },
@@ -11294,6 +13176,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leslypenabarra@gmail.com",
     "password": "$2y$10$LRkqKkQB56PRpep6SSBfz.859PKAj93UME5EmcLHi238zVvcstsbW",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-06-17 15:23:46",
     "updatedAt": "2024-06-17 15:23:46"
   },
@@ -11306,6 +13190,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fpacaya@unamad.edu.pe",
     "password": "$2y$10$vp02BkiNrxBHAR2QEk5Qgu7aDmUpnMkOcQQCIR.S4IideS0KXG4M2",
     "estado": 1,
+    "dependenciaCodigo": "UME",
+    "cargo": "ASISTENTE",
     "createdAt": "2024-06-18 13:36:33",
     "updatedAt": "2024-06-18 13:36:33"
   },
@@ -11318,6 +13204,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lhedivia@unamad.edu.pe",
     "password": "$2y$10$U5it1td.oCPQMbrBXh94ne1SIp1CuRTQa707DRxk1jbgwgELZcHfe",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-06-18 14:08:23",
     "updatedAt": "2024-06-18 14:08:23"
   },
@@ -11330,6 +13218,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "brendareyes.oroinn@gmail.com",
     "password": "$2y$10$g7W9Z2hmdxsv7jSAIAvd/ORS4VSf/D2xOBhEKUfpszEY6vW1SlXhy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-19 16:12:44",
     "updatedAt": "2024-06-19 16:24:38"
   },
@@ -11342,6 +13232,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fcardenas@indeci.gob.pe",
     "password": "$2y$10$oepWKI/Q5VPpLrgXrGFYheoBogWF6ZO5ZLk.g7Kk30H2CK9MMWg4q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-20 22:19:00",
     "updatedAt": "2024-06-20 22:19:17"
   },
@@ -11354,6 +13246,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "melizasamaniegom@gmail.com",
     "password": "$2y$10$.kAlYs5Z4jMO5HMeXJ1SN.CVqq3DfZyJLW2gYj1sJKTvzdIk0XnAO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-21 03:27:21",
     "updatedAt": "2024-06-21 03:29:13"
   },
@@ -11366,6 +13260,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jorgec@unamad.edu.pe",
     "password": "$2y$10$AZ5xY1Tj7eZoXO8SdEUCjOYwjW5zmG9NVBMzOkmAhiycKkkkAf/cW",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-06-21 16:59:56",
     "updatedAt": "2024-06-21 16:59:56"
   },
@@ -11378,6 +13274,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "C28736@utp.edu.pe",
     "password": "$2y$10$c4akbC9F2mriCAw76y.lue8vv6Qg0pVt5J256e0BQsQUpRBxKeh5a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-25 06:09:45",
     "updatedAt": "2024-06-25 06:10:34"
   },
@@ -11390,6 +13288,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "osmerburgagonzales@gmail.com",
     "password": "$2y$10$cL9OtrMNlUCWxLByVedfmeZhnGHVLypjNi3DZoLfpZrIj.ihT3ecW",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "AGENTE DE SEGURIDAD",
     "createdAt": "2024-06-25 15:35:33",
     "updatedAt": "2024-06-25 15:35:33"
   },
@@ -11402,6 +13302,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bvanesa@unamad.edu.pe",
     "password": "$2y$10$7G.dvjIn8T8o.To/AQ7j5eum1WQ38iKiG7bnoPo3rImBS2aWhDiEe",
     "estado": 1,
+    "dependenciaCodigo": "FI",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2024-06-26 17:17:32",
     "updatedAt": "2026-03-24 15:36:34"
   },
@@ -11414,6 +13316,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hhuaman22@unamad.edu.pe",
     "password": "$2y$10$Uyh40lscCNJp9taNLv6pBuwYMzBnHULKCOuctfbzQhYRolDraTkdG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-26 20:43:26",
     "updatedAt": "2024-06-26 20:43:26"
   },
@@ -11426,6 +13330,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rrhh@unah.edu.pe",
     "password": "$2y$10$2c7hNr5GMblAQGNwREiIUOtYQ/HvAvJb44tagJhkdJVvjzpTuGH5W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-06-27 15:40:52",
     "updatedAt": "2024-06-27 15:45:43"
   },
@@ -11438,6 +13344,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "martha@unamad.edu.pe",
     "password": "$2y$10$3EUQq6y65WkVB4ij.jV3xupQUELjhhLLjcVs0HRBG3O776NoRdQ3G",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "AGENTE SEGURIDAD",
     "createdAt": "2024-06-27 16:19:22",
     "updatedAt": "2025-12-16 15:56:03"
   },
@@ -11450,6 +13358,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lasereventosperu@hotmail.com",
     "password": "$2y$10$yWtfIFUrKPVFsyzppihbZO5TSy1w3GHXmHEXPrnUE5/lDcU9BUZKy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-01 16:48:39",
     "updatedAt": "2024-07-01 16:53:58"
   },
@@ -11462,6 +13372,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erosasve@pj.gob.pe",
     "password": "$2y$10$4KkmMvWQoNLIt0vbj0n2AOeGYTwBe08uqDl1sfuqklF2Y4n.oQ/Ja",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-02 15:08:14",
     "updatedAt": "2024-07-02 15:10:14"
   },
@@ -11474,6 +13386,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ggibajac@unamad.edu.pe",
     "password": "$2y$10$..lyTqgPLNeMlO50.eTusenaZlZuSWfQFkQnOZgugabOXot6scpdi",
     "estado": 1,
+    "dependenciaCodigo": "UASAD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-07-02 17:52:13",
     "updatedAt": "2024-07-02 17:52:13"
   },
@@ -11486,6 +13400,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gvalentino@congreso.gob.pe",
     "password": "$2y$10$7h3KMyycsv/AB1KTBw0MuO57kYsOmKagSXW0KJCDTgTEeDulkPNCa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-04 16:24:51",
     "updatedAt": "2024-07-04 16:39:29"
   },
@@ -11498,6 +13414,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jgarciac@congreso.gob.pe",
     "password": "$2y$10$XoSaHn7Y5fl9TMcfd5wLh.kNxULVn5RCCT4bgK/NcsiiGVVu.rwa2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-04 20:02:51",
     "updatedAt": "2024-07-04 20:05:42"
   },
@@ -11510,6 +13428,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "josegongora12@gmail.com",
     "password": "$2y$10$2gk0t8LIXC2b7.KOfSn/9OKQx8CeW4mjZ20pR5JIgyR9OVUSkL.US",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-04 21:11:16",
     "updatedAt": "2024-07-04 21:12:53"
   },
@@ -11522,6 +13442,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Kvelat@pj.gob.pe",
     "password": "$2y$10$B9DTSHnRk07LZPkQEyLQp.JpVpadTnaxzyu3kmxrJzD7shfpFHG.6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-04 21:21:45",
     "updatedAt": "2024-07-04 21:24:03"
   },
@@ -11534,6 +13456,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marcoochante@gmail.com",
     "password": "$2y$10$8KKJbH85y/xBl5/ZqcSJJuAHZCxEj9Za0n.JBtFDs.7jI/3qhTg4a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-05 03:16:21",
     "updatedAt": "2024-07-05 03:17:21"
   },
@@ -11546,6 +13470,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lqquecho@congreso.gob.pe",
     "password": "$2y$10$0QIzmLsRg4mLEPSDeZtueeJwD4kFpSGCiRQk6kQdWp53gyi0cXWr.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-05 15:10:16",
     "updatedAt": "2024-07-05 15:10:49"
   },
@@ -11558,6 +13484,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "epandia@unamad.edu.pe",
     "password": "$2y$10$sSI4kyQJyzY8Gs5DG8mdo.5SROLF4HHn8vBqSGHV5XTMYHYU5iRIS",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-08 14:12:31",
     "updatedAt": "2026-01-13 15:08:12"
   },
@@ -11570,6 +13498,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tsilvac@unamad.edu.pe",
     "password": "$2y$10$ePRfAm4iNfOp/UqSoC5FOOelXA2nVI3MOLT2BM1L1gGl4jmA26QL.",
     "estado": 0,
+    "dependenciaCodigo": "UPD",
+    "cargo": "RESPONSABLE",
     "createdAt": "2024-07-08 16:16:50",
     "updatedAt": "2024-08-23 22:12:01"
   },
@@ -11582,6 +13512,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "santiterra@hotmail.com",
     "password": "$2y$10$dItneDcQbU1.OQzwZcnZY.OjA3olJxGMvIdJJePcimG2JXE1wq0tO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-08 17:07:59",
     "updatedAt": "2024-07-08 17:08:39"
   },
@@ -11594,6 +13526,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jsantos@acomerpescado.gob.pe",
     "password": "$2y$10$nQ0.tZB0sA1DrZhdo5FW.urhpxCAQFIxG.UgK8S/3/91QNmO9tb6W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-09 21:11:57",
     "updatedAt": "2024-07-09 21:13:40"
   },
@@ -11606,6 +13540,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mabicperu@gmail.com",
     "password": "$2y$10$EKYc3k4XmD4Di33P6U6czuHtMjkvVgJaRgBUusEt.RjVjQ.WnJARm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-11 04:32:47",
     "updatedAt": "2024-07-11 04:33:48"
   },
@@ -11618,6 +13554,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "GLVELA@UNAMAD.EDU.PE",
     "password": "$2y$10$AGYS98ssIpjekIg2MK1C9OzeQczZsV89L5ku9uD1IHSCKa3y4TdK.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-11 13:52:21",
     "updatedAt": "2024-07-11 13:52:21"
   },
@@ -11630,6 +13568,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lponce@unamad.edu.pe",
     "password": "$2y$10$NHCTz48uvN.9x7GE/sUv1uaUcaVIX7qkL/onfoHgTFfv0T8B/g67K",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-11 14:36:32",
     "updatedAt": "2024-07-11 14:36:32"
   },
@@ -11642,6 +13582,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "evidencia.midis@midis.gob.pe",
     "password": "$2y$10$p/U57U4z4xi6w5BA4TYS4OTyr4HebJTQoLFEU2v/prYpl3SOoQQ6C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-11 19:32:43",
     "updatedAt": "2024-07-11 19:33:00"
   },
@@ -11654,6 +13596,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sochante@unamad.edu.pe",
     "password": "$2y$10$TUl1cN64F9reqFNSlgTzb.nYN2CA.ClO9h5CWOO0wp3Pvrhh5nW0y",
     "estado": 1,
+    "dependenciaCodigo": "EPDCP",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-07-11 21:18:44",
     "updatedAt": "2024-07-11 21:18:44"
   },
@@ -11666,6 +13610,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mquispep@unamad.edu.pe",
     "password": "$2y$10$X3ngUFdwtO.T.erSSoW6Au7AgUdouhGLaUh2e/jq/OJ453p4sIHXa",
     "estado": 1,
+    "dependenciaCodigo": "OCII",
+    "cargo": "DIRECTORA",
     "createdAt": "2024-07-12 13:08:00",
     "updatedAt": "2024-07-12 13:08:00"
   },
@@ -11678,6 +13624,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lquilli@unamad.edu.pe",
     "password": "$2y$10$4nFOxA4Y4ydCad0qdWf9TuPn.MKs3.L4rBwex7kyh9zsa/o6HY3Ja",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "JEFE",
     "createdAt": "2024-07-12 20:31:14",
     "updatedAt": "2024-07-12 20:31:14"
   },
@@ -11690,6 +13638,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rpaucara@unamad.edu.pe",
     "password": "$2y$10$hP1/KJedjkRiD.0htBqMDO2LXxcn/I0t7oDcrvHj54D2Acmq2oPmO",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-07-12 20:50:41",
     "updatedAt": "2025-01-20 20:13:30"
   },
@@ -11702,6 +13652,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CMIRANDA@UNAMAD.EDU.PE",
     "password": "$2y$10$.Do6ElYytvVcwPm/bp5VkOSgfxRabF8a6mKp7/Hey8bs0OuJmDu4.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-12 21:30:26",
     "updatedAt": "2024-07-12 21:30:26"
   },
@@ -11714,6 +13666,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jobregon@pcm.gob.pe",
     "password": "$2y$10$.IBKAMfOEhattG6oHQ0VceQer4v7pKfW4vSAKHj7awtglikHTRui6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-12 21:55:00",
     "updatedAt": "2024-07-12 21:55:21"
   },
@@ -11726,6 +13680,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmarquez@selectronicperu.com",
     "password": "$2y$10$WIX5tXZAhskof1QArV5dnewAm/MdkuO/Qv/fEU9ZwSNe4oaOvuyla",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-15 09:30:15",
     "updatedAt": "2024-07-15 09:31:27"
   },
@@ -11738,6 +13694,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wirarica@unamad.edu.pe",
     "password": "$2y$10$.8867wPhZn4/rT4QSN99ZeRocEnrBDI/nURnVhZDD6SDVZL2dIgSG",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE SEGURIDAD",
     "createdAt": "2024-07-15 15:31:18",
     "updatedAt": "2024-07-15 15:31:18"
   },
@@ -11750,6 +13708,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dpachacama@onpe.gob.pe",
     "password": "$2y$10$qY5PVlrMLQ1UN6mGxX.no.jeSKrN3e1NayiH88vXsoz5FdjZ8.tXS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-15 20:00:09",
     "updatedAt": "2024-07-15 20:00:09"
   },
@@ -11762,6 +13722,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "NOTIFICACIONES@BN.GOB.PE",
     "password": "$2y$10$C1NRStt2qHcTvkZacNxB8uy2mj5qz8.k3Jm5rqBhxdjhZUNEwOq1O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-16 13:55:13",
     "updatedAt": "2024-07-16 13:55:13"
   },
@@ -11774,6 +13736,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones@sbn.gob.pe",
     "password": "$2y$10$lrcf0f6jADI63PyI.aEW2u03HlztuikKrHPEU7Yie6rI21uaPDsDO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-16 13:58:45",
     "updatedAt": "2024-07-16 13:59:05"
   },
@@ -11786,6 +13750,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eparedes@unamad.edu.pe",
     "password": "$2y$10$Ti2n9OX1PuX4loWtsnhmN.fzCoMAzHzWklUHNGjXZ5Tt/nEcIKnyu",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-16 16:43:25",
     "updatedAt": "2024-07-16 16:54:14"
   },
@@ -11798,6 +13764,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Jotajordy22@gmail.com",
     "password": "$2y$10$.HlCrFvkDuD0xFcHJ2QfLe8122gV.DWYrt8qlE2CZJAQ6CCs4PawO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-17 01:21:43",
     "updatedAt": "2024-07-17 01:23:09"
   },
@@ -11810,6 +13778,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rromero@unamad.edu.pe",
     "password": "$2y$10$YeLox88tkG3pw70MGrSjA.05YOMr5rMK4icyD6J7uZBqI5Ig.TEoi",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-17 14:21:47",
     "updatedAt": "2024-07-17 14:21:47"
   },
@@ -11822,6 +13792,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "angelica.carrasco@untrm.edu.pe",
     "password": "$2y$10$zPa3rMCth3yABz6QtMi3DORaT7guyk56nwt.n/eNY3DNrrHwpvQmG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-17 21:18:26",
     "updatedAt": "2024-07-17 21:19:35"
   },
@@ -11834,6 +13806,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sramos@indecopi.gob.pe",
     "password": "$2y$10$DIwnyB184jt5MbNhw1Qbpu/9d.KOR55daw8MdaxuvrXfuZ0fi6J8y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-17 22:25:13",
     "updatedAt": "2024-07-17 22:25:42"
   },
@@ -11846,6 +13820,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "karlyzduran111@gmail.com",
     "password": "$2y$10$c1.lb3sRr0weDMM7DWG1DOMz.q33jwHxrLVJDHjB7DfhBe/Ptof7.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-18 14:02:58",
     "updatedAt": "2024-07-18 19:42:59"
   },
@@ -11858,6 +13834,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vluisita@unamad.edu.pe",
     "password": "$2y$10$GL7tI.72fI2KqIuf/rDTLOqUk5viI/GD3IuDIXz.QPD.mwxu/NK5K",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-18 14:31:00",
     "updatedAt": "2024-07-18 14:31:00"
   },
@@ -11870,6 +13848,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "darwinc@unamad.edu.pe",
     "password": "$2y$10$FZnonCnayNNoRd2NRnxMger6PPtnvZSBaya.2xo66x/u.VQ3giDlK",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-18 14:54:12",
     "updatedAt": "2024-07-18 14:54:12"
   },
@@ -11882,6 +13862,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nilda@unamad.edu.pe",
     "password": "$2y$10$lQom/m1N7JMDMYVzCxagqOsvAn8nQLThSqOIh7sPNPaTbwT9YANMK",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "LIMPIEZA",
     "createdAt": "2024-07-18 16:04:38",
     "updatedAt": "2025-05-27 16:29:44"
   },
@@ -11894,6 +13876,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nrojasm@unamad.edu.pe",
     "password": "$2y$10$Y0CPw8sskkcvWYYJG9Ya8.prp4l/GxqpihGupvuaSTUdU6e0ZeR/2",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "LIMPIEZA",
     "createdAt": "2024-07-18 16:05:49",
     "updatedAt": "2025-10-22 15:23:01"
   },
@@ -11906,6 +13890,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cnieto@unamad.edu.pe",
     "password": "$2y$10$2G0u.na/AzC.X1xGIUfpQO4OqHBAWtbrJpdQ5a42h.UPbvWRHHJL6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-18 19:04:59",
     "updatedAt": "2024-07-18 19:17:27"
   },
@@ -11918,6 +13904,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "calvaradovalles@gmail.com",
     "password": "$2y$10$rjKU/woJXmmN.FmqExMT6e1.7a70ZN4q8Aq0T9Y2ICROxIGO/d7lC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-19 12:26:19",
     "updatedAt": "2024-07-19 12:28:03"
   },
@@ -11930,6 +13918,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "NOTIFICACIONES.MP@UNSA.EDU.PE",
     "password": "$2y$10$CP3IpJt8Lutoz6NPhlWq2ej7iPY0TYFCFUTnKl/2lOg8.FadR8b4e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-19 21:16:30",
     "updatedAt": "2024-07-19 21:17:57"
   },
@@ -11942,6 +13932,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kfigueroa@unamad.edu.pe",
     "password": "$2y$10$xPN/f4SeEF7JY/gRegKKk.iBkLRLobupwHWdt/eHUKPuuhv8E/ICW",
     "estado": 1,
+    "dependenciaCodigo": "OCI",
+    "cargo": "ABOGADO III",
     "createdAt": "2024-07-22 15:38:09",
     "updatedAt": "2024-07-22 15:38:09"
   },
@@ -11954,6 +13946,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "scutipa@unamad.edu.pe",
     "password": "$2y$10$1Yp4gjYkKBkplYakfEMOT.2TbpFWGCsARJOceCJnjVsmqLMH/cPKW",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-22 16:36:31",
     "updatedAt": "2024-07-22 16:36:31"
   },
@@ -11966,6 +13960,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lyucrac@unamad.edu.pe",
     "password": "$2y$10$0aIpJZh2mB.g7xcP/zDMneVi8TqngqiNu8AkCiXhaFI.5J7rGA13q",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-07-22 16:47:46",
     "updatedAt": "2024-07-22 16:47:46"
   },
@@ -11978,6 +13974,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mhuaya@unamad.edu.pe",
     "password": "$2y$10$MiZLuL2cLLkvp4VcnqSTV.vF0xqvOukHhGs1kjIFFP/NGYd386ca2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-22 17:20:53",
     "updatedAt": "2026-03-10 20:30:42"
   },
@@ -11990,6 +13988,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "electrobombas.ventas@gmail.com",
     "password": "$2y$10$zwpV2RtnVYzwfFaTvS4oCOwcOMlbfqcPI.gdUP7WNkzF0DuMIibkK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-23 15:57:37",
     "updatedAt": "2024-07-23 15:58:18"
   },
@@ -12002,6 +14002,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "napazap@unamad.edu.pe",
     "password": "$2y$10$fD1Hh2tkd9Z8jMHetwourOAyggEIpEPTyJxj8o.68UfsMMNNml/N2",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "CARPINTERO",
     "createdAt": "2024-07-24 12:51:45",
     "updatedAt": "2024-07-24 12:51:45"
   },
@@ -12014,6 +14016,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smullerb_1991@hotmail.com",
     "password": "$2y$10$a//Ys6c3mlkjh..H6bT9/OTYdEufD7dK9K4hwfrxh926c/.YiF2g6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-24 21:09:16",
     "updatedAt": "2024-07-24 21:12:15"
   },
@@ -12026,6 +14030,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "adm.egep@gmail.com",
     "password": "$2y$10$dJ.TZQtvodTnv.KfVSxzAeeV1y8SNfmMjSdrTaZYnl.OkXGYlmol2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-26 17:03:31",
     "updatedAt": "2024-07-26 17:04:35"
   },
@@ -12038,6 +14044,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "est.cmad.ana.hancco@gmail.com",
     "password": "$2y$10$c2DdTkLgttzRFUrO.ED.4.B1.hhXZTCKaW4TRR1yjbQATfzSfS3IW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-29 23:21:16",
     "updatedAt": "2024-07-29 23:24:57"
   },
@@ -12050,6 +14058,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "earpi@unamad.edu.pe",
     "password": "$2y$10$4a5ntZlkL2xZJjxvZCQOT.DvoGjqcqHC1jL7QsSoFFya1iJ9D2C5u",
     "estado": 1,
+    "dependenciaCodigo": "DIE",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-07-30 21:02:32",
     "updatedAt": "2025-04-10 14:18:06"
   },
@@ -12062,6 +14072,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mespa@conida.gob.pe",
     "password": "$2y$10$jgdI2q98YhTbrGsv0f.uzOuxtE80opDYXfUSF9z1k5oKlOPuBhOIW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-30 21:20:37",
     "updatedAt": "2024-07-30 21:22:11"
   },
@@ -12074,6 +14086,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "correspondencia@inacal.gob.pe",
     "password": "$2y$10$KiOl3dImaie.MoguEsmtHuclCmarCkfXaOBqiPWkD4SEBol61pjU.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-07-31 17:03:36",
     "updatedAt": "2024-07-31 17:04:19"
   },
@@ -12086,6 +14100,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "atorresa19-1if@unamad.edu.pe",
     "password": "$2y$10$M8xp3Fwz7g8HSk2Kt1QBSe8UIWYbFgRFiDy6HZ5j87hoWuJ9mQZNy",
     "estado": 1,
+    "dependenciaCodigo": "OGAC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-08-01 15:59:36",
     "updatedAt": "2024-08-01 15:59:36"
   },
@@ -12098,6 +14114,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "recursoshumanos@unaj.edu.pe",
     "password": "$2y$10$0ZfqmpIjUbAnH8gWuhQA/Oh7DPvbAQp1D6Nr73hn/axhTm3Z0ktuS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-02 16:17:01",
     "updatedAt": "2024-08-02 16:17:14"
   },
@@ -12110,6 +14128,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fbautista@unamad.edu.pe",
     "password": "$2y$10$I.mSwTzyTo732t/ElaPXCeOCFNXRZ5qry2DKv3aIGuXagtW5qtV6e",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-05 13:12:34",
     "updatedAt": "2024-08-05 13:12:34"
   },
@@ -12122,6 +14142,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asistente@fimavperu.com",
     "password": "$2y$10$Xf0UkcohoIU1S1TfniKhfeBL2kOlsHojRXHi/4cLWE0MRQ5Ht9ruy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-07 17:07:00",
     "updatedAt": "2024-08-07 17:16:30"
   },
@@ -12134,6 +14156,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gpaucar@unamad.edu.pe",
     "password": "$2y$10$a9/oOeLP141Q6.YYMWIuqOjlRhaRXxKHRwCUIKQrErH9VN9l77pDW",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "RESPONSABLE",
     "createdAt": "2024-08-07 17:26:59",
     "updatedAt": "2024-12-03 16:05:55"
   },
@@ -12146,6 +14170,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tarimuya@conservacionamazonica.org",
     "password": "$2y$10$PgyFSrf3rMXOUNL/u2ODyOLjZTiuJywEbn55cnlAtKfMh1wCOl4g2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-09 19:48:09",
     "updatedAt": "2026-04-23 16:06:25"
   },
@@ -12158,6 +14184,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmontesinosb@unamad.edu.pe",
     "password": "$2y$10$az3sLsPhLOtqosZ0v0IBl.0Eqw3bE7Xw0pUzHZC.muxKfQnC2CCMq",
     "estado": 1,
+    "dependenciaCodigo": "ALC",
+    "cargo": "ASISTENTE",
     "createdAt": "2024-08-12 16:12:32",
     "updatedAt": "2025-04-07 15:44:07"
   },
@@ -12170,6 +14198,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "joulyg@unamad.edu.pe",
     "password": "$2y$10$yQna8jH1GvegXEnK0NB1p.i6JZT4Fcop4AYaoIaFRCfvphtYyQ0Gm",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-13 14:57:58",
     "updatedAt": "2026-05-12 20:00:25"
   },
@@ -12182,6 +14212,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ayampara@unamad.edu.pe",
     "password": "$2y$10$rgaf5gyqChX5ExREVoegL.9LjG9/zh1wSIUEINsocwhNqUjC5jE92",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-13 21:23:03",
     "updatedAt": "2024-11-24 00:39:29"
   },
@@ -12194,6 +14226,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "quijhuajara.10@gmail.com",
     "password": "$2y$10$GPw5pynKrvA3eu/OKaRzOO8VjChO3j7KP4U6kocK2VBe5bk/VYIou",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-13 21:23:42",
     "updatedAt": "2024-08-13 21:24:32"
   },
@@ -12206,6 +14240,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lchavez@unamad.edu.pe",
     "password": "$2y$10$LlDAXQfyk6kEW4aAOGp7A.2gUY4iLx3UilU50aJ2KP4YYSpgJdswK",
     "estado": 1,
+    "dependenciaCodigo": "UFE",
+    "cargo": "COORDINADOR ENCARGADO",
     "createdAt": "2024-08-13 22:05:52",
     "updatedAt": "2024-08-13 22:05:52"
   },
@@ -12218,6 +14254,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "msantos@unamad.edu.pe",
     "password": "$2y$10$y2gElxpJqLTQjCGba0iMzuwayYvBNSuJ6fanqkA/AbvvA/oRDe9RK",
     "estado": 1,
+    "dependenciaCodigo": "UFE",
+    "cargo": "PROYECTISTA",
     "createdAt": "2024-08-13 22:06:23",
     "updatedAt": "2024-08-13 22:06:23"
   },
@@ -12230,6 +14268,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mjamachi@unamad.edu.pe",
     "password": "$2y$10$WuRUEWpcn8yS.kpZ5H3vUO8UBf1ypKgWgs56Y6bf1xIZHEf4ug3BK",
     "estado": 1,
+    "dependenciaCodigo": "UFE",
+    "cargo": "ASISTENTE TÉCNICO",
     "createdAt": "2024-08-13 22:08:29",
     "updatedAt": "2024-08-13 22:09:53"
   },
@@ -12242,6 +14282,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "crquispe@unamad.edu.pe",
     "password": "$2y$10$82n1TzBehqotNkmXOKHvGevl/w/9ommPBSE1Wd1ZysvWQ.r1m9Cii",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "DIRECTOR (E)",
     "createdAt": "2024-08-13 22:10:26",
     "updatedAt": "2026-03-16 21:02:29"
   },
@@ -12254,6 +14296,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ukandy@unamad.edu.pe",
     "password": "$2y$10$gvepzuFyFJ6afJc9icWY..zcwRwX4abgPu880zZl/OeNFhfjxbzB6",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-14 16:27:33",
     "updatedAt": "2026-01-19 13:58:00"
   },
@@ -12266,6 +14310,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "valermauricio2001@gmail.com",
     "password": "$2y$10$68VpLEUU1c4u3UvuRLwu.ONEarzvbWsoX2XD0ageRcAX74a03WWYq",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "SUPERVISOR DE PROYECTOS DE INVERSIÓN",
     "createdAt": "2024-08-14 17:14:35",
     "updatedAt": "2024-08-14 17:14:35"
   },
@@ -12278,6 +14324,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "silvacordovaandrea@gmail.com",
     "password": "$2y$10$sDSfr183rlhoe6T79yN1LuCPWkDmm6RvaPlThmaVazQin5kjG2IA.",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "AUXILIAR ADMINISTRATIVA",
     "createdAt": "2024-08-16 13:12:05",
     "updatedAt": "2024-08-16 13:12:05"
   },
@@ -12290,6 +14338,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmarquez@leveltechperu.com",
     "password": "$2y$10$AxwW7LJ0Lvr7VnT9p14H6exXKPUMvoC3djrYwZpqWN6z2juvMuvga",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-19 20:14:44",
     "updatedAt": "2024-08-19 20:15:19"
   },
@@ -12302,6 +14352,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vcoapaza@unamad.edu.pe",
     "password": "$2y$10$OYj06BDbPUN3pzlus/qikuD/8.Ohm1af1G/CeM5nJzFasN7dttWAO",
     "estado": 1,
+    "dependenciaCodigo": "EPED",
+    "cargo": "SECRETARIA",
     "createdAt": "2024-08-20 12:38:31",
     "updatedAt": "2025-10-06 17:43:12"
   },
@@ -12314,6 +14366,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cmartinez@unamad.edu.pe",
     "password": "$2y$10$vzamipfGKGZzGTHaPaI2uOSYKsmMrp4TOStRCJgcNEUmYatCybHmm",
     "estado": 1,
+    "dependenciaCodigo": "UFSYLP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-08-20 13:39:38",
     "updatedAt": "2025-02-26 14:04:06"
   },
@@ -12326,6 +14380,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rparrhuay@unamad.edu.pe",
     "password": "$2y$10$DuaY3SWY0TZ12bqrEqe9C.uQh5YAiQwDYQ8Gn84vTccptHhifXxiS",
     "estado": 0,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-08-20 13:40:30",
     "updatedAt": "2024-08-20 21:02:55"
   },
@@ -12338,6 +14394,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "emontalvo@unamad.edu.pe",
     "password": "$2y$10$V5zMko1NwGv4wQzUNGq7v.DtRiIh2gTnVLZyh46AjeX0ylCJV9bY6",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-20 16:29:31",
     "updatedAt": "2024-08-20 16:29:31"
   },
@@ -12350,6 +14408,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rparhuay@unamad.edu.pe",
     "password": "$2y$10$OruyCejwXSOZqricpiXDy.HrOyqM1GU73Y/nl201LDYOUtTNjN5tS",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-08-20 21:01:29",
     "updatedAt": "2026-01-08 17:26:30"
   },
@@ -12362,6 +14422,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "epsalcedo@gmail.com",
     "password": "$2y$10$hHhXTMazXPDaNQKR4Ey/4OOXAuU5SUjLej4OhKdxYiw3/INilIyEW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-23 05:01:35",
     "updatedAt": "2024-08-23 05:01:35"
   },
@@ -12374,6 +14436,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcolque@unamad.edu.pe",
     "password": "$2y$10$atOTIuQITnFUrgavFczquO0wetxFwNR4WySj/bM2KpnTBr2fB.y8e",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-23 16:38:19",
     "updatedAt": "2024-08-23 16:51:45"
   },
@@ -12386,6 +14450,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmercado@unamad.edu.pe",
     "password": "$2y$10$efCrWdkOiUEYfFWNaNCNFOOKI8.OuJiNek.416owuVOrAQobfmHbW",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-23 16:55:11",
     "updatedAt": "2024-08-23 16:55:11"
   },
@@ -12398,6 +14464,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jchambih@unamad.edu.pe",
     "password": "$2y$10$7fQ/uwT94JZwWLB1T92Jc.VQCYlIPBIwEdkxOqhrtRROhjQNhlbxm",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-23 16:59:24",
     "updatedAt": "2024-08-23 16:59:24"
   },
@@ -12410,6 +14478,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rhijar@unamad.edu.pe",
     "password": "$2y$10$Iy/fgTO6BkTCMlwwaaij.OQ7F7iG0exw8TVaFT/RkuPXeDOV9zrLu",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-26 17:38:31",
     "updatedAt": "2024-08-26 17:38:31"
   },
@@ -12422,6 +14492,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lhincho@unamad.edu.pe",
     "password": "$2y$10$xsl4tkn9U6C3mTaZC/OXr.zcEzRGmupUanelGPEOH6/7fplZF2gle",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-26 17:43:18",
     "updatedAt": "2024-08-26 17:43:18"
   },
@@ -12434,6 +14506,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jadiaz@unamad.edu.pe",
     "password": "$2y$10$h./6UsUZqqhj0JJciQIsn.HSDHURnfokQAZ5.9ZFkniUq1wbHP4ku",
     "estado": 1,
+    "dependenciaCodigo": "EPIA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-08-26 21:24:27",
     "updatedAt": "2024-08-26 21:24:27"
   },
@@ -12446,6 +14520,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hramirez@unamad.edu.pe",
     "password": "$2y$10$JMvQUDVz37vjjmaKVjHlmOyawwVRRYJ3jahUe.LHG4R1HdRvWCjT.",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-27 16:25:11",
     "updatedAt": "2025-09-08 14:58:29"
   },
@@ -12458,6 +14534,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "omarz@unamad.edu.pe",
     "password": "$2y$10$p4mSNNawa8N4EuCMtTxXR.9RoWOTeQGsl2nzkBZ1O33gRDmzeiFUu",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-08-27 16:40:38",
     "updatedAt": "2025-09-18 15:55:23"
   },
@@ -12470,6 +14548,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "DJARAMILLO@UNAMAD.EDU.PE",
     "password": "$2y$10$uQ2NAw./.zxSvbrgGvDC5OlAqKjfINLF3zPqEkqS8bKmIEfcwG7NG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-28 13:34:05",
     "updatedAt": "2024-10-31 17:10:14"
   },
@@ -12482,6 +14562,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ymirianda@unamad.edu.pe",
     "password": "$2y$10$jKfQPxsS3Qt.14eIyAzVf.rQKFNeKOSNX2LDwpRXrVCRqg2y2TnbC",
     "estado": 0,
+    "dependenciaCodigo": "UGC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-08-28 17:25:57",
     "updatedAt": "2024-08-28 17:47:54"
   },
@@ -12494,6 +14576,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ymiranda@unamad.edu.pe",
     "password": "$2y$10$TaJy.mOQWrS4EduzS6PhteVoqOl/y/w0Vbj0CRXdCWIr/vf8Xckui",
     "estado": 1,
+    "dependenciaCodigo": "UGC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-08-28 17:47:40",
     "updatedAt": "2025-07-10 13:49:17"
   },
@@ -12506,6 +14590,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "czapata@cultura.gob.pe",
     "password": "$2y$10$0mMQzOxP8589gIUh2qSGsur1uxjG9PiWJusZEVtQmhswyiKCXeZsW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-28 19:59:53",
     "updatedAt": "2024-08-28 20:07:34"
   },
@@ -12518,6 +14604,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "niloampuero@gmail.com",
     "password": "$2y$10$qJXrdsbXb/uX5oVLr8tw5.5ZG4JmLsxdVhUMPi2Fki6TnXDPIUyka",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-08-31 04:16:01",
     "updatedAt": "2025-09-24 13:38:49"
   },
@@ -12530,6 +14618,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gmartinezh@unamad.edu.pe",
     "password": "$2y$10$R/utYZD8dHG3vjV3oi.sEeMzAvaZfSPAPaRjOHvyZgVHC909ylpm2",
     "estado": 1,
+    "dependenciaCodigo": "DAE",
+    "cargo": "ADMINISTRATIVO",
     "createdAt": "2024-09-02 17:53:37",
     "updatedAt": "2026-01-16 14:08:08"
   },
@@ -12542,6 +14632,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "joseluisvalenciazavala45@gmail.com",
     "password": "$2y$10$qgJm5HWHczvTRdrN7A8PW.JHMz3BJVqSmTCN0QFji/KOCRWAMfMp2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-03 21:26:54",
     "updatedAt": "2026-05-05 14:38:32"
   },
@@ -12554,6 +14646,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ychino@unamad.edu.pe",
     "password": "$2y$10$aw1D3mviDXM6zq0G/fJ2oenPhQkZDtquUz.PTEjvuT.1UCf/ANfn6",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE CIENCIAS BASICAS",
     "createdAt": "2024-09-04 21:00:32",
     "updatedAt": "2026-03-12 19:12:57"
   },
@@ -12566,6 +14660,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "xxx@unamad.edu.pe",
     "password": "$2y$10$pP.QMMHygEVAicmkOv7IrOlplRVR6ZeqvK3.IHnWeDApwhpYsQprm",
     "estado": 0,
+    "dependenciaCodigo": "OTI",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-09-04 21:17:56",
     "updatedAt": "2024-09-04 21:18:26"
   },
@@ -12578,6 +14674,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sscs01@pcm.gob.pe",
     "password": "$2y$10$/jEB9h7SrjdLOdQcLEztLOLvb5AXHLL73tusAWcWPwaQNXAnIhEF2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-06 17:46:52",
     "updatedAt": "2024-09-06 17:47:17"
   },
@@ -12590,6 +14688,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pejarech@gmail.com",
     "password": "$2y$10$Z89jzQ7.IBYXR/WDoztSHeUKbTPEen50j3pZGB1jqyHxfebH.Z0XG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-11 23:29:43",
     "updatedAt": "2024-09-11 23:38:13"
   },
@@ -12602,6 +14702,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rhuamanguilla@unamad.edu.pe",
     "password": "$2y$10$LHtCGAr8kxfo.ba0vIHKL.rFoWlZfHDR6hMSkul0vrqtPHpV3N/9C",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "DIRECTORA",
     "createdAt": "2024-09-13 12:56:44",
     "updatedAt": "2025-07-21 13:56:29"
   },
@@ -12614,6 +14716,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CAROLINA.LEDESMA@BALDECASH.COM",
     "password": "$2y$10$hS8YSipwuS49XgM5CY701eW/fwj7irCSQ1TO6lxKTYxLjOPMZaMZC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-13 14:56:00",
     "updatedAt": "2024-09-13 14:56:21"
   },
@@ -12626,6 +14730,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ecruza@unamad.edu.pe",
     "password": "$2y$10$tYX8kl57Mt2CB4i8ZAUrPe5jWF0RgVQKs95auVDRtY5GCDS3z.7Ve",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "TECNICO ADMINISTRATIVO",
     "createdAt": "2024-09-13 17:16:46",
     "updatedAt": "2024-09-13 19:28:25"
   },
@@ -12638,6 +14744,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lcudena@mda.org.pe",
     "password": "$2y$10$2.iE4Y.wPhdOWnB0joK1aOiwIuv1OZHid1cHx/B.czB7QBQtuwzIe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-17 15:09:53",
     "updatedAt": "2024-09-17 15:10:26"
   },
@@ -12650,6 +14758,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ptrujillo@disecod.com",
     "password": "$2y$10$JSbJ81WLtMx1lbmn8sa5OukTvotBWQJTE/iZmjekweUitsf9rB19y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-17 20:56:02",
     "updatedAt": "2024-09-17 20:56:38"
   },
@@ -12662,6 +14772,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pariasa@osce.gob.pe",
     "password": "$2y$10$1uMyHimJEjMFS1uScLvD9Oer3zXTIk1GSpqpcd/6dvAVcLZ5apGmm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-17 22:18:56",
     "updatedAt": "2025-03-12 21:46:37"
   },
@@ -12674,6 +14786,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gvelasquez@unamad.edu.pe",
     "password": "$2y$10$8b7cCTH8i5sHGfNyOQFA3.SqCgjIP2iN8ilovMZvTUYdkRVpP1.ZK",
     "estado": 1,
+    "dependenciaCodigo": "URH",
+    "cargo": "AA",
     "createdAt": "2024-09-18 19:29:49",
     "updatedAt": "2024-09-18 19:33:09"
   },
@@ -12686,6 +14800,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yobregon@unamad.edu.pe",
     "password": "$2y$10$H34w68k87ZgpOGWRDRguwO1wTdfnK2SGv3/DmummnNJxhQCZmsk9S",
     "estado": 1,
+    "dependenciaCodigo": "STPADD",
+    "cargo": "ASESORA",
     "createdAt": "2024-09-18 19:51:53",
     "updatedAt": "2024-09-18 19:51:53"
   },
@@ -12698,6 +14814,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "omarf@unamad.edu.pe",
     "password": "$2y$10$R3PvTka176O.MTrKUWZAd.PN41f/TfOT2zybHZLl6VBFG1coUz.h6",
     "estado": 0,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-19 16:06:58",
     "updatedAt": "2024-09-19 16:56:02"
   },
@@ -12710,6 +14828,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gabyc@unamad.edu.pe",
     "password": "$2y$10$TK.L8OnJGgj0wAhVXaFsAO0xMgoeiiukbWJn7Ol094MOMQTSDscGy",
     "estado": 1,
+    "dependenciaCodigo": "DAEN",
+    "cargo": "DOCENTE",
     "createdAt": "2024-09-19 16:26:27",
     "updatedAt": "2024-09-19 16:26:27"
   },
@@ -12722,6 +14842,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "oealvarezf@unamad.edu.pe",
     "password": "$2y$10$mO1q7BLb.ulMsl5XsRgb6uaGtWPxrjRMeB8SRpAeTP09Zh1/8ulRS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-19 16:54:20",
     "updatedAt": "2024-09-19 16:54:20"
   },
@@ -12734,6 +14856,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ealvarez@unamad.edu.pe",
     "password": "$2y$10$w0Vecld5/Q/xPBARJahiP.nhX4rQRBr70Qj/1wvdRn/ZJQzOPcVpS",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-09-19 19:40:16",
     "updatedAt": "2024-09-19 19:40:16"
   },
@@ -12746,6 +14870,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aloyola@congreso.gob.pe",
     "password": "$2y$10$7Yzhw1vTt.sDOyd8BKBwU.hVWsfyLhbMt03UE.qtl1IlqWDL0qceS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-19 21:38:20",
     "updatedAt": "2024-09-19 21:39:08"
   },
@@ -12758,6 +14884,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeria@inia.gob.pe",
     "password": "$2y$10$Tk7meNqIBDVGBctWrVkFMes12LM6C.NpdKXQNHjvyBlR3RtlTbz6G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-20 20:19:04",
     "updatedAt": "2026-03-04 16:20:19"
   },
@@ -12770,6 +14898,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pandito42175467@gmail.com",
     "password": "$2y$10$6v.pKSW3rai27VRzzId45ef7N6RixijSH/4SFxYZ27jw8oogq.3v2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-21 14:25:05",
     "updatedAt": "2026-03-02 15:51:09"
   },
@@ -12782,6 +14912,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lcoronado@osce.gob.pe",
     "password": "$2y$10$SgUCJto5W1vbCDVASWZ8VenQW0o/44DF5JuAfP0bkbztNVfM7Ahhq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-23 14:12:09",
     "updatedAt": "2024-09-23 14:12:45"
   },
@@ -12794,6 +14926,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gbellon@contraloria.gob.pe",
     "password": "$2y$10$BPbKPIVC.01z2iCtZxWXtulosTaQItyq.zWGcPEuZj4jOeTUMzAgq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-24 20:43:04",
     "updatedAt": "2024-09-24 20:50:05"
   },
@@ -12806,6 +14940,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carloswestreycher2003@gmail.com",
     "password": "$2y$10$McP083IM74Te3koyX4JjkukgGb/o0WtC9xoFXBMpehcW1TE4WaGca",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-25 16:54:39",
     "updatedAt": "2024-09-25 16:56:39"
   },
@@ -12818,6 +14954,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Est.cmad.brayan.yapo@gmail.com",
     "password": "$2y$10$ZLoxvKKsqE7Bq79lJjJCk.nNNJY6QWYujbxDgCIdCvN/mtakSTQJ.",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2024-09-25 19:21:26",
     "updatedAt": "2025-09-09 15:42:59"
   },
@@ -12830,6 +14968,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "42388898@continental.edu.pe",
     "password": "$2y$10$bwa0DO9Qf3PpMaEewC7GsuHf.4mDvXjG14b4KIswhozvYElJN7QNy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-27 23:08:20",
     "updatedAt": "2024-09-28 12:43:09"
   },
@@ -12842,6 +14982,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dramirez@unamad.edu.pe",
     "password": "$2y$10$iDbU7i6Hjo1iLdRd5pSlxeE/yu57PMn5V/Esy7skT3aMi/GcYVUai",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-30 15:36:21",
     "updatedAt": "2025-06-11 15:55:43"
   },
@@ -12854,6 +14996,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rtairo@unamad.edu.pe",
     "password": "$2y$10$6no4m0GNGF8GEFm63NMpBe9JmhmTdE2VuN.S4bTkddaoIEtSpENLC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-30 15:43:59",
     "updatedAt": "2024-09-30 15:43:59"
   },
@@ -12866,6 +15010,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sarat@unamad.edu.pe",
     "password": "$2y$10$IPrCB6J4k683nIHlq6zVreekSPExeqrVcFDQ09NdtXVkaC1Uvzy7K",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "PERSONAL DE LIMPIEZA",
     "createdAt": "2024-09-30 17:28:07",
     "updatedAt": "2024-09-30 17:28:07"
   },
@@ -12878,6 +15024,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "claricsajasminaguerrasandoval@yahoo.es",
     "password": "$2y$10$Cg8KafN.xJ3BTSOYgkKqB.M/fZWaT4R7rhAI8MaiEo8zR7PKMinVe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-09-30 22:48:57",
     "updatedAt": "2026-03-09 21:09:22"
   },
@@ -12890,6 +15038,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ceducacion@congreso.gob.pe",
     "password": "$2y$10$CYrEciFcH7U5.bQM0t4fU.egi0SJGUMFFLZvE/NCKGY4rII1Z2Mai",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-02 02:14:57",
     "updatedAt": "2024-10-02 02:15:46"
   },
@@ -12902,6 +15052,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmontalvo@contraloria.gob.pe",
     "password": "$2y$10$1DNr03uXe40AdmRRy1/0Qemcdte65inqu.fy9dCVhoj5cNn1wA8.W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-05 00:57:09",
     "updatedAt": "2024-10-09 23:24:55"
   },
@@ -12914,6 +15066,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvillafuerte@congreso.gob.pe",
     "password": "$2y$10$Mz8aPRxVpXMVMX7M1zTw4u7gABytn3rGyFXAQTNlK7eAvjxTJZxjC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-08 17:21:38",
     "updatedAt": "2024-10-08 17:21:38"
   },
@@ -12926,6 +15080,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "milagrosvillafuertevillavic@gmail.com",
     "password": "$2y$10$KzTNZEWSfY4fyFang3Yyluwe2DBv8eMATm4WIaHskI1gzCiuEiPe2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-08 17:26:43",
     "updatedAt": "2024-10-08 17:27:07"
   },
@@ -12938,6 +15094,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "frodriguez@unamad.edu.pe",
     "password": "$2y$10$hTAJ7fo.WxXvq3Tj0T968O1fN8pG14AJrSViWXbrmq3JCGHoUwAKi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-09 14:48:15",
     "updatedAt": "2024-10-09 17:39:54"
   },
@@ -12950,6 +15108,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cguevarac@congreso.gob.pe",
     "password": "$2y$10$Q/xwXm0pSyXYO69DH3k6aOxGwlgFvBybx8NIDzNJm.HaAwl9glZ9C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-10 20:58:29",
     "updatedAt": "2024-10-10 21:05:23"
   },
@@ -12962,6 +15122,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dimetcosac@gmail.com",
     "password": "$2y$10$sZ4YmAxlkbG3hGT9eMdIR.5m/QFIrwHDXB7BR5IV.Eyzs1YUFjAFa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-11 14:54:43",
     "updatedAt": "2024-10-14 17:38:24"
   },
@@ -12974,6 +15136,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gestrada@unamad.edu.pe",
     "password": "$2y$10$fs6h4daOaMlMKP42mzSx/OJ6ikPhgzWna5VMBr8TJ3OS8rYI1RoJO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-14 15:28:31",
     "updatedAt": "2024-10-14 15:28:31"
   },
@@ -12986,6 +15150,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "octem@regioncallao.gob.pe",
     "password": "$2y$10$F81L2ZtTM3VMLt9pSzeIVOgM9JjBm1xNU4NYHOjfGqZmRuEUAq.Hu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-14 20:14:21",
     "updatedAt": "2024-10-14 21:09:39"
   },
@@ -12998,6 +15164,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "paolab@unamad.edu.pe",
     "password": "$2y$10$3xcBbXNQIeRIZ3/X8m7l0uCxDMiO9pM/1ruyMkiSqoA45IMlPpk1e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-14 20:30:41",
     "updatedAt": "2025-09-04 05:34:51"
   },
@@ -13010,6 +15178,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "corporativo2.claro@avalperu.com",
     "password": "$2y$10$amU66UCyvuOkNznDKzmJcequYfS/RpE2iOeEfxRpPOF2xjXqtiDqy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-15 14:55:04",
     "updatedAt": "2024-10-15 14:56:30"
   },
@@ -13022,6 +15192,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Anamaqque35@gmail.com",
     "password": "$2y$10$.mML5ci68BXHGu3QcOIVg.ij/4OxLEm1wZnAoBPVSmy.BXQGfT5ke",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-15 22:17:20",
     "updatedAt": "2024-10-15 22:17:40"
   },
@@ -13034,6 +15206,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ngonzalesy@unamad.edu.pe",
     "password": "$2y$10$XumbMTTjFX6hh701HUNCFObMwq/85zU.XwQS4C3KCZhSKdB6WL.yO",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "AA",
     "createdAt": "2024-10-16 14:19:27",
     "updatedAt": "2024-10-16 14:19:27"
   },
@@ -13046,6 +15220,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ahuancarac@unamad.edu.pe",
     "password": "$2y$10$jeRBIS6lSNoAatzRaqEbA.ku6Jtue3Yl5q6e3KIMqecZISAKsUdfO",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "AA",
     "createdAt": "2024-10-16 14:20:27",
     "updatedAt": "2024-12-29 14:14:06"
   },
@@ -13058,6 +15234,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cgarciarolin@gmail.com",
     "password": "$2y$10$nkTtFNhcF3ulA3mvtiFm3.Kb6MqAjX7tfobVH.3b/ZVnT7TtW6MZ.",
     "estado": 1,
+    "dependenciaCodigo": "EPED",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2024-10-17 13:52:53",
     "updatedAt": "2025-01-31 19:49:26"
   },
@@ -13070,6 +15248,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "midagri.2022@gmail.com",
     "password": "$2y$10$MiraJouXUomcYu6s3Pso.uTT1IL88fjt6v8mBSg9/tBRomj9wH1UK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-17 23:07:03",
     "updatedAt": "2024-10-17 23:08:14"
   },
@@ -13082,6 +15262,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nmezag@unamad.edu.pe",
     "password": "$2y$10$O.mI/hIjHowOG1//3KRnbe2S9E0XJaLlxS0cXL2vkew3ZNtvtK3Pq",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "AXULIAR ADMINISTRATIVO",
     "createdAt": "2024-10-18 17:31:13",
     "updatedAt": "2024-10-18 17:31:13"
   },
@@ -13094,6 +15276,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jquispetui@unsa.edu.pe",
     "password": "$2y$10$zi/.O2WmOGrADJDc1AE9z.SkiRUVx6Mknt7YCs5rbvXM5lGyYo/7S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-19 01:28:52",
     "updatedAt": "2024-10-19 01:30:19"
   },
@@ -13106,6 +15290,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gcl.fisca.adqui1@essalud.gob.pe",
     "password": "$2y$10$Ge7o.YjIKfXmyAPauvQO4.eH0WRtwiTi84tz53RVb.32IIa11DH2u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-21 15:21:01",
     "updatedAt": "2024-10-21 15:21:01"
   },
@@ -13118,6 +15304,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "saguilarc@unamad.edu.pe",
     "password": "$2y$10$sOIQrFaFEBLpw9S0nhYZZegr6.HBqG4VBqeStLpecvAe03uSRifeG",
     "estado": 1,
+    "dependenciaCodigo": "DAA",
+    "cargo": "AA",
     "createdAt": "2024-10-21 16:28:36",
     "updatedAt": "2024-10-29 13:11:44"
   },
@@ -13130,6 +15318,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cconsuelo@unamad.edu.pe",
     "password": "$2y$10$jXJnA5qhjrh2i6xqyC7mx./McprHj0yEy55bgncBFcX4Cdk9aKoii",
     "estado": 1,
+    "dependenciaCodigo": "UPE",
+    "cargo": "AA",
     "createdAt": "2024-10-22 14:49:30",
     "updatedAt": "2025-06-10 13:48:08"
   },
@@ -13142,6 +15332,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gjcardozo@unamad.edu.pe",
     "password": "$2y$10$iKERjbcoiPtmSNfIl6UwOeUgDYJaAVivR1edxRzsREmeGvpO2Xr/u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-22 21:20:58",
     "updatedAt": "2024-10-22 21:22:18"
   },
@@ -13154,6 +15346,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fpomalaya@congreso.gob.pe",
     "password": "$2y$10$daPoZG.bhcgVRK.TwjvWjuMGMu9BLAMpE79.W4bVmwjGqKAcezeTq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-23 19:48:59",
     "updatedAt": "2024-10-23 19:52:08"
   },
@@ -13166,6 +15360,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ambellidos@gmail.com",
     "password": "$2y$10$U.8Mr0ic2ruTEXnMCwR8l.5jzUmy2lAhBzIHUO5N32zVgQ8pBxDj6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-24 11:16:47",
     "updatedAt": "2024-10-24 11:17:10"
   },
@@ -13178,6 +15374,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "AMONTOYAP@UNAMAD.EDU.PE",
     "password": "$2y$10$SmGiCG/Vj7gftMxxQIYwtu.vTwlj9XTmVBT4oI2kuUyEhd2ucne26",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-24 14:08:18",
     "updatedAt": "2024-10-24 14:10:00"
   },
@@ -13190,6 +15388,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fresciadelpilar@hotmail.com",
     "password": "$2y$10$I88EBmlBq2TN13U6LvKKceMWRz6MBzWBZcCuUXeIpA4cKy3nLSoZu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-25 02:30:30",
     "updatedAt": "2024-10-25 02:30:30"
   },
@@ -13202,6 +15402,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "noemichoquemamani90@gmail.com",
     "password": "$2y$10$S1ZD4UwTMT0R9ZdBm8NqeeWIJpDQgkaMgB3EqtRm0kc.v7HhvmDkO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-25 12:37:40",
     "updatedAt": "2024-10-25 12:37:40"
   },
@@ -13214,6 +15416,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "DIPROGE07@MINEDU.GOB.PE",
     "password": "$2y$10$I28obiR6/pK5/pyTe0kjZe5HKfZP1Rx.rBWnfiAXacElaiI1zfhiS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-25 12:53:26",
     "updatedAt": "2024-10-25 12:53:52"
   },
@@ -13226,6 +15430,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "joseph.capani06@gmail.com",
     "password": "$2y$10$i5yYfRxjj6wU6QDAW3I5XuR9/eI8Bc.VM0Q2JChZAN6bE3GmO7Gue",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-26 11:56:56",
     "updatedAt": "2024-10-26 11:57:52"
   },
@@ -13238,6 +15444,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dtoro@unamad.edu.pe",
     "password": "$2y$10$GBi4h7/5mQCjyFvYlVBg8.O6mp83dLothJ3WT4RpcOLtAqqa0aFDy",
     "estado": 1,
+    "dependenciaCodigo": "ULI",
+    "cargo": "ENCARGADO",
     "createdAt": "2024-10-30 13:52:16",
     "updatedAt": "2025-03-11 17:57:35"
   },
@@ -13250,6 +15458,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "icansayaf@unamad.edu.pe",
     "password": "$2y$10$MLNBAEgJ3S12wk5jLWahOeWbb77E6bwY25UeAhmjyo5IOCBjuVHq2",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "AA",
     "createdAt": "2024-10-31 13:48:58",
     "updatedAt": "2024-10-31 13:48:58"
   },
@@ -13262,6 +15472,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gguerrero@contraloria.gob.pe",
     "password": "$2y$10$iJG0j6Eu3KwNvzgoodokD.hFV63EGf54eGDsmwYZcj.nCqEH8Dnta",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-31 19:59:41",
     "updatedAt": "2024-10-31 20:00:45"
   },
@@ -13274,6 +15486,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fiscalizacion@essalud.gob.pe",
     "password": "$2y$10$FWlz9afN/51jAZJow6QCyOmpCuWLWhAVvtBt9fU/6AJty3S4FNer.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-10-31 20:14:15",
     "updatedAt": "2024-10-31 20:14:58"
   },
@@ -13286,6 +15500,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lvillafuerte@contraloria.gob.pe",
     "password": "$2y$10$3tTMYh9PmhXmLIoZT8YMTeFLRHhz/Mq1djX0u2CwHoreHsGNgfPou",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-04 20:38:25",
     "updatedAt": "2024-11-04 20:39:49"
   },
@@ -13298,6 +15514,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mmamanif@contraloria.gob.pe",
     "password": "$2y$10$K/2OQl5gaIHd2Yj10/oWB.zhtWuOG6xkn03dLz9kTfMFlpIKSOs9K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-04 20:41:29",
     "updatedAt": "2024-11-04 20:42:15"
   },
@@ -13310,6 +15528,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "repositorio@unh.edu.pe",
     "password": "$2y$10$ZVQx5EHRJ33sx/vOVSqQQ.DlTKJ7BUaV0CF.EJ507WezQ6dZ1Oye6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-04 20:51:55",
     "updatedAt": "2024-11-04 20:54:22"
   },
@@ -13322,6 +15542,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tony.lb12@gmail.com",
     "password": "$2y$10$7r15P4gzzKtboNCodeZEpukNCqhfE06lk7WtVQkCt6Vq0GxLViXyW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-04 22:09:35",
     "updatedAt": "2024-11-04 22:09:57"
   },
@@ -13334,6 +15556,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erikathe1213@gmail.com",
     "password": "$2y$10$7vhSc0A1PyAIAITOc5FmOOLGAmLjTwBScPmxdm.1GFwde6kkjzJmu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 02:35:36",
     "updatedAt": "2024-11-05 17:07:54"
   },
@@ -13346,6 +15570,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "oibarra@unamad.edu.pe",
     "password": "$2y$10$jVQFFlXmQA2ZWI6voVIEG.bwWIQ5kQbaNGkPMJZ6YXqrCtQ3fm.pm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 19:45:30",
     "updatedAt": "2026-04-16 12:54:17"
   },
@@ -13358,6 +15584,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "waparicio-usg@unamad.edu.pe",
     "password": "$2y$10$3E/shoXxcnEbphC2TezQH.TRjtMxcB1Y.vbL8HVq.FZitCODtNcXe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 19:47:23",
     "updatedAt": "2024-11-05 19:47:23"
   },
@@ -13370,6 +15598,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jchota@unamad.edu.pe",
     "password": "$2y$10$GgtqMWofJR9ea82qF35rx.JP4KFSHvD8oR9eIkwPvHxIV2XPWYKdW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 19:50:19",
     "updatedAt": "2024-11-05 19:50:19"
   },
@@ -13382,6 +15612,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kquispe@unamad.edu.pe",
     "password": "$2y$10$B0FcUrhYLnAL.yKkAQFFUOe0ApfwMck./sHB4kFp13utImxPMwpQ2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 19:51:52",
     "updatedAt": "2024-12-11 14:28:53"
   },
@@ -13394,6 +15626,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "averag@unamad.edu.pe",
     "password": "$2y$10$hpXb6WLwflVMvPtpoSSUS.EryJs0ZdXae0hsD5b8BB.0D9UjEhioe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 19:55:22",
     "updatedAt": "2024-11-05 19:55:22"
   },
@@ -13406,6 +15640,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bsairec@unamad.edu.pe",
     "password": "$2y$10$omyARIK0y3uGV7oyI2j4K.gAeunqtPMOX6RNw4MRS9384VUxErEvG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:03:30",
     "updatedAt": "2024-11-05 20:03:30"
   },
@@ -13418,6 +15654,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jdurandl@unamad.edu.pe",
     "password": "$2y$10$nbPPdk0EAffFOEfb4J6JJulkjFjvtTLt7bJuVx23rf.yS6T1nMbme",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:06:32",
     "updatedAt": "2024-11-05 20:06:32"
   },
@@ -13430,6 +15668,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sgalvezb@unamad.edu.pe",
     "password": "$2y$10$vDPsPxD4HTbsr9pA4s1i6ujjTAwWDK4uPwM88BdkMiDnNmW2jAhzu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:08:39",
     "updatedAt": "2024-11-05 20:08:39"
   },
@@ -13442,6 +15682,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "imfarro@unamad.edu.pe",
     "password": "$2y$10$TJ7jBIoCP3Ey4LLnRV6rqegc9uUFZXdSNUZ0HJ6lNFSLrODqjwtJW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:11:43",
     "updatedAt": "2024-11-05 20:11:43"
   },
@@ -13454,6 +15696,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jsppaniura@unamad.edu.pe",
     "password": "$2y$10$xL0iWmPzQebOCUT8gYFuAOxhDanOJKrbTxHrlFEp1TzllgpGn.dwK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:15:10",
     "updatedAt": "2026-04-17 22:21:22"
   },
@@ -13466,6 +15710,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pparisacal@unamad.edu.pe",
     "password": "$2y$10$TlxY99Qd7CcfJHBCYeEQveQzAY6yyqLbpXxzsZgzkHZ8i3qWz/cTi",
     "estado": 1,
+    "dependenciaCodigo": "INI",
+    "cargo": "AUXILIAR ADMINISTRAIVO",
     "createdAt": "2024-11-05 20:18:01",
     "updatedAt": "2025-04-10 14:18:59"
   },
@@ -13478,6 +15724,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jyvana@unamad.edu.pe",
     "password": "$2y$10$H//aSGMUv/svaKWMsBEeqOBpPFATwYeupBFCIza9j6seE2DgflPsS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:19:01",
     "updatedAt": "2026-04-01 16:38:02"
   },
@@ -13490,6 +15738,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "icumari@unamad.edu.pe",
     "password": "$2y$10$cZoyY6/z4SVoDfwoI.0oDeymdqE406AUHtMS3DoU/iltJXVTm0co.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:23:58",
     "updatedAt": "2025-06-23 13:17:13"
   },
@@ -13502,6 +15752,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mamasifuen@unamad.edu.pe",
     "password": "$2y$10$ZSDoKHMr8QOnt38vAsLmxeSNjP0sn/el3GhSUZX2YRoNmXaL4ee3q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:25:41",
     "updatedAt": "2025-04-22 20:35:26"
   },
@@ -13514,6 +15766,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smujica@unamad.edu.pe",
     "password": "$2y$10$jFNxuGNGzJudpnVvDSyKXOSslSX9Zy3k9dV0ZHZHeeUvC0IMZWsAi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:28:44",
     "updatedAt": "2024-11-05 20:28:44"
   },
@@ -13526,6 +15780,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gvela@unamad.edu.pe",
     "password": "$2y$10$ZfS5uxOp6L32G85U24ZucuhpFc7euBLtzkVKr0h1b5viciv0Ch7sq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:33:49",
     "updatedAt": "2025-02-17 20:26:12"
   },
@@ -13538,6 +15794,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "farellano@unamad.edu.pe",
     "password": "$2y$10$aISJlxzcVCgjsNjgc9J1fO8jmBIMQuavpDFl2tAOEPsydatnqMayK",
     "estado": 1,
+    "dependenciaCodigo": "OCII",
+    "cargo": "ESPECIALISTA",
     "createdAt": "2024-11-05 20:40:09",
     "updatedAt": "2026-01-15 17:23:25"
   },
@@ -13550,6 +15808,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lmerma@unamad.edu.pe",
     "password": "$2y$10$wSB73KlROHHJXvcDcfEW5ep/ybYhLr5N2UFskJsDhPV/VOdrIBQhq",
     "estado": 1,
+    "dependenciaCodigo": "VRA",
+    "cargo": "ESPECIALISTA ACADEMICO",
     "createdAt": "2024-11-05 20:42:27",
     "updatedAt": "2024-11-13 13:23:45"
   },
@@ -13562,6 +15822,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lhidalgoi@unamad.edu.pe",
     "password": "$2y$10$cXv5q2egX/qwYAc10GkC5.K0wic1Ros.tu1MSwCSGMqgoHmSm5sTy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:45:05",
     "updatedAt": "2024-11-05 20:45:05"
   },
@@ -13574,6 +15836,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cristhianm@unamad.edu.pe",
     "password": "$2y$10$.EvHBM/rRdM7x.dB/sY8Keak4eWknqnLpEVzYrZP4c.SX/cmp5Mxq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:48:47",
     "updatedAt": "2024-11-05 20:48:47"
   },
@@ -13586,6 +15850,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "roymarron@unamad.edu.pe",
     "password": "$2y$10$z9ICibLh9wxa5sJ7CUonO.kg3ZnGop433LZLQBhv2H29QJjAYf9t.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:51:21",
     "updatedAt": "2024-11-05 20:51:21"
   },
@@ -13598,6 +15864,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "avasquezc@unamad.edu.pe",
     "password": "$2y$10$rBiq8MFYcjC/I.sJJ6dCcuiuo/eoDRWpaX4k/oTiJpR087g./XBTq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:55:41",
     "updatedAt": "2025-10-15 17:32:56"
   },
@@ -13610,6 +15878,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "josemc@unamad.edu.pe",
     "password": "$2y$10$UiNzmcbQo02NoMxgyTIQSuT7ZOiLsa7QQ7rLtF2NUwkZEHJFOw1sS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 20:57:56",
     "updatedAt": "2024-11-05 20:57:56"
   },
@@ -13622,6 +15892,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sbellido@unamad.edu.pe",
     "password": "$2y$10$bh/bXm9Y14chhv3HJ8wGNu0b67DfkP9xhTExDhnSOSYVZpQhV00.2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:00:27",
     "updatedAt": "2024-11-05 21:00:27"
   },
@@ -13634,6 +15906,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "namayades@unamad.edu.pe",
     "password": "$2y$10$41hAwXMPMqr/Nhb1ruU4WOAKXbbrtK6ryHv7U8EU9utpyRhG9v7Ji",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:03:35",
     "updatedAt": "2024-11-05 21:03:35"
   },
@@ -13646,6 +15920,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "scusihuallpah@unamad.edu.pe",
     "password": "$2y$10$QFytJ9/c5Wzwo0QqVwqS3.TKyERoCELoMIsH4OPhm.qNpJgIV8JE6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:06:39",
     "updatedAt": "2025-09-10 15:38:44"
   },
@@ -13658,6 +15934,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "achahuara@unamad.edu.pe",
     "password": "$2y$10$iwc5debxJKtBMj3h7qDWSuoTEQYc0EFUAEYcJiY6bJnNCZxl.uHOu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:16:46",
     "updatedAt": "2026-03-25 15:52:46"
   },
@@ -13670,6 +15948,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gquispe@unamad.edu.pe",
     "password": "$2y$10$kFg0ejOVLgY0oHDrgxGcaeexwADwntfO.wKVCgOQb2g065mUMF26a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:19:33",
     "updatedAt": "2026-03-31 16:11:13"
   },
@@ -13682,6 +15962,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cvicente@unamad.edu.pe",
     "password": "$2y$10$oZM943eVjmV2bvRTjTQSEu.oY5MwVeJqInE6Uk8g2ICDeE92AJNjC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:25:24",
     "updatedAt": "2024-11-05 21:25:24"
   },
@@ -13694,6 +15976,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "epumachoque@unamad.edu.pe",
     "password": "$2y$10$vFvEjDyq8BXHe0/8IVPuGuOrRiRyHXwyh5eobSeyGq.uvY.HcpxrS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:36:51",
     "updatedAt": "2026-01-15 16:45:16"
   },
@@ -13706,6 +15990,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jrojas@unamad.edu.pe",
     "password": "$2y$10$/FP2aGy1mWxJkoLT29.IYOh3e9oWpSbek0ClHIuK2HNu/MOY5Wqsa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 21:40:43",
     "updatedAt": "2025-09-04 00:35:15"
   },
@@ -13718,6 +16004,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "farpita@unamad.edu.pe",
     "password": "$2y$10$UhmksnLgZZ3y.fWPqTKLW.Ddion4ZIN60XXaYK6wNq9qQU20LBaty",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:03:08",
     "updatedAt": "2026-03-11 14:38:37"
   },
@@ -13730,6 +16018,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvillafuerte@unamad.edu.pe",
     "password": "$2y$10$US5YoQHLUOH5gmFaG8YAt./Njoznx.k9Oy7CrpUortcagYgIITDUC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:04:58",
     "updatedAt": "2024-11-05 22:04:58"
   },
@@ -13742,6 +16032,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jesusq@unamad.edu.pe",
     "password": "$2y$10$wh3Uei72dRsfOpxU1JjETush1IUnFgqsao/8AeRYHUUeNsnPrPX.6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:09:08",
     "updatedAt": "2024-11-05 22:09:08"
   },
@@ -13754,6 +16046,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "khuacasi@unamad.edu.pe",
     "password": "$2y$10$RioGFdFhmtawj635Psg7S./xhv7AQqDJBS0suSWQWQnZjTgypkUBO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:11:28",
     "updatedAt": "2026-01-12 16:37:01"
   },
@@ -13766,6 +16060,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MTITOQ@CONTRALORIA.GOB.PE",
     "password": "$2y$10$oAPRJkWRIaAJEWUE3XNqvO9agV1ccGflBFv8X.U/h3IxS1n6kxKX2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:12:21",
     "updatedAt": "2024-11-05 22:12:51"
   },
@@ -13778,6 +16074,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lbejar@unamad.edu.pe",
     "password": "$2y$10$ShPziCA.k4IudIgI0VfGuu.m9QNsYXkCunLOxiStdAcjbWratbALS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:13:09",
     "updatedAt": "2024-11-05 22:13:09"
   },
@@ -13790,6 +16088,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ROBINSONR@UNAMAD.EDU.PE",
     "password": "$2y$10$B5elf62hXnwernH66QinZuTi9ulS3Aws.qFAz49JrqrPJqq37a.h2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:16:46",
     "updatedAt": "2024-11-05 22:16:46"
   },
@@ -13802,6 +16102,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mjimenez@unamad.edu.pe",
     "password": "$2y$10$smXQO130kU0wkdHqUsqyKuzBmGYezrePuHkNxRcwDE0GmW5I8pH3K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:18:22",
     "updatedAt": "2026-03-31 17:42:34"
   },
@@ -13814,6 +16116,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yordyj@unamad.edu.pe",
     "password": "$2y$10$357kxRWlo26Y2fmyaTGicesU.o/Il5G53w/y20dClzB82bjOz4P4G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:20:39",
     "updatedAt": "2025-09-09 14:24:06"
   },
@@ -13826,6 +16130,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alex.aytet@unamad.edu.pe",
     "password": "$2y$10$HK3nrRvFlf8uUfIwYAU7UumwBUEZLE5J8/s7CTDDpWAakLmZ5jNp.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:22:33",
     "updatedAt": "2024-11-05 22:22:33"
   },
@@ -13838,6 +16144,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ryhuamans@unamad.edu.pe",
     "password": "$2y$10$Cgg8Vb3lwRoTICholHszWO1E9FmUByKc7BRVm/d8IT50RxoVUQz4q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:24:26",
     "updatedAt": "2026-03-11 16:58:01"
   },
@@ -13850,6 +16158,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tbolarte@unamad.edu.pe",
     "password": "$2y$10$0WaBRx7R1wzeuhgNFakE0etgQtR/82RRNVtRR/l8zfKup3yn2m9Pq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:38:07",
     "updatedAt": "2024-11-05 22:38:07"
   },
@@ -13862,6 +16172,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eroque@unamad.edu.pe",
     "password": "$2y$10$rMc4ntLtzN7Egn0SBt0ULuI8XmwcNB/z208itCPkwswDw5M5rIoaO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:48:55",
     "updatedAt": "2024-11-05 22:48:55"
   },
@@ -13874,6 +16186,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "flor.mamanic@unamad.edu.pe",
     "password": "$2y$10$/35lTcjdt2xaVolme13vau7sOp.35RfGNUHKNQaK6YuWnW2yf7T3G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:49:47",
     "updatedAt": "2026-03-12 20:02:25"
   },
@@ -13886,6 +16200,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fhuayllat@unamad.edu.pe",
     "password": "$2y$10$sKtyp76Sspzarv7e/7uVEOw0t509euwRelLbUsDvH7UWDaGNc8mAW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 22:51:41",
     "updatedAt": "2024-11-05 22:51:41"
   },
@@ -13898,6 +16214,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "acari@unamad.edu.pe",
     "password": "$2y$10$ELYHatHXXnhRjO5n.TTEwOKgeEHv37nb.vBqUyIDBgEYFFtFukoYO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:00:48",
     "updatedAt": "2024-11-05 23:00:48"
   },
@@ -13910,6 +16228,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jparedesp@unamad.edu.pe",
     "password": "$2y$10$4OO9bQ3viZL7D4b1m8rbLOTEpepaL62bpZqOvlADowqjt13sqGUxS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:01:45",
     "updatedAt": "2024-11-05 23:01:45"
   },
@@ -13922,6 +16242,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "equispem@unamad.edu.pe",
     "password": "$2y$10$OnVc8hwuAiYJK7gIY3lvqOH3MeqAJmriNOwilLm.33RupMAbRGJ8q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:02:58",
     "updatedAt": "2026-03-31 21:01:06"
   },
@@ -13934,6 +16256,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mchino@unamad.edu.pe",
     "password": "$2y$10$zed7mK3SmPs.TkaR/FdLWuXzE.5ADb5g61xl2HHh3rRtIQHhON8cu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:04:11",
     "updatedAt": "2024-11-05 23:04:11"
   },
@@ -13946,6 +16270,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesteba@unamad.edu.pe",
     "password": "$2y$10$/8DxBuWi7UloNV0gFDihReW7N9GwRavXbqJYN.hU1elzuJmX5Exbu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:05:19",
     "updatedAt": "2024-11-05 23:05:19"
   },
@@ -13958,6 +16284,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dpaye@unamad.edu.pe",
     "password": "$2y$10$jB0MDr4FI4W5na3Gch5FweZloTItMsJghUrGEpzMxUHAcAa6ZLhQK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:06:18",
     "updatedAt": "2025-08-15 13:18:11"
   },
@@ -13970,6 +16298,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smendoza@unamad.edu.pe",
     "password": "$2y$10$pASrQMkIUigN8f6QjERaNuDQ1Ib1hmqq4qY9a7Di/z5Pw.qo/cogy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:08:55",
     "updatedAt": "2024-11-05 23:08:55"
   },
@@ -13982,6 +16312,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ariasj@unamad.edu.pe",
     "password": "$2y$10$8UPJ0TY2M3WkucSjixdaweAnJbE.JyJQttz2E9jxiU9fcnAdMAqjG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:10:05",
     "updatedAt": "2024-11-05 23:10:05"
   },
@@ -13994,6 +16326,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mbeltran@unamad.edu.pe",
     "password": "$2y$10$n5LG87IqU2bjSXtissr5ueXVIj8ICbYprVwyIvzZuxiHwlfZgtS7.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:10:55",
     "updatedAt": "2025-11-18 14:19:46"
   },
@@ -14006,6 +16340,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvillarruel@unamad.edu.pe",
     "password": "$2y$10$odhixs5qPhhq1/C1IWsvEuQ014ejpYLAfCMIQt29LMj1i80lAGHy6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:14:05",
     "updatedAt": "2024-11-05 23:14:05"
   },
@@ -14018,6 +16354,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "flizaraso@unamad.edu.pe",
     "password": "$2y$10$gr/KdfwJePl7eFHZ3gXAOeD4k835sNqGWtrFM3Ql7ALEOYHZjf21i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:15:04",
     "updatedAt": "2024-11-05 23:15:04"
   },
@@ -14030,6 +16368,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sttitov@unamad.edu.pe",
     "password": "$2y$10$zd1li.qGkriUtRz98p7vguagNUiWESmUEYsUybX552rx7A.tXj9F2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:16:06",
     "updatedAt": "2026-01-24 03:36:17"
   },
@@ -14042,6 +16382,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rosams@unamad.edu.pe",
     "password": "$2y$10$0NJDU.Y.HkRvByCAtCLeIud/RqtbDhUWfi498fZ7en0lWR08lfTc6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:16:57",
     "updatedAt": "2024-11-05 23:16:57"
   },
@@ -14054,6 +16396,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcruz@unamad.edu.pe",
     "password": "$2y$10$B/A0BJ3kR2OKi9rMqjrU7.4E9ANr4ypMLYuBaj3cjuLsK5eYPOzde",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:17:45",
     "updatedAt": "2024-11-05 23:17:45"
   },
@@ -14066,6 +16410,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cesarl@unamad.edu.pe",
     "password": "$2y$10$ovMkWFUlHukWarmNibzFE.zqcI2B0xDDJ/M8SQTSXoSI99S0Z2UGa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:18:21",
     "updatedAt": "2024-11-05 23:18:21"
   },
@@ -14078,6 +16424,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "darellano@unamad.edu.pe",
     "password": "$2y$10$AmMxbth2pG9yBmp9UBpnLunW8l2o7eEG5b4XLacMglhODDyZJ9r3u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:18:58",
     "updatedAt": "2024-11-05 23:18:58"
   },
@@ -14090,6 +16438,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jdpenap@unamad.edu.pe",
     "password": "$2y$10$SZG/d/zK742sJD./V4G1xeeMF8zfvm/RaOvK4Qq8vOH6uKcTFQoiK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:19:55",
     "updatedAt": "2025-08-13 11:33:28"
   },
@@ -14102,6 +16452,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ctuesta@unamad.edu.pe",
     "password": "$2y$10$ACBJnfJXzVY9krSUfWmEQeOOTbjBj21MD4lBA0sksLJVhKBlMJ0/y",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2024-11-05 23:20:41",
     "updatedAt": "2025-05-14 13:10:15"
   },
@@ -14114,6 +16466,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "varostegui@unamad.edu.pe",
     "password": "$2y$10$KtSJmKNzpBHk8IcCV/STyuil7LOBNlEkgR47jRdyiFL/FJmg/SVtm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:22:01",
     "updatedAt": "2026-05-25 12:43:00"
   },
@@ -14126,6 +16480,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcamarena@unamad.edu.pe",
     "password": "$2y$10$Tyr8cm1k/FLvRRya2o18R.EkyV9AHb1/AkJpUgLcqQm27ETkIB2ju",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:22:41",
     "updatedAt": "2024-11-05 23:22:41"
   },
@@ -14138,6 +16494,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rramosh@unamad.edu.pe",
     "password": "$2y$10$jrKUgJt1FVKDclkNdO1rSeqFbDQo5txY0rFWcQTT6bebGl/a.ZwLu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:23:24",
     "updatedAt": "2024-11-05 23:23:24"
   },
@@ -14150,6 +16508,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mlovera@unamad.edu.pe",
     "password": "$2y$10$H5cJHt6YqCJ7tpbDGcWkMOgbGv.FPA.X23/kl86u/UdSKUU33dXjm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:24:10",
     "updatedAt": "2026-01-13 17:10:29"
   },
@@ -14162,6 +16522,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eescobedo@unamad.edu.pe",
     "password": "$2y$10$FrlJHoz3KxS29KXI2skQzuZtUOEnMbmGNEGAakEW7WEjby15qkOTK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:24:50",
     "updatedAt": "2024-11-05 23:24:50"
   },
@@ -14174,6 +16536,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cbejar@unamad.edu.pe",
     "password": "$2y$10$pY04SvyndJ37tmbirLUD1OS.QJ2ANd1av8hU5e6Z3571iOnk.9M0C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:25:29",
     "updatedAt": "2024-11-05 23:25:29"
   },
@@ -14186,6 +16550,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "roparedes@unamad.edu.pe",
     "password": "$2y$10$ri.BMhPXQWsZQMzkOap.3eY60nOA46wQwqLCxquxQyu52oHX1GYUW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-05 23:27:35",
     "updatedAt": "2025-06-19 15:59:25"
   },
@@ -14198,6 +16564,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "icarrion@unamad.edu.pe",
     "password": "$2y$10$5n9iVY8o4UuAbcQOkWZfc.tMts3GJ64q46X7WcjYF7Ga5hcDykwyW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:13:14",
     "updatedAt": "2026-06-05 19:34:04"
   },
@@ -14210,6 +16578,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lrevollarc@unamad.edu.pe",
     "password": "$2y$10$VLi0a3AcmKtERvklfVx5Iucaxk5xcE5l0pIwRU17ruTzrFBmfw1DG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:14:16",
     "updatedAt": "2024-11-06 00:14:16"
   },
@@ -14222,6 +16592,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "elloccallasi@unamad.edu.pe",
     "password": "$2y$10$133uq9ifQmX5BRaa4FOi.u2sxcvHvAuqUOHfBRYBJJtd8IzLswImm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:15:05",
     "updatedAt": "2026-03-06 16:35:15"
   },
@@ -14234,6 +16606,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eusebio@unamad.edu.pe",
     "password": "$2y$10$LZ87eJDlnRF4wA01Qc4tVuGst.hlLO/8r4bAgo730E12OZaI3HaK.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:15:45",
     "updatedAt": "2026-06-15 20:56:35"
   },
@@ -14246,6 +16620,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yula.rojasv@unamad.edu.pe",
     "password": "$2y$10$ewJWl6URsfnI6agZl4KAsOUnfjmrL/Ip4TdbeJX.6SZhoDv8OEDBO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:16:17",
     "updatedAt": "2024-11-06 00:16:17"
   },
@@ -14258,6 +16634,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ocuela@unamad.edu.pe",
     "password": "$2y$10$l4TGugxcBm5ExRtvUuBq.upCHym64MwxrdqCGoPCrFASpb8CcDP5S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:16:47",
     "updatedAt": "2026-01-22 14:29:33"
   },
@@ -14270,6 +16648,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jcasafranca@unamad.edu.pe",
     "password": "$2y$10$26E4xQohOBP6Ggq1ioDe8un9wEuPUV4qOuE13Cj.65bm8q0KOzqC6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:17:18",
     "updatedAt": "2024-11-22 17:13:17"
   },
@@ -14282,6 +16662,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mparedesa@unamad.edu.pe",
     "password": "$2y$10$n8Es7InSPOMpCbR2pPtPw.7g6olWXybJn5LY5jRPMU8TFUdtlRjU6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:18:15",
     "updatedAt": "2024-11-06 00:18:15"
   },
@@ -14294,6 +16676,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "warratia@unamad.edu.pe",
     "password": "$2y$10$Qo94QABVEgFiq6iIEe0xqOfBw2WjWfO1/EgaKTG8eFwtV/sC3ZzT.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:18:50",
     "updatedAt": "2024-11-06 00:18:50"
   },
@@ -14306,6 +16690,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yhuamani@unamad.edu.pe",
     "password": "$2y$10$L4mWt2RVjuDp.95TTsVGkO./DJUCwl3q8mIBTWIacY./BGRCAOw0e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:19:48",
     "updatedAt": "2024-11-06 00:19:48"
   },
@@ -14318,6 +16704,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bmamani@unamad.edu.pe",
     "password": "$2y$10$4ianyFu7NkpRgaIkS4NhEenEyQkJOgLDEa.m824sC4s9O8ZquaN2G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:20:20",
     "updatedAt": "2026-03-24 17:04:09"
   },
@@ -14330,6 +16718,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ghuayhua@unamad.edu.pe",
     "password": "$2y$10$x79Cv1hSlpyiN6C7YSiIXO6ZCMIl9Pkun.NXjrl0StpnQ9HAQy9OO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:20:51",
     "updatedAt": "2024-11-06 00:20:51"
   },
@@ -14342,6 +16732,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vmedina@unamad.edu.pe",
     "password": "$2y$10$glF.ksZpDCIOv2YPgDXNheQ8mEUauD/VkRcBajgoAasNgcILf90jS",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2024-11-06 00:22:26",
     "updatedAt": "2026-01-13 15:31:12"
   },
@@ -14354,6 +16746,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mquiroz@unamad.edu.pe",
     "password": "$2y$10$Gz83ZNPiGjhdtfegGjjiU.OFdjDGdrBfG9v3RHMw1hC6WJvfmAZsu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:23:08",
     "updatedAt": "2024-11-06 00:23:08"
   },
@@ -14366,6 +16760,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "psonccos@unamad.edu.pe",
     "password": "$2y$10$svIwzdGlVwlLAdqKdOA2O.3DKs0/gnwRdD0MFFjP40LEC5xWzAutK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:23:49",
     "updatedAt": "2026-03-13 14:19:03"
   },
@@ -14378,6 +16774,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "frecuenco@unamad.edu.pe",
     "password": "$2y$10$yynQvED.dMP9mGWa8S2dZu2lLITccXZmvgwbvvU3iKIDE0BNcQfCq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:30:24",
     "updatedAt": "2024-11-06 00:30:24"
   },
@@ -14390,6 +16788,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yrperez@unamad.edu.pe",
     "password": "$2y$10$M9DVZCfAIGkbouKcuzQC8uh1kg/WXaNUK5HgWaR/dZGsBxMDQeo6m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:31:05",
     "updatedAt": "2025-09-08 21:00:55"
   },
@@ -14402,6 +16802,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nmachaca@unamad.edu.pe",
     "password": "$2y$10$3of3x5.xILeuJQ6AP/8Vsuh4NSoEzaS0bPTVkBIEBsNnj5EEJs.su",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:31:58",
     "updatedAt": "2024-11-06 00:31:58"
   },
@@ -14414,6 +16816,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rgutierrez@unamad.edu.pe",
     "password": "$2y$10$QYcFEK7C0vDnaJrE6zGy6.wA88v2jlyFtUkM2ZbI9ufZIm33ArmZ6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:32:35",
     "updatedAt": "2024-11-06 00:32:35"
   },
@@ -14426,6 +16830,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rroquem@unamad.edu.pe",
     "password": "$2y$10$PziEUMYSepb5KNgj.sjrSO3Jgrll9S0ApZg57DVBcvbFDEzYXQ5PC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:33:08",
     "updatedAt": "2024-11-06 00:33:08"
   },
@@ -14438,6 +16844,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hgomez@unamad.edu.pe",
     "password": "$2y$10$LRukWvjUGSoqYKYYJezvk.2jimbVSnHrEj2yYPC8k0PNVsSbkH6Oa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:33:56",
     "updatedAt": "2026-03-13 16:11:31"
   },
@@ -14450,6 +16858,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "phincho@unamad.edu.pe",
     "password": "$2y$10$SvrCUuS.DdxQ.yPM2MqCy.uVyaOap5lUM.AfNNeTi13T.8QrTKHhq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:34:46",
     "updatedAt": "2024-11-06 00:34:46"
   },
@@ -14462,6 +16872,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "agutierrez@unamad.edu.pe",
     "password": "$2y$10$7IWcJkoCABza4j.EpkzhfemcSsmLTaP73eOPEf5hYoRNTNZ2SsuN6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 00:35:51",
     "updatedAt": "2024-11-06 00:35:51"
   },
@@ -14474,6 +16886,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cherreraa@unamad.edu.pe",
     "password": "$2y$10$0EJKgZTXFP5COCafAa83Uu4aa29Ho.KjvbKmKLGqxKCfMPz5WaR6K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 15:54:33",
     "updatedAt": "2024-11-06 15:54:33"
   },
@@ -14486,6 +16900,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvilchezn@unamad.edu.pe",
     "password": "$2y$10$yznHP9z.YQJTZecpnAG9SOpTeR0N.aSNrsC8gIStM08mSsuzppkYW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 15:55:49",
     "updatedAt": "2024-11-06 15:55:49"
   },
@@ -14498,6 +16914,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "crist.floresb@unamad.edu.pe",
     "password": "$2y$10$4eIrv/Aq7IJc5tGCrKsEWeBPglnu.jIv.Elbgh2drPK87DbYf/skW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 15:57:17",
     "updatedAt": "2025-09-08 14:53:29"
   },
@@ -14510,6 +16928,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "esvargas@unamad.edu.pe",
     "password": "$2y$10$cyqfCq30U73.0GwCSr4GteJIihc7opsRyc2Om./tGgLczXxJQVJiO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 15:58:44",
     "updatedAt": "2025-04-04 15:20:53"
   },
@@ -14522,6 +16942,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hvillalba@unamad.edu.pe",
     "password": "$2y$10$W8kvuMbpJyFRR4zlV156ieBihc6QNXPxy7naY9nHKYSrRJgHxojQ.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 15:59:45",
     "updatedAt": "2026-02-23 13:34:09"
   },
@@ -14534,6 +16956,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "deysisedano@unamad.edu.pe",
     "password": "$2y$10$3asDf3V0rSha8N0RNh/ZaeYByz3qzNGUrQ3p0nOzANQ7XaBcmE.Fq",
     "estado": 1,
+    "dependenciaCodigo": "EPE",
+    "cargo": "DOCENTE",
     "createdAt": "2024-11-06 16:01:57",
     "updatedAt": "2024-11-06 16:01:57"
   },
@@ -14546,6 +16970,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ejaimes@unamad.edu.pe",
     "password": "$2y$10$/ysY6epdQ2FMYNYRkH7an.I1XPnDRk3HBYPzwqkS/SOrQYW0dVD7G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:06:40",
     "updatedAt": "2024-11-06 16:06:40"
   },
@@ -14558,6 +16984,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mangelica@unamad.edu.pe",
     "password": "$2y$10$Yqb.YS/X7dLv12ytUuPwTuAW01zk/KBvGwpKbyhDo5z9RkY/jbjhG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:07:34",
     "updatedAt": "2024-11-06 16:07:34"
   },
@@ -14570,6 +16998,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "larapa@unamad.edu.pe",
     "password": "$2y$10$yo8H5sA45.dpDmHZmgI7NuSLvAmlgeKn94427J4w/35ifu01EPBsO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:08:24",
     "updatedAt": "2024-11-06 16:08:24"
   },
@@ -14582,6 +17012,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maria.mamaniq@unamad.edu.pe",
     "password": "$2y$10$cAXWVVpHUDWImS3v6CheEuEyfkeF6lgYm5/S7bfoXPdLQ70qZGry2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:09:25",
     "updatedAt": "2024-11-06 16:09:25"
   },
@@ -14594,6 +17026,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lcolquehuanca@unamad.edu.pe",
     "password": "$2y$10$YuDUZtuXd6sAK/NrjXFvkuo6P.6C2Uj4U4at7t7yeIBQLfMLZeTsi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:11:08",
     "updatedAt": "2024-11-06 16:11:08"
   },
@@ -14606,6 +17040,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nchacon@unamad.edu.pe",
     "password": "$2y$10$V6nbU.nMGwRL2knGCfwSj.ichWT/NazgKovzw9zefkf5mbD9mnUQa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:11:56",
     "updatedAt": "2024-11-06 16:11:56"
   },
@@ -14618,6 +17054,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ebarrionuevo@unamad.edu.pe",
     "password": "$2y$10$eFr/Qb0uDQhbe3BdTP7BRes7AKX1gKFK2zMsTbQ2psJRCB7hz8UtW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:13:00",
     "updatedAt": "2026-03-31 17:36:55"
   },
@@ -14630,6 +17068,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mariapg@unamad.edu.pe",
     "password": "$2y$10$ZMaOKfgLNVEaalfMC4k72u8L0M.KGlG3q4ViuX7lup/NDc.f7P992",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 16:14:33",
     "updatedAt": "2024-11-06 16:14:33"
   },
@@ -14642,6 +17082,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lmotta@unamad.edu.pe",
     "password": "$2y$10$C7QJ4hm8I3Jy.9vKMwdCVuQ/LinFAeRXo.5VH5r/wsi4DdxZFV3LO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:19:36",
     "updatedAt": "2025-08-19 15:23:04"
   },
@@ -14654,6 +17096,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eestremadoyro@unamad.edu.pe",
     "password": "$2y$10$3VKZMhiPCLX97Ymqvpb8wOcjUUUy1CBEA0PIvD.hhNapH3eZYtBHe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:20:35",
     "updatedAt": "2024-11-06 17:20:35"
   },
@@ -14666,6 +17110,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fcoaquira@unamad.edu.pe",
     "password": "$2y$10$tVB.kjiWdhffa7z/0CNL3.oQSzNFGS4qn6qOgVaeeg71TXkxKAjD.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:21:17",
     "updatedAt": "2025-12-20 12:42:49"
   },
@@ -14678,6 +17124,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "phalanocca@unamad.edu.pe",
     "password": "$2y$10$LwVYIr5wqzi1AbKomEWj1.ewR.GFOcS72YW0ct3FGfORCvjyiYUlm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:22:06",
     "updatedAt": "2024-11-06 17:22:06"
   },
@@ -14690,6 +17138,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jepari@unamad.edu.pe",
     "password": "$2y$10$A9R.jFMJXa134R8dOT9N7.vcu.CRWBUtVQN86CwxdtkDaSIGed52K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:23:12",
     "updatedAt": "2025-09-08 15:00:59"
   },
@@ -14702,6 +17152,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carmenr@unamad.edu.pe",
     "password": "$2y$10$naM9VcRxU8i/Ijcf.IKapuurEWDlv4PgPbeRHfCBz4uanBkKMvfTC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:24:56",
     "updatedAt": "2024-11-06 17:24:56"
   },
@@ -14714,6 +17166,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ecabanillass@unamad.edu.pe",
     "password": "$2y$10$c9jaXme.YatDC5WhRwqsKepdd1E3mKTHdcSQq0/1bkRLU5Vbu9tyq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:25:31",
     "updatedAt": "2024-11-06 17:25:31"
   },
@@ -14726,6 +17180,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mccahuantico@unamad.edu.pe",
     "password": "$2y$10$059alopGJ1.dG50I3pmhuOHChYKAs6XGGvFCNDcDsSqLgo.VMRWrW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:26:07",
     "updatedAt": "2024-11-06 17:26:07"
   },
@@ -14738,6 +17194,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "etocra@unamad.edu.pe",
     "password": "$2y$10$9bbKhMFCLQNHGXHpv1F4NOPr.DdChbz3WHRZyhtxMFb5GgklLr7H6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:26:46",
     "updatedAt": "2024-11-06 17:26:46"
   },
@@ -14750,6 +17208,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tbrenda@unamad.edu.pe",
     "password": "$2y$10$qFGam/Sg4sGeVsFtmKXuAeDbKWPAJfYG95iL/BjPkIvvPTx4F307S",
     "estado": 1,
+    "dependenciaCodigo": "DBU",
+    "cargo": "AA",
     "createdAt": "2024-11-06 17:27:37",
     "updatedAt": "2024-11-06 17:27:37"
   },
@@ -14762,6 +17222,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcanahuire@unamad.edu.pe",
     "password": "$2y$10$amPW2rdGtQUKqcM88.Rw9OQnUjLx/Ofoyfg/zqt7ymBpe/E.7sO9.",
     "estado": 1,
+    "dependenciaCodigo": "OGAC",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-11-06 17:27:50",
     "updatedAt": "2026-02-09 12:42:05"
   },
@@ -14774,6 +17236,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kpilco@unamad.edu.pe",
     "password": "$2y$10$pvAamFxzrYYGO.cbPrFAH.n1STH/u4.Am3zlVC/7uqsgPn/Zqw1a6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:28:49",
     "updatedAt": "2024-11-06 17:28:49"
   },
@@ -14786,6 +17250,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmedina@unamad.edu.pe",
     "password": "$2y$10$hqFFR78elHWj.Xe27hPKMu71TRwzdFDW1QU513AgUqrOYKTH6SUJW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:31:18",
     "updatedAt": "2024-11-06 17:31:18"
   },
@@ -14798,6 +17264,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gloriav@unamad.edu.pe",
     "password": "$2y$10$1CyBJtnalixgWFyzfdAPiuGjLz3LCZEsYi1WmSMZet7d3T0xrShle",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:32:03",
     "updatedAt": "2024-11-06 17:32:03"
   },
@@ -14810,6 +17278,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "slcarhuarupay@unamad.edu.pe",
     "password": "$2y$10$DTA8mIMa4K.IyyOSzMj2heqe3xqr2byHQgCx5aaG7898PdnVs9Erm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:33:11",
     "updatedAt": "2024-11-06 17:33:11"
   },
@@ -14822,6 +17292,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bmeza@unamad.edu.pe",
     "password": "$2y$10$2yeV95lqevCZtyzAIeCacusOh050kFpkc0WAZr8u49h3JHjTMZnzW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:33:49",
     "updatedAt": "2025-09-03 15:11:05"
   },
@@ -14834,6 +17306,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mauroc@unamad.edu.pe",
     "password": "$2y$10$aqTWOJykg3SHoO8lgdJK8.gQcUnsbIcpgnjguiAHNpF73LCif7WgO",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "JEFE",
     "createdAt": "2024-11-06 17:35:26",
     "updatedAt": "2025-02-04 12:49:49"
   },
@@ -14846,6 +17320,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hpalomino@unamad.edu.pe",
     "password": "$2y$10$yZF3ml5j7.sif9.hdpmRsOFl3XHpZ41UzWQOOrrXyhPSM889Ih032",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:36:14",
     "updatedAt": "2024-11-06 17:36:14"
   },
@@ -14858,6 +17334,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rcatunta@unamad.edu.pe",
     "password": "$2y$10$0L3v.CMW1vVROOrUFRZEUObcXRPtTH1nk.sdB5agSjSCSmian4upK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:36:50",
     "updatedAt": "2024-11-06 17:36:50"
   },
@@ -14870,6 +17348,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ogibajab@unamad.edu.pe",
     "password": "$2y$10$vk6fK1gGnDzcZkrUVidFD.ZnOleXNcyxtDxoXw.utHxsoy5vrJyh6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:37:34",
     "updatedAt": "2024-11-06 17:37:34"
   },
@@ -14882,6 +17362,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cbordaq@unamad.edu.pe",
     "password": "$2y$10$zo.n.UN92jG/mag0iLhWDOMidhCcKz5LNkFjbB8oYcVDiJYu3VWeu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:38:13",
     "updatedAt": "2025-11-25 10:34:08"
   },
@@ -14894,6 +17376,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvargas@unamad.edu.pe",
     "password": "$2y$10$oeuTUMkpEjKvb8EJcHN2duWbFul4LhfD.8TpKo4wCSQ/IfCe3VrF.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:38:55",
     "updatedAt": "2024-11-06 17:38:55"
   },
@@ -14906,6 +17390,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fribera@unamad.edu.pe",
     "password": "$2y$10$8iMxS475lN5Mj3s5TbJ/1uAPixzLMGCT6aOXeBonti6TcP/UccAO2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:40:00",
     "updatedAt": "2024-11-06 17:40:00"
   },
@@ -14918,6 +17404,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "caquino@unamad.edu.pe",
     "password": "$2y$10$dGp7BmDC9LfclUlMWtuKWOrBF1Rde5yxbu3jJ/IBDNc2LKQeTVtH2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:40:57",
     "updatedAt": "2024-11-06 17:40:57"
   },
@@ -14930,6 +17418,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "respinoza@unamad.edu.pe",
     "password": "$2y$10$TDADFkXYyQFWhbkEkcQXhuFU8SDh9QC50.9y38183g7iaF1ypI1WO",
     "estado": 1,
+    "dependenciaCodigo": "EPECON",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-11-06 17:41:42",
     "updatedAt": "2026-06-10 14:11:10"
   },
@@ -14942,6 +17432,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jgarcia@unamad.edu.pe",
     "password": "$2y$10$D6NcW2NAio0d1Wq6IYRQOOzoDo.1bQICgnjHfuf6yjjBiEpai68.y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:42:35",
     "updatedAt": "2024-11-06 17:42:35"
   },
@@ -14954,6 +17446,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jprieto@unamad.edu.pe",
     "password": "$2y$10$RrRcMeUGrLKI4lSSiwNJDujKkBwGvffomMpPmyMt2LcIc3cHWgWd.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:44:30",
     "updatedAt": "2026-04-01 21:45:18"
   },
@@ -14966,6 +17460,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cpena@unamad.edu.pe",
     "password": "$2y$10$FX1w3rQdFtU47uExoXSID.IoJlu6rkWhG6A1Vn3uArxtK6yDplST.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:45:11",
     "updatedAt": "2024-11-06 17:45:11"
   },
@@ -14978,6 +17474,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smanrique@unamad.edu.pe",
     "password": "$2y$10$zf6KhemfxGDz.Id3ZSBDG.mRRHoag2upDkK2OxV9UOYXU.wrV2Vg.",
     "estado": 1,
+    "dependenciaCodigo": "UIFI",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-11-06 17:46:10",
     "updatedAt": "2025-04-25 15:24:31"
   },
@@ -14990,6 +17488,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vvelasquez@unamad.edu.pe",
     "password": "$2y$10$qXGsXoKpuQIJ9yMve8PMZ.snSQoJYaJcr8GEulzVU3dZbaeikszVK",
     "estado": 1,
+    "dependenciaCodigo": "DACB",
+    "cargo": "DOCENTE",
     "createdAt": "2024-11-06 17:47:24",
     "updatedAt": "2026-03-09 17:29:06"
   },
@@ -15002,6 +17502,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "onin@unamad.edu.pe",
     "password": "$2y$10$gN/0yQLt7A4nDVSEZPIc9OjmRhgmW8MkWh00tRl7dYJC2o2FO1Hum",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:48:14",
     "updatedAt": "2024-11-06 17:48:14"
   },
@@ -15014,6 +17516,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "huchasara@unamad.edu.pe",
     "password": "$2y$10$22tom/3qc6CsPFIlm6hOguEUJbdA/s/hzGuGf3mbGrQ4dWrjGmeG.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 17:49:01",
     "updatedAt": "2026-01-06 16:14:28"
   },
@@ -15026,6 +17530,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maguilarc@congreso.gob.pe",
     "password": "$2y$10$gp1j6iR4Es2GircYRDPNmeWg06ZwoTQmjjkY5ZbkvGe/OX0zlqr/S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-06 19:42:46",
     "updatedAt": "2024-11-06 19:43:26"
   },
@@ -15038,6 +17544,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FMENDOZAG@CONGRESO.GOB.PE",
     "password": "$2y$10$2tMXMx.11KQdCIqk1f8BjuIv4LDT1qsgPOqGmNfdADZaRJsTh755.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-08 15:24:23",
     "updatedAt": "2025-10-22 19:28:07"
   },
@@ -15050,6 +17558,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jccaritay@gmail.com",
     "password": "$2y$10$KqR8jsVUBMYGsE8q1h0TN.3oRqN4E9k/8R.JZDVU.G7WZfIh0Zw0y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-09 10:41:06",
     "updatedAt": "2024-11-09 10:42:29"
   },
@@ -15062,6 +17572,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marcelolimapacco@gmail.com",
     "password": "$2y$10$lGh1f5s0reWO/BrJEmwXcOs.o/lbxkg6UN9lbJ9qRkrJMwwc0oUS2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-12 13:51:51",
     "updatedAt": "2024-11-12 13:51:51"
   },
@@ -15074,6 +17586,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mpfcivilmdd@pj.gob.pe",
     "password": "$2y$10$LjcQcCoI2i9/bUZDtRHp8enpy7zOIIolmRukjFY7TlviVYqqC8qj2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-13 15:06:48",
     "updatedAt": "2024-11-13 15:19:45"
   },
@@ -15086,6 +17600,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jomimoad@gmail.com",
     "password": "$2y$10$MNdFR2FV8GEzj83nVqolYeJmhH2uaNTKCJsFlFcDjrSm/rf6s7G7e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-14 14:10:53",
     "updatedAt": "2024-11-14 14:12:13"
   },
@@ -15098,6 +17614,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvelasquezm@unamad.edu.pe",
     "password": "$2y$10$8xgPwllvkkiYsu79LVjNI.ItfKdxyE4ess1luznx/i8Y.fBB9oYH2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-15 15:49:39",
     "updatedAt": "2024-12-04 16:45:46"
   },
@@ -15110,6 +17628,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jonatanv@unamad.edu.pe",
     "password": "$2y$10$VTMx89j5s0RZZo0NX9u9bufGvB7QbhSfku12aeKiYMPVmZRfS/N2i",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ESPECIALISTA EN CONTROL INTERNO",
     "createdAt": "2024-11-15 21:24:04",
     "updatedAt": "2024-11-26 15:38:54"
   },
@@ -15122,6 +17642,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "myanqui@congreso.gob.pe",
     "password": "$2y$10$xlkKGh9/HuediA6ed6CL3ehB31oBBQLiIPvJzx1CgnUR4WuTZvw0W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-18 18:06:01",
     "updatedAt": "2024-11-18 18:06:01"
   },
@@ -15134,6 +17656,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "SFLORES.HITSS@CLARO.COM.PE",
     "password": "$2y$10$LVmRqfZ7KoW/x28e6HqxMuj6vZINqfS2t1whhoVoB143GnbvX0zcC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-19 23:29:50",
     "updatedAt": "2024-11-19 23:34:41"
   },
@@ -15146,6 +17670,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "milagrosca94@gmail.com",
     "password": "$2y$10$5XcuJjNuf03exhjGtolr..t9qU8joL6bd0hK189ua7uUuoc9Yvaue",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-21 20:36:46",
     "updatedAt": "2024-11-21 20:37:38"
   },
@@ -15158,6 +17684,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "capani.joseph.03@gmail.com",
     "password": "$2y$10$IdM87KdAfgbKq8KMA4fF6epJuAO95/AzZD1JoBxr7p/yiGV.Zimgi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-23 23:12:05",
     "updatedAt": "2024-11-23 23:13:44"
   },
@@ -15170,6 +17698,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "iperuptomaldonado@promperu.gob.pe",
     "password": "$2y$10$QjGZW11iaa2.kfNbZDK3WOAjwZj96o0dY0rFzrS9XXLlF6p/acnn.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-26 21:03:41",
     "updatedAt": "2024-11-26 21:03:41"
   },
@@ -15182,6 +17712,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abilicza32@gmail.com",
     "password": "$2y$10$yg.YCMjIagVtKMZIgJK0y.WMP1nZgmVBJRnAMHsHwNnTAmfNAbSrm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-26 21:08:06",
     "updatedAt": "2024-11-26 21:09:22"
   },
@@ -15194,6 +17726,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvelasquezs2017@gmail.com",
     "password": "$2y$10$/Zc7Vz4rXaxft7YiwRZCu.oN29R.k8b9vxmMQ/aqaGbyzIMhQpp82",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-28 15:20:36",
     "updatedAt": "2024-11-28 15:32:35"
   },
@@ -15206,6 +17740,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@imperia.com.pe",
     "password": "$2y$10$FyeYSWK7LQ1HiCpuHG2giO.wb.IDI1CWChLzGEVP8TIgrGKlzsj0u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-29 16:07:18",
     "updatedAt": "2024-11-29 16:08:50"
   },
@@ -15218,6 +17754,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aarevalo@minedu.gob.pe",
     "password": "$2y$10$QdbU9/4XrQOiDE5I91z6be56CIcGY0Bz3WB3/znon.Mx5FmqWVMrC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-11-29 20:28:19",
     "updatedAt": "2024-11-29 20:32:35"
   },
@@ -15230,6 +17768,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rlopezsi@pj.gob.pe",
     "password": "$2y$10$GmspYRiTKGUqIsDqmREHqugiEuS/cLXNjVsHqowYte/Hf5nzcz.jG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-02 21:08:20",
     "updatedAt": "2024-12-02 21:09:14"
   },
@@ -15242,6 +17782,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "niloatala@gmail.com",
     "password": "$2y$10$sshUOoGSPsk7OlZM8yMB0OJtRO.3Glb7PEHqsYV8hP4HSV3ffhhs2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-03 15:05:11",
     "updatedAt": "2024-12-03 15:06:37"
   },
@@ -15254,6 +17796,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rocabado077@hotmail.com",
     "password": "$2y$10$Hj4aozgiLSwM6QIYescvn.WG9ybJEFWeyE9DJORY4VrS7WGetXwji",
     "estado": 1,
+    "dependenciaCodigo": "DADCP",
+    "cargo": "DIRECTOR",
     "createdAt": "2024-12-05 14:44:21",
     "updatedAt": "2026-01-29 15:30:19"
   },
@@ -15266,6 +17810,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JCUNYAS@GMAIL.COM",
     "password": "$2y$10$JrstftzZiXjmUtmmE7jn1eSAS9qoSb5wqt14BSJqgTquXWXJYYCFm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-05 17:26:18",
     "updatedAt": "2024-12-05 17:27:16"
   },
@@ -15278,6 +17824,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jefatura@inia.gob.pe",
     "password": "$2y$10$OtuKfIQYp2wy4ku0W42X9Ofcson6M0iqn2ZbMQYghenV9fvRV.TiK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-07 11:30:47",
     "updatedAt": "2024-12-07 11:31:15"
   },
@@ -15290,6 +17838,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rodolfo@unamad.edu.pe",
     "password": "$2y$10$ONeZK8BgYZMt1V6luaLAEu0TciwtVhdN7/IR5hYLxX9X9zXyOmTTG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-11 14:34:11",
     "updatedAt": "2024-12-11 14:34:11"
   },
@@ -15302,6 +17852,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "secretaria@colbiolima.org",
     "password": "$2y$10$ZHJ02Ek3B2CdbIfZZGsL9.V4MhKxDUy6eY/ZIeoo96XuDPV6qVM46",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-12 16:21:35",
     "updatedAt": "2024-12-12 16:24:29"
   },
@@ -15314,6 +17866,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@toqen.pe",
     "password": "$2y$10$4XjdhAumhIOKtN5SJrkvku9EW3K0LPrG9V9OMG5rbp0snxkCYIKiC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-12 21:24:58",
     "updatedAt": "2024-12-12 21:25:27"
   },
@@ -15326,6 +17880,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vidartemathius@gmail.com",
     "password": "$2y$10$uSMzzPnCc6phD68q/TYYt.B.hBFjKlFIga3DHFji47gKBG0akshSa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-19 16:25:55",
     "updatedAt": "2024-12-19 16:30:20"
   },
@@ -15338,6 +17894,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "confendup2024@gmail.com",
     "password": "$2y$10$Hetxa6uM3kx3CJDcF/sXROIg4IHgAmWxM6KO/LFFvDE9bCGgoQjzG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-20 04:32:48",
     "updatedAt": "2024-12-20 04:32:48"
   },
@@ -15350,6 +17908,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "TOTOSNET@GMAIL.COM",
     "password": "$2y$10$MX5cfWDwM1iGlW8wr/B/Nu0Wpwp.Pso2X.YJyYnVB9nBVEWeqkN3i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2024-12-26 22:57:23",
     "updatedAt": "2024-12-26 23:07:52"
   },
@@ -15362,6 +17922,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gerenciamunicipal@munitahuamanu.gob.pe",
     "password": "$2y$10$BrayHHDl5g0Ai8G4yO4Gc.0pU3ERwcPW2L7aYoO5YWd9EjdKThqpK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-02 15:02:07",
     "updatedAt": "2025-01-02 15:03:38"
   },
@@ -15374,6 +17936,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "arteagadeida17@gmail.com",
     "password": "$2y$10$1eKV58kUtHryg/cZmkPhNetOV/z00edqouioaX.BYMYSKzqgJHi1a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-03 22:52:37",
     "updatedAt": "2025-01-03 22:52:37"
   },
@@ -15386,6 +17950,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MIRLU_14@HOTMAIL.COM",
     "password": "$2y$10$96UWjHuCjSdYavz.5BuCGu7eEq63AI7S.3ESWHefHlezwNmJCzrpq",
     "estado": 1,
+    "dependenciaCodigo": "USG",
+    "cargo": "JEFE",
     "createdAt": "2025-01-06 19:35:16",
     "updatedAt": "2025-01-06 19:35:16"
   },
@@ -15398,6 +17964,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smithedgarpinto@gmail.com",
     "password": "$2y$10$OGf4W1c5aZERQXOtPcbWlutkyGIWbO0TXJypiav.eqy5rly3SWJIG",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "JEFE",
     "createdAt": "2025-01-06 20:20:53",
     "updatedAt": "2025-05-09 21:15:56"
   },
@@ -15410,6 +17978,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lis.r_cv@hotmail.com",
     "password": "$2y$10$.MkKjaK64mnW4reKfOJykO1TUjIb2cnxWuVsz6Z7YbOlP7YvkEZvK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-06 21:34:13",
     "updatedAt": "2025-01-06 21:34:13"
   },
@@ -15422,6 +17992,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "renewilsqv@gmail.com",
     "password": "$2y$10$ImF1e5zGUSD9.O/rQKTSQePViwG.y6x2Tm4ukCIGu1oZb6kYtZr06",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "JEFE",
     "createdAt": "2025-01-07 14:02:41",
     "updatedAt": "2026-02-05 21:27:09"
   },
@@ -15434,6 +18006,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "thosami_sac@hotmail.com",
     "password": "$2y$10$Xwo.vPBzhOQ1Hb730yZln.J1wfYazzLoa9hXQJmW4gra4BrYFQZ2O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-07 18:09:19",
     "updatedAt": "2025-01-07 18:09:55"
   },
@@ -15446,6 +18020,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "SACOSTUPAS@UNAMAD.EDU.PE",
     "password": "$2y$10$3pKH2C8b8k.xpYxqxZHldeRwuL20OalhpQq82SFWyDrEBtJrc/S4q",
     "estado": 1,
+    "dependenciaCodigo": "CEINFO",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-01-08 13:13:17",
     "updatedAt": "2025-01-08 13:13:17"
   },
@@ -15458,6 +18034,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yvillar22@unamad.edu.pe",
     "password": "$2y$10$tvV8I.kOF6j7FRRgu8iNguXdYcN2bAW.fHMM9NB.07EBic9tfDsZi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-08 20:59:23",
     "updatedAt": "2025-01-11 03:06:26"
   },
@@ -15470,6 +18048,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "clarisarojash@gmail.com",
     "password": "$2y$10$pSwEmM15lQ1cXtk3LDWC4uDelT5W./8BIq1LDj48HoTJTcZjQnLY2",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-01-09 16:18:27",
     "updatedAt": "2025-01-09 16:21:59"
   },
@@ -15482,6 +18062,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "NMAMANIT@UNAMAD.EDU.PE",
     "password": "$2y$10$gZFhF8.o5tpDfI0WRvuCY.PskHq/vXAM.PgmCIZ00Mlz4CpRX7Gzy",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "JEFE",
     "createdAt": "2025-01-09 21:36:41",
     "updatedAt": "2025-01-09 21:36:41"
   },
@@ -15494,6 +18076,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rninai@unamad.edu.pe",
     "password": "$2y$10$Vno7PxkVR5vx37MyHuVWBOqLaFm.oTJ4dTPHYqUmzjQW/0SOvjbC2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-11 02:10:51",
     "updatedAt": "2025-01-11 02:10:51"
   },
@@ -15506,6 +18090,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MARIBELJESSICA0830@GMAIL.COM",
     "password": "$2y$10$sl4OnI6iR188ru0KRdX7b.eLzFaGQc4SLWB6UehixVaF7Py4J1cxe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-13 14:24:01",
     "updatedAt": "2025-01-13 14:24:59"
   },
@@ -15518,6 +18104,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dmamanic@unamad.edu.pe",
     "password": "$2y$10$3JQZJWgzT81AwedSrIl12.gfnO9yh90QkwQ09NVTewRXMCjd.0ij2",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "LOCADOR",
     "createdAt": "2025-01-13 14:38:42",
     "updatedAt": "2025-01-13 14:42:17"
   },
@@ -15530,6 +18118,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "danita.dre@gmail.com",
     "password": "$2y$10$EwToIU1AGNbWejKplIzkqODujzfWSNS7m5Knkve9ibQDT/xzOXS9W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-13 18:02:29",
     "updatedAt": "2025-01-13 18:03:44"
   },
@@ -15542,6 +18132,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dsegovia22@unamad.edu.pe",
     "password": "$2y$10$iBPCwxJNzhcchWB8Nqwbh.0tROIASMWnVpaSVqNFU7bH8ca6U2cwu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-13 18:08:22",
     "updatedAt": "2025-01-13 18:08:36"
   },
@@ -15554,6 +18146,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gladysemismeh@gmail.com",
     "password": "$2y$10$FArglkHopoiAKDHKe0FnPeZybgoisLsg5W0pWDemhdBSM4.TNOVSC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-13 18:31:03",
     "updatedAt": "2025-01-13 18:31:52"
   },
@@ -15566,6 +18160,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jonas.ccm.10@gmail.com",
     "password": "$2y$10$jfHx23sVKgdDcpvnzqX0qeOodnyZgRQFAB/ldzhtCTaBj./tzFO0K",
     "estado": 1,
+    "dependenciaCodigo": "DIE",
+    "cargo": "DIRECTOR",
     "createdAt": "2025-01-14 14:47:23",
     "updatedAt": "2026-01-15 14:50:27"
   },
@@ -15578,6 +18174,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jpari@oefa.gob.pe",
     "password": "$2y$10$lMIhNitQ4CTq8PLuA5Lequ9KUKVIAsR8BOGfHbzdWMHUhkbLracEu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-15 15:37:59",
     "updatedAt": "2025-01-15 15:39:35"
   },
@@ -15590,6 +18188,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sgiraldob@unamad.edu.pe",
     "password": "$2y$10$/6P/aOoBkeqEmR59vB7WU.SKLHO0DE/.g/BqqVqdSBuVXG6vVkwYi",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-01-15 15:54:31",
     "updatedAt": "2025-01-17 15:47:54"
   },
@@ -15602,6 +18202,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "miluskammd@gmail.com",
     "password": "$2y$10$tmJWhKhuuBc1bJQJPJiZTOJVJ4xakKAStvhgEEyhn9cPiczTNZHCq",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-01-16 13:57:18",
     "updatedAt": "2025-01-16 13:57:18"
   },
@@ -15614,6 +18216,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "PVEGA@MINJUS.GOB.PE",
     "password": "$2y$10$hMYMfLY8hy14XSEujNXdP.VbClzl4dK/a4yRIfzQbpZewSEOgKv9C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-16 17:15:49",
     "updatedAt": "2025-01-16 17:15:49"
   },
@@ -15626,6 +18230,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "PALOMINOYERSIN@GMAIL.COM",
     "password": "$2y$10$bfNiAlRn2Rix5WWIBbpX4uBKx2tIM2aMaNvXAzlA8RVMk1RwyndL6",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-01-16 19:37:03",
     "updatedAt": "2025-01-16 19:37:03"
   },
@@ -15638,6 +18244,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jahayra@vilabperu.com",
     "password": "$2y$10$uZ5VV.yTMHTVc30pMvO9Zu5o/KISb1oE3BgVVyoql7RdlgENCoRtO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-16 21:00:24",
     "updatedAt": "2025-01-16 21:00:24"
   },
@@ -15650,6 +18258,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ndurandcutipa@gmail.com",
     "password": "$2y$10$rNSQdpuSXwys.2qcR7kvLuBOa3zb2BQQrK1uN0I/Ya/ZJsYyGHDsG",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-01-17 12:41:57",
     "updatedAt": "2025-01-17 12:41:57"
   },
@@ -15662,6 +18272,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pamelacarrera14@gmail.com",
     "password": "$2y$10$UBJxKK5wJYaUVLv5QP9wSuOcY9WeM/wVQg2.1gUohjmDbnMihKqJ.",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-01-17 12:55:16",
     "updatedAt": "2025-03-24 20:23:32"
   },
@@ -15674,6 +18286,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mangulov@unamad.edu.pe",
     "password": "$2y$10$cdu0y1.3m9uu7Oj2BOgibeNUD6kAUW/DCQdhmfdDTDN.yepi4vh1i",
     "estado": 1,
+    "dependenciaCodigo": "FCE",
+    "cargo": "PRACTICANTE",
     "createdAt": "2025-01-17 16:46:56",
     "updatedAt": "2025-01-17 16:46:56"
   },
@@ -15686,6 +18300,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erwin_cj@hotmail.com",
     "password": "$2y$10$zI2QEFpbmGey1M9uLsMDc.dwDV370Ofqloyfm9Sw6ctMldDzIgS0u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-20 13:35:28",
     "updatedAt": "2025-01-27 22:17:59"
   },
@@ -15698,6 +18314,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "villarruelbejar@gmail.com",
     "password": "$2y$10$jlpPqprjIBo0S95AuR/RCOF7laUm7Ql8n8k70xVEbLQKkpVlqnUee",
     "estado": 1,
+    "dependenciaCodigo": "EPIFYMA",
+    "cargo": "SECRETARIA",
     "createdAt": "2025-01-20 19:45:05",
     "updatedAt": "2025-01-20 19:45:05"
   },
@@ -15710,6 +18328,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "senaju_diproge_11@minedu.gob.pe",
     "password": "$2y$10$ER50zl5Vc05cuDOQM1ErtuRR4ROfEkvn1OYPh3wlHX4WFfZVF1m5i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-20 20:19:58",
     "updatedAt": "2025-01-20 20:21:10"
   },
@@ -15722,6 +18342,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "info@labsciencesac.com",
     "password": "$2y$10$Zn92tr6aQhlRUnswjnC8je8f.XNfAMebIdv5w422fwKcGbmvq4SWK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-21 22:10:36",
     "updatedAt": "2025-01-21 22:12:03"
   },
@@ -15734,6 +18356,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "scarletescalantefigueroa37@gmail.com",
     "password": "$2y$10$n3R8V7xcL.AK4izCf931pu5Nz4VCBeVa8yV/07Xi2spGearhQTTsy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-23 12:57:51",
     "updatedAt": "2025-01-29 08:26:45"
   },
@@ -15746,6 +18370,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "squispes@unamad.edu.pe",
     "password": "$2y$10$q0muZZF5X4lQpZjlbs/xeuyhAy5F6V//Qdleg8cSqRl1Kxv2ugFze",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-26 23:58:37",
     "updatedAt": "2025-01-26 23:58:37"
   },
@@ -15758,6 +18384,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yaninajudith99@gmail.com",
     "password": "$2y$10$WaBStGkAkwLCjaxLd0ALoufMUN27nDhHifRRY8dYSZUKAJ/g5jAO6",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "AUXILIAR ADMINISTRATIVA",
     "createdAt": "2025-01-27 16:55:21",
     "updatedAt": "2025-01-27 19:39:20"
   },
@@ -15770,6 +18398,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "os_cpizarro@cunamas.gob.pe",
     "password": "$2y$10$neV6cq.9Ux.zdgvUEDljku/FC.bdqfYnPFV1VFQVPg7mn/Zzx82IG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-27 21:32:37",
     "updatedAt": "2025-01-27 21:33:34"
   },
@@ -15782,6 +18412,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cgrandez@minedu.gob.pe",
     "password": "$2y$10$QppMG1cleAb4XN9HG7lr2e9g9uo2mMoZbXbKrWdOJ2Mmdv8jebPL.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-29 05:07:56",
     "updatedAt": "2025-01-29 05:10:49"
   },
@@ -15794,6 +18426,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "soryalcira@gmail.com",
     "password": "$2y$10$VD/kQ3fBXgBV7amyfWwSAeCDnbs2Al3X9BPrMRtGh/6st.wAuGnhS",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "INTEGRADORA CONTABLE",
     "createdAt": "2025-01-29 13:37:19",
     "updatedAt": "2025-01-29 13:37:19"
   },
@@ -15806,6 +18440,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "COTIZACIONES.LG@AGLEPERUVIANC.COM",
     "password": "$2y$10$/isVR3Hrbqh1bQO2QjazkuzuRdSs2UtXD/dWbNXqRkaCt0SoLpoSu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-29 15:00:12",
     "updatedAt": "2025-01-29 15:01:14"
   },
@@ -15818,6 +18454,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sig@qacert-la.com",
     "password": "$2y$10$2i.qkj8yFS.ImlFatN8BF.gzH56AoTRHRr0SQ6eIFyHmPH9twEOoy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-30 17:36:28",
     "updatedAt": "2025-01-30 17:36:28"
   },
@@ -15830,6 +18468,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bicm2003@hotmaill.com",
     "password": "$2y$10$oqL1hnliRKh0AUJsmpub0exbONOcMWpIb04LXNwTLmkIbnQ0y3jlS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-30 19:35:08",
     "updatedAt": "2025-01-30 19:35:08"
   },
@@ -15842,6 +18482,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dmoquillaza@pcm.gob.pe",
     "password": "$2y$10$kflQt8YUW2VJ/TQM6Azbq.BQFI4PdSDBXpPrJJ4EuTxexLd.Dsaxu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-30 21:13:27",
     "updatedAt": "2025-01-30 21:13:57"
   },
@@ -15854,6 +18496,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "estatalsac@gmail.com",
     "password": "$2y$10$kCGrYmEIZs5QTNtjkMPPhOMlikMoCfpXydPt73Dd76afSFExqdXSa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-31 02:19:55",
     "updatedAt": "2025-01-31 02:21:33"
   },
@@ -15866,6 +18510,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "esscuelag@gmail.com",
     "password": "$2y$10$krMenGiT6OaNtLWSZii3.efyW906zTqcogzoyAgVCNvYlvL1Sc1Pa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-01-31 16:47:03",
     "updatedAt": "2025-01-31 16:48:33"
   },
@@ -15878,6 +18524,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "INDRALATINVEST@GMAIL.COM",
     "password": "$2y$10$HvldImGp664nDHofhmnNfeD8Eq.Petm9rdLEPwHOEENYGwnTRfECy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-03 00:13:18",
     "updatedAt": "2025-02-03 00:13:55"
   },
@@ -15890,6 +18538,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "exicorpsa@gmail.com",
     "password": "$2y$10$XHtmqVoI0czQRrnKMszKN.FqKTyEUOBmGy.Idf8qIMR.c0oxIMeIS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-03 00:22:32",
     "updatedAt": "2026-06-05 18:27:43"
   },
@@ -15902,6 +18552,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "luisotsuka23@gmail.com",
     "password": "$2y$10$BvjiI6L9QAttMxSKCq1Oh.sa9WjJoKk4K3T/gEaVBqvmVpa8ak6PS",
     "estado": 1,
+    "dependenciaCodigo": "UFE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-02-03 14:21:07",
     "updatedAt": "2025-02-03 14:21:07"
   },
@@ -15914,6 +18566,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MRONDANC@UNAMAD.EDU.PE",
     "password": "$2y$10$oAX4tZLzkpGepf355cBgWu8YDsn3nGa5wkIn/IGFMrAmjFVYMACAC",
     "estado": 1,
+    "dependenciaCodigo": "USEBT",
+    "cargo": "TECNICO ADMINISTRATIVO II",
     "createdAt": "2025-02-03 17:03:28",
     "updatedAt": "2025-06-07 16:16:02"
   },
@@ -15926,6 +18580,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leonela.labra@cbc.org.pe",
     "password": "$2y$10$VTUXYR8eQQR94s0BbOgQbuaxxJQT.UsThBBNNVYaGI0W8XP8KbCF.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-05 21:52:58",
     "updatedAt": "2025-02-05 21:53:46"
   },
@@ -15938,6 +18594,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "msandoval@congreso.gob.pe",
     "password": "$2y$10$Fth5.2VqIaGArTxwKS.MjOeHCfTnag/blIMhoxXyzOAHs5I8DVNrO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-07 18:08:38",
     "updatedAt": "2025-02-07 18:24:32"
   },
@@ -15950,6 +18608,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "betzaida@unamad.edu.pe",
     "password": "$2y$10$23cuE9x5Y6fpk.xQYQzfTO1B6/Izscf1VEQPhqxjd5D01O1.8qEFi",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-02-10 15:29:11",
     "updatedAt": "2026-02-04 15:12:33"
   },
@@ -15962,6 +18622,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "afernandezl@unamad.edu.pe",
     "password": "$2y$10$P0RT016LaH3/kQqD4zEHe.9Uf2CcuDyOZvnOICSa.C2x5nPfcpF.2",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-02-11 13:06:47",
     "updatedAt": "2026-01-21 17:51:42"
   },
@@ -15974,6 +18636,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sotochurataroxykely@gmail.com",
     "password": "$2y$10$Vak7YKqHocnbYfIqW.cVieSHqXeTxpgMxNc0OPl6bRf5RwWLCgbd6",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-02-11 13:40:13",
     "updatedAt": "2025-02-12 20:08:31"
   },
@@ -15986,6 +18650,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "josuecarazas984@gmail.com",
     "password": "$2y$10$zDe6020ZS9t08648s7hkVuRAdBVtXOQ1QTrI3J4I.G8Du1FDoa1CC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-11 16:56:59",
     "updatedAt": "2025-02-11 16:57:48"
   },
@@ -15998,6 +18664,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yacceleyda@gmail.com",
     "password": "$2y$10$RaNUy89SQ9ntQETFi1hXeeAEKpTKpAClfJyMwYgAjIJSHg1Ue8WQq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-11 18:11:47",
     "updatedAt": "2025-02-11 18:12:44"
   },
@@ -16010,6 +18678,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nhuamanc@unamad.edu.pe",
     "password": "$2y$10$eQEP7hF9jg6Dunzc5Ik55.JwjuKJQqg6LEdUO7wFoEMGhoKkI/ixW",
     "estado": 1,
+    "dependenciaCodigo": "TH",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-02-11 19:48:55",
     "updatedAt": "2026-04-16 03:17:32"
   },
@@ -16022,6 +18692,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "info2000instituto@gmail.com",
     "password": "$2y$10$jbjS.pYv98ZH11pzEIfJUeIBHqsbKNSyMHjEa7OlJmhvhzZmfsKS.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-11 20:19:35",
     "updatedAt": "2025-02-11 20:19:35"
   },
@@ -16034,6 +18706,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lamiski.cultura@gmail.com",
     "password": "$2y$10$ubAEyuVByEN2BAbkhly0zuj7H9GKrRdC0cBFvtVb9jCdlvv6xsEh2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-17 19:57:50",
     "updatedAt": "2025-02-17 19:58:11"
   },
@@ -16046,6 +18720,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jazsilvano@gmail.com",
     "password": "$2y$10$QGPKtR1ecUQieIyDmlxK2.3SfEA2hllREDdjcRaiBCaxx/sXzcWJW",
     "estado": 1,
+    "dependenciaCodigo": "UASAD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-02-19 16:13:57",
     "updatedAt": "2025-04-03 15:28:34"
   },
@@ -16058,6 +18734,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yuriparejapinarez@gmail.com",
     "password": "$2y$10$su6IYi0x7eTCPnIRHHYA/.Jg/THJ13MVN6d1poW3XYeJEzKDE8UE6",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "ASISTENTE EN INTEGRACIÓN CONTABLE",
     "createdAt": "2025-02-19 19:50:17",
     "updatedAt": "2025-02-19 19:50:17"
   },
@@ -16070,6 +18748,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cruzadoyover0407@gmail.com",
     "password": "$2y$10$pB4mgvFZp.mVLOTuAxy45OgnYbZTYjsKGGheSWznGuYxk.9BJt3sS",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-02-20 13:32:17",
     "updatedAt": "2025-02-20 13:32:17"
   },
@@ -16082,6 +18762,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mantillacalderonedmund@gmail.com",
     "password": "$2y$10$x3K0WaMQk.UOp3dPZaKjr.4kCIGFaI6ZToaWQwhBubSsxSUsWeHXS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-20 17:09:17",
     "updatedAt": "2025-02-20 17:09:17"
   },
@@ -16094,6 +18776,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "garonivaler@gmail.com",
     "password": "$2y$10$FMZQUXN49g5Rt7gdyDxy4e.Her3uUW3qO5v0Ui65ePrmcNfqrvCBW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-21 13:54:34",
     "updatedAt": "2025-02-21 13:54:34"
   },
@@ -16106,6 +18790,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "elizabethqm05@gmail.com",
     "password": "$2y$10$LjMHXMIeAy7llfcr.2fwk.XiwcEre08Bvtp636u48xLkGN1NM7F/u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-21 15:17:23",
     "updatedAt": "2025-02-21 15:18:41"
   },
@@ -16118,6 +18804,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@rc-consulting.org",
     "password": "$2y$10$PjvwBZEwbhwCxc39rmdw8ODCyhonrCG4gBGv.5aadbfOUiQ6FsYRa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-21 18:23:47",
     "updatedAt": "2025-02-21 18:30:00"
   },
@@ -16130,6 +18818,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MCAFIERO@MINEDU.GOB.PE",
     "password": "$2y$10$3iMr6POS4KWwYfEouu4Eb.sP3STF0awQ7fpGFtgGUN40nsUs.JUr6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-21 18:43:47",
     "updatedAt": "2025-02-21 18:47:12"
   },
@@ -16142,6 +18832,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "WMENDOZAS@UNAMAD.EDU.PE",
     "password": "$2y$10$Di0JRNMTV79qYLEu/pbL6Oi6GSjsXctFWS4xXg73GhHsoNY/C3/Wy",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "ASISTENTE",
     "createdAt": "2025-02-25 17:56:47",
     "updatedAt": "2025-02-25 17:56:47"
   },
@@ -16154,6 +18846,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "GECOLIMP.PERUCOMPRAS@OUTLOOK.COM",
     "password": "$2y$10$4dtAESMgWRBKLgb1v1BlBOvG.rwLzGWVaUtj2DBWpUkCTFSpH6p4G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-25 23:37:09",
     "updatedAt": "2025-02-25 23:37:09"
   },
@@ -16166,6 +18860,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Chobits.14_99@hotmail.com",
     "password": "$2y$10$GTcl63ZA7cCjt8RiQ.yPXOk.5RDaFmhn48Z.IxIhTHtQA4oibQgaS",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2025-02-27 20:09:00",
     "updatedAt": "2025-02-27 20:09:00"
   },
@@ -16178,6 +18874,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sip_s01@pcm.gob.pe",
     "password": "$2y$10$Mxcza0Y/nNFcVfbWKkrWFeh3Dfpk6uLmd8XwOsBzAcisUs6Kjxhha",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-02-28 21:09:21",
     "updatedAt": "2025-02-28 21:09:46"
   },
@@ -16190,6 +18888,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lozanoalarconm@gmail.com",
     "password": "$2y$10$iH3lUMTcZimt/R.Hm0UYtO7SmbYCDc5pMdXbiv568c/HBlsTvortG",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "ESPECIALIALISTA ADMINISTRATIVO IV",
     "createdAt": "2025-03-03 12:46:08",
     "updatedAt": "2025-03-03 12:46:08"
   },
@@ -16202,6 +18902,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JRCHAVEZMAMANI.581@GMAIL.COM",
     "password": "$2y$10$SF9FQ4Kgl8Pcf9Xnb/7xK.tF67SdwHIJ3ji12fgL/lbFPMQ1Vssw2",
     "estado": 1,
+    "dependenciaCodigo": "DIPROBYS",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-03-03 13:42:57",
     "updatedAt": "2025-03-07 14:04:09"
   },
@@ -16214,6 +18916,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "anyamable1720@gmail.com",
     "password": "$2y$10$gJRHY/8.bh2FVEzlWl5xLuEc/9Bci71hlarqw0phnRKXQ8Rqeenpi",
     "estado": 1,
+    "dependenciaCodigo": "UC",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-03-03 17:19:00",
     "updatedAt": "2025-03-03 17:19:00"
   },
@@ -16226,6 +18930,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "contactoesnap@gmail.com",
     "password": "$2y$10$RV15PlKT8/SPwQ6KR1gSA.TwMepq3vfOfbyZ4jggEQrA5t/bjOvam",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-03 17:39:37",
     "updatedAt": "2025-03-03 17:40:50"
   },
@@ -16238,6 +18944,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CESPINOZA@MIDAGRI.GOB.PE",
     "password": "$2y$10$FEPGJyJUHzg51rHFVarM6.WgM7mVXnuJq25gZfds9JVzu12eqsDpO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-04 13:48:55",
     "updatedAt": "2025-03-04 13:58:34"
   },
@@ -16250,6 +18958,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "distribuidores@tizianni.com",
     "password": "$2y$10$YKman/RQvHVGd84/fBEnleE9C6NV9UVHR/UhqTyIvfkbnrAfTVRQa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-04 20:14:22",
     "updatedAt": "2025-03-04 20:14:49"
   },
@@ -16262,6 +18972,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "esallomp@gmail.com",
     "password": "$2y$10$mEip85hRddBTR6jcaNjAA..n2uee6GDXnvw6ZyxOzssR5EE68Tm.a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-05 14:11:28",
     "updatedAt": "2025-04-03 20:19:20"
   },
@@ -16274,6 +18986,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "herjegoenoki@gmail.com",
     "password": "$2y$10$xSOkiCPLdofsCM0GDA5F0ejYMECgfu25aTPrE4y/GWWZYg3WZQq72",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-05 20:38:37",
     "updatedAt": "2025-03-05 20:39:36"
   },
@@ -16286,6 +19000,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ejecutialvarado2096@gmail.com",
     "password": "$2y$10$irwwiJVGkOfIT724jVtidet1T4KkNTEmR0dIKM5FDBdF1Lb2emDB6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-06 14:12:19",
     "updatedAt": "2025-04-21 15:36:17"
   },
@@ -16298,6 +19014,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "SHUAMANI@UNAMAD.EDU.PE",
     "password": "$2y$10$cKhmFP7OWwl3P//0oAPGreSmaV5NMt8gPfs48cISX6jyXFI8WGCum",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "JEFE",
     "createdAt": "2025-03-06 19:13:41",
     "updatedAt": "2025-03-06 19:13:41"
   },
@@ -16310,6 +19028,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fabiolapurizacacabrera@gmail.com",
     "password": "$2y$10$ZUx.j97/LYs4/0ms32qoROv3ClYNChHa6YI30mv6.FotQ2MOZLUNi",
     "estado": 1,
+    "dependenciaCodigo": "SG",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-03-07 12:54:05",
     "updatedAt": "2025-03-07 13:59:26"
   },
@@ -16322,6 +19042,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "practicante2.gip@amsac.pe",
     "password": "$2y$10$PsquBzBp1q2C2JfiFT5peeaGHx.oFo2T700zuy/vpcG/fbUhpXDlq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-07 14:06:31",
     "updatedAt": "2025-03-07 14:06:31"
   },
@@ -16334,6 +19056,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "PHUAMANTUPAPUMA@GMAIL.COM",
     "password": "$2y$10$lxUGw0vrTjL2sYoiECzJ9e8584Q8l8UuHi3bfCKW/IbxLwXJm.KOm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-07 15:46:53",
     "updatedAt": "2025-03-07 15:47:45"
   },
@@ -16346,6 +19070,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CARTIN2001@GMAIL.COM",
     "password": "$2y$10$zG05UpMDLjnFlN.HE4TcV.IJOoHjkhFnnXohwLp5Fd1xokceiZQja",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-03-07 21:28:20",
     "updatedAt": "2025-03-07 21:28:20"
   },
@@ -16358,6 +19084,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jchavez.grupocontable@gmail.com",
     "password": "$2y$10$MlNNw3gEF.oihtKnqOHDUeAkdZgDo7fgufdFEe08LfyqlFgySijrm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-10 19:16:18",
     "updatedAt": "2025-03-10 19:17:11"
   },
@@ -16370,6 +19098,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "oscarsantiago495@gmail.com",
     "password": "$2y$10$r6wfCt/heuA28wSX6MhYYefpv0gLvAPjt3FfpQT0dXly02a4y//Ni",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-11 01:10:57",
     "updatedAt": "2025-03-11 01:10:57"
   },
@@ -16382,6 +19112,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "brainalejandroq28@gmail.com",
     "password": "$2y$10$pitqP5OT4qKO0YusaYMIZ.aDUJtcKARwYXCeqCK.63DVAUwaxh/My",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-11 13:29:33",
     "updatedAt": "2025-03-11 13:29:33"
   },
@@ -16394,6 +19126,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cecademdd@gmail.com",
     "password": "$2y$10$asC9u2/f/W0utUBWKYC7quAjxQRgS/LKvjpddS5fhzTzEn1ywxiNG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-11 15:34:19",
     "updatedAt": "2025-08-20 13:41:19"
   },
@@ -16406,6 +19140,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yashira662@gmail.com",
     "password": "$2y$10$ovqxne5n1HWTrkrdaDTWd.x.ErCIgNEWJMqS/6YrunSMtvzgagpC6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-11 20:24:54",
     "updatedAt": "2025-03-11 20:26:10"
   },
@@ -16418,6 +19154,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dhuamanidj@mpfn.gob.pe",
     "password": "$2y$10$znc8TExEjS4MXTnWKfUYDuUbs9BdbgH6F78romcyeAVP/135cnQdq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-12 14:11:48",
     "updatedAt": "2025-03-12 14:19:49"
   },
@@ -16430,6 +19168,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "torresortizdayana225@gmail.com",
     "password": "$2y$10$twNbauXYPgdYwIUsa9HvVum7fXiUG5s1bdAxzJTOmcl1JkcZ0etEW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-13 23:28:37",
     "updatedAt": "2025-03-13 23:28:37"
   },
@@ -16442,6 +19182,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vramirezb@unamad.edu.pe",
     "password": "$2y$10$1LRlnRG/0To/79YYFBPoZeqBWfuf7Y5xAnQmfd7d60aUPFuc0ltSu",
     "estado": 1,
+    "dependenciaCodigo": "USEBT",
+    "cargo": "TECNICO ADMINISTRATIVO II",
     "createdAt": "2025-03-17 15:24:19",
     "updatedAt": "2026-02-20 21:08:07"
   },
@@ -16454,6 +19196,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "PRUEBA_VRI@unamad.edu.pe",
     "password": "$2y$10$EsY7QRxorJadDToGRz0g2O2yxSaHXmMyfFbVVrTEadFDsUchlUHA.",
     "estado": 1,
+    "dependenciaCodigo": "VRI",
+    "cargo": "PRUEBA_VRI_SECRETARIA",
     "createdAt": "2025-03-18 17:52:07",
     "updatedAt": "2025-03-18 17:52:07"
   },
@@ -16466,6 +19210,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gmedina@bioterraperu.com",
     "password": "$2y$10$7V5LzKeO7TF6mKx.1cp4Nuh8ACHmIIYv.ltoBhrhKTFSr7Z/bB/zW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-18 18:04:27",
     "updatedAt": "2025-03-18 18:05:52"
   },
@@ -16478,6 +19224,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vice.investigacion@unas.edu.pe",
     "password": "$2y$10$XW91/Zch3KZDMjwljYqZluw6eR8zzToJ84UoCPZV.sHbAThaLSVR.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-18 19:52:09",
     "updatedAt": "2025-03-18 19:52:36"
   },
@@ -16490,6 +19238,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Natsueariana123@gmail.com",
     "password": "$2y$10$/5hbIKX4I6Uc3pXTYKqcEu25vvjiLE4UnR9O2Fa99ZR6D2iXIkrcS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-18 20:11:02",
     "updatedAt": "2025-03-18 20:11:02"
   },
@@ -16502,6 +19252,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alessandrosahuarico2607@gmail.com",
     "password": "$2y$10$Uj9mpnxCaz3Pg5ycKYRFR.dAtKpLJhqJq3S3uGQfdjKucY0Abak6S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-18 22:35:44",
     "updatedAt": "2025-03-18 22:35:44"
   },
@@ -16514,6 +19266,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MCHAVEZ@PROCIENCIA.GOB.PE",
     "password": "$2y$10$7BQzV2vK4WVX1kwyOf.SSOEDHW320uVB0lgD6EQJLLJ44g38G5icW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-19 19:27:02",
     "updatedAt": "2025-03-19 19:45:24"
   },
@@ -16526,6 +19280,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "espinozamartinezjeilit@gmail.com",
     "password": "$2y$10$yXb/Q57rnVDLi2VPkRfBdeV1vkkAZ8f3FoBNQXDoD40axGBFg/kn6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-19 22:41:26",
     "updatedAt": "2025-03-19 22:41:26"
   },
@@ -16538,6 +19294,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cesiajeilyt@gmail.com",
     "password": "$2y$10$1XdSutu8iKDCp59A4AKm6.pAfnWHhCxS88wYZ6FLTsPtWsr.rA9pS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-19 22:45:49",
     "updatedAt": "2025-03-19 22:48:56"
   },
@@ -16550,6 +19308,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sandrawcm_2013@hotmail.com",
     "password": "$2y$10$Zxcgmpf07bP5llLw1pNZc.xOrl7ueUppzg.TDxQ88XlAkH5CUXp2e",
     "estado": 1,
+    "dependenciaCodigo": "UBP",
+    "cargo": "JEFE",
     "createdAt": "2025-03-20 20:48:16",
     "updatedAt": "2025-06-16 13:57:48"
   },
@@ -16562,6 +19322,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "romerodann10@gmail.com",
     "password": "$2y$10$7z7Q5tyxlK29dzr3JZ0BF.u2UpLF8mAF5hUUYqkh57AF3/gpYzmX.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-21 01:07:53",
     "updatedAt": "2025-03-21 01:08:32"
   },
@@ -16574,6 +19336,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvillegas@reniec.gob.pe",
     "password": "$2y$10$FEbfFKW2tGADcofamn/z3eKChRWSOgnBiyxjhJB3xUR06rmzSf9Oa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-21 13:10:11",
     "updatedAt": "2025-03-21 13:14:17"
   },
@@ -16586,6 +19350,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "erikakimberlyzg.85@gmail.com",
     "password": "$2y$10$tXNOaRYMVZPp7piuN8N9c.64jsDbN4pKYqjRKEFgA6LEoeQ/EawCi",
     "estado": 1,
+    "dependenciaCodigo": "UEI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-03-21 14:16:10",
     "updatedAt": "2025-03-21 14:16:10"
   },
@@ -16598,6 +19364,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "derickyto25@gmail.com",
     "password": "$2y$10$.JcEumFUx1RJb2LwrqYd.u2qZgGzA1CsDEGFbnLErokSW8uG3GGqK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-24 04:53:51",
     "updatedAt": "2025-03-24 04:54:12"
   },
@@ -16610,6 +19378,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aarmas@congreso.gob.pe",
     "password": "$2y$10$mFYpcTVZ9HMWEc.aqU2yb.nGIF1BgfXYHbw07pD8K9uqUbaZgdvlC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-24 16:45:29",
     "updatedAt": "2025-03-24 16:45:29"
   },
@@ -16622,6 +19392,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvargasa@congreso.gob.pe",
     "password": "$2y$10$NyNhqnsYfK69UY/JiEh.5OKr7tXAB/FvtxDk.42k80Lj2q.Mfy3OC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-25 18:35:17",
     "updatedAt": "2025-03-25 18:35:17"
   },
@@ -16634,6 +19406,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "areanne.montes@gmail.com",
     "password": "$2y$10$3o/RjIO0lkzg4GSgq2Ps4OpPox4Tofr9RDsONriV2zXDNvHGMcx8C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-27 19:33:45",
     "updatedAt": "2025-03-27 19:34:16"
   },
@@ -16646,6 +19420,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dimetcosac.contabiilidad@gmail.com",
     "password": "$2y$10$EWfzDsvedzJdT6SyOmq1cOKWAvRIet9Ej4JsBbJi6uWSBe8ua5VS6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-28 16:50:00",
     "updatedAt": "2025-03-28 16:55:00"
   },
@@ -16658,6 +19434,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dccalav@unamad.edu.pe",
     "password": "$2y$10$xj1hEfdOVtD9SI.rPyoHFOQeMrtLtRpOVwIMZ2LyGl7nrR1bh3XnK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-28 19:24:34",
     "updatedAt": "2025-03-28 19:25:22"
   },
@@ -16670,6 +19448,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mdisttahuamanu@gmail.com",
     "password": "$2y$10$K4uibAbVfqgMroOpa73EM.5sHTnTtk1ho9.XI1Jds5cy9febxvmmC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-28 23:17:41",
     "updatedAt": "2025-03-28 23:18:46"
   },
@@ -16682,6 +19462,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kurquiag@unamad.edu.pe",
     "password": "$2y$10$Ro2kVHkwOulblfpbZNAo7OUH/1r3Li60/GqS8Lug8iD02YJwolOkK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-03-31 20:44:37",
     "updatedAt": "2025-03-31 20:44:37"
   },
@@ -16694,6 +19476,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "noporto@produce.gob.pe",
     "password": "$2y$10$MAapQMNQtCBnoYN7kiDBC.ewcSsvsZk0NJgbVRhTJLZIFl6JwOGAy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-01 18:00:07",
     "updatedAt": "2025-04-01 18:01:56"
   },
@@ -16706,6 +19490,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fr452807@gmail.com",
     "password": "$2y$10$1YVezSQXsXuH41rPQ8Mx1.hlOyPNaZI2QF6t8cF05HgkjqUDFDCvO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-01 21:40:47",
     "updatedAt": "2025-04-01 21:41:12"
   },
@@ -16718,6 +19504,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "recursoshumanos@munivistaalegre.gob.pe",
     "password": "$2y$10$BNubPEcV9823u6wNsEo68uN5fQHy5j8JYvEGkrXj7emqq6PYB/bYy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-02 21:28:35",
     "updatedAt": "2025-04-02 21:31:11"
   },
@@ -16730,6 +19518,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CPARIP@RREE.GOB.PE",
     "password": "$2y$10$92BVF/mEWHh224rO7NsQQ.Fntau1ywDiyyVy1OW/tQ4bNy0qtMkSa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-03 16:04:04",
     "updatedAt": "2025-04-03 16:06:12"
   },
@@ -16742,6 +19532,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "chuaman@unamad.edu.pe",
     "password": "$2y$10$q3neYV4q2AXi9ripZlaoR.whXbVMPO2TcD8G97wY7YXjwJHJBECyq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-03 19:34:18",
     "updatedAt": "2025-04-03 19:34:18"
   },
@@ -16754,6 +19546,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "svargas@unamad.edu.pe",
     "password": "$2y$10$EdyKrTatFXOb0s7bf3.UaONBY6zCD.S9m.kfCKAbRbkBQfYPMUz6a",
     "estado": 1,
+    "dependenciaCodigo": "ULI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-04-04 16:03:16",
     "updatedAt": "2025-10-22 17:46:57"
   },
@@ -16766,6 +19560,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "katialh@unamad.edu.pe",
     "password": "$2y$10$.xKSx3f1v33Z6Nh4SiKkkOEjuCq1eHb3S4AByKAPQvW3N/aHKdvFG",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-04-04 20:20:37",
     "updatedAt": "2025-04-04 20:20:37"
   },
@@ -16778,6 +19574,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "LMEJIA@UNAMAD.EDU.PE",
     "password": "$2y$10$8z/BFCQ4nh0d18z.rEeZJeOflN0c8A2SYyMNsruqZL7scT.J4SLfy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-07 17:43:25",
     "updatedAt": "2025-04-07 17:43:25"
   },
@@ -16790,6 +19588,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "reburgaster@gmail.com",
     "password": "$2y$10$ZuIR722qeq86gAtPgIWhuuhR0P5Y9JAsCEswPtsik/8H2PbtH18Ii",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-08 06:08:21",
     "updatedAt": "2025-04-08 12:50:47"
   },
@@ -16802,6 +19602,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "acarhuamaca@uni.edu.pe",
     "password": "$2y$10$5duox7M3xC/bxkhBZ9XqpeH9GK8B.hz7NEI0XeQItrQY91PBW0UN.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-08 15:47:36",
     "updatedAt": "2025-04-08 15:49:12"
   },
@@ -16814,6 +19616,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "finanzasalizonde@sunass.gob.pe",
     "password": "$2y$10$VwJEeX1nHaZ2hH2hblx.CuEoBtqtqYM7GA30H9vGjAkNwUkuWuGZ6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-08 20:09:33",
     "updatedAt": "2025-04-08 20:09:33"
   },
@@ -16826,6 +19630,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marilu20mv@gmail.com",
     "password": "$2y$10$Vx54b2Gma7e0g18P8LmQYOOh/LQ4coNL6TDib7qNJsqytBOnLNQZq",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-04-09 14:53:34",
     "updatedAt": "2026-04-16 13:42:57"
   },
@@ -16838,6 +19644,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "educito76880961@gmail.com",
     "password": "$2y$10$G.wc0n7hFkOnjSLSMlsBmerPx00/v3rArIeYTrWJne4YyCX4oIGiK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-09 15:58:18",
     "updatedAt": "2025-04-09 16:00:03"
   },
@@ -16850,6 +19658,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "TAUROVIP18@GMAIL.COM",
     "password": "$2y$10$XskW1YlpLLRtELSGRA1EfuTyMvvSx5787G4.AsWDLNmA2YkQKEJca",
     "estado": 1,
+    "dependenciaCodigo": "ALC",
+    "cargo": "JEFE",
     "createdAt": "2025-04-10 17:52:23",
     "updatedAt": "2025-04-10 17:52:23"
   },
@@ -16862,6 +19672,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aramos@osce.gob.pe",
     "password": "$2y$10$GvWsr6RFvUCV79H2vX15UOfG6F0nk6mKIpI6dpSd1FQAfQ7KukJDW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-10 21:56:42",
     "updatedAt": "2025-04-10 21:56:59"
   },
@@ -16874,6 +19686,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "contacto@masprofesional.pe",
     "password": "$2y$10$8ZzC5o5R74E8XSGybTPs0uqY52VNZOSrvpsMc6CsBntApzjWD7Djm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-11 23:14:45",
     "updatedAt": "2025-04-11 23:15:52"
   },
@@ -16886,6 +19700,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ryupanquip@unamad.edu.pe",
     "password": "$2y$10$WsIlhh2VauyaesfCiFPoOe0RDgxFp/pAletXBgL/eWee5MwV4g1iC",
     "estado": 1,
+    "dependenciaCodigo": "EPIA",
+    "cargo": "SECRETARIA",
     "createdAt": "2025-04-14 14:58:57",
     "updatedAt": "2025-04-14 14:58:57"
   },
@@ -16898,6 +19714,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "albercasrl@hotmail.com",
     "password": "$2y$10$nds0ztHAF7rZ1LHg2jFRyuWjV1.dnz2y/W4Gl9A.VQns7UN3Jm0D6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-14 18:34:56",
     "updatedAt": "2025-04-14 18:36:31"
   },
@@ -16910,6 +19728,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Calichita66@gmail.com",
     "password": "$2y$10$TdUDrFK46vt1QZIlCNhUl.uehQilwa0IAwEZ2SUt/76oTfmAz9p.O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-15 16:03:04",
     "updatedAt": "2025-04-15 16:03:04"
   },
@@ -16922,6 +19742,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pdavila@congreso.gob.pe",
     "password": "$2y$10$9lZ.VXms1jbaGQCrcWmNbebWOmLXCYYBU5F1e9FreVyfS2aSwGPVu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-16 00:52:52",
     "updatedAt": "2025-04-16 00:52:52"
   },
@@ -16934,6 +19756,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesadepartespdavilacongresista@gmail.com",
     "password": "$2y$10$CnamPtDrOvPlqfpFBpYd5evJXLXFSHxK/W6gFCQX9fOF95/SH9U46",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-16 01:07:23",
     "updatedAt": "2025-04-16 01:08:23"
   },
@@ -16946,6 +19770,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "npenac@unamad.edu.pe",
     "password": "$2y$10$vrN8fDXGF0Nw54EhUKmqUeFet5XVxp6T9jmfooC/Y4jvrXCkohH3m",
     "estado": 1,
+    "dependenciaCodigo": "FI",
+    "cargo": "SECRETARIA",
     "createdAt": "2025-04-16 12:40:48",
     "updatedAt": "2025-04-16 12:40:48"
   },
@@ -16958,6 +19784,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abl.27@hotmail.com",
     "password": "$2y$10$mEvd7swWL0D0iKvlvjiJCOHNLJ9Jc/uT3M6yC5dzowiSALUgvJrc6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-16 17:51:14",
     "updatedAt": "2025-04-16 22:19:32"
   },
@@ -16970,6 +19798,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ermctech@outlook.com",
     "password": "$2y$10$ZfZqSI9WO/RQfslJLLR9LOcxs7DLDs/AepEb41ueJuNLRjZxzC7SG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-17 12:17:20",
     "updatedAt": "2025-04-17 12:17:55"
   },
@@ -16982,6 +19812,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dcastellonx@gmail.com",
     "password": "$2y$10$RgfYTOtBNWFhuuIAlXwUFeOokQ4dSg6apzGE/HSjbv98SQX6B6LC2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-21 03:24:09",
     "updatedAt": "2025-04-21 03:26:49"
   },
@@ -16994,6 +19826,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nataly.paredes@pluxeegroup.com",
     "password": "$2y$10$q/yHYhBEZ.YnpwAV53oUkeoHluquBEXMGgJnGFOG7y1.GhCSK8sRW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-21 16:41:50",
     "updatedAt": "2025-04-21 16:42:33"
   },
@@ -17006,6 +19840,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aguilar.concilia2@gmail.com",
     "password": "$2y$10$l7DmvgtR21Xo.hT7ZaqVVeNYD2QcYFDFCw.Z5.9OHKr5u6kRo1Vp6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-22 16:08:43",
     "updatedAt": "2025-04-22 16:11:41"
   },
@@ -17018,6 +19854,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "recupero1.claro@avalperu.com",
     "password": "$2y$10$VuFM8nygcCwydHaHmRZeWu10hg9ewMnf0zA7zl01WA0LzQAniavv6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-22 17:11:04",
     "updatedAt": "2025-04-22 17:16:04"
   },
@@ -17030,6 +19868,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kcueto@congreso.gob.pe",
     "password": "$2y$10$f2wWnDcePx0uZbNHrWX5fO.dL49q2jRbdhFJboTHK4Gfkhgq3T0X2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-23 00:19:05",
     "updatedAt": "2025-04-23 00:19:05"
   },
@@ -17042,6 +19882,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rccoyuri@unamad.edu.pe",
     "password": "$2y$10$bz5RXdXUv2UdJT.hFzErXOWViJYrFb1.ZksliwwJXR5JBECx8wDDa",
     "estado": 1,
+    "dependenciaCodigo": "OCRI",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-04-23 17:44:19",
     "updatedAt": "2025-06-11 15:35:57"
   },
@@ -17054,6 +19896,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lquispec@unamad.edu.pe",
     "password": "$2y$10$fUisF1vU4QNq3f7XN3MqeOHdd3ir9BPXqFCCcntC81dSu0SBVoA4e",
     "estado": 1,
+    "dependenciaCodigo": "UFDP-URH",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-04-23 17:45:39",
     "updatedAt": "2025-04-23 17:45:39"
   },
@@ -17066,6 +19910,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "presidentecrxxiii@cnp.org.pe",
     "password": "$2y$10$ddI/vyVH.jqBliexVY8o/exG7GXlvAlUJ9XPZ9lvLLDmrCKJmxvvW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-24 16:49:21",
     "updatedAt": "2025-04-24 16:51:05"
   },
@@ -17078,6 +19924,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Josephcorisepaflores@gmail.com",
     "password": "$2y$10$7ueD8KEWQUofDmbewqEuYOBIMmaZ3anF6C4ESRpuYZwNPI0HPHiqK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-29 03:00:46",
     "updatedAt": "2025-04-29 03:00:46"
   },
@@ -17090,6 +19938,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "robermaytanocruz@gmail.com",
     "password": "$2y$10$q5qJBW81wsHdtWjpCDE4u.jpolYxpcPtpby/lx1J6JggnN6kwQ3Sa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-29 16:23:19",
     "updatedAt": "2025-04-29 16:23:19"
   },
@@ -17102,6 +19952,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "LILIANAMENDOZACONDORI7@GMAIL.COM",
     "password": "$2y$10$ikgjxreptWEBJNkiaIM6OePSZeH8Cm5d3084EjOQBn3DVR.UBjLFW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-04-30 14:52:12",
     "updatedAt": "2025-08-20 15:52:00"
   },
@@ -17114,6 +19966,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Aalvarado22@unamad.edu.pe",
     "password": "$2y$10$aYIMLxY5hf/IcBjXYwHL9uQrGmURWbxwr.HhNAozUYvcABTfncybS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-03 18:39:16",
     "updatedAt": "2025-05-03 18:39:39"
   },
@@ -17126,6 +19980,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "madavila@congreso.gob.pe",
     "password": "$2y$10$Ix0RjqRRGcyGmPkeOjGU9emNWrAK6pRySO0qku8RmJuGsJou7ml42",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-06 15:41:11",
     "updatedAt": "2025-05-06 15:41:11"
   },
@@ -17138,6 +19994,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ELUNAH@UNAMAD.EDU.PE",
     "password": "$2y$10$d2.LR9IBjwWKnPfVhHzu/OFcm6Oxnij2Nv3HzGRUNtEkhoeWCaWe2",
     "estado": 1,
+    "dependenciaCodigo": "FCE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-05-07 15:52:36",
     "updatedAt": "2025-09-26 13:01:09"
   },
@@ -17150,6 +20008,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "practicante.nquispe_cusco@sunarp.gob.pe",
     "password": "$2y$10$hPPohGwR5MK7gmTHEbtt.u2iN7OguC36dvFbqweRxjocvoBRh5/xW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-08 20:35:07",
     "updatedAt": "2025-05-08 20:37:24"
   },
@@ -17162,6 +20022,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JPAUCCARB@UNAMAD.EDU.PE",
     "password": "$2y$10$BX9X6JZNBZfv6S4WNIjqF.Em4hsh5hMqdZ0VfJhbMh709HoOELmwW",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "SOPORTE",
     "createdAt": "2025-05-09 21:26:08",
     "updatedAt": "2026-05-20 21:07:17"
   },
@@ -17174,6 +20036,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@equilamac.com",
     "password": "$2y$10$izy1DereqAvIgjNOlYbeAeOmhFnsVsjJ0xvd6d1p0f9bjcBeGAJ3K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-10 02:06:43",
     "updatedAt": "2025-05-10 02:08:23"
   },
@@ -17186,6 +20050,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carlosfarfan.gnaa@gmail.com",
     "password": "$2y$10$9a2faA8jdK/4VN4.AtGSUu4MxtJc6NqWgJU4KUv7WaOot4Dc/A0H6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-12 14:34:48",
     "updatedAt": "2025-05-13 21:54:57"
   },
@@ -17198,6 +20064,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yuri.ramos07mr@gmail.com",
     "password": "$2y$10$5p7gAS5kNnwaoNFZYYCY.eTcU8mxKi4EQDEQRpjWRTE/s/EXxtGky",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO IV",
     "createdAt": "2025-05-13 13:06:33",
     "updatedAt": "2025-05-13 13:06:33"
   },
@@ -17210,6 +20078,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asistopep01@minedu.gob.pe",
     "password": "$2y$10$/H.mAspesVaXexU3uNURkOOGC1fMqVYTDivp/8IcFuOlj85S45AwW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-13 22:09:05",
     "updatedAt": "2025-05-13 22:09:05"
   },
@@ -17222,6 +20092,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhuler1994@gmail.com",
     "password": "$2y$10$zdlwzs9uDShnCyOOs9srPe4.LWLiAiQBk2c1ceeFcTvrUgt7yFR9.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-14 14:57:29",
     "updatedAt": "2025-05-14 15:09:46"
   },
@@ -17234,6 +20106,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mzamora@sernanp.gob.pe",
     "password": "$2y$10$j/Kkr9KzMeRL3ZZpaPH0ae/Ek/j1oBjqAltGNC0fBo6G/1sl3/cL2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-14 23:22:39",
     "updatedAt": "2025-05-14 23:23:11"
   },
@@ -17246,6 +20120,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "LSANDOVAL@UNAMAD.EDU.PE",
     "password": "$2y$10$6wvDWvBGmNAa9dUdmNxj.ugeDOu1uSR8jRm6iufEIW5oQfD/UFHsy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-15 21:47:09",
     "updatedAt": "2025-05-15 21:47:09"
   },
@@ -17258,6 +20134,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "serciagroup@gmail.com",
     "password": "$2y$10$X/SWmArmnsfVtFLtPQWmK.5KmACBoy0B.1MVFL3beSKEfhK.MsrQO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-15 23:05:02",
     "updatedAt": "2025-05-15 23:05:44"
   },
@@ -17270,6 +20148,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "traperos_de_emausareq@hotmail.com",
     "password": "$2y$10$P65ufwl1Y78C/TAJ4SvFaOaa6Speu0xpJKj0puVcjSZ5DSZOPKSfC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-16 15:36:09",
     "updatedAt": "2025-10-14 16:34:13"
   },
@@ -17282,6 +20162,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "diremidmdd@diresamdd.gob.pe",
     "password": "$2y$10$yIg4YYU3yffnYsyZtnKU1Om0vuyI6n0og2KxVsiqnTkFfZWaOo15a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-16 16:23:39",
     "updatedAt": "2025-05-16 16:25:43"
   },
@@ -17294,6 +20176,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jportilla@concytec.gob.pe",
     "password": "$2y$10$aA/7jN4l6sP9ekXzQczT6uzsXN7CgbIZFN58O7UGPB/b.F7v61tl.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-16 16:32:15",
     "updatedAt": "2025-05-16 16:32:39"
   },
@@ -17306,6 +20190,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "frankquispe01262001@gmail.com",
     "password": "$2y$10$4qbEmy1pmjS2Ch4Ol5U2Juqc1wMZm2yQ12J1wsAyRilJjYgyh3IJ6",
     "estado": 1,
+    "dependenciaCodigo": "DA",
+    "cargo": "OPERADOR ADMINISTRATIVO",
     "createdAt": "2025-05-19 16:09:53",
     "updatedAt": "2025-05-19 16:09:53"
   },
@@ -17318,6 +20204,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alizonde@sunass.gob.pe",
     "password": "$2y$10$YXm4XTO3IQ6.25i5EVe25uTlLHvYXUZNzhH75wAQ6fRtWk/rumhSC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-20 15:30:36",
     "updatedAt": "2026-04-22 21:09:00"
   },
@@ -17330,6 +20218,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "joquipu1@gmail.com",
     "password": "$2y$10$CBkA2dpc7QA8xBh3QU7KgulyUVV.OqtvXPjC.YNKmzP1i.B.94pD.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-20 21:12:13",
     "updatedAt": "2025-05-20 21:12:54"
   },
@@ -17342,6 +20232,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "stacas@unamad.edu.pe",
     "password": "$2y$10$vnMjiI2R/XTW/4pybX2yve8shpcR41SGalVptlBzxRX9PHDCji.BK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-21 14:43:45",
     "updatedAt": "2025-05-21 14:43:45"
   },
@@ -17354,6 +20246,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "imachaca.hitss@claro.com.pe",
     "password": "$2y$10$VhhNoNKSWU1CsjCIe1X8KuWOl3n711dKa2yMWTDbqHd1ApXqffhMC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-21 15:05:38",
     "updatedAt": "2025-05-21 15:05:38"
   },
@@ -17366,6 +20260,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "misa.isabel98@gmail.com",
     "password": "$2y$10$oBuDD/G98lNSTW02WXbtaua9C/CVIZwf8nEFKrrFebNtN0n7OYsBW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-21 15:31:48",
     "updatedAt": "2025-05-21 15:32:42"
   },
@@ -17378,6 +20274,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gutrengifoca@gmail.com",
     "password": "$2y$10$MXXEbXOf7SC6eeuIYapmvuUomdod3O.uDRDIDvTYXhoGTFsCvAii2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-22 22:58:04",
     "updatedAt": "2025-05-22 22:59:03"
   },
@@ -17390,6 +20288,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "paulespinozatorres27@icloud.com",
     "password": "$2y$10$3kX.FQeLoM8kwUCzVzH68eBK0OUZQHpCFPsZGRX6mRfEgeiHPkZqu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-23 14:29:14",
     "updatedAt": "2025-05-23 14:29:50"
   },
@@ -17402,6 +20302,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "misuiza@gmail.com",
     "password": "$2y$10$K9YD5C85lm7WlDl1pLR5Ve81rSLXEPH7OhXtcEPXqoCATvIc6awhe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-23 22:10:16",
     "updatedAt": "2025-05-23 22:10:16"
   },
@@ -17414,6 +20316,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "misuiza@defensoria.gob.pe",
     "password": "$2y$10$HIaSx7vU2Gm3tJdHY7UJPuh/dssvqga2/cFOA4ABCRHlLEnNSli2m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-23 22:15:06",
     "updatedAt": "2025-05-26 13:57:57"
   },
@@ -17426,6 +20330,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "odmadrededios@defensoria.gob.pe",
     "password": "$2y$10$yj2X.7uD5VKgxJIfAmfcPOopZFourdkAjPnqafGrMD.3mxsWM2S3u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-23 22:19:39",
     "updatedAt": "2026-02-13 21:59:19"
   },
@@ -17438,6 +20344,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rarce@unamad.edu.pe",
     "password": "$2y$10$KaduhCtWEMBiIEP24d6wYeXkKbaRYLMtTnr3H1BcAMd58PRC7OL2i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-27 13:36:53",
     "updatedAt": "2025-05-27 13:36:53"
   },
@@ -17450,6 +20358,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "corporacionasaf@gmail.com",
     "password": "$2y$10$ERB6pTYIUCj1jN6.p2nBEeuscL1/BCeePdg3crae4b1Y2aNzXOYfu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-27 13:53:04",
     "updatedAt": "2025-05-27 13:53:28"
   },
@@ -17462,6 +20372,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "FMACHACA@UNAMAD.EDU.PE",
     "password": "$2y$10$LoqKU95rqZtDtiEytKPTPubi2Yp.0hbeSge2jGBJLEjWBA6TRNb7a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-05-27 16:53:19",
     "updatedAt": "2025-12-12 16:59:29"
   },
@@ -17474,6 +20386,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "acoprope.centrodeformacion@gmail.com",
     "password": "$2y$10$IIQaLgoatk0guTAmtU8bpOKSYbi4rOZh0v6ydkUmAFm17qZNKvrxu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-04 15:16:41",
     "updatedAt": "2025-06-04 15:17:54"
   },
@@ -17486,6 +20400,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "denistava61@gmail.com",
     "password": "$2y$10$N0i9w2xVCWdDPSeG1jAAnOI7vdIPQC.gRR3wYeaRrPBdpC1IEzQCa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-06 13:05:00",
     "updatedAt": "2025-06-06 13:05:37"
   },
@@ -17498,6 +20414,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "NOTIFICACIONES@ONPE.GOB.PE",
     "password": "$2y$10$CfoDS0u0g8g.0Bsv.og4lewrKtgxpK1EMgFNOO679TuUiR9ZxVp0G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-09 14:59:58",
     "updatedAt": "2025-06-12 17:10:23"
   },
@@ -17510,6 +20428,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventasedcip@gmail.com",
     "password": "$2y$10$ZuMF3c1.2n8HH5Dh3G08U.NJV09ZAtIqQRgrEfmfcQ2U0jhRN0Fhu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-09 15:43:40",
     "updatedAt": "2025-06-09 15:45:12"
   },
@@ -17522,6 +20442,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "llopez@qubitsconsulting.com",
     "password": "$2y$10$id0dn6wY7gHH6FZQgjTIEemov7PRy9QixHLBK.jNZrZ/jPwLVGpGm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-09 20:36:52",
     "updatedAt": "2025-06-09 20:37:41"
   },
@@ -17534,6 +20456,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ladyruthrg@gmail.com",
     "password": "$2y$10$GyREQDIpsRhNGaxoZ0LqT.eSLYst/9Uh5vhiJlZ3y2vz8graeW6we",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-10 15:29:51",
     "updatedAt": "2025-06-10 15:31:36"
   },
@@ -17546,6 +20470,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gladysemisme@gmail.com",
     "password": "$2y$10$SpmHMYxC2syLAcuGovVKNuDkrCeYNQbg0Y6F8ZMyEXOI3JlQsKQE.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-10 17:45:24",
     "updatedAt": "2025-06-10 17:45:24"
   },
@@ -17558,6 +20484,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ahuaracham21-2ef@unamad.edu.pe",
     "password": "$2y$10$kH1mLyzC47WEt4psjcWFWuQKBhPfUI0m7EMAO84s1CEsn/Nv3ICY6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-11 11:38:16",
     "updatedAt": "2025-06-11 11:38:16"
   },
@@ -17570,6 +20498,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "secretariatecnica@anupp.edu.pe",
     "password": "$2y$10$RtThQsv.ODFmYs9pidfH.eHj7ZIa5/.uj5GgsNRNqvPZsfb4/yMgG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-13 20:29:11",
     "updatedAt": "2026-03-26 21:08:00"
   },
@@ -17582,6 +20512,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lveliz@pcm.gob.pe",
     "password": "$2y$10$xc.8W5lx.yR1Saqzpc4ybeubikDLa/v7TRhORU90/zSDVPTMzdBwe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-16 22:39:57",
     "updatedAt": "2025-06-16 22:39:57"
   },
@@ -17594,6 +20526,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "giira.paz.guerra@gmail.com",
     "password": "$2y$10$QbiSvf/FlGQTW2zZQf5zu.5Ai8JIyJdHdjWSXV1W1tA8p2mO.H7cm",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "APOYO ADMINISTRATIVO",
     "createdAt": "2025-06-17 13:34:20",
     "updatedAt": "2025-06-17 13:34:20"
   },
@@ -17606,6 +20540,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aranibaralejandrina84@gmail.com",
     "password": "$2y$10$iKqZ8cHfXVK47SU8sboxdeYUNvluDA7crOjgzei8I7dfBb8O6wFQ.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-17 20:27:24",
     "updatedAt": "2025-06-17 20:27:50"
   },
@@ -17618,6 +20554,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sscs_02@pcm.gob.pe",
     "password": "$2y$10$qjGKR4IVu9hDrgtq3wJt9ecH7FfThFmx4WZw2pFhqD9Y8VnF0irSy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-17 21:23:59",
     "updatedAt": "2025-06-17 21:23:59"
   },
@@ -17630,6 +20568,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lizbethflores@congreso.gob.pe",
     "password": "$2y$10$/9758MtmgoWweqj/6mqRxuaiyzua9FQbVRb8qh17btBpgPomQaG.6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-18 21:56:16",
     "updatedAt": "2025-06-18 21:56:16"
   },
@@ -17642,6 +20582,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lizfp99@gmail.com",
     "password": "$2y$10$zMTiDZ39NdZcj2mGQmbd0.jUisQjmoFeON1oK.5US4ZnmloyXrblu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-18 22:03:35",
     "updatedAt": "2025-06-18 22:03:35"
   },
@@ -17654,6 +20596,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lfquispea@unamad.edu.pe",
     "password": "$2y$10$BcZ4R7MX5BxRqPsuRGje2u.yA09/T66GbpK3bde.OjQihlWt2zKS2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-20 15:22:16",
     "updatedAt": "2025-06-20 15:22:16"
   },
@@ -17666,6 +20610,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "umartinezo@unamad.edu.pe",
     "password": "$2y$10$LVIHxyscWr/b4NcZNPUty.vRi4HkEdIRVmT4ks3DifofTkEqzfTjS",
     "estado": 1,
+    "dependenciaCodigo": "DADCP",
+    "cargo": "ASISTENTE  ADMINISTRATIVO",
     "createdAt": "2025-06-20 15:28:26",
     "updatedAt": "2025-06-20 15:28:26"
   },
@@ -17678,6 +20624,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "convencionesdgdncr@minjus.gob.pe",
     "password": "$2y$10$LwXyENXGCp2SQtyR1Fyfzer23iijodyPG9KlEBSNYYx52cT0czI4C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-20 21:19:17",
     "updatedAt": "2025-06-20 21:19:17"
   },
@@ -17690,6 +20638,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ledy_mamani@hotmail.com",
     "password": "$2y$10$itmt3TSNAmFQxnxUqsFSOOullFYnCnGqyvmQ1gw6.9pxPRDxz2Ld.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-23 18:08:52",
     "updatedAt": "2025-06-23 18:18:57"
   },
@@ -17702,6 +20652,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "chioraquel@gmail.com",
     "password": "$2y$10$6I6iN/xis/kdnWjnaVa9C.5Rva8hifPSbHZr2ass0fxck1U7TAaXy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-23 20:35:45",
     "updatedAt": "2025-06-23 20:36:43"
   },
@@ -17714,6 +20666,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "senaju_diproge_09@minedu.gob.pe",
     "password": "$2y$10$YAEd7tr4K.i4a9zNgR7fJO04BlyNfe9Iluoh6On8nY7VS3/WU9/Le",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-25 14:29:59",
     "updatedAt": "2025-06-25 14:40:09"
   },
@@ -17726,6 +20680,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones_ugds@agn.gob.pe",
     "password": "$2y$10$MZjr3odIqcdy3zULxZ4WeugHnNAb4JYxbwvpJcBTN4Pft8wWOALjq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-25 21:41:04",
     "updatedAt": "2025-06-25 21:41:31"
   },
@@ -17738,6 +20694,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacion5@midisext.pe",
     "password": "$2y$10$ScyysLPdD.jRbf5jsBBNhOGeWS1JeQAXEBcpn6MmG50FgIx7PDtNO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-26 14:04:13",
     "updatedAt": "2025-06-26 14:05:04"
   },
@@ -17750,6 +20708,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fernanderiver7@gmail.com",
     "password": "$2y$10$.gfAHxcENKum7a6A0XDBmueBz6qbg..yAExj7p46mo/wM3X40fMpe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-26 15:56:12",
     "updatedAt": "2025-10-23 13:11:48"
   },
@@ -17762,6 +20722,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "joselitovaca.1810@gmail.com",
     "password": "$2y$10$BSXmf4MOmVJYISkAMWB3x.qqGaVwML3gi8MG0vhJFBf6RQ4AdFtoC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-26 16:20:06",
     "updatedAt": "2025-06-26 16:20:52"
   },
@@ -17774,6 +20736,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yortega_cusco@sunarp.gob.pe",
     "password": "$2y$10$v.vsap.4PnbbFZI/fiVL7OLSwUeLXJS.Xk0ji6pP4DxZMHIfzOjju",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-26 21:33:43",
     "updatedAt": "2025-06-26 21:33:43"
   },
@@ -17786,6 +20750,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alberto.pena.mondragon@gmail.com",
     "password": "$2y$10$LUtf5EUYCjPB5suSDIpCv.czWE0ZCqcnbqCpcqKHczjTsRvR.ZSQm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-27 12:49:37",
     "updatedAt": "2025-06-27 12:49:37"
   },
@@ -17798,6 +20764,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cencaepcapacita@gmail.com",
     "password": "$2y$10$5jYfTSD78zdmhrljN7TLFeLVrfCOsZxLxIulROABHzjyngOfNou9S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-27 21:00:41",
     "updatedAt": "2025-06-27 21:03:36"
   },
@@ -17810,6 +20778,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "imomota@congreso.gob.pe",
     "password": "$2y$10$3vJIZCN5uW0Yn7v3jRJ.Z.2iTM4KZ0Zi.UCKNJ4ZWUWyFTyPVv4Va",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-30 20:27:20",
     "updatedAt": "2025-06-30 20:27:20"
   },
@@ -17822,6 +20792,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dryc_cindell17@hotmail.com",
     "password": "$2y$10$tVIlxmwiDpHMoiUbx0Ztqez3FBNe5zcz7tyw9wPYNwL0wgzdW3jpW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-30 21:25:29",
     "updatedAt": "2025-06-30 21:27:13"
   },
@@ -17834,6 +20806,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rectorado@unam.edu.pe",
     "password": "$2y$10$PN2YfrxVLmo8nU5OBtC1uO/k2P4IygzUrZcGnFFKpgeOsOWjfDWye",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-06-30 22:59:52",
     "updatedAt": "2025-06-30 23:00:28"
   },
@@ -17846,6 +20820,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "VENTAS@CUSCOGO.COM",
     "password": "$2y$10$IbUwZYhkHh44QrBQkZctQ.v3RgpMXk1yz0EOCCpka1aj5jW5dnxDS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-01 16:26:51",
     "updatedAt": "2025-07-01 16:27:35"
   },
@@ -17858,6 +20834,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciondigital@anin.gob.pe",
     "password": "$2y$10$q3cplejYQd7Fv5KYO/0wduSgCMfM0m8iQn1.Akr7zlPKHiPlhUyx6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-02 15:33:02",
     "updatedAt": "2025-07-02 15:39:16"
   },
@@ -17870,6 +20848,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ingambiental@unam.edu.pe",
     "password": "$2y$10$9ym6zIgHOZPhOd7HlBhQMOtsuk9sP.kycgs1Bq3JI1SRFc/PTJT.e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-02 22:42:10",
     "updatedAt": "2025-07-02 22:42:10"
   },
@@ -17882,6 +20862,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ledy02446666@gmail.com",
     "password": "$2y$10$YiX5AQtcBodmQZIz6fLmV.Uxz9e2FQAvWukl9.XmbKTPs2rheZtOq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-03 18:21:10",
     "updatedAt": "2025-07-03 18:22:01"
   },
@@ -17894,6 +20876,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones@juntos.gob.pe",
     "password": "$2y$10$X2zJt6o73igQkCVqcDAdNuizsr5N4LKBw0va1Jx.TpCifzuOedfSa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-03 19:17:56",
     "updatedAt": "2025-07-03 19:18:47"
   },
@@ -17906,6 +20890,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gcruz@untels.edu.pe",
     "password": "$2y$10$DU6XiWEU.auMXlvWvk7jIeExZrTdEN9irrZqaxgztf/80NsAdD8x2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-04 16:03:04",
     "updatedAt": "2025-07-04 16:03:04"
   },
@@ -17918,6 +20904,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Rectorado@untels.edu.pe",
     "password": "$2y$10$JUEWoWZXghieghpjC0.eQewErlMyJ3yKNpA.tE1FaV1hT331oQI0e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-04 16:30:44",
     "updatedAt": "2025-07-04 16:32:08"
   },
@@ -17930,6 +20918,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "24261021@unamad.edu.pe",
     "password": "$2y$10$kahqY47r/kNzqIRltfE3SO7ay7X5o/7KPHAZ6Bxk8osCFfFPY57Q.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-04 22:05:04",
     "updatedAt": "2025-07-04 22:10:31"
   },
@@ -17942,6 +20932,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marcelohandball12@gmail.com",
     "password": "$2y$10$afymZkIIr26xJAi/2t5lNuGvYUny/AZdxA92sizOTlj027jXZDaSu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-05 18:29:30",
     "updatedAt": "2025-07-05 18:30:02"
   },
@@ -17954,6 +20946,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jareque22@unamad.edu.pe",
     "password": "$2y$10$TtBKW8OHciB/hZ9BVuPYyOO6NTsXp.XFY7UBjVX78gjDGoArJvlk.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-05 18:44:42",
     "updatedAt": "2025-07-05 18:46:07"
   },
@@ -17966,6 +20960,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kathequim@gmail.com",
     "password": "$2y$10$H7SyQfhi3Lyl2U3NI7VuPegCpolRdwL5Jol/uL/LD98xfTlwJmASa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-07 13:25:50",
     "updatedAt": "2025-07-07 13:26:46"
   },
@@ -17978,6 +20974,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Rolitomara99@gmail.com",
     "password": "$2y$10$OX4wjCBTq1Ed1WuohQ3lIuhZaqXxxDj3Qh1pdtlcjFqHkudspEIDG",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ENCARGADO",
     "createdAt": "2025-07-07 15:47:51",
     "updatedAt": "2025-07-07 15:47:51"
   },
@@ -17990,6 +20988,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pachaoalisson28@gmail.com",
     "password": "$2y$10$6wyI/bidULoBarOiSLx1s.RcA3781qOFiYZ57ffzRnXiddPzOu17a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-07 16:24:55",
     "updatedAt": "2025-07-07 19:41:49"
   },
@@ -18002,6 +21002,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhuari@unamad.edu.pe",
     "password": "$2y$10$L7SRItY6CyEduIx9f4OsQOLgqZ5OaqT7Tg/fsUyT2e9w0JOwkMs0u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 12:40:05",
     "updatedAt": "2025-07-08 12:40:05"
   },
@@ -18014,6 +21016,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jannpier@unamad.edu.pe",
     "password": "$2y$10$ViMIpFUyXGruic06OGGcl.p6R4uxmFVoHMNLhtFiJNoHCzkQoM9UC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 12:42:10",
     "updatedAt": "2025-07-08 12:42:10"
   },
@@ -18026,6 +21030,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maniceto@unamad.edu.pe",
     "password": "$2y$10$8KnHtPMCK3jv4aw/wz5OYuCtiWJO3Yi.6VyfmUrudKZ0W7eCCVLIG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 12:45:25",
     "updatedAt": "2025-07-08 12:45:25"
   },
@@ -18038,6 +21044,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hsoria@unamad.edu.pe",
     "password": "$2y$10$pSobPEDbKe8Xq9URpxiwVOZ9fZJ7EtHVwnFFTL2FOJVTs.JZcQL6e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 13:01:01",
     "updatedAt": "2025-07-08 13:01:01"
   },
@@ -18050,6 +21058,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cyabar@unamad.edu.pe",
     "password": "$2y$10$iAxANgdP40S6MQ8IXXJg9euw8TUdr6eUAFCw0UFNTn2JKjI1W6N0y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 13:06:28",
     "updatedAt": "2025-07-08 13:06:28"
   },
@@ -18062,6 +21072,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "equirisina@unamad.edu.pe",
     "password": "$2y$10$nHTdB5Tn0y1/U9nn8B4/POgqQx0Hplw7EkMBZBh.Lji5IFr1DfGbO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 13:11:29",
     "updatedAt": "2025-07-08 13:11:29"
   },
@@ -18074,6 +21086,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dlleditorial@cultura.gob.pe",
     "password": "$2y$10$LZHRHq.zjxCm5TO4ak3rd.nooLPDY/D45ZnVTrRn/c1pkNuFjdFMS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 22:34:57",
     "updatedAt": "2025-07-08 22:38:10"
   },
@@ -18086,6 +21100,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "vrosas@minsa.gob.pe",
     "password": "$2y$10$ge1H/4EeK.kz2Xuwf4CSU.HVqFUmCgOPU2zedewEIzyuWoS7x0mU2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-08 23:36:00",
     "updatedAt": "2025-07-08 23:37:04"
   },
@@ -18098,6 +21114,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "innovacion.cotizaciones@gmail.com",
     "password": "$2y$10$cuctgY2v7LHyZeeT9KU2j.JpGHeHiGCj0oxjEMstLJIPFGw7dBnW.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-09 16:07:15",
     "updatedAt": "2025-07-09 16:08:04"
   },
@@ -18110,6 +21128,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dolmosfrancodelicia@gmail.com",
     "password": "$2y$10$XBn75Rnv2E2q4r/Vt5DLsuZu5ur9C98wcVgTpNhwSZtkfwz2SoM3.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-10 21:33:04",
     "updatedAt": "2025-07-10 21:33:04"
   },
@@ -18122,6 +21142,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bbarcena@unamad.edu.pe",
     "password": "$2y$10$40U3/JJOuBaRvaXz3ELYxeW5elhO0A1OZBgN.Wu6BuzysiMuQPZWC",
     "estado": 1,
+    "dependenciaCodigo": "DACYF",
+    "cargo": "DOCENTE",
     "createdAt": "2025-07-11 14:34:05",
     "updatedAt": "2026-03-11 14:46:23"
   },
@@ -18134,6 +21156,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacionestribunal@minjus.gob.pe",
     "password": "$2y$10$8qyqtfe7xZlCvldcX4qV3eWU51P8vT8.z4ygdKpY7FVHoIYixRu9K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-11 20:06:34",
     "updatedAt": "2025-07-11 20:06:34"
   },
@@ -18146,6 +21170,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rdelrosario@prouce.gob.pe",
     "password": "$2y$10$zl33rCkvfm/ruBIsh5KcEO78XviyZq5xg2UD738Bgpu4TCOfuZ7xS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-14 15:56:41",
     "updatedAt": "2025-07-14 15:56:41"
   },
@@ -18158,6 +21184,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Elimoncca98@gmail.com",
     "password": "$2y$10$jaU7pjz2moO.heKbQOoYou.seBzLp.mPpLLZ8ltElHjlNHH/tvpx.",
     "estado": 1,
+    "dependenciaCodigo": "UFR-URH",
+    "cargo": "JEFE",
     "createdAt": "2025-07-14 20:33:57",
     "updatedAt": "2025-08-27 16:48:06"
   },
@@ -18170,6 +21198,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CVILLASANTE@UNAMAD.EDU.PE",
     "password": "$2y$10$a6AVfSAWnFq27l5nxIcth.EKkcWiwTdbaODMXd1FW4D78MiXH2.ze",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-15 13:18:01",
     "updatedAt": "2026-03-12 20:23:54"
   },
@@ -18182,6 +21212,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificacionestaipsegundasala@minjus.gob.pe",
     "password": "$2y$10$SSJ/c5Dk/59Dxyl.PgmOFO9qT5yfNcfC8ncYFUWmzbFNGqZ1dm6F6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-15 16:11:40",
     "updatedAt": "2025-07-15 16:11:40"
   },
@@ -18194,6 +21226,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rmeza@inaigem.gob.pe",
     "password": "$2y$10$Z2fbAi8U.3RsnByOL3kBdOAvWisfxnT7UsiDw7VRuk8U.zXoBgomK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-15 16:20:29",
     "updatedAt": "2025-07-15 16:47:15"
   },
@@ -18206,6 +21240,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rafael.esco.perez@gmail.com",
     "password": "$2y$10$ii1Mlyb2IXmj9zSTfTI97Om3cYRuEBeT4Qga1mx6vlwJd1wnTuExG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-15 16:26:31",
     "updatedAt": "2025-07-15 16:27:53"
   },
@@ -18218,6 +21254,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcerna@ins.gob.pe",
     "password": "$2y$10$SVPB8NmAoYo5drdcp62CiOp/nYAAUOpHQpT0..6cznQwrHrZLv052",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-15 22:26:28",
     "updatedAt": "2025-07-16 16:21:26"
   },
@@ -18230,6 +21268,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asistentecomercial@carolina-peru.com",
     "password": "$2y$10$5CeOgTPNH51MNzbfwXhoJ.8PDHeUN4XGOP7E2RVNIGP3RiFQJG7ry",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-17 15:16:52",
     "updatedAt": "2025-07-17 15:24:57"
   },
@@ -18242,6 +21282,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rdelrosario@produce.gob.pe",
     "password": "$2y$10$bUQn/qUps3IsWwaZGgMwPOYIjgN2ZxgNq.iVSiuOTVBn/gO141R0u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-17 16:07:41",
     "updatedAt": "2025-07-17 16:07:41"
   },
@@ -18254,6 +21296,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "belinda.klara@hotmail.com",
     "password": "$2y$10$MamMhMUPi6BJKljOzrhq4.loXWUD/sxw6vQPrJeLzhptq4HH7LXbO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-17 19:00:38",
     "updatedAt": "2025-07-17 19:05:08"
   },
@@ -18266,6 +21310,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carolina.caceres@upch.pe",
     "password": "$2y$10$cYOO//rRtKx54k5LnOifhuOVtOhp3Cp2/D.1W6vQg8ds9X8o.QggW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-17 19:41:47",
     "updatedAt": "2025-07-17 19:43:41"
   },
@@ -18278,6 +21324,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@ecocolor.pe",
     "password": "$2y$10$d3zx5fgSOAelIDlQXb3yAOAvWiwGgj4tVSoJsUBAo5uKORmENQub2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-17 21:49:36",
     "updatedAt": "2025-07-17 21:51:03"
   },
@@ -18290,6 +21338,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "imagen@unaj.edu.pe",
     "password": "$2y$10$O19QQz/3Eji90cWoF4mnNuUgPX4KbqJCj/wSweFu1oLswV9y8fBjW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-18 09:19:08",
     "updatedAt": "2025-07-18 09:19:08"
   },
@@ -18302,6 +21352,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "liliana.s.valverde.c@gmail.com",
     "password": "$2y$10$9Q2N3P/iSeC1WxX/zr/Sr.ctv5TlkWfsGc.fk1aVMX2sswkzdcMg2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-19 01:38:46",
     "updatedAt": "2025-07-19 01:39:23"
   },
@@ -18314,6 +21366,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "martelanali@gmail.com",
     "password": "$2y$10$HFIDWUAJeJzU4Cg06G5jyuKvojQfsfcH6LB6.0fUPPXmOFNhUcJW.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-19 03:03:42",
     "updatedAt": "2025-07-19 03:06:07"
   },
@@ -18326,6 +21380,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lizmaribel140@gmail.com",
     "password": "$2y$10$z2OhXHuFEGd2fVHyj4ssT.4wvYfiLIZKLxGi0TzJzptXr0Nt95ete",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-27 18:36:15",
     "updatedAt": "2025-07-27 18:36:15"
   },
@@ -18338,6 +21394,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "slinaresh@unamad.edu.pe",
     "password": "$2y$10$Z/PjlVFr3Njt.5x5IapiO.CXKoUVjqDZ1IDIHPWY4N3g5J83Ds.Ky",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-30 17:40:12",
     "updatedAt": "2025-07-30 17:40:12"
   },
@@ -18350,6 +21408,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "secretariageneral@fap.mil.pe",
     "password": "$2y$10$BdAEPOYrDuVU4eO9RIrA9u.a6t0qJavlAO5SwG/ZdDsK/Tc67koUu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-07-31 21:20:22",
     "updatedAt": "2025-07-31 21:21:03"
   },
@@ -18362,6 +21422,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "zalva@congreso.gob.pe",
     "password": "$2y$10$mBst.CPtRvcgdX3o91LKsOHrdyC0XDq99WO0k7VnwWaA7B.TSVgty",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-01 14:45:06",
     "updatedAt": "2025-08-01 14:45:06"
   },
@@ -18374,6 +21436,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "flopezydahua@gmail.com",
     "password": "$2y$10$2HG0TEov2.7oUg8JoTXGK.RROWzyLto64sTNGhB3of/.DeRMORRcW",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "RESPONSABLE",
     "createdAt": "2025-08-01 15:12:27",
     "updatedAt": "2025-08-01 15:12:27"
   },
@@ -18386,6 +21450,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "z.alvatarazona@gmail.com",
     "password": "$2y$10$Lf7CPs6oIw6ZpMdOu3565.JHvVa/NHWItSzO5uYlVNBH3fuF/nuKW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-01 15:26:23",
     "updatedAt": "2025-08-01 15:26:36"
   },
@@ -18398,6 +21464,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rectorado@unamad.edu.pe",
     "password": "$2y$10$IiM9ac9Wz.RLbIEJTMMuKuWEW/1Ai0Rv5Ql.IXV5PQ5vcnfx6irdy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-01 17:01:26",
     "updatedAt": "2025-08-01 17:01:26"
   },
@@ -18410,6 +21478,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "legal.piader@uegps.gob.pe",
     "password": "$2y$10$6W3jn73rHDAdTefIExaQW.ZIL1nBxauHxsTq7HcqRKKYkydCihbFy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-01 19:56:38",
     "updatedAt": "2025-08-01 19:57:02"
   },
@@ -18422,6 +21492,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fpninas@unamad.edu.pe",
     "password": "$2y$10$xeR98.4QBbgWHZxGccQhLOB3o7PwC0iR.AeO3uYozZcjp4ZLb27Le",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-08-04 14:14:54",
     "updatedAt": "2025-08-04 14:14:54"
   },
@@ -18434,6 +21506,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eholgado03@gmail.com",
     "password": "$2y$10$SMnrGLnDaroZ/upf/8Y6oOAo.PYQ2qBHXYvHOw/xuj6MRmqKVUXqy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-04 17:29:59",
     "updatedAt": "2025-08-04 17:32:11"
   },
@@ -18446,6 +21520,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kquinteros@oece.gob.pe",
     "password": "$2y$10$1u9hl8P1OhAEMlUsxUySU.haOh4mxvQc2K8oWbDL6CWZeNRboD5Q.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-04 17:56:31",
     "updatedAt": "2025-08-04 17:57:14"
   },
@@ -18458,6 +21534,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marcley1990@gmail.com",
     "password": "$2y$10$dv8gBrj3f4PLWbmu2shCxOy8BBV2aBik42ax0N6jY.ZQri0WJW1LK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-05 20:56:03",
     "updatedAt": "2025-08-05 20:56:03"
   },
@@ -18470,6 +21548,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "municipalidadprovincialdemanu@gmail.com",
     "password": "$2y$10$tO.f2v2GpluYcIc6NBMXoezgdie6esYPHviWFDUgClcJCNu.QhyGK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-05 20:59:09",
     "updatedAt": "2025-08-05 20:59:52"
   },
@@ -18482,6 +21562,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nathali.vega@jnj.gob.pe",
     "password": "$2y$10$VDuR2CE9mW744FfapmJtHOe3oQNhLL0AAF3dKLR1wZAAZMM6dZKx.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-05 21:42:44",
     "updatedAt": "2025-08-05 21:43:05"
   },
@@ -18494,6 +21576,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "escalafon2@minedu.gob.pe",
     "password": "$2y$10$Od.o5bKJxG2tJ2r9PMR6Q..JG18D2hv.pK9eq3igEcN//vhgSsFP6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-08 15:41:08",
     "updatedAt": "2025-08-08 15:43:48"
   },
@@ -18506,6 +21590,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jimmyjaviermamani@gmail.com",
     "password": "$2y$10$IDcsEFpksAJ6lR9isvJN2e5eLZ3WuFh40oD8WYcxHmGCmkqYVYyOK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-09 18:00:21",
     "updatedAt": "2025-08-09 18:01:11"
   },
@@ -18518,6 +21604,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hsaldana.midis@gmail.com",
     "password": "$2y$10$9ZnawSM/LfwCoi6pTusfq.mANxLR9Pi.H8rVQ.VpZWZyQvMSHTuq.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-12 02:21:58",
     "updatedAt": "2025-08-12 02:22:33"
   },
@@ -18530,6 +21618,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ETRIGOS@CONCYTEC.EDU.PE",
     "password": "$2y$10$QG8QZ/AUSqMr2SulY2HnveD3Uek1xndTET1LJX1urgIgjeBewuYYW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-13 22:13:44",
     "updatedAt": "2025-08-13 22:13:44"
   },
@@ -18542,6 +21632,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "poolnajayamozombite@gmail.com",
     "password": "$2y$10$3IJcJJ6IBOWSudCDFL.xG.gACXqmTVq5l705sRqvp6641O5W9U2eS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-15 01:44:51",
     "updatedAt": "2025-08-15 01:45:36"
   },
@@ -18554,6 +21646,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "arbitraje@cearlatinoamericano.pe",
     "password": "$2y$10$k.QpX959/X5ZcJVyJXx0reED06zXusRMQTMWH9j34RusGJ7Jh0TNu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-15 15:40:28",
     "updatedAt": "2025-08-15 15:40:56"
   },
@@ -18566,6 +21660,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "recupero5.claro@avalperu.com",
     "password": "$2y$10$UfS/x6oBZaA8LGzdBz520.xh1FdmleSti.uHaNBhlziZ7xDpeCEAm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-19 16:46:09",
     "updatedAt": "2025-08-19 16:46:50"
   },
@@ -18578,6 +21674,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rectorado@untrm.edu.pe",
     "password": "$2y$10$J53pu6L4g8/jk7ZfCsZZlOEg3g6.4DLF5nbP7nvjYN1HPTC8hYp5.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-19 22:14:14",
     "updatedAt": "2025-08-19 22:14:33"
   },
@@ -18590,6 +21688,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "clientes.provincias.lima@outlook.com",
     "password": "$2y$10$YFVuNCjNCeWCpla9ZDXK3u0nWOlVn9Ja7SdKmg103NJBHl0Ope9le",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-20 17:25:03",
     "updatedAt": "2025-08-20 17:43:11"
   },
@@ -18602,6 +21702,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "clientes.provincias.lima@gmail.com",
     "password": "$2y$10$4b3PdRJjjfZj4TOhT98O0.06htLY2kJlsuvAyv77MiZtM1xn.LD7.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-20 17:34:33",
     "updatedAt": "2025-08-20 17:35:04"
   },
@@ -18614,6 +21716,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cpacheco@educaciondigitalsa.com",
     "password": "$2y$10$xUqwI6nkytRvWbiJSLbsUOA4fp8pG98T8Hwlx/yZDTHDsqNOYNDw6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-20 17:46:27",
     "updatedAt": "2025-08-20 17:46:42"
   },
@@ -18626,6 +21730,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sip_s03@pcm.gob.pe",
     "password": "$2y$10$fhI06EyTFmeIRWu78mwbQusqXMCcuwoDidPMKXiZ3F6JIhUIkGIfm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-21 03:50:16",
     "updatedAt": "2025-08-21 03:50:16"
   },
@@ -18638,6 +21744,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "susanmachicao30@gmail.com",
     "password": "$2y$10$1de9BkA.F/VLBi13Vy82D.WtK1cAF7wsX.RX7tdvpxtIOfOuoxq7i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-21 04:14:34",
     "updatedAt": "2025-08-21 04:15:43"
   },
@@ -18650,6 +21758,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dante_gogo_2000@hotmail.com",
     "password": "$2y$10$u9GN3rcjda4j94NgoZ.J6.EJEG2AtJdGB5gB2.UQq8f4.XQTGPtV6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-21 08:44:03",
     "updatedAt": "2025-08-21 08:48:52"
   },
@@ -18662,6 +21772,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rectorado@unap.edu.pe",
     "password": "$2y$10$JYHRG2rgcfwakDDwwNghC.B37dBcziv7Gp4wcNUnUoymTWi.Nv0Lm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-21 16:13:46",
     "updatedAt": "2025-08-21 16:14:09"
   },
@@ -18674,6 +21786,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "drvivienda@regionmadrededios.gob.pe",
     "password": "$2y$10$U4Vw0AtWxcwmjrpMe.LJROgbkzXcaHk0mIN5L1RLsK2B8MP31YuBK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-25 21:25:02",
     "updatedAt": "2025-08-25 21:25:58"
   },
@@ -18686,6 +21800,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cervantesnelidamaritza@gmail.com",
     "password": "$2y$10$o7fA.3sOGqVNuy4uBRFgvOrRxcR7ORqAklcwieLktrv1oSpY7JX4m",
     "estado": 1,
+    "dependenciaCodigo": "SERV-MED",
+    "cargo": "ENFERMERA",
     "createdAt": "2025-08-27 13:00:40",
     "updatedAt": "2025-08-27 13:00:40"
   },
@@ -18698,6 +21814,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Patinojanet13@gmail.com",
     "password": "$2y$10$Wdh2Tu4./Ysz4XCk18XPOOSqXtrTCAwLwzMoC5pk0ezXdLo4uTpuK",
     "estado": 1,
+    "dependenciaCodigo": "SERV-MED",
+    "cargo": "MEDICO",
     "createdAt": "2025-08-27 13:01:16",
     "updatedAt": "2025-08-27 13:01:16"
   },
@@ -18710,6 +21828,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "anahirg0411@gmail.com",
     "password": "$2y$10$AS1djf0FngIjIWn6G7Bau.Qh1SutNf4zzyAoTMjityGa.tc4N6O6O",
     "estado": 1,
+    "dependenciaCodigo": "SERV-MED",
+    "cargo": "ENFERMERA",
     "createdAt": "2025-08-27 13:03:23",
     "updatedAt": "2025-08-27 13:04:48"
   },
@@ -18722,6 +21842,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aldairdaco@gmail.com",
     "password": "$2y$10$iPFzIDJ/3wTaSBmNtqpjmuEjQdTzdsR/Rtda5K2h42vYt4r/VqOWe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-08-28 17:44:46",
     "updatedAt": "2025-08-28 17:45:33"
   },
@@ -18734,6 +21856,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "totalbusiness.eaae@gmail.com",
     "password": "$2y$10$fzWCbtUFz.82fdVmT7dY7OjxDoFWJxr5h1Xsg16AzF8pi93...pJa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-01 16:38:55",
     "updatedAt": "2025-09-01 16:39:23"
   },
@@ -18746,6 +21870,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "shakirabt96@gmail.com",
     "password": "$2y$10$A5h2i/erwJrwpCOXkmmpr.wLL2KbnaVBNhCwFoz8yURs5ZIuZT0pC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-01 18:12:49",
     "updatedAt": "2025-09-01 18:15:01"
   },
@@ -18758,6 +21884,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "suab.wsanchez_01@inabif.gob.pe",
     "password": "$2y$10$ZUCF5cOQwoGwPc1X46c5Y.Ty5qvD4eGKlrp28/z4RulzGxSYve7ja",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-02 20:17:39",
     "updatedAt": "2025-09-02 20:20:14"
   },
@@ -18770,6 +21898,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jquispec@unamad.edu.pe",
     "password": "$2y$10$Pce/ZB1L1v14kpe.L4VeKO1ZvMWIvleGhxISyCZ25QO/fy23K6kPi",
     "estado": 1,
+    "dependenciaCodigo": "URH",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-09-03 17:35:25",
     "updatedAt": "2025-09-03 17:35:25"
   },
@@ -18782,6 +21912,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sarajalk30@gmail.com",
     "password": "$2y$10$bU729FRXnQsBXt80zraY3eK6IdB7xM2lRYeWFkTAUpoqPAFal7ieW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-04 15:39:19",
     "updatedAt": "2025-09-04 15:39:19"
   },
@@ -18794,6 +21926,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sarajalk30@hotmail.com",
     "password": "$2y$10$2e3ZUjgu.KQ8l883quUKre2BNWNRWeSCeohFKQ59HtHmth3gerdVy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-04 15:41:33",
     "updatedAt": "2025-09-04 15:41:33"
   },
@@ -18806,6 +21940,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "eabanoq@unamad.edu.pe",
     "password": "$2y$10$mtpJfcnCAjiCJ/oaikxH9OTlX4adxgdOsaLRH0LYh3HklKyzrhj/W",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2025-09-04 19:23:54",
     "updatedAt": "2025-09-04 19:23:54"
   },
@@ -18818,6 +21954,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeria.pronabi@gmail.com",
     "password": "$2y$10$zUthG6eiAbhT2oMBQlciCuBzaIIwnSyEK7zHTFyH22s4Bgo7GH0e6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-05 23:06:52",
     "updatedAt": "2025-09-05 23:07:15"
   },
@@ -18830,6 +21968,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "llacotay@unamad.edu.pe",
     "password": "$2y$10$iCSI.OZTKSlvyqCQGTbrLeC/qacqnU7fXCkljt4rEMDfTugbjX3E.",
     "estado": 1,
+    "dependenciaCodigo": "DADCP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-09-07 22:12:23",
     "updatedAt": "2026-02-23 16:50:25"
   },
@@ -18842,6 +21982,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "REUNIONESMIDAGRI@GMAIL.COM",
     "password": "$2y$10$5Su5HuQ7pDFgmxFjaH0VDeXXkopN4l0oGM/iSPEQgJqqAyHPur1LK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-08 15:14:59",
     "updatedAt": "2025-09-08 15:16:15"
   },
@@ -18854,6 +21996,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ancotapatricia30@gmail.com",
     "password": "$2y$10$IOUT5hLZ.Skr9trTQ9vHP.EVWu/cow1ssaZVZnqFz34xfNf0GOF7K",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "JEFE",
     "createdAt": "2025-09-08 20:17:18",
     "updatedAt": "2025-09-08 20:17:18"
   },
@@ -18866,6 +22010,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jtbejaranoa@unamad.edu.pe",
     "password": "$2y$10$SjwUqM1KT74XCyMI6izGWuIVHK9ckIQkIX0qsgF0awL.m0S10kECC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-09 00:13:33",
     "updatedAt": "2025-09-09 00:17:47"
   },
@@ -18878,6 +22024,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "25261043@unamad.edu.pe",
     "password": "$2y$10$QjP6dRBnDtuaaEiM6PoBoOdMYaKz6lvUyoSQ277Dt0OXBRV/AtKMa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-09 01:54:02",
     "updatedAt": "2025-09-09 01:54:02"
   },
@@ -18890,6 +22038,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jrios@unamad.edu.pe",
     "password": "$2y$10$lZK7Z8gZJ/6adpmnbXH2PejGb9I1jkRK4vNSZVpv6zyxcD0aTmQQW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-09 22:37:24",
     "updatedAt": "2025-09-09 22:40:23"
   },
@@ -18902,6 +22052,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "RYARICAHUAD14@UNAMAD.EDU.PE",
     "password": "$2y$10$/KzcjozBEE6g33I2g9Gl3OKabUAmodI9/BAzT4vU2WlWzRc5dPXVS",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-09-10 13:07:24",
     "updatedAt": "2026-02-12 12:57:15"
   },
@@ -18914,6 +22066,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "arqrosavela@gmail.com",
     "password": "$2y$10$hAQM41G0AG2DZcywkmvnNeNXOHjD3a08YCQCcokDT4T22nGqrUGBK",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "PERSONAL DE PREINVERSION",
     "createdAt": "2025-09-10 17:50:18",
     "updatedAt": "2025-09-10 17:50:18"
   },
@@ -18926,6 +22080,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ccazace@gmail.com",
     "password": "$2y$10$iKu7jfsUCg5Gxs6qAdf7c.bvedaoDSOryQZ.2da8IcuJnwA7gKh8y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-10 21:42:01",
     "updatedAt": "2025-09-10 21:42:55"
   },
@@ -18938,6 +22094,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "8040755@unamad.edu.pe",
     "password": "$2y$10$.ydmvyxFhzFa6eoJ.jisJ.w4W93ojEd1M17/76o/wAsNJQT/byEDC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-10 21:45:06",
     "updatedAt": "2025-09-10 21:45:26"
   },
@@ -18950,6 +22108,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "arodriguez@devida.gob.pe",
     "password": "$2y$10$qD/CWuReSGeyWf5tc/3fr.Nol0KPn8FsT7uMRpDBxA7dcPJXIs7nK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-11 22:34:13",
     "updatedAt": "2025-09-11 22:34:46"
   },
@@ -18962,6 +22122,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "electromecanicaryj@gmail.com",
     "password": "$2y$10$svRRdgDGTTcS8GlrZ7Q0RuqW6TZtDuP4jjMKFQDLp61KVYbITOYSq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-12 16:48:29",
     "updatedAt": "2025-09-12 16:49:29"
   },
@@ -18974,6 +22136,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bochoah21-1cf@unamad.edu.pe",
     "password": "$2y$10$Z.szOsPvF1eRRtoJW4myLus4M1MLuIEQQ./qe.2v7j7Nq9/IP2cGq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-12 21:16:56",
     "updatedAt": "2025-09-12 21:16:56"
   },
@@ -18986,6 +22150,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jparisuana@unamad.edu.pe",
     "password": "$2y$10$CWFlTWoj5aPPKbQZwY0G/ehJmehypKrq7ZkdlwzYVvkpgB6HbSHQK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-15 16:08:38",
     "updatedAt": "2026-03-12 19:51:05"
   },
@@ -18998,6 +22164,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mcorrea@mtc.gob.pe",
     "password": "$2y$10$oEdMIMe9LRpcCbS1bwFsx.JFb4uzvK3FYdyekHDHg8vNNnPWI8aFO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-16 14:07:19",
     "updatedAt": "2025-09-16 14:15:59"
   },
@@ -19010,6 +22178,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "claudiahuancarte@yahoo.es",
     "password": "$2y$10$rsm84qMLKUsLv9u2trZd7eMybaDhCoWq.2gVenB8zZ8lIhJ6RTWAW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-16 17:38:11",
     "updatedAt": "2025-09-16 17:38:11"
   },
@@ -19022,6 +22192,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JBARRA@UNAMAD.EDU.PE",
     "password": "$2y$10$LvUNiCfcc6bV/F0UuoItFeI3QccjzjHO6RYiqiQxaIpCCfalJI6Ta",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "JEFE (E)",
     "createdAt": "2025-09-16 20:02:52",
     "updatedAt": "2026-03-24 16:06:43"
   },
@@ -19034,6 +22206,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ANITTATENAZOA-2017@HOTMAIL.COM",
     "password": "$2y$10$Dtp8qAqNDX8o2vM0OnKDBuj34IPoMCpSlq4WxH8cczRI/DBChWxv.",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-09-16 20:50:24",
     "updatedAt": "2025-09-16 20:50:24"
   },
@@ -19046,6 +22220,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "chuanca@unab.edu.pe",
     "password": "$2y$10$0zMtXv8GgIkj3pKQYGK/D.HXQLHmohU67t3OsK3BSE9pvghP9nB06",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-17 19:53:38",
     "updatedAt": "2025-09-17 19:53:38"
   },
@@ -19058,6 +22234,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abastecimiento@unamba.edu.pe",
     "password": "$2y$10$kzkbP.pmvAfiGaYuaZ09SOJLFXIwT4WRUKhafCZ1Pmi6xpcbhqNtS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-17 20:10:14",
     "updatedAt": "2025-09-17 20:14:26"
   },
@@ -19070,6 +22248,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "TUEMPRESA_TEMP383@PRODUCE.GOB.PE",
     "password": "$2y$10$k.RlOpnOOPBAfEFsRtpxI.eHzXIDonljaOm2a7beSb2C.x9ofQQdi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-18 20:06:06",
     "updatedAt": "2025-09-18 20:09:43"
   },
@@ -19082,6 +22262,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "donacionesinadej@gmail.com",
     "password": "$2y$10$ngUtDtA1VIBa4PajUKqPGeajuuBwV8bKLGIIqTC0KeOp9H9NCOzN.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-20 00:19:12",
     "updatedAt": "2025-09-20 00:19:40"
   },
@@ -19094,6 +22276,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "huayparamos@gmail.com",
     "password": "$2y$10$Kv63lgiyi6GXPLNpYXaFuejmIxERDa673LY5UJrgus32ptBoXTet.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-23 00:02:46",
     "updatedAt": "2025-09-23 00:04:05"
   },
@@ -19106,6 +22290,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "claudiahuancaarte@yahoo.es",
     "password": "$2y$10$rXMYTJ5r1Gz9v7O.Z1mePO3Sxgk7HmkYyjPfVT1K.X/gYmD/P2hge",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-23 13:10:58",
     "updatedAt": "2025-09-23 13:11:53"
   },
@@ -19118,6 +22304,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmayuri@unamad.edu.pe",
     "password": "$2y$10$v5CfCO8NJGi.jJ85VEqNjuiJDdGP8QnuLwV4b2sKna5Q/nqIqYqRq",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2025-09-24 17:14:04",
     "updatedAt": "2025-09-24 17:14:04"
   },
@@ -19130,6 +22318,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "degc@concytec.gob.pe",
     "password": "$2y$10$bAADrnNtTKaZdcHxGxF/6ebqiOZOK7lBSv/dP6A2vJ.Zu3nHpOaHq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-26 15:44:05",
     "updatedAt": "2025-09-26 15:45:07"
   },
@@ -19142,6 +22332,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JROMAN@MIMP.GOB.PE",
     "password": "$2y$10$A0AN4zIrY8efB2wJ7oF4t.d7Nrd72dR5PqyAg0uO08coxi2qNgf1S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-26 17:33:48",
     "updatedAt": "2026-02-12 22:04:39"
   },
@@ -19154,6 +22346,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "naycelisdcp@gmail.com",
     "password": "$2y$10$JVvnWdpvqP4DLjwz.P6gUeP3SdfnJhCcuJQagjrclR3o.Pv8u8nnG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-27 04:36:54",
     "updatedAt": "2025-09-27 04:36:54"
   },
@@ -19166,6 +22360,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cisociales20@gmail.com",
     "password": "$2y$10$D0cC6w5O0sK99eXbZvJJ5erMjfoZTAL8rrxwWBCuoGKYR4kBelgTy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-28 04:19:56",
     "updatedAt": "2025-09-28 04:20:50"
   },
@@ -19178,6 +22374,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "perucompras@mobiseat.pe",
     "password": "$2y$10$s9LBk/IpiB9ylY/1cUI.A.h.fAfadO6VeXWWsdX7BhHfV9icfCGgm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-29 19:04:00",
     "updatedAt": "2025-09-29 19:09:14"
   },
@@ -19190,6 +22388,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "roxymatematica@gmail.com",
     "password": "$2y$10$qQa/D9V5oDgHlHNJX1iBKOQUPZA48tc8vg5v3GXb4E9kqxL8mA6kS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-30 17:49:49",
     "updatedAt": "2025-09-30 17:49:49"
   },
@@ -19202,6 +22402,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hgonzalessota@gmail.com",
     "password": "$2y$10$qWOfpPHRHRwnmJNIKVoZEONdvNjX1yEsIGDIdL2SM7iVnaGbSjoMq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-30 23:02:46",
     "updatedAt": "2025-09-30 23:03:19"
   },
@@ -19214,6 +22416,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "glenacu98@gmail.com",
     "password": "$2y$10$5XvckmQS3iwUc/1LFW7B1ejUIO3qiJ5ey7vw3dZE/z.4daHtTyz5K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-30 23:09:16",
     "updatedAt": "2025-09-30 23:09:51"
   },
@@ -19226,6 +22430,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "contacto@kaizen-certification.com",
     "password": "$2y$10$e5YNz75dx.fKhv/mwrCp3.LN1z904eeTIDfNF78VuKckVtEHqgR1a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-09-30 23:37:03",
     "updatedAt": "2025-09-30 23:38:15"
   },
@@ -19238,6 +22444,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kiomymontalico1@hotmail.com",
     "password": "$2y$10$vIWVBud5LawJWeC6ljY6eeZ/5qyV0MT59EL4mZ5Gbonpl7vSJZweC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-02 16:13:07",
     "updatedAt": "2025-10-02 16:18:36"
   },
@@ -19250,6 +22458,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "valeriatizon07@gmail.com",
     "password": "$2y$10$GseDn/WI1KDXUJmhsHx8m.2LcgksNRnJ2xhfJtnLr33hHGoH1M5PC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-03 15:35:38",
     "updatedAt": "2025-10-06 15:42:11"
   },
@@ -19262,6 +22472,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "22221021@unamad.edu.pe",
     "password": "$2y$10$qcHdClaagN1dVckHaoy0Teu/nKeFey2Slv84jJLTnFhPYmsPI34O6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-05 03:39:13",
     "updatedAt": "2025-10-05 03:39:57"
   },
@@ -19274,6 +22486,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "floravh10@gmail.com",
     "password": "$2y$10$XIxloWLIpFFf.ZtnuI.1s.VQybD1aspQ/ONzss9NJLGqTAs3W4qdK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-06 11:41:31",
     "updatedAt": "2025-10-06 11:41:31"
   },
@@ -19286,6 +22500,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "floratrabajo10@gmail.com",
     "password": "$2y$10$0qtNFu6gEJBwFqLAWk6Uvuu5TrnFXFi6NcnJSWXT12TuT3MhWFGQ6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-06 11:45:46",
     "updatedAt": "2025-10-06 11:46:33"
   },
@@ -19298,6 +22514,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "info.lideresporelperu@gmail.com",
     "password": "$2y$10$BUvPORS2TvUGcHm.Co4pV.bWWwAvdviMAiNGNV9G1CzVcAnvfvi7K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-07 16:27:18",
     "updatedAt": "2025-10-07 16:28:58"
   },
@@ -19310,6 +22528,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "prensamuniputina11@gmail.com",
     "password": "$2y$10$dMCp7zHCKM2nAFxHEZaLIeq8RIBhPpUNUrxwpEooF3tUOhiadmiTS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-07 17:59:51",
     "updatedAt": "2025-10-07 18:00:24"
   },
@@ -19322,6 +22542,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "compras@argotsac.com",
     "password": "$2y$10$W72AMq4icLREwWYIMxMm3uifOCwRWkIi1EzGn.IM54raidAUAt6Hu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-07 22:50:26",
     "updatedAt": "2025-10-07 22:51:44"
   },
@@ -19334,6 +22556,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "floresvaldezyesenia@gmail.com",
     "password": "$2y$10$2VGiOa5924KAVdVgijrf8eP/LUnP8bginXVIc.cqr/tm9e.Z8vy26",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-08 21:14:27",
     "updatedAt": "2025-10-08 21:21:32"
   },
@@ -19346,6 +22570,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jttato73@gmail.com",
     "password": "$2y$10$SMOhzdOQaXxwYczrmZok3uZBdx0IBVBYIRFPcff5qCLlrqJhUsQt2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-10 03:56:21",
     "updatedAt": "2025-10-10 03:56:21"
   },
@@ -19358,6 +22584,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "23121029@unamad.edu.pe",
     "password": "$2y$10$T78H4E7Zzg//Gqjwws.e8eJKT4SIVAkSZ9525s6eAbzoj1imboASe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-12 14:15:45",
     "updatedAt": "2025-10-12 14:19:48"
   },
@@ -19370,6 +22598,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hervingk@unamad.edu.pe",
     "password": "$2y$10$BT3ZRx.DGbqLoIpHhv8Qpel/tJrtyHx4vCH0qYtTket2KLQDLIwua",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-13 17:39:47",
     "updatedAt": "2025-10-13 17:39:47"
   },
@@ -19382,6 +22612,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "servicios_uicet09@mincetur.gob.pe",
     "password": "$2y$10$MWS6onBiQABtBrg1i3nTlemh1CZ8kp3oZPOod9Hrs8TaqWxYaigqG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-13 21:25:25",
     "updatedAt": "2025-10-13 21:26:54"
   },
@@ -19394,6 +22626,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lquispeca@pj.gob.pe",
     "password": "$2y$10$rovgGV9cjU2HcDQMjp1zguX7GKvDttmxfMu/qo6/R1Bc1NvBIds8O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-13 21:29:52",
     "updatedAt": "2025-10-13 21:31:06"
   },
@@ -19406,6 +22640,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ekarenht@gmail.com",
     "password": "$2y$10$q6xAYiDGCfQfi9YO69m4DO1rH2GfiF0ajTwUuvJaWOO1eGP9C3ghm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-14 12:41:09",
     "updatedAt": "2025-10-14 12:41:09"
   },
@@ -19418,6 +22654,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "allisonbs1509@gmail.com",
     "password": "$2y$10$0XLQ4mwLd6F1Iek500jhueX1iLxdXJ2cD7OFODTEM97v75wvnvXHG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-14 14:58:14",
     "updatedAt": "2026-04-17 00:27:25"
   },
@@ -19430,6 +22668,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "baezcondoribelindayanina@gmail.com",
     "password": "$2y$10$2ungx.puNPNKhHNnP6VS.ud8m9XqjgOc9BxdIrQCO5lIbcNIh/FTK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-14 23:53:27",
     "updatedAt": "2025-10-14 23:54:35"
   },
@@ -19442,6 +22682,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "22229031@unanad.edu.pe",
     "password": "$2y$10$hnEFBDAnef.BgrJUx8eSa.nka9WZbGcLwsYHjQ6ttyJNiUbp5pqci",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-15 21:58:30",
     "updatedAt": "2025-10-15 21:58:30"
   },
@@ -19454,6 +22696,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "22229031@unamad.edu.pe",
     "password": "$2y$10$ujiN56r2jQ.IfJ.wusi5LO4JoKAYn49A9l/.rI9yAnIDKbRUj6hQe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-15 22:01:48",
     "updatedAt": "2025-10-15 22:02:12"
   },
@@ -19466,6 +22710,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dged-despacho@sbs.gob.pe",
     "password": "$2y$10$RqKaNBFrRRJzpxFZTsfnoOXPXo3X511QG.C7oloLbQ7/DeCS8bPG.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-16 21:07:42",
     "updatedAt": "2025-10-16 21:10:47"
   },
@@ -19478,6 +22724,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rbarrionuevo@unamad.edu.pe",
     "password": "$2y$10$bRJP8uPItdhHjFZqOnlXWO6k259HFgsiL54FgPB8ir5jnKC877xEy",
     "estado": 1,
+    "dependenciaCodigo": "UF",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-10-17 14:09:14",
     "updatedAt": "2026-04-27 13:36:56"
   },
@@ -19490,6 +22738,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmedinav@unamad.edu.pe",
     "password": "$2y$10$3RRtO7422yp5OPZrJIxhJ.sWvlmM0/Uk2wbpqZ.nmbdU9ZBJP2jQS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-18 04:43:34",
     "updatedAt": "2025-10-18 04:43:34"
   },
@@ -19502,6 +22752,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bmdiazayala@gmail.com",
     "password": "$2y$10$FmuVrDf57RPSX0SSJte4FeUPenHYreI5B61d.WiCRuVMnvGjRMdjG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-20 16:22:58",
     "updatedAt": "2025-10-20 16:36:10"
   },
@@ -19514,6 +22766,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "locador_ua_15@migraciones.gob.pe",
     "password": "$2y$10$tiR3Pu0wkw9y3eqJ8PDwU.z4e9ISVXzOP1cOjm6mh8RjfBTrxc1.i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-21 22:16:51",
     "updatedAt": "2025-10-21 22:18:06"
   },
@@ -19526,6 +22780,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "srevilla@unamad.edu.pe",
     "password": "$2y$10$Nm2NwuQL8I0GiHHNJHsO4ORe3SovvJA6AhUcL6.cpP.0SPZ19d/8C",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2025-10-22 16:31:08",
     "updatedAt": "2025-10-22 17:16:27"
   },
@@ -19538,6 +22794,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "atencion.ingtec@gmail.com",
     "password": "$2y$10$gacBPejta8lSkuaDJxgdD.n9PEk9ZAANoGA4e1pRlimHGEavNCuzO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-22 20:08:37",
     "updatedAt": "2025-10-22 20:09:35"
   },
@@ -19550,6 +22808,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lixamachaccahuaman@gmail.com",
     "password": "$2y$10$tJSw3yY5w4FtZWTIx15TiuyAwlmrs4vcBc0wwPcH6G6.u2jIGLZri",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-23 00:18:43",
     "updatedAt": "2025-10-23 00:20:25"
   },
@@ -19562,6 +22822,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leandro25pinto11@gmail.com",
     "password": "$2y$10$CYy5Uf4Iq2MqXKdmnM0rbuxM4SGG5dkVCKQ8txttUypFdGZS/jfHy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-23 22:45:39",
     "updatedAt": "2025-10-23 22:47:05"
   },
@@ -19574,6 +22836,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dipnaasistencia@midagri.gob.pe",
     "password": "$2y$10$n1RPa95YBJZvKTKMNiSiY.byyg7fc.FJrKChB8OPgArC/LFvgf8L.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-24 20:10:04",
     "updatedAt": "2025-10-24 20:11:04"
   },
@@ -19586,6 +22850,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hc.selvatropical@gamil.com",
     "password": "$2y$10$h7tx8uTQENurUe3lTii.eeSEC.VqXKUm.YMHFInR7jMWlFloRQfh2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-27 20:53:34",
     "updatedAt": "2025-10-27 20:53:34"
   },
@@ -19598,6 +22864,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hc.selvatropical@gmail.com",
     "password": "$2y$10$6dI/Omo81Gzl15vFhQDoleccUYIIERyYX9ZGzNmE4RU.GCQe7nmnW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-27 21:13:00",
     "updatedAt": "2025-10-27 21:13:29"
   },
@@ -19610,6 +22878,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Castrofrancis359@gmail.com",
     "password": "$2y$10$14Gf5.g.gQZXFDSlralkweVhiKrYvwdFbT3WaNwVsDZfcYHfTHB5S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-28 13:26:46",
     "updatedAt": "2025-10-28 13:26:46"
   },
@@ -19622,6 +22892,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@gruporiversa.com",
     "password": "$2y$10$m/PUm7OADjit7TCmu4K.Ru0YPDSprHo52FYdv5rco4Ytqsyt4u0L.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-29 14:12:00",
     "updatedAt": "2025-10-29 14:12:00"
   },
@@ -19634,6 +22906,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "KHEN1232002@GMAIL.COM",
     "password": "$2y$10$JPfJILEvlWWpt5xAGvKjPuQ5Y7PTPoQn1R3BVxpzEnhCht31NpqtW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-29 14:15:25",
     "updatedAt": "2025-10-29 14:16:06"
   },
@@ -19646,6 +22920,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "GERENCIA@GRUPORIVERSA.COM",
     "password": "$2y$10$uyD2wYe9y0T7eSpvUd2DjOf1sIB.5ZXe1DAO55M8iSDwUJ2NyxlDq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-29 14:33:57",
     "updatedAt": "2026-05-06 22:56:20"
   },
@@ -19658,6 +22934,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cvargas@unamad.edu.pe",
     "password": "$2y$10$FmiUoo7NkfEYDC.2xN33NedQcRXEP8ByPrCoJFnTiC0jU3CLIN9my",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-29 19:30:17",
     "updatedAt": "2025-10-29 19:30:17"
   },
@@ -19670,6 +22948,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dproduccion@uniscjsa.edu.pe",
     "password": "$2y$10$pr69.AYcmOXs.U2ADXK8JuvgmM742Gi.qZ7S6H4/V7Tytf5KdReK6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-29 21:53:48",
     "updatedAt": "2025-10-29 21:54:23"
   },
@@ -19682,6 +22962,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "IZEGARRA@unamad.edu.pe",
     "password": "$2y$10$Po12WE5s10AaJJ2XEShEuOx.sZbLrYToeC2jTS6fnKKwOzKZ53vsG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-31 16:25:59",
     "updatedAt": "2025-10-31 16:25:59"
   },
@@ -19694,6 +22976,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "roxanayzea@gamil.com.pe",
     "password": "$2y$10$HXT93tX6xtCHtzwRka617Ooxw/Sy6nFkkb95pRRZABawuVZt9/WRW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-31 16:44:27",
     "updatedAt": "2025-10-31 16:44:27"
   },
@@ -19706,6 +22990,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "roxanayzea@gmail.com",
     "password": "$2y$10$5BpkVN0HLTZR3HdxxzNlMOWUQ5uNlpqZDReIkdf0v3VLnkG2BDYVO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-31 16:47:54",
     "updatedAt": "2025-10-31 16:50:15"
   },
@@ -19718,6 +23004,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alfonsobazo123@gmail.com",
     "password": "$2y$10$Gids4trazbfB4LpzWaIsmeQpMmE/yaY0OmgwX79hzkDSSOt.qPM0q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-10-31 17:31:00",
     "updatedAt": "2025-10-31 17:31:28"
   },
@@ -19730,6 +23018,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jessiewk7@gmail.com",
     "password": "$2y$10$TGgpAZbDWO59NA9Fm/DmE.gheaLxAI7RgvB9l9h7oe18U8f.QdvFa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-03 14:36:42",
     "updatedAt": "2025-11-03 14:37:32"
   },
@@ -19742,6 +23032,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alifcallo33@gmail.com",
     "password": "$2y$10$kUFLkF8xRoxNAgMAY2O5XeM/ALzSWfxz2TVwGwXVXc0Ox0Dzs.7ZC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-03 15:36:55",
     "updatedAt": "2025-11-03 15:37:36"
   },
@@ -19754,6 +23046,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "formalizaperumadrededios@gmail.com",
     "password": "$2y$10$1DGIGHHHhTXgIU4KWY4a1OytTpowbMrxvE6EqqslEcz8ezsrB75XS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-03 19:46:11",
     "updatedAt": "2025-11-04 22:06:58"
   },
@@ -19766,6 +23060,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "noheliamedrano352@gmail.com",
     "password": "$2y$10$4ftBgQbjDOegSgwF.Ug8quNDOKDo6/rACVVc.UyZFwKFWBGA5i2X6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-04 20:49:28",
     "updatedAt": "2025-11-04 20:52:56"
   },
@@ -19778,6 +23074,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JHOSUEJVY@GMAIL.COM",
     "password": "$2y$10$y.r6bSLALn9AOKYIMHx0OOQu13Nu3mgigt5YR3KDH6GrTk5K4rdjO",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-11-05 17:51:13",
     "updatedAt": "2025-11-05 17:51:13"
   },
@@ -19790,6 +23088,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "angelmunizquispe@gmail.com",
     "password": "$2y$10$gx9j1hEXxU4B9Xlhc5wU9.jaDjYPSa7/eMDLvSWyHVZICwMmD.7fi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-05 22:11:28",
     "updatedAt": "2025-11-06 15:35:08"
   },
@@ -19802,6 +23102,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lsilva@pcm.gob.pe",
     "password": "$2y$10$lGTuhN7LYINSVqmtdoSuve3z5TLRQjSi9o7sylvi/FR83JliaZe8a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-06 19:40:45",
     "updatedAt": "2025-11-06 19:41:14"
   },
@@ -19814,6 +23116,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "giohasinio.mauricio.paredes@gmail.com",
     "password": "$2y$10$YR6KGiKbAIzFunQYB8koD.W6TqoITv2bgl4n8UAR7VD5b6E9BVm0a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-10 13:38:34",
     "updatedAt": "2025-11-10 13:39:33"
   },
@@ -19826,6 +23130,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alexaruthtairo@gmail.com",
     "password": "$2y$10$gnPImAseMTBQbJliZRDlOOaQxANlzye4DFbkuPo1wyQ.JL7c5JYyW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-11 03:51:48",
     "updatedAt": "2025-11-11 03:53:50"
   },
@@ -19838,6 +23144,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ilizarraga@senamhi.gob.pe",
     "password": "$2y$10$.90K3pmEcetT5izv9cRQRefb4acY0PCsY0gQb..MV9BE29g2Rau0.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-11 15:01:57",
     "updatedAt": "2025-11-11 15:02:21"
   },
@@ -19850,6 +23158,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cpizangoy@unamad.com.pe",
     "password": "$2y$10$2oLCUOKUzhcBlbUWedPAgOhvghkuj0zK9AK90884I4kzzkVIX5j3a",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-11-11 19:53:45",
     "updatedAt": "2025-11-11 19:53:45"
   },
@@ -19862,6 +23172,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ahuamanih@unamad.edu.pe",
     "password": "$2y$10$VSJqLvYBrLe5RRgT2vduT.NhS1kCuIeOj42Qbe7h2VCzq6LpyeQRm",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2025-11-11 20:07:59",
     "updatedAt": "2026-03-12 20:20:37"
   },
@@ -19874,6 +23186,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "msalcedog@unamad.edu.pe",
     "password": "$2y$10$HmBirbcHyw6Vjc2K4plpfOfeTklw/22B9xnhhHIzemDWcxlUQZtf2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-12 15:04:50",
     "updatedAt": "2025-11-12 15:05:49"
   },
@@ -19886,6 +23200,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CRISOSTOMO.PROJ@GMAIL.COM",
     "password": "$2y$10$fukjGUclf.EmHl1gBYqn1eu1LeQMC2TOW7LbVazhNZNC9huTe84am",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-17 21:26:02",
     "updatedAt": "2025-11-17 21:26:34"
   },
@@ -19898,6 +23214,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "servicios_dpdt332@mincetur.gob.pe",
     "password": "$2y$10$ApKM.emtCMqn.f6gTRNEr.uXJmR3FYC3NA60r7bUQnXJQHmDUvkAG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-18 02:31:58",
     "updatedAt": "2025-11-18 02:34:31"
   },
@@ -19910,6 +23228,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abastecimiento@regionayacucho.gob.pe",
     "password": "$2y$10$44rKD.hn/uKIMF.eso87W.6j5SAt60BRWBHGadFiNtdwWwiogVLCC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-18 13:40:28",
     "updatedAt": "2026-05-26 20:14:07"
   },
@@ -19922,6 +23242,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marializier@gmail.com",
     "password": "$2y$10$HN28oVmsbxhRv6y6uy8BN.yue52Bljy49B/ffme7poJe3vzws0uPy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-18 16:58:40",
     "updatedAt": "2025-11-18 16:59:36"
   },
@@ -19934,6 +23256,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "puertomaldonado53@gmail.com",
     "password": "$2y$10$WkhyQqAsmVcr.BGtAEjZPek4ZbAArC.KwinFf7h8Fzb5Ta4NGj7Ke",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-19 03:18:51",
     "updatedAt": "2025-11-19 03:19:30"
   },
@@ -19946,6 +23270,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "DVELIS@CONGRESO.GOB.PE",
     "password": "$2y$10$DuiorlbQRUv7AV5dvrB89OmQ./.rSfDa763cRnRYL7MoJxgYYZ1KK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-19 17:41:15",
     "updatedAt": "2025-11-19 17:42:34"
   },
@@ -19958,6 +23284,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "atffspuno11@serfor.gob.pe",
     "password": "$2y$10$wdJ.uyA9Qsj73FlDS47IXuE7DVFw3jFWjclONeZ9U/se4ov/1cTXq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-19 23:55:57",
     "updatedAt": "2025-11-20 00:00:38"
   },
@@ -19970,6 +23298,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "MARYGRETHEL87@GMAIL.COM",
     "password": "$2y$10$1hjdsyHcLGK48dlzC/OWWOVu8ZiC2lTnOUNN1V2vKL01bTFtn3v3a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-20 04:01:20",
     "updatedAt": "2026-02-12 00:21:51"
   },
@@ -19982,6 +23312,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "analistaadqui1@bosques.gob.pe",
     "password": "$2y$10$w6fBIimU7RJpxTHT4vTInuFvKy3YqgWgqDXAk1KlPY/Tp1ViPZYmO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-21 23:24:31",
     "updatedAt": "2025-11-21 23:25:41"
   },
@@ -19994,6 +23326,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "iorosv@regioncusco.gob.pe",
     "password": "$2y$10$vUq4umHDnaXxUWXP41/yie3WSMD3dcTElqzzvZnlPk5Mv6XloMMEa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-23 04:49:27",
     "updatedAt": "2025-11-23 04:50:48"
   },
@@ -20006,6 +23340,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "almendrachavezmoran@gmail.com",
     "password": "$2y$10$hpZnO6mZFt0v2SagrLlYcOR/SjcSkgxp335zI/Qv9xonCGkoI1JX.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-24 17:56:03",
     "updatedAt": "2025-11-24 17:56:50"
   },
@@ -20018,6 +23354,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aaronpinedoguerra@gmail.com",
     "password": "$2y$10$SquTDA7L8645mewG715zPuJ6wmIsP4Be3fUVK3EJVfceduG0b6Eau",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-25 03:21:02",
     "updatedAt": "2025-11-25 03:22:37"
   },
@@ -20030,6 +23368,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@rebelqu.com",
     "password": "$2y$10$60IK0QfIWBe6QtT5h9BuQ.hhRs.20Aq2rRszjQzE0j893EFaPcXZa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-25 14:54:58",
     "updatedAt": "2025-11-25 14:58:48"
   },
@@ -20042,6 +23382,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bordonezn@pj.gob.pe",
     "password": "$2y$10$EKs77t3xw9Dl2SpMxTH8H.ElYJEE1Tej6T8QAkMQNVBAReCn4nhA6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-25 17:09:40",
     "updatedAt": "2025-11-25 17:11:05"
   },
@@ -20054,6 +23396,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "betomirandallanqui@gmail.com",
     "password": "$2y$10$240hSeZ/NT7MMrgTfivIG.Y3w55Y2Ri0acm6VhLtOdKfZYwNyRnYS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-26 14:54:46",
     "updatedAt": "2025-11-26 14:55:22"
   },
@@ -20066,6 +23410,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asistenciatecnica@oece.gob.pe",
     "password": "$2y$10$FiqSQ80.HFucFUDRA7Q6OenI2trAqBGLHQ3GsBJUgJQ4pQuczKfUq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-11-28 23:55:39",
     "updatedAt": "2025-11-28 23:56:27"
   },
@@ -20078,6 +23424,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "espcontrataciones1@bosques.gob.pe",
     "password": "$2y$10$TYlnDhPdMyxISa2NR.KGqOJWlYOUK0KerM4vm3mjDd7T/z/MGv0Bq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-01 17:31:52",
     "updatedAt": "2025-12-01 17:32:26"
   },
@@ -20090,6 +23438,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "icamposj@unamad.edu.pe",
     "password": "$2y$10$ujEq7llZxsGOFPCPeTZSUeqkHleH5ohOopopzi1lBu/P4OIX8oSx.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-01 18:33:01",
     "updatedAt": "2025-12-01 18:33:30"
   },
@@ -20102,6 +23452,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pastormejialoi@gmail.com",
     "password": "$2y$10$fMK8sFmEXuWwMlj72Rtt5.cVJ3icGqfM7342bhXFXI3aE40xpA3QK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-01 19:20:14",
     "updatedAt": "2025-12-01 19:20:14"
   },
@@ -20114,6 +23466,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jroa@oece.gob.pe",
     "password": "$2y$10$b2ZG0KgWRZDChaNF6NgjKOltp6ThQl5mEZxMxdCpY1sIChxn93pFq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-02 14:45:45",
     "updatedAt": "2025-12-02 14:46:01"
   },
@@ -20126,6 +23480,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "atencionalcliente@fptecnologi.com",
     "password": "$2y$10$NUUPnjm9l1.cdIeQi2rjheCegb3MFJAQBWOwulycGCxVm9LXMrxkC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-03 17:02:27",
     "updatedAt": "2025-12-03 17:04:36"
   },
@@ -20138,6 +23494,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nbarrientos@onpe.gob.pe",
     "password": "$2y$10$I8vCJ5GaGfHJUllxZDXG0.IW.gqzoYLK7aQz1Z0qo4q.P0Tm.xyEy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-03 20:33:26",
     "updatedAt": "2025-12-03 20:35:57"
   },
@@ -20150,6 +23508,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "yoberleon981@gmail.com",
     "password": "$2y$10$nQtIT.soy8QEMH1j/pU07eADtHz5bWYQ8jV/hYD4kA30k43An6LXO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-03 22:43:17",
     "updatedAt": "2025-12-03 22:44:18"
   },
@@ -20162,6 +23522,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mvcs_oacp_ldrgp@viviendaext.pe",
     "password": "$2y$10$lEA.hGeR.UdwP6/fe6KMp.GHTcDZV6JtXMQni3G4J7QpeqX4A/ac6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-04 14:10:33",
     "updatedAt": "2025-12-04 14:12:06"
   },
@@ -20174,6 +23536,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "1522emiliano@gmail.com",
     "password": "$2y$10$KWWO9T2KVkNsncL7NUfzsevrDxnq4arvntdqZOYz10u.Kd4pWlgjK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-08 11:45:26",
     "updatedAt": "2025-12-08 11:45:56"
   },
@@ -20186,6 +23550,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jiam0095@gmail.com",
     "password": "$2y$10$iGZ8rbfggy1Uh9/LOTKG2OED74/xhO3.TEPUdsgGT8Ewp11iNQlRe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-08 17:17:30",
     "updatedAt": "2025-12-08 17:17:52"
   },
@@ -20198,6 +23564,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "24120034@unamad.edu.pe",
     "password": "$2y$10$/AjL/NnNLsicYx3Z9wF9X.5NN9hY1DVNTmPo/e.7KDkoq0jD54Bn2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-10 13:35:17",
     "updatedAt": "2025-12-10 13:35:17"
   },
@@ -20210,6 +23578,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "raguilar@migraciones.gob.pe",
     "password": "$2y$10$5kJq/rLANajvwQd/lsgfvua/YwwwbByROloQSkhNC2IPGVP37/a9i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-12 14:59:10",
     "updatedAt": "2025-12-12 14:59:55"
   },
@@ -20222,6 +23592,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mensajeria@ipd.gob.pe",
     "password": "$2y$10$rpYmoddw/o6mwT5jSevRAutoZVB3r4joVnBprjM.dfbXEJI8ALr2q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-12 16:09:40",
     "updatedAt": "2025-12-12 16:10:03"
   },
@@ -20234,6 +23606,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gerencia@rydcys.com",
     "password": "$2y$10$9barlfPrQjG7O76rwzaiH.tweCYDug9G28BcwvREjbfLFdAiGpVNy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-12 17:21:06",
     "updatedAt": "2025-12-12 17:22:20"
   },
@@ -20246,6 +23620,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ppr.bak@gmail.com",
     "password": "$2y$10$jZYU3BlqQprqvASfbmswBeUILg1Ilb85c7Z01I28PVc8X6zKcWWPS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-15 20:09:02",
     "updatedAt": "2025-12-15 20:11:28"
   },
@@ -20258,6 +23634,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lucasmfsac@gmail.com",
     "password": "$2y$10$1CFIJVkzXGfEpjjD8MFuWeCq8J6tT0UjaDmtButOUXeygIVd1Stuu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-21 16:02:37",
     "updatedAt": "2025-12-21 16:06:54"
   },
@@ -20270,6 +23648,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "LICITACIONES@CIMATEC.COM.PE",
     "password": "$2y$10$CT2YzS04ZxwXqMNdu.5UseG6ar85HVTmf3QbyMQM5dq4R/P0iLi8e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-23 15:56:16",
     "updatedAt": "2025-12-23 16:04:02"
   },
@@ -20282,6 +23662,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pabloalaniaarce@gmail.com",
     "password": "$2y$10$ku11VljbGUsrK6u.y68xsefROFDIvYB1FcKv5Mkah5cBzPtk6H8Cu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-24 13:51:32",
     "updatedAt": "2025-12-24 13:52:22"
   },
@@ -20294,6 +23676,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ecachay@contraloria.gob.pe",
     "password": "$2y$10$2rGy0Tvs1ND/eMz0akoLK.z.1hes0rRQ2P4CzWal/fYgLDcRIN3r6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-24 19:50:03",
     "updatedAt": "2025-12-24 19:52:16"
   },
@@ -20306,6 +23690,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "patinoabogadosperu@gmail.com",
     "password": "$2y$10$EqMmWh18J5quPulpGCrXlu3OGWCJkWeiXSfW1nZMTlELhfEMm9MCe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-30 18:01:37",
     "updatedAt": "2025-12-30 18:02:05"
   },
@@ -20318,6 +23704,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CONCILIAPERURAMOS@GMAIL.COM",
     "password": "$2y$10$3r9VFQvF78X70DL0Cer3we5vzS.mQuzAXrRmBcMxZcazrqwjkr866",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2025-12-30 18:39:00",
     "updatedAt": "2025-12-30 18:40:08"
   },
@@ -20330,6 +23718,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ramirezsinuirisergiogabriel@gmail.com",
     "password": "$2y$10$0QkaR3FglgQyTEEsmciDh.kUhtr.rIEjF1oKJzc.w/r0Et5GJMqB6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-04 00:50:03",
     "updatedAt": "2026-01-04 00:51:03"
   },
@@ -20342,6 +23732,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ymozo@unamad.edu.pe",
     "password": "$2y$10$FlrngNXpZdbwIP9M9iXITeXfuQ3zypgFTzdbkGBNdj17Lj/7nEPNq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-05 17:07:19",
     "updatedAt": "2026-01-05 17:07:19"
   },
@@ -20354,6 +23746,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "centrodearbitrajeelitarbitrium@gmail.com",
     "password": "$2y$10$5kikI4zjT2zXz.CscDz3vO6fWRtzbrWUcWNWHIL.T6SiOzhpLrycK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-06 18:04:52",
     "updatedAt": "2026-01-06 18:05:44"
   },
@@ -20366,6 +23760,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jpinedam@sunat.gob.pe",
     "password": "$2y$10$5W4TzIRmWe/5UlO4tZy/xOkDRTcYcWkZ.LoYdn1gKGquX47hyETg6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-08 21:16:08",
     "updatedAt": "2026-01-08 21:34:18"
   },
@@ -20378,6 +23774,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bminayal@unamad.edu.pe",
     "password": "$2y$10$1PVV1uG86tvgRjdC.bjZqOCVq/bA2f0YfcDm9PXlz6H5AMTuaM0rm",
     "estado": 1,
+    "dependenciaCodigo": "UP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-01-13 15:38:41",
     "updatedAt": "2026-01-13 15:38:41"
   },
@@ -20390,6 +23788,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rosamariahilario123@gmail.com",
     "password": "$2y$10$9KSSlhFNo3o4nJkDtOuVV.JbY5hmcbUWt47xqV9JnQ8yK6zsOLZOm",
     "estado": 1,
+    "dependenciaCodigo": "OTI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-01-13 16:29:21",
     "updatedAt": "2026-01-13 16:29:21"
   },
@@ -20402,6 +23802,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jhonatan_1224@hotmail.com",
     "password": "$2y$10$iZlL5hwkerD7ojR9scw3zOZF3ezewftIHYtWehLOeh49NwY6isP9e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-13 17:36:41",
     "updatedAt": "2026-01-13 17:37:58"
   },
@@ -20414,6 +23816,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "smanrique@unamadmeu.pe",
     "password": "$2y$10$j4zv8sqMqrnpZ/PxW0bMa.ftn9H6s7SecdZ8zfm/m1Ri/.KK4TIlm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-14 01:40:08",
     "updatedAt": "2026-01-14 01:40:08"
   },
@@ -20426,6 +23830,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sharelymoreno81@gmail.com",
     "password": "$2y$10$6dC9tBDKqUmiBKCupncrHuGF38YdCD71tveNdXfPH1air6vqcoBIS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-14 21:45:15",
     "updatedAt": "2026-01-14 21:45:15"
   },
@@ -20438,6 +23844,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "913885309.sha@gmail.com",
     "password": "$2y$10$K/2swB62jIX/niSvz7PQFuFCbIeUcMr0PGGu08jwWaTz1l2ggUT0O",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2026-01-15 16:16:29",
     "updatedAt": "2026-05-06 13:18:34"
   },
@@ -20450,6 +23858,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cieloth1712@gmail.com",
     "password": "$2y$10$rxqJAg4u7QR0Jux80/paO.9k2Hb4bznJp13ji3xWy4aWhc7Tp8yZC",
     "estado": 1,
+    "dependenciaCodigo": "OPP",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-01-15 16:54:55",
     "updatedAt": "2026-01-15 16:54:55"
   },
@@ -20462,6 +23872,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jodiebetzabemp@gmail.com",
     "password": "$2y$10$iSiwP1EvmTZbJznTM4TgZew3xmneetHBluRfq7PcZTIapyRsLv4uy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-15 17:45:01",
     "updatedAt": "2026-01-15 17:46:42"
   },
@@ -20474,6 +23886,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "urielmq92@gmail.com",
     "password": "$2y$10$1fnlQSn3yfIXL0qXNYxz5O9yWIJWcQyQMl0fXnrTClNXQvK5G2lz6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-15 19:01:46",
     "updatedAt": "2026-01-15 19:02:10"
   },
@@ -20486,6 +23900,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "saradianaapaza@gmail.com",
     "password": "$2y$10$hhDuvVjtt1xFDNyECGW3OO80tyRlLyoN4py94iT21iCcOdR1EVpSe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-15 22:05:13",
     "updatedAt": "2026-01-15 22:31:50"
   },
@@ -20498,6 +23914,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tatianamr0504@gmail.com",
     "password": "$2y$10$gcJEUtsL93iz8kKc/t5wkO/Ul.EQBzItpu0GQxADC2BQNZkHLxgd2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-16 21:44:19",
     "updatedAt": "2026-01-16 22:33:52"
   },
@@ -20510,6 +23928,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gonzalesmilenin91@gmail.com",
     "password": "$2y$10$fUPJvYdvWl7AgPKvViWSFuvdRYOXXeRnU8JJ/hTkNjHirpzi9ySLy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-16 21:45:53",
     "updatedAt": "2026-01-16 21:56:20"
   },
@@ -20522,6 +23942,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mlopezg@unamad.edu.pe",
     "password": "$2y$10$XblXglalwmCmTPw7GBk7/.C2ihfeQUkBS9crNz4Xu23qaC/x/sXzK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-16 21:54:34",
     "updatedAt": "2026-01-16 21:58:48"
   },
@@ -20534,6 +23956,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "licitaciones@tecnicascp.com.pe",
     "password": "$2y$10$mZkd327Ik.0oRA8ydHQL5O6tZ3TMV6ESwK1n1rgpRcdi7Py5SassG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-17 16:39:02",
     "updatedAt": "2026-01-17 16:40:26"
   },
@@ -20546,6 +23970,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "litomu.23@gmail.com",
     "password": "$2y$10$4PQ012zwqvlTHMO7vwnPx..Wc6N0pltUVM.YCgBOYbnLYgS/AIdhS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-17 18:45:04",
     "updatedAt": "2026-01-17 18:45:29"
   },
@@ -20558,6 +23984,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nvalenzuela@mimp.gob.pe",
     "password": "$2y$10$rPHXYskAESAeaik8WKTM2.VUFP/XXD0lfXFXXhY4vPeZo.G2zJwfO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-19 17:27:57",
     "updatedAt": "2026-05-05 15:11:30"
   },
@@ -20570,6 +23998,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carlosvalers68@gmail.com",
     "password": "$2y$10$AKXIDkrsLe/bK6UFiUpxyu21gxknz8573dqi1bukxCrdkNu6C2Rg2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-19 20:05:36",
     "updatedAt": "2026-01-19 20:08:37"
   },
@@ -20582,6 +24012,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marguet_15_09@hotmail.com",
     "password": "$2y$10$0WGtjOBjI6BDBcBiBTkaCOZkW6uKPWREUVnjB5dvEuTllLjIcZRyC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-20 01:39:06",
     "updatedAt": "2026-01-20 01:41:29"
   },
@@ -20594,6 +24026,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@965publicidad.com",
     "password": "$2y$10$C72kj2cLNJjkT8zMPM2Wou9YPJOJCwPfLFJmbTAsAmsAYNp85RY2y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-20 15:03:52",
     "updatedAt": "2026-01-20 15:04:26"
   },
@@ -20606,6 +24040,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "oli_87rr@hotmail.com",
     "password": "$2y$10$xwLcPFI4uME2ucxMTNZKG.1IFwlm8OqrXOIi9K7DDDdV9685Odezy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-20 18:33:24",
     "updatedAt": "2026-01-20 18:33:24"
   },
@@ -20618,6 +24054,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pdavilaluces@gmail.com",
     "password": "$2y$10$aPfYYesxytqa2uRsSCbGWOokN0O6LdGSSVRF0BYG/lhyUcNGz/1Zi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-21 15:33:18",
     "updatedAt": "2026-01-21 15:35:25"
   },
@@ -20630,6 +24068,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "samazonas2026@gmail.com",
     "password": "$2y$10$ae4XbQApum.98Up/ad9LTuTo1Ne/4pVzO50bsbxjIJjP5etuznwZC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-21 22:11:05",
     "updatedAt": "2026-01-21 22:11:29"
   },
@@ -20642,6 +24082,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "carnavaloriginariodelperu@gmail.com",
     "password": "$2y$10$21AUGlACVFAPMurjAm0AeOrCSUM4R.bT1UE6CUMUMHhxan05inLgi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-21 22:18:47",
     "updatedAt": "2026-01-21 22:20:01"
   },
@@ -20654,6 +24096,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dmurrietap@unamad.edu.pe",
     "password": "$2y$10$74Ww6H827Si7CdyOlMdil.KfmQ0xTR8Zo9dezc0RckTlWGUE0p97G",
     "estado": 1,
+    "dependenciaCodigo": "EPEN",
+    "cargo": "SECRETARIA",
     "createdAt": "2026-01-22 14:21:51",
     "updatedAt": "2026-01-22 14:21:51"
   },
@@ -20666,6 +24110,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "JMARIN@MIDIS.GOB.PE",
     "password": "$2y$10$yDxly7drtYtNwcckyeONKu6TMe1p.5DmO6GFXP42abHYLf9Em1OEO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-26 20:23:36",
     "updatedAt": "2026-01-26 20:24:15"
   },
@@ -20678,6 +24124,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "danitza.bustamante@claro.com.pe",
     "password": "$2y$10$Lq0xXBTe3DCvym8zU7AzdO/iuVCqAES02LMNo6l/44sk6kfjVEfPu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-26 23:26:48",
     "updatedAt": "2026-01-26 23:29:57"
   },
@@ -20690,6 +24138,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ebscapacitta@gmail.com",
     "password": "$2y$10$z/NCx4Ei66iyGZxMgdE9Kuz4yIJ.OBExEzht0jKUtclQpYdp.TWla",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-26 23:36:35",
     "updatedAt": "2026-01-26 23:37:48"
   },
@@ -20702,6 +24152,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "olasp_7@minedu.gob.pe",
     "password": "$2y$10$QeavSXfRHmae2J/VmDb3H.CqhgldETfz7jpY1r7iTUL63OnnOI0wm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-27 16:24:22",
     "updatedAt": "2026-01-27 16:37:25"
   },
@@ -20714,6 +24166,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones@otass.gob.pe",
     "password": "$2y$10$E0bs8JZtVb0LJ2nn8LV5t.Wd6StUKniqvGBkk.zLWdm1388RDd4Lq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-27 20:19:58",
     "updatedAt": "2026-01-27 20:23:01"
   },
@@ -20726,6 +24180,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fpodesta@pj.gob.pe",
     "password": "$2y$10$f1BJbtYsjW.QyLyHSo7yCeQbTLCEL3iFdRyBhwdJwKp9c5uJayoAO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-29 16:33:45",
     "updatedAt": "2026-01-29 16:34:06"
   },
@@ -20738,6 +24194,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jomaxgerenciabltsac@gmail.com",
     "password": "$2y$10$wqhHtRfuPno2uvDwbjh75Ogt4p5i6abKhssh6jT8jbpfMbNgJVg4S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-29 20:48:15",
     "updatedAt": "2026-01-29 20:48:58"
   },
@@ -20750,6 +24208,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "licitaciones.multisenda@gmail.com",
     "password": "$2y$10$IhLY5BcNOdidG6z5fL3STOmBgalUSAQcFSq/FgcydtB6.ONWyJ67K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-30 14:21:24",
     "updatedAt": "2026-01-30 14:21:59"
   },
@@ -20762,6 +24222,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "23221015@unamad.edu.pe",
     "password": "$2y$10$f4yq5e6eqe.4J9qSWAMNiuFT55ZqRrFnrE2.y3P3NDNM9pBtVpz/q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-30 16:29:28",
     "updatedAt": "2026-01-30 16:31:00"
   },
@@ -20774,6 +24236,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "afnerschalco@gmail.com",
     "password": "$2y$10$mEMTf8/0IwMaCJUqFJ974ecoXsub.EBdQcXGyFTI9pW3XZ/9kGA2W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-01-30 16:58:35",
     "updatedAt": "2026-01-30 16:59:18"
   },
@@ -20786,6 +24250,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mauespejochura@gmail.com",
     "password": "$2y$10$eGSV..tPOCA9nPmti6rQeea3ZYiWgI57PeVhaWgu8wATPTpV4Rat.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-01 16:45:28",
     "updatedAt": "2026-02-01 16:46:26"
   },
@@ -20798,6 +24264,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@munaystore.com",
     "password": "$2y$10$9VVgN8Dcffkdl6rft2Tfi.K3sCJhPmyN1/Sw42muDbJVHOuijovPy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-02 15:10:53",
     "updatedAt": "2026-02-02 15:11:11"
   },
@@ -20810,6 +24278,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "maryori25alexandra@gmail.com",
     "password": "$2y$10$jKMB2GU05xkUWTMkmDVZfe.yPUbLe.uOuqctLeaNLACx7L./hRcPe",
     "estado": 1,
+    "dependenciaCodigo": "OCN",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-02-02 16:40:44",
     "updatedAt": "2026-02-02 16:40:44"
   },
@@ -20822,6 +24292,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aalonzo@mincetur.gob.pe",
     "password": "$2y$10$SHRtBV3E0JnyiGVy4UNkLu9k4PAB5j3wpsk.xYUfP/bFjcbUpWZpu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-03 21:25:58",
     "updatedAt": "2026-02-04 12:07:49"
   },
@@ -20834,6 +24306,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "evamariseva0510@gmail.com",
     "password": "$2y$10$lzyHn55Bjo1IN31eJJ/yjO7Zug7W.ye2Rcq1p7s0AkbjU6o/YvU2G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-03 21:59:15",
     "updatedAt": "2026-02-03 22:00:07"
   },
@@ -20846,6 +24320,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dalvarezc@unamad.edu.pe",
     "password": "$2y$10$iAcP5UAP.LKD0CX.kqOMQ.i///hT266.ku0YBaQrcLGmI/F6Bbx/i",
     "estado": 1,
+    "dependenciaCodigo": "VRI",
+    "cargo": "SOPORTE TECNICO",
     "createdAt": "2026-02-05 14:19:18",
     "updatedAt": "2026-02-05 14:19:18"
   },
@@ -20858,6 +24334,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "edwinnunezhuaman24@gmail.com",
     "password": "$2y$10$AxSRVnOdIaq2WLWp/cEVnOVDKKKp9HOUGKFhsDX6j3G1yx5ECI7xy",
     "estado": 1,
+    "dependenciaCodigo": "UA",
+    "cargo": "ESPECIALISTA EN CONTRATACIONES",
     "createdAt": "2026-02-05 15:30:24",
     "updatedAt": "2026-02-05 15:30:24"
   },
@@ -20870,6 +24348,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mmermal@unamad.edu.pe",
     "password": "$2y$10$/X2fZobN6cWKkuYuM7IBFeZp7Jp1L3s.tyC.gvif75BgJxOOPwq1G",
     "estado": 1,
+    "dependenciaCodigo": "EPCYF",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-02-05 17:23:05",
     "updatedAt": "2026-02-05 17:23:05"
   },
@@ -20882,6 +24362,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "angelica.cadillo@qubitssales.com",
     "password": "$2y$10$SHL44jIPYFqr4DBKC0repuOMfVz//vMYaFrPJluWZPT94giS/.gN6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-05 20:02:37",
     "updatedAt": "2026-02-05 20:02:57"
   },
@@ -20894,6 +24376,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CCPMDD@GMAIL.COM",
     "password": "$2y$10$7JmtHSGio/yfo862IemsouZbyDNrChYfxHQtX8atgoMwdJKD9jOVy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-10 16:16:33",
     "updatedAt": "2026-03-27 16:48:55"
   },
@@ -20906,6 +24390,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "flordemaria.malaga@gmail.com",
     "password": "$2y$10$55CKu7LJpMybUQ.GEw3mVefknWbxGXA8LaEw7rS.bcu8IF1/sbRhO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-10 21:44:16",
     "updatedAt": "2026-02-10 21:44:42"
   },
@@ -20918,6 +24404,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "camaracomerciomdd@gmail.com",
     "password": "$2y$10$X8JAV57oXBFzgRFIGW1PX.A9IR0bFygGn9DzgUlc1vZxUeo89juMy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-10 21:47:46",
     "updatedAt": "2026-03-31 13:39:26"
   },
@@ -20930,6 +24418,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "AZURITA@UNAMAD.EDU.PE",
     "password": "$2y$10$KcbN6xWmx9dSoC4wlePrXuwjSzMgCtJF8FGP80Gfrf1BcfdKRgJKO",
     "estado": 1,
+    "dependenciaCodigo": "DAED",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-02-11 15:51:22",
     "updatedAt": "2026-02-11 15:51:22"
   },
@@ -20942,6 +24432,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aphunoj@unamad.edu.pe",
     "password": "$2y$10$TX7xnGJWGxSi7kwn7Q/GXeGb/z9YwSbOF0YWHDgCK3V8lush5zkzq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-11 18:22:41",
     "updatedAt": "2026-02-11 18:23:59"
   },
@@ -20954,6 +24446,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asalazar-edu@unamad.edu.pe",
     "password": "$2y$10$YJvekkXoKATy7cKGi9coaeLXEvhBDlDCrHZlvbqHOw4vwcjRFqD9a",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-12 13:47:45",
     "updatedAt": "2026-03-19 05:15:36"
   },
@@ -20966,6 +24460,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Veroquenta@gmail.com",
     "password": "$2y$10$SSrE5cCZqSeaFxAKOpsU7u9ttATu3i42R9RX1KNlkp/N0jLl01fFW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-12 21:16:58",
     "updatedAt": "2026-02-12 21:16:58"
   },
@@ -20978,6 +24474,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mesadepartes@vivienda.gob.pe",
     "password": "$2y$10$15bIWfqibokb7lC11dtJKOn/i/ZB672RZPr8171tLGVE2M3vyz5XS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-13 17:22:13",
     "updatedAt": "2026-02-19 20:05:10"
   },
@@ -20990,6 +24488,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "licitaciones@preyti.com",
     "password": "$2y$10$UmsHeE825rQ9weoVwBcKOuS7RSlP3LGEX.sgNT5ItjuPfJOlkH95m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-13 18:14:46",
     "updatedAt": "2026-02-13 18:15:27"
   },
@@ -21002,6 +24502,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pcoca@oece.gob.pe",
     "password": "$2y$10$lPVyS5ZXRBbAEzk1mKLz2uovqkxUWm0W9KN8RvVjVQPdSEQycQ0bW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-13 21:42:47",
     "updatedAt": "2026-02-13 21:43:07"
   },
@@ -21014,6 +24516,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dluna@unamad.edu.pe",
     "password": "$2y$10$1fHYmloxj5uQXna4jYJ8qeN861aywZF5Er6/O82jNwDOxFCG3vli6",
     "estado": 1,
+    "dependenciaCodigo": "UPD",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-02-16 15:27:30",
     "updatedAt": "2026-02-16 15:27:30"
   },
@@ -21026,6 +24530,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bayalac@unamad.edu.pe",
     "password": "$2y$10$v36WLf3D3AdMD5K9l3wFe.ne2NuKW2Kj91XOPCf9oSpIwNKaVIj1K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-16 16:45:18",
     "updatedAt": "2026-02-16 16:45:18"
   },
@@ -21038,6 +24544,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "checcayulissa@gmail.com",
     "password": "$2y$10$VmtxWsxFrr46994nqjxPC.QmkP39r1XASlBiZuRnrI2YM9yG5Hh5S",
     "estado": 1,
+    "dependenciaCodigo": "DIGA",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-02-17 20:42:11",
     "updatedAt": "2026-02-17 20:42:11"
   },
@@ -21050,6 +24558,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "soen.apye@gmail.com",
     "password": "$2y$10$2z9F6PWoeKl8KWC9EHVA.Ox1laUOClkhu/1W9cCfNWTzdHYp5JIoK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-18 13:44:27",
     "updatedAt": "2026-02-18 13:44:27"
   },
@@ -21062,6 +24572,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "solucionesmaju@gmail.com",
     "password": "$2y$10$w1BM.Oa60r5L2nXU1WKmDO1yuZRM.YYBwVdqFGZBAtlOwr2URvYHa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-19 22:49:02",
     "updatedAt": "2026-02-19 22:49:33"
   },
@@ -21074,6 +24586,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "WFLORESM@CONTRALORIA.GOB.PE",
     "password": "$2y$10$XLuJyEG5J/RRhJ23xAdb9e0pth2pqUn2hVrqD5X7SmdaPxHGLsirS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-20 19:30:16",
     "updatedAt": "2026-02-20 19:36:39"
   },
@@ -21086,6 +24600,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "administracion@coandina.com",
     "password": "$2y$10$lGHjk645ZLfpew670lnkaeqEYOMVccFZ0QCmwtki3kXhVStY4zNVa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-20 20:08:59",
     "updatedAt": "2026-02-20 20:16:31"
   },
@@ -21098,6 +24614,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "diana.sandoval@xdc.com.pe",
     "password": "$2y$10$LLwLOiJKOj6z5FAe/7fUZec7sCV3woSkQFkg.8hRYZ/zGW4kPXrda",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-23 03:32:53",
     "updatedAt": "2026-02-23 03:34:36"
   },
@@ -21110,6 +24628,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "paricahua1966@gmail.com",
     "password": "$2y$10$wnJkJUAnr0az6kbL9LgpU.BHI8ngQuOjifSfhMNIkm2oKfKeN9LI.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-25 01:49:12",
     "updatedAt": "2026-02-25 01:50:18"
   },
@@ -21122,6 +24642,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ings.mafer@gmail.com",
     "password": "$2y$10$qyQebrdEKyGnEt981dLrVe45NQO8wuRfQosAOaCTOrJkHIVS6dRzW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-26 07:38:13",
     "updatedAt": "2026-02-26 07:39:18"
   },
@@ -21134,6 +24656,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ivonfigueroaperdomo@gmai.com",
     "password": "$2y$10$p2XG/o2m/I7MYqYXHfCBluMzZLZ1lVpPai.0FDNtU4tAm8erYofau",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-26 13:08:50",
     "updatedAt": "2026-02-26 14:04:48"
   },
@@ -21146,6 +24670,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ivonfigueroaperdomo@gmail.com",
     "password": "$2y$10$vNnI.BwiXSJA6/Cofz4xDOsJURZlI14DOzFjm33u7kw0uZ5ZNrG1y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-26 13:14:39",
     "updatedAt": "2026-02-26 13:15:18"
   },
@@ -21158,6 +24684,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "javier.ayala@autoniza.com",
     "password": "$2y$10$bxbcrnnMMFzQH3zjPWidO.OA2/EuAAmdkJ1PTDttLMVCDC1lfQdDi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-28 12:55:00",
     "updatedAt": "2026-02-28 12:55:53"
   },
@@ -21170,6 +24698,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "juanmejiabacaaqp@gmail.com",
     "password": "$2y$10$KzNRot5931OKZblRGEclXOXUa5A52lFOve5R5k6cDoATqPkiFI/.O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-02-28 15:15:20",
     "updatedAt": "2026-02-28 15:16:01"
   },
@@ -21182,6 +24712,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pmedrano@unamad.edu.pe",
     "password": "$2y$10$VEv7A4iNGmswpJDddTI5Yu3nmGPNMjhhrXx0eUtal1McBWacETzXi",
     "estado": 1,
+    "dependenciaCodigo": "EPAYNI",
+    "cargo": "DOCENTE",
     "createdAt": "2026-03-02 14:31:22",
     "updatedAt": "2026-03-02 14:31:22"
   },
@@ -21194,6 +24726,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "DROMEROL@OECE.GOB.PE",
     "password": "$2y$10$8EpLu1yaGVL7/e3pSZNmxOoU36vdwTUyEdXmWAc8AvxvdFsdl7u6y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-04 17:42:25",
     "updatedAt": "2026-03-04 17:43:01"
   },
@@ -21206,6 +24740,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mbustamante@mincetur.gob.pe",
     "password": "$2y$10$ODijuWVVjBWyokPH7uU/i.otf33cWsoymLohEqsfdGzHwF84IhttG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-05 14:24:40",
     "updatedAt": "2026-03-05 14:30:01"
   },
@@ -21218,6 +24754,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mgamarra@produce.gob.pe",
     "password": "$2y$10$.e.M2O3MpAQ2oAOCT4NYMehzEEFFJSlJKRu6ISZxEAhLA.SsKDy.m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-05 22:08:40",
     "updatedAt": "2026-03-05 22:10:17"
   },
@@ -21230,6 +24768,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jesusls03@hotmail.com",
     "password": "$2y$10$UcGLTjcO2pfRth5WVlPH6.9PxEUSq3yiKbWxlAypUgl0Bsk1TnmGK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-06 13:26:23",
     "updatedAt": "2026-03-06 13:26:23"
   },
@@ -21242,6 +24782,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas.coea02@gmail.com",
     "password": "$2y$10$mhtuav/CGQDiBn2UsuzKzefnL1geFjK8TkzCqYMqob1MGHbJSHvkK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-06 22:49:02",
     "updatedAt": "2026-03-06 22:49:50"
   },
@@ -21254,6 +24796,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rquispeb@unamad.edu.pe",
     "password": "$2y$10$Y.MciIWuKTCPJAk2/m50nePEwEq.rBRQ/A/MSa2AbyY53dnox94o6",
     "estado": 1,
+    "dependenciaCodigo": "UPE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-03-09 19:42:00",
     "updatedAt": "2026-03-09 19:42:00"
   },
@@ -21266,6 +24810,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "veronicaescobedod@gmail.com",
     "password": "$2y$10$0G2UFnLx6c4Vb85un19WK.g0epyhiVpNqcgSYpzk33iVZuz9yYk3y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-09 21:51:00",
     "updatedAt": "2026-03-09 21:51:38"
   },
@@ -21278,6 +24824,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "heldersonbouroncle10@gmail.com",
     "password": "$2y$10$aLQ6ZpxKBqgQaht1jTbvY.23vwtvaom4B/CHJAF2B.yAQoBipG.oC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-10 15:58:46",
     "updatedAt": "2026-03-10 15:58:46"
   },
@@ -21290,6 +24838,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alysonley@gmail.com",
     "password": "$2y$10$.DMEOXMJ2lKGwkqmMlwaYuLMt/A.gMU5Q3.l7vkeW5XjsjWnkKN6.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-10 21:15:21",
     "updatedAt": "2026-03-10 21:16:24"
   },
@@ -21302,6 +24852,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aranibarcesardavid@gmail.com",
     "password": "$2y$10$Z.khhzuEIygdJUr7qmM/TOI.HTCgGJYvNrfpTlv1jWTIS3tgGFX3W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-11 16:15:07",
     "updatedAt": "2026-03-11 16:16:35"
   },
@@ -21314,6 +24866,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dorisvm932@gmail.com",
     "password": "$2y$10$EC5jZf2LGMCen.GZJv2OMubUYoQARtdjaZIpIlAoeKjuiPz5ZbVkK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-12 07:51:11",
     "updatedAt": "2026-03-12 07:51:11"
   },
@@ -21326,6 +24880,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tribunal.honor@unh.edu.pe",
     "password": "$2y$10$8H.J6VY.adKb0P2DBgghxekz0si5oqyTRy1INJdgvm2vBNIpEzmw6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-12 17:01:06",
     "updatedAt": "2026-03-12 17:03:19"
   },
@@ -21338,6 +24894,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Clunar@unamad.edu.pe",
     "password": "$2y$10$yUCEozrLAHNp.cxkO/BHqe3oLFmxvF1AQ1lIOukSMfnApkmZmmpwK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-12 18:04:18",
     "updatedAt": "2026-03-12 18:05:44"
   },
@@ -21350,6 +24908,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rosavylma@gmail.com",
     "password": "$2y$10$pB9bsvbWi36Z7yKMod5QpO4f04bm7yAQ8D2ToMxMw2VhCCwrOzvxi",
     "estado": 1,
+    "dependenciaCodigo": "TH",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2026-03-12 20:11:06",
     "updatedAt": "2026-03-12 20:11:06"
   },
@@ -21362,6 +24922,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gloriafrancesca.fv@gmail.com",
     "password": "$2y$10$PKxjHX7Zk/uNp.qIXdfOuO1IPQKRIVZ4iIeCU7vqQ1XJZ0HWqSRaW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-12 22:24:03",
     "updatedAt": "2026-03-12 22:24:44"
   },
@@ -21374,6 +24936,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "kelyquif@unamad.edu.pe",
     "password": "$2y$10$KHXImqHlcJJGo24ik6Zmh.FTS2tv3uhmRKwqhOPgOi9fXxzX6N5me",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-13 02:37:06",
     "updatedAt": "2026-03-13 02:37:38"
   },
@@ -21386,6 +24950,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Josetruji47@gmail.com",
     "password": "$2y$10$QC2L5fdYfROwUX6OnsydiOq967Zi3aDXprpXocSIe3F.dGccAN6.e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-13 19:16:55",
     "updatedAt": "2026-03-13 19:16:55"
   },
@@ -21398,6 +24964,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "asesor@rc-consulting.org",
     "password": "$2y$10$NzLDV33vNZpiYBE6zTT.susdTxxF4KfAew7IYPR888sJgKF8st.JO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-13 20:37:31",
     "updatedAt": "2026-03-13 20:37:58"
   },
@@ -21410,6 +24978,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "genesisgv2806@gmail.com",
     "password": "$2y$10$vEtRrF9/LFcp21sIjpVajOxcW1fgnCclLhuPe3qMNVO09.N4W0/j6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-16 01:50:32",
     "updatedAt": "2026-03-16 01:51:54"
   },
@@ -21422,6 +24992,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aronbolpd37@gmail.com",
     "password": "$2y$10$IGutiDXT3LiTXzcDR62FRu2hYwh2LibjTSuLGfkfsEFcW0MXdOC6y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-16 13:10:40",
     "updatedAt": "2026-03-16 13:11:28"
   },
@@ -21434,6 +25006,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "wil051281@gmail.com",
     "password": "$2y$10$r.qBFgl8HSGQ9iw6cnEWFuwWsjt3iOuXsFkQN7OGJVaP273q.dU3y",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-16 17:33:50",
     "updatedAt": "2026-03-16 17:36:21"
   },
@@ -21446,6 +25020,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "8040365@unamad.edu.pe",
     "password": "$2y$10$emuwpQUgsSFVne5gb79g6.ELjz13wKIpesbAUxivfMeO4cQAutRjG",
     "estado": 1,
+    "dependenciaCodigo": "OCII",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2026-03-16 17:39:30",
     "updatedAt": "2026-03-17 19:31:44"
   },
@@ -21458,6 +25034,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "julissagamarra18@gmail.com",
     "password": "$2y$10$Y.LO7mA1vfo/HniHafDqTOibwiZQr282R6p/egeuwU0CG0IaDJ.mq",
     "estado": 1,
+    "dependenciaCodigo": "UPFI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-03-16 19:47:26",
     "updatedAt": "2026-03-16 19:47:26"
   },
@@ -21470,6 +25048,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "corporacion@creatics.pe",
     "password": "$2y$10$GAGub9JPEWU6ssSnKgOG.eI5i2cz0vQMy0EVu/Tc37NZNsgn.kWxO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-17 20:49:17",
     "updatedAt": "2026-03-17 21:05:20"
   },
@@ -21482,6 +25062,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "teslacit06@gmail.com",
     "password": "$2y$10$c5SYkww5.CwVrPiRXUjc9elaLnEkshsFlc569P7KbE4AisydAAsXW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-17 20:55:11",
     "updatedAt": "2026-03-17 20:55:49"
   },
@@ -21494,6 +25076,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "runda@sunass.gob.pe",
     "password": "$2y$10$2ws1eBsFtLZZZSIIB8xd3.uqpMlmOj.xccR8FGRsWuLBvQ8fnjcwK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-18 14:28:02",
     "updatedAt": "2026-03-18 14:29:50"
   },
@@ -21506,6 +25090,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lquispel@unamad.edu.pe",
     "password": "$2y$10$fl98sWcH329PtSux.yHU.eVhOtualSv4kxCtXwgqAzmNkpMfK7wZu",
     "estado": 1,
+    "dependenciaCodigo": "INI",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-03-18 15:37:09",
     "updatedAt": "2026-03-18 15:37:09"
   },
@@ -21518,6 +25104,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "freddyova2017@gmail.com",
     "password": "$2y$10$prVAO4Ix2HCGz1u/6zKF0uktLzQrHrzyjXcxIjCTzAOF9NASbhY.C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-18 16:17:08",
     "updatedAt": "2026-03-18 16:18:02"
   },
@@ -21530,6 +25118,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sncruzado1@gmail.com",
     "password": "$2y$10$S2qzYzmTXwEN1y5bqrqA5uBHfdBcvRnVlkI/gO.F0PlNqscys2uei",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-18 20:54:01",
     "updatedAt": "2026-03-18 20:58:56"
   },
@@ -21542,6 +25132,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "LICITACIONESYCONTRATOS@GRUPOSANTAFE.COM.PE",
     "password": "$2y$10$cHI3IOYWMOLXNph5w.eCc.1oU6PqFVpV3CNg0Dip4pIbnHNgqNYT6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-19 17:16:37",
     "updatedAt": "2026-03-19 17:18:56"
   },
@@ -21554,6 +25146,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nadirrivera33@gmail.com",
     "password": "$2y$10$tBAfRMfNgFa4seevhkfBV.ly9wTF.zHnAY7pLOF7ihTalEmWblNrW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-19 21:39:46",
     "updatedAt": "2026-03-19 21:44:13"
   },
@@ -21566,6 +25160,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "presidencia@unah.edu.pe",
     "password": "$2y$10$ekoKTIEtasi2x.nxdUkCDegNyQQXho1lV.O2trSSx7JLSaqu0UIEa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-23 16:23:23",
     "updatedAt": "2026-03-24 22:21:54"
   },
@@ -21578,6 +25174,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gbaez@unamad.edu.pe",
     "password": "$2y$10$enKZeram1j5mH21ZzUaIVutQCsUw/TLeR1qvP7QuaC.G.JwlFeqx6",
     "estado": 1,
+    "dependenciaCodigo": "FCE",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-03-23 19:08:33",
     "updatedAt": "2026-03-23 19:08:33"
   },
@@ -21590,6 +25188,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "hcjefersonpaul@gmail.com",
     "password": "$2y$10$jPUXXZiwNIHQiH4zy8ed6.IfNipI1y5q02RvIb5R3N6RCxGAkreE2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-24 06:18:23",
     "updatedAt": "2026-03-24 06:21:21"
   },
@@ -21602,6 +25202,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jfarrror@unamad.edu.pe",
     "password": "$2y$10$mQO8Kh8rQW0jgNwmNRJr0eInZWKsOjzaxq1I.pqg9a9sfnsJFZ7gq",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-03-24 15:03:44",
     "updatedAt": "2026-03-24 15:03:44"
   },
@@ -21614,6 +25216,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "amcconsultores50@gmail.com",
     "password": "$2y$10$nnnU0n2eUHfZDVh4MxR9U.aSx4.wFa1.hFhVYaBu0/Q7XKi7cUCmq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-24 16:39:54",
     "updatedAt": "2026-03-24 16:42:13"
   },
@@ -21626,6 +25230,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "apoyo4_sdctt@concytec.gob.pe",
     "password": "$2y$10$xa6/EWprfeQwaVx55K5E0eg6JQ3/0OeGb0C/Vj71Rsis9ZtyRXf/S",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-24 20:23:45",
     "updatedAt": "2026-03-24 20:24:10"
   },
@@ -21638,6 +25244,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gemenisepvc92@gmail.com",
     "password": "$2y$10$zl0CYojUZeUJleHV7Ss2b.dWjDC.iExu5IfeDihkn55n.H7AQdGqS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-25 04:16:53",
     "updatedAt": "2026-03-25 04:18:04"
   },
@@ -21650,6 +25258,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "abastecimientos@uncar.edu.pe",
     "password": "$2y$10$0otN8dZ5Fv0v2Za/IxDzZ.WFFA.Lm2d3COu3.KdQCNwM14F7ojihe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-25 14:18:58",
     "updatedAt": "2026-03-25 14:21:28"
   },
@@ -21662,6 +25272,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ECABEZAS@OECE.GOB.PE",
     "password": "$2y$10$3uv.Jn0UfBalXWxpTSpmP.vXADJ8bXbvfWJkrv6Vv15UZRaqxsl/W",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-25 22:12:06",
     "updatedAt": "2026-03-25 22:14:26"
   },
@@ -21674,6 +25286,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "anyhelogutierrez12@gmail.com",
     "password": "$2y$10$pSh7SqDFrebPz06tlqiMBOzH3G4JNMJBtD6v8MUvwP0OB.y8ctpT6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-26 16:43:21",
     "updatedAt": "2026-03-26 16:44:42"
   },
@@ -21686,6 +25300,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ymamanih@unamad.edu.pe",
     "password": "$2y$10$mggbf58ZIadJR3c.8XHgIeekEdDeSfsckMcIB.6ZUx6.4L6h8lY4u",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-27 23:25:12",
     "updatedAt": "2026-03-27 23:26:45"
   },
@@ -21698,6 +25314,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "terranovacorporation930@gmail.com",
     "password": "$2y$10$mqXvxGFslxIhEK.VwS59T./jVVJcTLJaRP0NEof3fRV0Yq9DSyg.K",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-28 23:00:47",
     "updatedAt": "2026-03-28 23:00:47"
   },
@@ -21710,6 +25328,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lalybeberly@gmail.com",
     "password": "$2y$10$9OxshGNwvPvry3AgJjzONObsXdKWwR0S1HjAn6vs0K6GYaZqjeC.q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-30 22:30:01",
     "updatedAt": "2026-03-30 22:31:38"
   },
@@ -21722,6 +25342,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "inambarimazuko7@gmail.com",
     "password": "$2y$10$2pBsty5LUDTLZQJA2CKiPOtPXI394GKzQiyzI5n92HoxgbrEIAMQO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-03-31 21:09:06",
     "updatedAt": "2026-03-31 21:09:58"
   },
@@ -21734,6 +25356,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alexandersandovallazaro@gmail.com",
     "password": "$2y$10$kafCI5TJP2jtt0qQgk/i8eL26Tg2gc51jgKOv/Z6oM19ujiQa5Vgq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-01 15:39:39",
     "updatedAt": "2026-04-01 15:40:29"
   },
@@ -21746,6 +25370,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@movilabdelperu.com",
     "password": "$2y$10$ioDb.450DynxtMdaBQ9JRu9JX5gVxIK/o8yadc0PlC4d0a0GNgFo2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-01 17:04:23",
     "updatedAt": "2026-04-01 17:04:42"
   },
@@ -21758,6 +25384,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "Josecarlosgutierrezpando1@gmail.com",
     "password": "$2y$10$sTOgtCG2HT1zlzmMb9NbJugaRCv453T5JrLYn/Z2zuP0trKLvx7/m",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-01 18:28:42",
     "updatedAt": "2026-04-01 18:29:27"
   },
@@ -21770,6 +25398,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "st.cfordes@mininter.gob.pe",
     "password": "$2y$10$wlAqXjNz2ibm0Ft.i3FEQuBadpealpgPTcjqu1M5g.sicxBKni1EC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-01 20:36:29",
     "updatedAt": "2026-04-14 20:51:55"
   },
@@ -21782,6 +25412,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "osleraf1984@gmail.com",
     "password": "$2y$10$N4K.HnOtsNCG2Ri73etl1OLJqIJkvKHSUlR.9sA73LUaKweZgdJma",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-08 20:34:12",
     "updatedAt": "2026-04-08 20:35:44"
   },
@@ -21794,6 +25426,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "brelopez@minedu.gob.pe",
     "password": "$2y$10$TvfXsmr2uNt1OIeTRMro9uwb2ysh3NyBS2CGz7AWf0VccpwL0fdyK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-09 21:25:59",
     "updatedAt": "2026-04-09 21:25:59"
   },
@@ -21806,6 +25440,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "tatianabolarteschmitt@gmail.com",
     "password": "$2y$10$bMmHHVP5e8d/t8pZlgL1EOGf7xdp3S.MDwd5HqCI0b/AiZLBGIiN.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-10 15:01:17",
     "updatedAt": "2026-04-10 15:06:48"
   },
@@ -21818,6 +25454,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "gutierrezvelayami798@gmail.com",
     "password": "$2y$10$uVmVTJbbapnM5tM3RcqZhet4yLcffu8G7gvPmv7WhVFqeHpb5deIm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-12 01:16:10",
     "updatedAt": "2026-04-12 01:16:10"
   },
@@ -21830,6 +25468,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "letyventascorp@hotmail.com",
     "password": "$2y$10$gOrx4Rno/Boy69xg/1ME8Og5bEAYnlG8.U3K.S7oFXnezfP5bPeW2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-13 13:23:45",
     "updatedAt": "2026-04-13 13:25:06"
   },
@@ -21842,6 +25482,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "OGDA_TRAMITE02@PCM.GOB.PE",
     "password": "$2y$10$DwgMGf0Pt1rDVdWnqfxKeuVACTTukBMCO.PFDnG94VPUh8MTIz1Yu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-13 21:37:07",
     "updatedAt": "2026-04-13 21:37:29"
   },
@@ -21854,6 +25496,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "26109021@unamad.edu.pe",
     "password": "$2y$10$G1zM/cyrBKsfumL7VLuQIOwPTDGVCwiQKMeHpnTPr4pEJDFa8FsZq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-14 03:40:04",
     "updatedAt": "2026-04-14 03:40:52"
   },
@@ -21866,6 +25510,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "marielapillaca78@gmail.com",
     "password": "$2y$10$vJRY1/7.VjIjGgJ085B3DOI1EUDOCVO07N8wvlEFQbLISw5TLnWtm",
     "estado": 1,
+    "dependenciaCodigo": "CTINGCIV",
+    "cargo": "ASISTENTE ADMINISTRATIVO",
     "createdAt": "2026-04-14 13:44:27",
     "updatedAt": "2026-04-14 13:44:27"
   },
@@ -21878,6 +25524,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "katlisparizacafuentes@gmail.com",
     "password": "$2y$10$VnjTgMXQqUwIOqDee7lzHOJKzY3FYNLO89NGtZyWmTm3roDaEEaAa",
     "estado": 1,
+    "dependenciaCodigo": "STPAD-URH",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2026-04-15 19:52:11",
     "updatedAt": "2026-04-15 19:52:11"
   },
@@ -21890,6 +25538,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nicolesalazarcarazas1997@gmail.com",
     "password": "$2y$10$v8Ii4/842HlbhgWIsxyzq.zO6AvT3g5g4Ljs4krRUysK21w0fDd.q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-17 13:21:46",
     "updatedAt": "2026-04-17 13:22:33"
   },
@@ -21902,6 +25552,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "apoyo2_sdctt@concytec.gob.pe",
     "password": "$2y$10$OndReoYtA8dc1QKnO7uBu.AGaTBokeJAX00lDIcwfhWMvAF5feoUS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-17 15:42:58",
     "updatedAt": "2026-04-17 15:43:13"
   },
@@ -21914,6 +25566,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pdelapena@contraloria.gob.pe",
     "password": "$2y$10$jm5Q/qXE5ViaJWibLW4mneSPc8AWl/iHOOH6avwqgjEfhiXqZ3udq",
     "estado": 1,
+    "dependenciaCodigo": "OCI",
+    "cargo": "JEFE DE OCI",
     "createdAt": "2026-04-17 20:01:43",
     "updatedAt": "2026-04-17 20:01:43"
   },
@@ -21926,6 +25580,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dailysullachacon@gmail.com",
     "password": "$2y$10$QZPC/M2dLDjMh5.SiHcWQel0MKxpIkkJ0LBTHHAS3FrYsLO8b48Yu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-17 22:17:03",
     "updatedAt": "2026-04-17 22:22:15"
   },
@@ -21938,6 +25594,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nadihuillca1997@gmail.com",
     "password": "$2y$10$N7EzcRjz6Odri9DzBNGbeeEy/w948CBwQZj1o7Qf3mvJGVFyjHCLW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-19 05:55:38",
     "updatedAt": "2026-04-19 05:55:38"
   },
@@ -21950,6 +25608,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "corporacionchaupis@friochap.com",
     "password": "$2y$10$l0/tKbp9Wt/Mnq0HQBZwj.CsU226r4k95eurknIbi39Hdrp6QVK4C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-20 21:27:36",
     "updatedAt": "2026-04-20 21:28:29"
   },
@@ -21962,6 +25622,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nsoncco@contraloria.gob.pe",
     "password": "$2y$10$7eQWxg1fXkYesFcQjmk6Euiyl4Cmp2sG8jbSv1mLViyIYQUVEMWMW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-20 21:39:02",
     "updatedAt": "2026-04-20 21:41:13"
   },
@@ -21974,6 +25636,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "rvelaq@unamad.edu.pe",
     "password": "$2y$10$FZWkydIO0VsSVd9GP5RmceYnBrV/rh3tekkYeWLqcHYd/Qu8And/G",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-22 15:27:49",
     "updatedAt": "2026-04-22 15:28:21"
   },
@@ -21986,6 +25650,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mjarav@unamad.edu.pe",
     "password": "$2y$10$BbsMFDJB7SYCooe7JlzeWeUHLVMYOvFQXSj.V6owzu8toisHHWvia",
     "estado": 1,
+    "dependenciaCodigo": "OAJ",
+    "cargo": "ESPECIALISTA ADMINISTRATIVO",
     "createdAt": "2026-04-22 16:48:35",
     "updatedAt": "2026-04-22 16:48:35"
   },
@@ -21998,6 +25664,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "admision@unaj.edu.pe",
     "password": "$2y$10$YLHEyJ.Nmme75W5LyMnfJu7JhYlpl16vK/giceIbxf.mhTnrlYX2q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-23 17:02:19",
     "updatedAt": "2026-04-23 17:07:54"
   },
@@ -22010,6 +25678,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lquispeg@pj.gob.pe",
     "password": "$2y$10$4D/NL0z94GrFmiL2lCrmge/oGMXxYBqWYJWr5e.0jn61NC/fELRui",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-23 19:43:33",
     "updatedAt": "2026-04-23 20:07:52"
   },
@@ -22022,6 +25692,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ASTONMEDICLABEIRL@GMAIL.COM",
     "password": "$2y$10$9zHv7rIINanIYtmQ3Mdw5ee0c.iK7jeYE9nqOBc/OpNomg.QhDDZO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-26 09:40:59",
     "updatedAt": "2026-04-26 09:42:58"
   },
@@ -22034,6 +25706,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "javiersalcedoperez4@gmail.com",
     "password": "$2y$10$3vZi5cFrsGZNnIqZ3Du/juCHudd0NoZ4Mi1TsN62ouWld/Z/UufRW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-26 15:03:00",
     "updatedAt": "2026-04-26 15:04:19"
   },
@@ -22046,6 +25720,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "dtorres_aluvitemp@outlook.com",
     "password": "$2y$10$t1mbPMej0spiFlUDPrD04OlheVtRJ8w9Bt.JoA.nSwyHX.0fwBBIK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-28 00:05:44",
     "updatedAt": "2026-04-28 00:11:52"
   },
@@ -22058,6 +25734,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "EAPAZA@UNAMAD.EDU.PE",
     "password": "$2y$10$W7eHK/6x4sfvaxrusiTCVuLS1ObG/mGdtz6gMHEaUpKoRDxnWM5Ja",
     "estado": 1,
+    "dependenciaCodigo": "ASIST-SOC",
+    "cargo": "ASISTENTE SOCIAL",
     "createdAt": "2026-04-28 19:29:51",
     "updatedAt": "2026-04-28 19:29:51"
   },
@@ -22070,6 +25748,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "btucto@pj.gob.pe",
     "password": "$2y$10$uy87vn2SLPkQGIwEcSXja.mA7bWJY7bgynsiRC5kBJQEZJ1XHYF3C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-29 16:56:16",
     "updatedAt": "2026-04-29 16:59:23"
   },
@@ -22082,6 +25762,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas02@esppi.pe",
     "password": "$2y$10$H7OruRzQ5bC80/zWlIPmBulQ66Px3cIK5lr3YqJKQrqiVJYLbqm0O",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-29 22:25:31",
     "updatedAt": "2026-04-29 22:26:11"
   },
@@ -22094,6 +25776,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "cotrinabricelairis@gmail.com",
     "password": "$2y$10$9Pc4ojCsT4/XZyQcTs8asORJ86BBQdqir6c.67/I3jPQZTpaahWJa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-04-30 19:41:08",
     "updatedAt": "2026-04-30 19:41:08"
   },
@@ -22106,6 +25790,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "pwcr85@gmail.com",
     "password": "$2y$10$1T5zz8hE1/D3xks3D93CeOq9NzX.yjbJEg2TOlh/buJQayqz/iWeO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-04 15:22:38",
     "updatedAt": "2026-05-04 15:31:53"
   },
@@ -22118,6 +25804,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lzavalapacherrez@yahoo.com.pe",
     "password": "$2y$10$yFY95wk00P9mLH.oHUtQQOyHALrNqttgkj9xyt5YGy81a8x9iy3Je",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-04 16:52:55",
     "updatedAt": "2026-05-04 16:52:55"
   },
@@ -22130,6 +25818,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "notificaciones_asistenciatecnica@oece.gob.pe",
     "password": "$2y$10$cbbxKpxQBzZHHpEBR8OtB.2GJ3JooC8hBHOTs3QbrAxCEnQI3xWey",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-04 17:56:53",
     "updatedAt": "2026-05-04 17:56:53"
   },
@@ -22142,6 +25832,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "katyalesun2018@gmail.com",
     "password": "$2y$10$O0fnI4AOE3MzjBUCHDWi3.F5gVSH3tBgaX02GvjRY6kn4HXNqILeS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-05 14:16:20",
     "updatedAt": "2026-05-05 14:17:18"
   },
@@ -22154,6 +25846,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "allinuniformes@gmail.com",
     "password": "$2y$10$EQuqWCWkhMS1vpME.A0VXuFukCCB.UAnK6XJvFAGGAl4dqsaYim16",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-05 17:20:31",
     "updatedAt": "2026-05-05 17:22:06"
   },
@@ -22166,6 +25860,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "lizmelanypezoquispe580@gmail.com",
     "password": "$2y$10$8jpVEE69xB5MhFgVrlrzWOeZHCmjDx4aZiY7CDlEZVhA6Sf.u6vt6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-05 18:31:46",
     "updatedAt": "2026-05-05 18:32:42"
   },
@@ -22178,6 +25874,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mariochavezmella@gmail.com",
     "password": "$2y$10$RbzcqSa4VH9KrDBAMR7c.ObvCaR2Vp9p5QFEJMObQG82KTKLKRbeS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-06 16:22:15",
     "updatedAt": "2026-05-06 16:23:03"
   },
@@ -22190,6 +25888,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "EDISSON411@HOTMAIL.COM",
     "password": "$2y$10$kmkiS4YfZKP5fx0TFaMBzu3HnUeJbfTbDu9lnbjTIp3FjW03cS/6C",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-08 21:43:41",
     "updatedAt": "2026-05-08 21:46:07"
   },
@@ -22202,6 +25902,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "renzocfb@outlook.es",
     "password": "$2y$10$mfVhcfbPt58WCleHXW96J.vbfFuTOdDsjJ6lu0ahW5K783Sry.VjK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-10 03:05:59",
     "updatedAt": "2026-05-10 03:07:54"
   },
@@ -22214,6 +25916,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jmozombite@unamad.edu.pe",
     "password": "$2y$10$RyIlhhv6caOQc3cwZWNuf.IoEg0xBhWuxRvtMHriXXG0vJzvkehPG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-12 15:49:53",
     "updatedAt": "2026-05-12 15:49:53"
   },
@@ -22226,6 +25930,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jvelasquezh@unamad.edu.pe",
     "password": "$2y$10$u/nfIjKSaqQtAwPP/H7Le.FZyX5NjWd/x5DNlb5swumy.wnVRZ.HK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-12 20:38:32",
     "updatedAt": "2026-05-12 20:38:32"
   },
@@ -22238,6 +25944,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "imaldonado@unamad.edu.pe",
     "password": "$2y$10$ARa9C9de0RwkHWIadFN3xeCRQK.2xlgvhhm/QvDBaJ6fZ84fQZqT.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-12 21:05:12",
     "updatedAt": "2026-05-12 21:05:12"
   },
@@ -22250,6 +25958,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jgudiel@unamad.edu.pe",
     "password": "$2y$10$5lMYoAyFk0Uo4M4cuSJF8ONzlCEeH0eL5XBDim2HdMDqd2lOthRh2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-13 14:42:45",
     "updatedAt": "2026-05-13 14:42:45"
   },
@@ -22262,6 +25972,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "larissahuamangarcia@icloud.com",
     "password": "$2y$10$1TWT0Uz9peWWRKb0zJ/84O6XJ/b/yOp2ZTwA4B3ZBI7ObAdKhgJu.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-13 15:53:22",
     "updatedAt": "2026-05-13 15:56:51"
   },
@@ -22274,6 +25986,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "aachullic21-2if@unamad.edu.pe",
     "password": "$2y$10$8fWKWs1k8VtwGAxGnWdwuuDmlQlTMnYOELVcvPWB1BpMUeTlP7dda",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-14 14:02:22",
     "updatedAt": "2026-05-14 14:04:53"
   },
@@ -22286,6 +26000,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "fernando_pintado19@hotmail.com",
     "password": "$2y$10$yKU7L/1K0bBqUBVqu1jN5uRml1t7mVaP0CjVwWaaoHSdGMGAWgPcy",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-14 19:31:10",
     "updatedAt": "2026-05-14 19:34:13"
   },
@@ -22298,6 +26014,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "peleulloa@gmail.com",
     "password": "$2y$10$xgVy4fh9.QUjsAzV63B1R.M9k4c9DJQr01xkmZbzNVG2SERARDTKO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-19 12:31:54",
     "updatedAt": "2026-05-19 12:32:58"
   },
@@ -22310,6 +26028,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leonormb19@gmail.com",
     "password": "$2y$10$Asuo4SKPNOmTzjkk4kouXeYIiuNtwvNFKhdnCIlVJisZATQuTtUym",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-20 02:02:51",
     "updatedAt": "2026-05-20 02:06:01"
   },
@@ -22322,6 +26042,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "construtex2014@hotmail.com",
     "password": "$2y$10$cZ9C37hHcV1n4/Bo.qWW9uHFxmJzUIfaUEhpSl2FhI0NgQ2DpLxU2",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-20 21:00:23",
     "updatedAt": "2026-05-20 21:00:23"
   },
@@ -22334,6 +26056,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "digere186@minedu.gob.pe",
     "password": "$2y$10$ePAhRLQLqcaMT09D7mPcee2k.mVgf9eZnhPueLvcnTL.uvwf.Hy2e",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-20 22:09:28",
     "updatedAt": "2026-05-20 22:11:25"
   },
@@ -22346,6 +26070,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "mtejada@minsa.gob.pe",
     "password": "$2y$10$cDGwYR2ehHLDETSrkYxkjef7SU8Fwl6fpCVdctwEeP69/zq52FPSe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-22 13:35:46",
     "updatedAt": "2026-05-22 13:37:10"
   },
@@ -22358,6 +26084,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "bmogrovejoa@unamad.edu.pe",
     "password": "$2y$10$en3ak6UNcuGL8YlMeyMstOZMXfmimniyjLVabXx11iIsXJzk47nZC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-25 16:41:35",
     "updatedAt": "2026-05-25 16:41:35"
   },
@@ -22370,6 +26098,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jnavarror@unamad.edu.pe",
     "password": "$2y$10$FhQJvG/c.EOrlMlgdjpDjucvo3FNspeiT/RcuP6rI1fBRuWG.rrXy",
     "estado": 1,
+    "dependenciaCodigo": "DOC-UNAMAD",
+    "cargo": "DOCENTE",
     "createdAt": "2026-05-25 17:03:27",
     "updatedAt": "2026-05-25 17:03:27"
   },
@@ -22382,6 +26112,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "malvarez@minedu.gob.pe",
     "password": "$2y$10$t9oP5skONIBGXmWnHOpMyO5I7Jo5nLrWN5ETQJmfkiuO5SOqTkecO",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-25 17:07:52",
     "updatedAt": "2026-05-25 17:12:06"
   },
@@ -22394,6 +26126,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sayshiro95@gmail.com",
     "password": "$2y$10$uC4Ubz8mQC3fkPr9kD2Z1u40oBuj122yEDFy/h9hhG27nYvMivxyG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-27 16:55:30",
     "updatedAt": "2026-05-27 17:16:43"
   },
@@ -22406,6 +26140,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ayquipaquispegianmarco@gmail.com",
     "password": "$2y$10$.9y3R4tvKyjE.Gfc9/Zoge7DFYoJkQ.Pv5.d1kB2DgGUTo99j.fyG",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-28 14:37:58",
     "updatedAt": "2026-05-28 14:37:58"
   },
@@ -22418,6 +26154,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "munisanpedro26@munisanpedro.gob.pe",
     "password": "$2y$10$kY8OOTqmZMWtEF54TjH63ezpUJYZwBb0onIHTOxhlYyGHjICa4Z4.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-28 16:23:51",
     "updatedAt": "2026-05-28 19:58:31"
   },
@@ -22430,6 +26168,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "chsalternativo@chsalternativo.org",
     "password": "$2y$10$PnjklihCCUkKmH3ngblQlOTf2qRPDgJtoz.UlrOYWIwfrIuhDmFIC",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-29 14:59:06",
     "updatedAt": "2026-05-29 14:59:36"
   },
@@ -22442,6 +26182,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "23110007@UNAMAD.EDU.PE",
     "password": "$2y$10$IMlnoV/l/hq3LzGKgCQMFOLJIaX1xBDyeLj5UE2WYDxZDkdSHhu2.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-30 00:02:42",
     "updatedAt": "2026-05-30 00:03:16"
   },
@@ -22454,6 +26196,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "jbcconsultoria5@gmail.com",
     "password": "$2y$10$Mcrdr8GeWF9zUZdFND36r.2sVp1J5kAkJhXbgQahmVD6fdbsezHaa",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-05-31 14:46:44",
     "updatedAt": "2026-05-31 14:46:44"
   },
@@ -22466,6 +26210,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "alecoaquiraa@gmail.com",
     "password": "$2y$10$5jo3AZz2joF4zehdrh30Q./EJOez2IzzXIhnSAq05YavZHVxiNbsm",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-01 01:24:06",
     "updatedAt": "2026-06-01 01:25:59"
   },
@@ -22478,6 +26224,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "suministrossumeirl@gmail.com",
     "password": "$2y$10$Wn/HMYSZObiCvdFUF9sgYOqdccmusb6wTgBbfUZdPdOLcnztv8POS",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-01 20:43:01",
     "updatedAt": "2026-06-01 20:43:28"
   },
@@ -22490,6 +26238,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "logistica_mesadepartes@unsa.edu.pe",
     "password": "$2y$10$VnqEmvOl5doR042q5KERMO7FsqTURiyP6NJUnbAR4vmDRReo/1x8q",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-02 19:30:07",
     "updatedAt": "2026-06-02 19:31:31"
   },
@@ -22502,6 +26252,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "CFISCALIZACION@CONGRESO.GOB.PE",
     "password": "$2y$10$qhgndjoK3NnDvCmtVpzaKOiOIm2Px2EvzlRPT.3/v2Lok9EaAvB3i",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-02 23:19:32",
     "updatedAt": "2026-06-02 23:19:57"
   },
@@ -22514,6 +26266,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "ventas@engiperu.com",
     "password": "$2y$10$X7QbyQcWUJ.0HzdjToXYl.zUw67jA1XnzekqT3NWRAF7yzV33awMi",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-05 17:35:56",
     "updatedAt": "2026-06-05 17:43:49"
   },
@@ -22526,6 +26280,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sanbernardo@inia.gob.pe",
     "password": "$2y$10$QB8qp0Byim4BnuGQFFj07.CFEa9iDFd1vMQA8JlGQQq1jbWGi6mCu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-08 14:11:06",
     "updatedAt": "2026-06-08 14:15:04"
   },
@@ -22538,6 +26294,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "DIPROGE_DSFCH@MINEDU.GOB.PE",
     "password": "$2y$10$Ea7op.o3.ZR.1aHLGi/pBuxZZ0BW0h.U4XPv0q5BIgZ8n7tZtGZc.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-08 21:49:43",
     "updatedAt": "2026-06-08 21:54:38"
   },
@@ -22550,6 +26308,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "leydiesquivel245@gmail.com",
     "password": "$2y$10$o5RfZPw0yJZY74InnLX6WOrMe/Pfo5RC9Fv3ZrtQaRfJXKHpS1bnW",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-10 18:25:53",
     "updatedAt": "2026-06-10 18:26:24"
   },
@@ -22562,6 +26322,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "edermontescc@gmail.com",
     "password": "$2y$10$hN9qhF/r4UpZO8j.1BNOt.9svCAMKhm9/7QUjx4TNKurygzvFByuu",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-11 02:57:30",
     "updatedAt": "2026-06-11 02:58:16"
   },
@@ -22574,6 +26336,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "nquispecu@unamad.edu.pe",
     "password": "$2y$10$ZMLuIdQJR6UvzH9sTXmzZOYFWdG9ailkHZ5g61xz4uxsYCb3Y/5ia",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-11 12:57:10",
     "updatedAt": "2026-06-11 12:58:31"
   },
@@ -22586,6 +26350,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "BPAUCARP@UNAMAD.EDU.PE",
     "password": "$2y$10$6iB8syBy5sMqMEHiqrgHne9qXnmfgWtBPPOaq9JjL48fqGg47KsEi",
     "estado": 1,
+    "dependenciaCodigo": "DITRAT",
+    "cargo": "AUXILIAR ADMINISTRATIVO",
     "createdAt": "2026-06-11 12:57:26",
     "updatedAt": "2026-06-11 12:57:26"
   },
@@ -22598,6 +26364,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "PLOGISTICA261@ELSE.COM.PE",
     "password": "$2y$10$JEADueqrcZVRsfnMsVUipe6oGVyVubOE/KmN/U5PeTuEhf/NCoHOK",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-11 17:41:56",
     "updatedAt": "2026-06-11 17:41:56"
   },
@@ -22610,6 +26378,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "020200300e@uandina.edu.pe",
     "password": "$2y$10$WwAgkx/3RzRudl.maDveIO2hMX3ZCNVmUDInC4j9kbFjwqituhqGe",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-11 17:48:49",
     "updatedAt": "2026-06-11 17:49:21"
   },
@@ -22622,6 +26392,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "sizquierdoc@sunat.gob.pe",
     "password": "$2y$10$saIncJgTE4Nl9ZhBMth42ui9i4f3YIBDe0Oed3FUtGVA2qrZYyz/6",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-11 17:50:38",
     "updatedAt": "2026-06-11 17:59:28"
   },
@@ -22634,6 +26406,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "luisastoapaza28@gmail.com",
     "password": "$2y$10$Q09ynJBX8Q5StaHmKrZ.N.6Eu5tWqc54LSdTRLwyVwKoGl2GdVYm.",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-12 12:46:03",
     "updatedAt": "2026-06-12 12:47:01"
   },
@@ -22646,6 +26420,8 @@ export const USUARIOS_TRAMITE: UsuarioTramite[] = [
     "email": "daniela.vilca@edenred.com",
     "password": "$2y$10$MZSqeoBFZrtqe/NcKBF6l.B5CYb20UY91zi4MLv6XyF2Se0L6eavq",
     "estado": 1,
+    "dependenciaCodigo": null,
+    "cargo": null,
     "createdAt": "2026-06-15 23:03:57",
     "updatedAt": "2026-06-15 23:13:45"
   }

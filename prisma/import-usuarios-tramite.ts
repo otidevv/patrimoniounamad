@@ -61,6 +61,14 @@ async function main() {
     }
   }
 
+  // 1b. Cargar dependencias destino por código (las crea el seed). Se usa para
+  //     asignar la oficina del usuario y, de ahí, derivar su sede.
+  const dependencias = await prisma.dependencia.findMany({
+    select: { id: true, codigo: true, sedeId: true },
+  })
+  const depPorCodigo: Record<string, { id: string; sedeId: string | null }> = {}
+  for (const d of dependencias) depPorCodigo[d.codigo] = { id: d.id, sedeId: d.sedeId }
+
   // 2. Estado actual de la BD: documentos ya usados (restricción única
   //    [tipoDocumento, numeroDocumento]) y emails existentes (para contar
   //    creados vs. actualizados).
@@ -73,7 +81,9 @@ async function main() {
   let creados = 0
   let actualizados = 0
   let docsAnulados = 0
+  let conDependencia = 0
   const porRol: Record<string, number> = { ADMIN: 0, RESPONSABLE: 0, USUARIO: 0 }
+  const codigosNoEncontrados = new Set<string>()
   const errores: { email: string; error: string }[] = []
 
   // 3. Pre-pass secuencial: resolver numeroDocumento evitando colisiones de
@@ -104,6 +114,21 @@ async function main() {
         const apellidos = `${u.apaterno || ""} ${u.amaterno || ""}`.trim() || "-"
         const activo = u.estado === 1
 
+        // Resolver dependencia (oficina) y sede a partir del código de trámite.
+        let dependenciaId: string | undefined
+        let sedeId: string | undefined
+        if (u.dependenciaCodigo) {
+          const dep = depPorCodigo[u.dependenciaCodigo]
+          if (dep) {
+            dependenciaId = dep.id
+            sedeId = dep.sedeId ?? undefined
+            conDependencia++
+          } else {
+            codigosNoEncontrados.add(u.dependenciaCodigo)
+          }
+        }
+        const cargo = u.cargo || undefined
+
         try {
           const res = await prisma.usuario.upsert({
             where: { email },
@@ -113,6 +138,9 @@ async function main() {
               apellidos,
               activo,
               rolId,
+              cargo,
+              dependenciaId,
+              sedeId,
             },
             create: {
               email,
@@ -123,6 +151,9 @@ async function main() {
               numeroDocumento,
               activo,
               rolId,
+              cargo,
+              dependenciaId,
+              sedeId,
               createdAt: parseFecha(u.createdAt),
             },
             select: { id: true },
@@ -142,9 +173,13 @@ async function main() {
   console.log("\n\n========================================")
   console.log("Importación completada")
   console.log("========================================")
-  console.log(`   Creados/actualizados (upsert): ${creados + actualizados}`)
+  console.log(`   Creados: ${creados} | Actualizados: ${actualizados} | Total: ${creados + actualizados}`)
   console.log(`   Documentos anulados por duplicado: ${docsAnulados}`)
   console.log(`   Por rol -> ADMIN: ${porRol.ADMIN}, RESPONSABLE: ${porRol.RESPONSABLE}, USUARIO: ${porRol.USUARIO}`)
+  console.log(`   Con dependencia/sede asignada: ${conDependencia}`)
+  if (codigosNoEncontrados.size) {
+    console.log(`   ⚠ Códigos de dependencia sin equivalente en Patrimonio (oficina queda vacía): ${[...codigosNoEncontrados].join(", ")}`)
+  }
   if (errores.length) {
     console.log(`\n   ⚠ ${errores.length} errores:`)
     errores.slice(0, 20).forEach((e) => console.log(`     - ${e.email}: ${e.error}`))
