@@ -1,0 +1,758 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table roles {
+  id String [pk]
+  codigo String [unique, not null]
+  nombre String [not null]
+  descripcion String
+  color String [not null, default: '#6b7280']
+  activo Boolean [not null, default: true]
+  esSistema Boolean [not null, default: false]
+  permisos permisos_rol [not null]
+  usuarios usuarios [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table usuarios {
+  id String [pk]
+  email String [unique, not null]
+  password String [not null]
+  nombre String [not null]
+  apellidos String [not null]
+  tipoDocumento TipoDocumento [not null, default: 'DNI']
+  numeroDocumento String
+  cargo String
+  telefono String
+  foto String
+  fotoGoogle String
+  fechaInicio DateTime
+  fechaFin DateTime
+  activo Boolean [not null, default: true]
+  rolId String [not null]
+  rol roles [not null]
+  sedeId String
+  sede sedes
+  dependenciaId String
+  dependencia dependencias
+  passwordResetTokens password_reset_tokens [not null]
+  configuracion configuracion_usuarios
+  documentosCreados documentos_tramite [not null]
+  documentosDestinatario documentos_destino [not null]
+  documentosRecibidos documentos_destino [not null]
+  historialDocumentos documentos_historial [not null]
+  notificaciones notificaciones [not null]
+  archivosRepositorio archivos_repositorio [not null]
+  carpetasRepositorio carpetas_repositorio [not null]
+  sesionesResponsable sesiones_inventario [not null]
+  participacionesInventario participantes_inventario [not null]
+  verificacionesRealizadas verificaciones_bien [not null]
+  asignacionesInventario asignaciones_inventario [not null]
+  transferenciasEnviadas transferencias_bien [not null]
+  transferenciasRecibidas transferencias_bien [not null]
+  bienesSobrantesRegistrados bienes_sobrantes [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (tipoDocumento, numeroDocumento) [unique]
+  }
+}
+
+Table configuracion_usuarios {
+  id String [pk]
+  userId String [unique, not null]
+  user usuarios [not null]
+  theme String [not null, default: 'light']
+  notificacionesEmail Boolean [not null, default: true]
+  notificacionesPush Boolean [not null, default: true]
+  idioma String [not null, default: 'es']
+  vistaCompacta Boolean [not null, default: false]
+  mostrarEstado Boolean [not null, default: true]
+  mostrarActividad Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table password_reset_tokens {
+  id String [pk]
+  token String [unique, not null]
+  userId String [not null]
+  user usuarios [not null]
+  expiresAt DateTime [not null]
+  used Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table dependencias {
+  id String [pk]
+  codigo String [unique, not null]
+  nombre String [not null]
+  siglas String
+  tipo TipoDependencia [not null]
+  sedeId String [not null]
+  sede sedes [not null]
+  parentId String
+  parent dependencias
+  hijos dependencias [not null]
+  usuarios usuarios [not null]
+  bienes bienes [not null]
+  documentosOrigen documentos_tramite [not null]
+  documentosDestino documentos_destino [not null]
+  historialDocumentos documentos_historial [not null]
+  sesionesInventario sesiones_inventario [not null]
+  activo Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table sedes {
+  id String [pk]
+  codigo String [unique, not null]
+  nombre String [not null]
+  direccion String
+  ciudad String
+  telefono String
+  email String
+  activo Boolean [not null, default: true]
+  dependencias dependencias [not null]
+  usuarios usuarios [not null]
+  sesionesInventario sesiones_inventario [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table catalogo_bienes {
+  id String [pk]
+  codigo String [unique, not null]
+  descripcion String [not null]
+  cuenta String [not null]
+  grupoId String
+  grupo grupos_bienes
+  vidaUtil Int
+  tasaDepreciacion Float
+  activo Boolean [not null, default: true]
+  bienes bienes [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table grupos_bienes {
+  id String [pk]
+  codigo String [unique, not null]
+  nombre String [not null]
+  catalogos catalogo_bienes [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table bienes {
+  id String [pk]
+  codigoPatrimonial String [unique, not null]
+  codigoSBN String
+  descripcion String [not null]
+  marca String
+  modelo String
+  serie String
+  color String
+  dimensiones String
+  caracteristicas String
+  estado EstadoBien [not null, default: 'BUENO']
+  situacion SituacionBien [not null, default: 'EN_USO']
+  valorAdquisicion Float
+  valorActual Float
+  fechaAdquisicion DateTime
+  fechaAlta DateTime
+  documentoAlta String
+  catalogoId String
+  catalogo catalogo_bienes
+  dependenciaId String
+  dependencia dependencias
+  ubicacion String
+  observaciones String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table permisos_rol {
+  id String [pk]
+  rolId String [not null]
+  rol roles [not null]
+  modulo Modulo [not null]
+  ver Boolean [not null, default: false]
+  crear Boolean [not null, default: false]
+  editar Boolean [not null, default: false]
+  eliminar Boolean [not null, default: false]
+  reportes Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (rolId, modulo) [unique]
+  }
+}
+
+Table tipos_documento_tramite {
+  id String [pk]
+  codigo String [unique, not null]
+  nombre String [not null]
+  descripcion String
+  requiereFirma Boolean [not null, default: true]
+  prefijo String
+  activo Boolean [not null, default: true]
+  documentos documentos_tramite [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table documentos_tramite {
+  id String [pk]
+  correlativo String [not null]
+  anio Int [not null]
+  tipoDocumentoId String [not null]
+  tipoDocumento tipos_documento_tramite [not null]
+  asunto String [not null]
+  contenido String
+  folios Int [not null, default: 1]
+  dependenciaOrigenId String [not null]
+  dependenciaOrigen dependencias [not null]
+  remitenteId String [not null]
+  remitente usuarios [not null]
+  estado EstadoDocumentoTramite [not null, default: 'BORRADOR']
+  tipoFirma TipoFirma [not null, default: 'NINGUNA']
+  archivoFirmadoUrl String
+  firmaDigitalData String
+  fechaFirma DateTime
+  prioridad PrioridadDocumento [not null, default: 'NORMAL']
+  fechaDocumento DateTime [default: `now()`, not null]
+  fechaEnvio DateTime
+  fechaLimite DateTime
+  archivosAdjuntos archivos_adjuntos [not null]
+  destinos documentos_destino [not null]
+  historial documentos_historial [not null]
+  notificaciones notificaciones [not null]
+  transferencias transferencias_bien [not null]
+  documentoReferenciaId String
+  documentoReferencia documentos_tramite
+  documentosRelacionados documentos_tramite [not null]
+  observaciones String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (tipoDocumentoId, correlativo, anio) [unique]
+  }
+}
+
+Table documentos_destino {
+  id String [pk]
+  documentoId String [not null]
+  documento documentos_tramite [not null]
+  dependenciaDestinoId String [not null]
+  dependenciaDestino dependencias [not null]
+  destinatarioId String
+  destinatario usuarios
+  esCopia Boolean [not null, default: false]
+  estadoRecepcion EstadoRecepcion [not null, default: 'PENDIENTE']
+  fechaRecepcion DateTime
+  receptorId String
+  receptor usuarios
+  observacionRecepcion String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (documentoId, dependenciaDestinoId) [unique]
+  }
+}
+
+Table archivos_adjuntos {
+  id String [pk]
+  documentoId String [not null]
+  documento documentos_tramite [not null]
+  nombre String [not null]
+  url String [not null]
+  tipo String [not null]
+  tamanio Int [not null]
+  archivoRepositorioId String
+  archivoRepositorio archivos_repositorio
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table documentos_historial {
+  id String [pk]
+  documentoId String [not null]
+  documento documentos_tramite [not null]
+  accion AccionDocumento [not null]
+  usuarioId String [not null]
+  usuario usuarios [not null]
+  dependenciaId String
+  dependencia dependencias
+  descripcion String
+  estadoAnterior EstadoDocumentoTramite
+  estadoNuevo EstadoDocumentoTramite
+  ip String
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table notificaciones {
+  id String [pk]
+  usuarioId String [not null]
+  usuario usuarios [not null]
+  documentoId String
+  documento documentos_tramite
+  tipo TipoNotificacion [not null]
+  titulo String [not null]
+  mensaje String [not null]
+  enlace String
+  leido Boolean [not null, default: false]
+  fechaLeido DateTime
+  enviadoEmail Boolean [not null, default: false]
+  fechaEnvioEmail DateTime
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table carpetas_repositorio {
+  id String [pk]
+  nombre String [not null]
+  descripcion String
+  color String
+  usuarioId String [not null]
+  usuario usuarios [not null]
+  parentId String
+  parent carpetas_repositorio
+  hijos carpetas_repositorio [not null]
+  archivos archivos_repositorio [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table archivos_repositorio {
+  id String [pk]
+  nombre String [not null]
+  nombreArchivo String [not null]
+  url String [not null]
+  tipo String [not null, default: 'application/pdf']
+  tamanio Int [not null]
+  usuarioId String [not null]
+  usuario usuarios [not null]
+  carpetaId String
+  carpeta carpetas_repositorio
+  firmado Boolean [not null, default: false]
+  fechaFirma DateTime
+  hashArchivo String
+  usosEnTramites archivos_adjuntos [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table sesiones_inventario {
+  id String [pk]
+  codigo String [unique, not null]
+  nombre String [not null]
+  descripcion String
+  dependenciaId String
+  dependencia dependencias
+  sedeId String
+  sede sedes
+  ubicacionFisica String
+  sigaCentroCosto String
+  sigaNombreDependencia String
+  fechaProgramada DateTime [not null]
+  fechaInicio DateTime
+  fechaFin DateTime
+  estado EstadoSesionInventario [not null, default: 'PROGRAMADA']
+  responsableId String [not null]
+  responsable usuarios [not null]
+  totalBienesSiga Int [not null, default: 0]
+  totalVerificados Int [not null, default: 0]
+  totalEncontrados Int [not null, default: 0]
+  totalReubicados Int [not null, default: 0]
+  totalNoEncontrados Int [not null, default: 0]
+  totalSobrantes Int [not null, default: 0]
+  verificaciones verificaciones_bien [not null]
+  asignaciones asignaciones_inventario [not null]
+  participantes participantes_inventario [not null]
+  bienesSobrantes bienes_sobrantes [not null]
+  observaciones String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table participantes_inventario {
+  id String [pk]
+  sesionId String [not null]
+  sesion sesiones_inventario [not null]
+  usuarioId String [not null]
+  usuario usuarios [not null]
+  rol String [not null, default: 'INVENTARIADOR']
+  activo Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  agregadoPorId String
+  agregadoPorNombre String
+  removidoPorId String
+  removidoPorNombre String
+  fechaRemovido DateTime
+
+  indexes {
+    (sesionId, usuarioId) [unique]
+  }
+}
+
+Table asignaciones_inventario {
+  id String [pk]
+  sesionId String [not null]
+  sesion sesiones_inventario [not null]
+  usuarioId String
+  usuario usuarios
+  tipoDocumento String [not null, default: 'DNI']
+  numeroDocumento String [not null]
+  nombres String [not null]
+  apellidoPaterno String [not null]
+  apellidoMaterno String
+  estado EstadoAsignacion [not null, default: 'PENDIENTE']
+  fechaEnvio DateTime
+  fechaRespuestaUsuario DateTime
+  fechaCierre DateTime
+  observacionesUsuario String
+  verificaciones verificaciones_bien [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (sesionId, numeroDocumento) [unique]
+  }
+}
+
+Table verificaciones_bien {
+  id String [pk]
+  sesionId String [not null]
+  sesion sesiones_inventario [not null]
+  asignacionId String
+  asignacion asignaciones_inventario
+  codigoPatrimonial String [not null]
+  descripcionSiga String
+  marcaSiga String
+  modeloSiga String
+  serieSiga String
+  colorSiga String
+  tipoSiga String
+  dimensionesSiga String
+  otrosSiga String
+  responsableSiga String
+  usuarioSiga String
+  dependenciaSiga String
+  ubicacionSiga String
+  valorSiga Float
+  resultado ResultadoVerificacion [not null, default: 'ENCONTRADO']
+  estadoFisico EstadoFisicoBien
+  situacion String
+  ubicacionReal String
+  responsableReal String
+  dniResponsableActual String
+  nombresResponsableActual String
+  apellidosResponsableActual String
+  observaciones String
+  fotoUrl String
+  verificadorId String [not null]
+  verificador usuarios [not null]
+  fechaVerificacion DateTime [default: `now()`, not null]
+  dispositivoTipo String
+  dispositivoInfo String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  transferenciasEnviadas transferencias_bien [not null]
+  transferenciasRecibidas transferencias_bien [not null]
+
+  indexes {
+    (sesionId, codigoPatrimonial) [unique]
+  }
+}
+
+Table transferencias_bien {
+  id String [pk]
+  verificacionId String [not null]
+  verificacion verificaciones_bien [not null]
+  codigoPatrimonial String [not null]
+  descripcionBien String
+  remitenteId String
+  remitente usuarios
+  dniRemitente String [not null]
+  nombreRemitente String [not null]
+  destinatarioId String
+  destinatario usuarios
+  dniDestinatario String [not null]
+  nombreDestinatario String [not null]
+  verificacionDestinoId String
+  verificacionDestino verificaciones_bien
+  documentoActaId String
+  documentoActa documentos_tramite
+  estado EstadoTransferencia [not null, default: 'PENDIENTE']
+  motivo String
+  observacionesDestinatario String
+  fechaSolicitud DateTime [default: `now()`, not null]
+  fechaRespuesta DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table bienes_sobrantes {
+  id String [pk]
+  sesionId String [not null]
+  sesion sesiones_inventario [not null]
+  descripcion String [not null]
+  marca String
+  modelo String
+  serie String
+  color String
+  estadoFisico EstadoFisicoBien
+  ubicacionEncontrado String
+  codigoAntiguo String
+  fotoUrl String
+  observaciones String
+  registradoPorId String [not null]
+  registradoPor usuarios [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Enum TipoDocumento {
+  DNI
+  PASAPORTE
+  CARNET_EXTRANJERIA
+  PTP
+  OTRO
+}
+
+Enum TipoDependencia {
+  RECTORADO
+  VICERRECTORADO
+  FACULTAD
+  ESCUELA
+  OFICINA
+  DIRECCION
+  UNIDAD
+  OTRO
+}
+
+Enum EstadoBien {
+  NUEVO
+  BUENO
+  REGULAR
+  MALO
+  MUY_MALO
+  CHATARRA
+}
+
+Enum SituacionBien {
+  EN_USO
+  EN_DESUSO
+  BAJA
+  TRANSFERIDO
+  FALTANTE
+  SOBRANTE
+}
+
+Enum Modulo {
+  DASHBOARD
+  BIENES
+  INVENTARIO
+  ALTAS
+  BAJAS
+  TRANSFERENCIAS
+  CATEGORIAS
+  DEPENDENCIAS
+  RESPONSABLES
+  REPORTES
+  DOCUMENTOS
+  ADMIN_PANEL
+  ROLES_PERMISOS
+  USUARIOS
+  CONFIGURACION
+  SEDES
+  TRAMITE
+}
+
+Enum EstadoDocumentoTramite {
+  BORRADOR
+  ENVIADO
+  RECIBIDO
+  DERIVADO
+  OBSERVADO
+  ATENDIDO
+  ARCHIVADO
+}
+
+Enum TipoFirma {
+  DIGITAL
+  ESCANEADO
+  NINGUNA
+}
+
+Enum AccionDocumento {
+  CREADO
+  EDITADO
+  ENVIADO
+  RECIBIDO
+  DERIVADO
+  OBSERVADO
+  ATENDIDO
+  ARCHIVADO
+  FIRMADO
+  ANULADO
+}
+
+Enum TipoNotificacion {
+  DOCUMENTO_RECIBIDO
+  DOCUMENTO_DERIVADO
+  DOCUMENTO_OBSERVADO
+  DOCUMENTO_ATENDIDO
+  DOCUMENTO_FIRMADO
+  RECORDATORIO
+}
+
+Enum PrioridadDocumento {
+  BAJA
+  NORMAL
+  ALTA
+  URGENTE
+}
+
+Enum EstadoRecepcion {
+  PENDIENTE
+  RECIBIDO
+  RECHAZADO
+}
+
+Enum EstadoSesionInventario {
+  PROGRAMADA
+  EN_PROCESO
+  PAUSADA
+  FINALIZADA
+  CANCELADA
+}
+
+Enum EstadoFisicoBien {
+  BUENO
+  REGULAR
+  MALO
+  INOPERATIVO
+  CHATARRA
+}
+
+Enum ResultadoVerificacion {
+  ENCONTRADO
+  REUBICADO
+  NO_ENCONTRADO
+  SOBRANTE
+}
+
+Enum EstadoAsignacion {
+  PENDIENTE
+  ENVIADO
+  ACEPTADO
+  RECHAZADO
+  CERRADO
+}
+
+Enum EstadoTransferencia {
+  PENDIENTE
+  ACEPTADA
+  RECHAZADA
+}
+
+Ref: usuarios.rolId > roles.id
+
+Ref: usuarios.sedeId > sedes.id
+
+Ref: usuarios.dependenciaId > dependencias.id
+
+Ref: configuracion_usuarios.userId - usuarios.id [delete: Cascade]
+
+Ref: password_reset_tokens.userId > usuarios.id [delete: Cascade]
+
+Ref: dependencias.sedeId > sedes.id
+
+Ref: dependencias.parentId - dependencias.id
+
+Ref: catalogo_bienes.grupoId > grupos_bienes.id
+
+Ref: bienes.catalogoId > catalogo_bienes.id
+
+Ref: bienes.dependenciaId > dependencias.id
+
+Ref: permisos_rol.rolId > roles.id [delete: Cascade]
+
+Ref: documentos_tramite.tipoDocumentoId > tipos_documento_tramite.id
+
+Ref: documentos_tramite.dependenciaOrigenId > dependencias.id
+
+Ref: documentos_tramite.remitenteId > usuarios.id
+
+Ref: documentos_tramite.documentoReferenciaId - documentos_tramite.id
+
+Ref: documentos_destino.documentoId > documentos_tramite.id [delete: Cascade]
+
+Ref: documentos_destino.dependenciaDestinoId > dependencias.id
+
+Ref: documentos_destino.destinatarioId > usuarios.id
+
+Ref: documentos_destino.receptorId > usuarios.id
+
+Ref: archivos_adjuntos.documentoId > documentos_tramite.id [delete: Cascade]
+
+Ref: archivos_adjuntos.archivoRepositorioId > archivos_repositorio.id [delete: Set Null]
+
+Ref: documentos_historial.documentoId > documentos_tramite.id [delete: Cascade]
+
+Ref: documentos_historial.usuarioId > usuarios.id
+
+Ref: documentos_historial.dependenciaId > dependencias.id
+
+Ref: notificaciones.usuarioId > usuarios.id [delete: Cascade]
+
+Ref: notificaciones.documentoId > documentos_tramite.id [delete: Cascade]
+
+Ref: carpetas_repositorio.usuarioId > usuarios.id [delete: Cascade]
+
+Ref: carpetas_repositorio.parentId - carpetas_repositorio.id
+
+Ref: archivos_repositorio.usuarioId > usuarios.id [delete: Cascade]
+
+Ref: archivos_repositorio.carpetaId > carpetas_repositorio.id [delete: Set Null]
+
+Ref: sesiones_inventario.dependenciaId > dependencias.id
+
+Ref: sesiones_inventario.sedeId > sedes.id
+
+Ref: sesiones_inventario.responsableId > usuarios.id
+
+Ref: participantes_inventario.sesionId > sesiones_inventario.id [delete: Cascade]
+
+Ref: participantes_inventario.usuarioId > usuarios.id
+
+Ref: asignaciones_inventario.sesionId > sesiones_inventario.id [delete: Cascade]
+
+Ref: asignaciones_inventario.usuarioId > usuarios.id
+
+Ref: verificaciones_bien.sesionId > sesiones_inventario.id [delete: Cascade]
+
+Ref: verificaciones_bien.asignacionId > asignaciones_inventario.id [delete: Set Null]
+
+Ref: verificaciones_bien.verificadorId > usuarios.id
+
+Ref: transferencias_bien.verificacionId > verificaciones_bien.id
+
+Ref: transferencias_bien.remitenteId > usuarios.id
+
+Ref: transferencias_bien.destinatarioId > usuarios.id
+
+Ref: transferencias_bien.verificacionDestinoId > verificaciones_bien.id
+
+Ref: transferencias_bien.documentoActaId > documentos_tramite.id
+
+Ref: bienes_sobrantes.sesionId > sesiones_inventario.id [delete: Cascade]
+
+Ref: bienes_sobrantes.registradoPorId > usuarios.id

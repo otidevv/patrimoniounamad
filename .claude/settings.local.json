@@ -46,7 +46,8 @@
       "Bash(\"C:\\\\Program Files\\\\7-Zip\\\\7z.exe\" --help)",
       "Bash(openssl rand:*)",
       "Bash(PGPASSWORD=954040025 psql -h localhost -U postgres -d patrimonio_unamad -c 'SELECT email, activo, nombre FROM \"Usuario\" LIMIT 10;')",
-      "Bash(xargs -I {} bash -c 'echo \"=== {} ===\" && head -30 {}')"
+      "Bash(xargs -I {} bash -c 'echo \"=== {} ===\" && head -30 {}')",
+      "PowerShell(npm install *)"
     ]
   }
 }

@@ -2,6 +2,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Genera el diagrama entidad-relación (ERD) en formato Mermaid.
+// Se actualiza automáticamente al correr `npx prisma generate`.
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../docs/ERD.svg"
+}
+
+// Genera el esquema en formato DBML para importar en https://dbdiagram.io
+generator dbml {
+  provider = "prisma-dbml-generator"
+  output   = "../docs"
+}
+
 datasource db {
   provider = "postgresql"
 }
