@@ -1,0 +1,245 @@
+========================================================================
+ SISTEMA DE GESTIÓN DE PATRIMONIO - UNAMAD
+ Documento técnico: Herramientas, arquitectura y funcionamiento
+ Universidad Nacional Amazónica de Madre de Dios
+========================================================================
+
+
+1. ¿QUÉ ES ESTE SISTEMA?
+------------------------------------------------------------------------
+Sistema web para la Gestión de Patrimonio (activos fijos) de la UNAMAD.
+Es una interfaz moderna que mejora la experiencia del módulo de
+patrimonio del SIGA (Sistema Integrado de Gestión Administrativa).
+
+Además del patrimonio, el sistema incluye un módulo de TRÁMITE
+DOCUMENTARIO (documentos, derivaciones, firma digital) y un módulo de
+INVENTARIO (sesiones de inventario, verificación física de bienes).
+
+Funciones principales:
+  - Bienes patrimoniales: equipos, mobiliario, vehículos, infraestructura
+  - Control de inventario: registro, seguimiento y estado de bienes
+  - Operaciones: altas, bajas, transferencias entre dependencias
+  - Trámite documentario con firma digital (Firma Perú / PCM)
+  - Etiquetado con códigos de barras / QR
+
+
+2. ¿ES UN MONOLITO? SÍ
+------------------------------------------------------------------------
+Este sistema es un MONOLITO (aplicación monolítica), NO microservicios.
+
+¿Por qué es un monolito?
+  - Una sola aplicación Next.js contiene TODO: el frontend (las páginas
+    que ve el usuario) y el backend (la lógica y las APIs).
+  - Todo se construye, despliega y ejecuta como UNA SOLA UNIDAD
+    (un único proceso de Node.js, gestionado por PM2).
+  - El frontend y el backend comparten el mismo repositorio, el mismo
+    proyecto y el mismo servidor.
+
+Es un monolito de tipo "full-stack" gracias a Next.js App Router:
+  - Las CARPETAS app/dashboard/... -> son las páginas (frontend / React).
+  - Las CARPETAS app/api/...       -> son las APIs (backend / servidor).
+  Ambas viven dentro del mismo proyecto y se ejecutan juntas.
+
+En un monolito como este NO hay servicios separados comunicándose por
+red entre sí; todo está integrado en una misma base de código.
+
+
+3. HERRAMIENTAS Y TECNOLOGÍAS USADAS
+------------------------------------------------------------------------
+
+>> FRAMEWORK Y LENGUAJE PRINCIPAL
+  - Next.js 16.1.1 (App Router)  -> framework full-stack (front + back)
+  - React 19.2.3                 -> librería de interfaz de usuario
+  - TypeScript 5                 -> lenguaje (JavaScript con tipado)
+  - Node.js                      -> entorno de ejecución del servidor
+
+>> ESTILOS E INTERFAZ (UI)
+  - Tailwind CSS 4               -> framework de estilos (clases CSS)
+  - tw-animate-css               -> animaciones
+  - shadcn/ui (estilo new-york)  -> componentes de interfaz
+  - Radix UI (@radix-ui/*)       -> base accesible de los componentes
+    (dialog, dropdown, select, tabs, tooltip, switch, popover, etc.)
+  - Lucide React                 -> íconos
+  - next-themes                  -> modo claro / oscuro (temas)
+  - sonner                       -> notificaciones tipo "toast"
+  - cmdk                         -> paleta de comandos / búsqueda
+  - class-variance-authority,
+    clsx, tailwind-merge         -> manejo de clases CSS condicionales
+
+>> BASE DE DATOS
+  - PostgreSQL                   -> base de datos PRINCIPAL del sistema
+                                    (BD: patrimonio_unamad, puerto 5432)
+  - Prisma 7.2.0 (ORM)           -> acceso a la base de datos PostgreSQL
+    - @prisma/client             -> cliente para consultas
+    - @prisma/adapter-pg + pg    -> driver de conexión a PostgreSQL
+  - SQL Server / MSSQL           -> base de datos EXTERNA del SIGA
+    - mssql (paquete)            -> conexión al SIGA (SIGA_1030)
+    - lib/siga.ts                -> pool de conexión al SQL Server del SIGA
+
+  IMPORTANTE: el sistema usa DOS bases de datos:
+    1) PostgreSQL  -> datos propios del sistema (usuarios, trámite,
+                      inventario, transferencias, etc.)
+    2) SQL Server  -> SOLO LECTURA del SIGA institucional para obtener
+                      bienes y dependencias oficiales.
+
+>> AUTENTICACIÓN Y SEGURIDAD
+  - next-auth 4.24              -> autenticación / sesiones
+  - jsonwebtoken (JWT)         -> tokens de sesión
+  - bcryptjs                   -> cifrado / hash de contraseñas
+  - Google OAuth               -> login con cuenta Google (institucional)
+
+>> DOCUMENTOS, REPORTES Y EXPORTACIÓN
+  - exceljs / xlsx             -> generación y lectura de archivos Excel
+  - file-saver                 -> descarga de archivos en el navegador
+  - pdf-lib                    -> creación / manipulación de PDF
+  - Firma Perú (PCM)           -> firma digital de documentos (trámite)
+  - 7-Zip (7z.exe)             -> requerido por Firma Perú (firma por lotes)
+
+>> CÓDIGOS DE BARRAS / QR / IMPRESIÓN
+  - html5-qrcode               -> escaneo de QR / códigos con la cámara
+  - react-barcode              -> generación de códigos de barras
+  - lib/zebra-printer.ts +
+    hooks/use-zebra-printer.ts -> impresión de etiquetas en impresoras Zebra
+
+>> CORREO ELECTRÓNICO
+  - nodemailer                 -> envío de correos (SMTP de Gmail)
+                                  ej.: recuperación de contraseña, avisos
+
+>> DESPLIEGUE / EJECUCIÓN
+  - PM2 (ecosystem.config.js)  -> gestor de procesos en producción
+                                  (app "patrimonio-unamad", puerto 3000)
+  - Apache (htdocs)            -> el proyecto está alojado bajo Apache24
+                                  (posible proxy inverso hacia el puerto 3000)
+  - dotenv                     -> variables de entorno (.env)
+
+>> HERRAMIENTAS DE DESARROLLO
+  - ESLint 9                   -> análisis y calidad de código
+  - tsx                        -> ejecutar scripts TypeScript (seeds, etc.)
+  - prisma-erd-generator       -> genera diagrama ER de la BD
+  - prisma-dbml-generator      -> genera DBML de la BD
+  - @mermaid-js/mermaid-cli    -> diagramas
+
+
+4. ESTRUCTURA DEL PROYECTO
+------------------------------------------------------------------------
+app/                  -> Páginas y APIs (Next.js App Router)
+  page.tsx            -> Página inicial / dashboard
+  login/              -> Inicio de sesión
+  forgot-password/    -> Recuperación de contraseña
+  reset-password/     -> Restablecer contraseña
+  dashboard/          -> Área privada (tras iniciar sesión)
+    admin/            -> Administración
+    patrimonio/       -> Bienes, etiquetas, reportes
+    inventario/       -> Sesiones de inventario
+    tramite/          -> Trámite documentario (entrada, salida, derivar)
+    dependencias/     -> Catálogo de dependencias
+    sedes/            -> Catálogo de sedes
+    reportes/         -> Reportes
+    documentos/       -> Repositorio de documentos
+    configuracion/    -> Configuración
+    perfil/           -> Perfil del usuario
+  api/                -> BACKEND (rutas de servidor)
+    auth/             -> login, recuperar/resetear contraseña, config
+    patrimonio/       -> buscar bienes, "mis bienes"
+    inventario/       -> sesiones de inventario, reportes
+    siga/             -> consulta de bienes y dependencias del SIGA
+    tramite/          -> tipos de documento
+    reportes/, sedes/, uploads/
+
+components/           -> Componentes de interfaz reutilizables
+  app-sidebar.tsx     -> Menú lateral de navegación
+  barcode-scanner.tsx -> Escáner de códigos
+  print-label-button  -> Botón de impresión de etiquetas
+  ui/                 -> Componentes shadcn/ui (button, card, table, etc.)
+
+lib/                  -> Lógica auxiliar (utilidades)
+  prisma.ts           -> Cliente de PostgreSQL (Prisma)
+  siga.ts             -> Conexión al SQL Server del SIGA
+  email.ts            -> Envío de correos
+  excel-export.ts     -> Exportación a Excel
+  zebra-printer.ts    -> Impresión Zebra
+  utils.ts            -> Utilidad cn() para clases CSS
+
+hooks/                -> Hooks de React
+  use-mobile.ts       -> Detecta dispositivos móviles
+  use-zebra-printer.ts-> Impresora Zebra
+
+prisma/               -> Base de datos
+  schema.prisma       -> Esquema (modelos/tablas de la BD)
+  seed.ts             -> Datos iniciales
+
+public/               -> Archivos estáticos (imágenes, etc.)
+ecosystem.config.js   -> Configuración de PM2 (producción)
+.env                  -> Variables de entorno (credenciales, conexiones)
+
+
+5. MODELO DE DATOS (PostgreSQL via Prisma)
+------------------------------------------------------------------------
+Principales tablas (modelos) del sistema:
+
+  Seguridad / usuarios:
+    Rol, Usuario, ConfiguracionUsuario, PasswordResetToken,
+    PermisoRol, Modulo (permisos por módulo)
+
+  Organización:
+    Dependencia, Sede
+
+  Patrimonio:
+    Bien, CatalogoBien, GrupoBien
+    (estados: EstadoBien, SituacionBien)
+
+  Inventario:
+    SesionInventario, ParticipanteInventario, AsignacionInventario,
+    VerificacionBien, BienSobrante
+    (estados: EstadoSesionInventario, EstadoFisicoBien, etc.)
+
+  Transferencias:
+    TransferenciaBien (estado: EstadoTransferencia)
+
+  Trámite documentario:
+    TipoDocumentoTramite, DocumentoTramite, DocumentoDestino,
+    ArchivoAdjunto, DocumentoHistorial, Notificacion,
+    CarpetaRepositorio, ArchivoRepositorio
+    (estados/tipos: EstadoDocumentoTramite, TipoFirma, AccionDocumento,
+     TipoNotificacion, PrioridadDocumento, EstadoRecepcion)
+
+
+6. ¿CÓMO FUNCIONA? (FLUJO GENERAL)
+------------------------------------------------------------------------
+  1) El usuario abre el sistema en el navegador (puerto 3000).
+  2) Inicia sesión (usuario/contraseña con bcrypt o login con Google).
+     - Se genera una sesión/token (next-auth + JWT).
+  3) Según su ROL y PERMISOS, ve diferentes menús y módulos.
+  4) Las PÁGINAS (React/Next.js) muestran la interfaz.
+  5) Cuando el usuario hace una acción (buscar bien, crear documento,
+     registrar inventario...), la página llama a una RUTA API interna
+     (app/api/...).
+  6) La ruta API ejecuta la lógica en el SERVIDOR:
+       - Lee/escribe en PostgreSQL usando Prisma (datos del sistema).
+       - Si necesita datos oficiales del SIGA, consulta el SQL Server
+         externo mediante lib/siga.ts (solo lectura).
+  7) El servidor devuelve la respuesta y la página se actualiza.
+  8) Acciones adicionales:
+       - Generar reportes en Excel (exceljs) o PDF (pdf-lib).
+       - Enviar correos (nodemailer) p.ej. recuperación de contraseña.
+       - Imprimir etiquetas con código de barras (Zebra) o escanear QR.
+       - Firmar documentos digitalmente (Firma Perú / PCM).
+
+  TODO esto ocurre dentro de UNA SOLA APLICACIÓN (el monolito Next.js),
+  ejecutándose como un único proceso administrado por PM2.
+
+
+7. RESUMEN RÁPIDO
+------------------------------------------------------------------------
+  Tipo de sistema : Monolito full-stack (una sola app Next.js)
+  Frontend        : Next.js + React + TypeScript + Tailwind + shadcn/ui
+  Backend         : APIs de Next.js (app/api) en Node.js
+  Base de datos   : PostgreSQL (propia) + SQL Server SIGA (externa, lectura)
+  ORM             : Prisma
+  Autenticación   : next-auth + JWT + bcrypt + Google OAuth
+  Despliegue      : PM2 + Apache, puerto 3000
+  Extras          : Excel/PDF, correo, códigos de barras/QR, firma digital
+
+========================================================================
+ Fin del documento
+========================================================================

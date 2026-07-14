@@ -442,6 +442,11 @@ Table verificaciones_bien {
   tipoSiga String
   dimensionesSiga String
   otrosSiga String
+  procesador String
+  generacion String
+  sistemaOperativo String
+  ram String
+  disco String
   responsableSiga String
   usuarioSiga String
   dependenciaSiga String

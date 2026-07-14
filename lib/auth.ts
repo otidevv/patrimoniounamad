@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/lib/next-auth"
 import { Modulo } from "@prisma/client"
+import { construirPermisosMap } from "@/lib/validaciones"
 
 const JWT_SECRET = process.env.JWT_SECRET || "unamad-patrimonio-secret"
 
@@ -142,20 +143,11 @@ export async function getUserPermisos(): Promise<PermisosMap> {
     const session = await getSession()
     if (!session) return {}
 
+    const modulos = Object.values(Modulo) as string[]
+
     // Admin siempre tiene todos los permisos
     if (session.rol === "ADMIN") {
-      const modulos = Object.values(Modulo)
-      const permisosMap: PermisosMap = {}
-      for (const modulo of modulos) {
-        permisosMap[modulo] = {
-          ver: true,
-          crear: true,
-          editar: true,
-          eliminar: true,
-          reportes: true,
-        }
-      }
-      return permisosMap
+      return construirPermisosMap(true, [], modulos)
     }
 
     let rolId = session.rolId
@@ -177,33 +169,7 @@ export async function getUserPermisos(): Promise<PermisosMap> {
       where: { rolId },
     })
 
-    // Convertir a un objeto más fácil de usar
-    const permisosMap: PermisosMap = {}
-    const modulos = Object.values(Modulo)
-
-    // Inicializar todos los módulos con permisos vacíos
-    for (const modulo of modulos) {
-      permisosMap[modulo] = {
-        ver: false,
-        crear: false,
-        editar: false,
-        eliminar: false,
-        reportes: false,
-      }
-    }
-
-    // Sobrescribir con permisos de la base de datos
-    for (const permiso of permisos) {
-      permisosMap[permiso.modulo] = {
-        ver: permiso.ver,
-        crear: permiso.crear,
-        editar: permiso.editar,
-        eliminar: permiso.eliminar,
-        reportes: permiso.reportes,
-      }
-    }
-
-    return permisosMap
+    return construirPermisosMap(false, permisos, modulos)
   } catch {
     return {}
   }

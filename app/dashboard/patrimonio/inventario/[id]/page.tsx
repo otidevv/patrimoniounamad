@@ -45,6 +45,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -106,6 +107,11 @@ interface Verificacion {
   tipoSiga: string | null
   dimensionesSiga: string | null
   otrosSiga: string | null
+  procesador: string | null
+  generacion: string | null
+  sistemaOperativo: string | null
+  ram: string | null
+  disco: string | null
   dependenciaSiga: string | null
   ubicacionSiga: string | null
   responsableSiga: string | null
@@ -208,7 +214,13 @@ export default function VerificacionPage() {
     tipo: "",
     dimensiones: "",
     otros: "",
+    procesador: "",
+    generacion: "",
+    sistemaOperativo: "",
+    ram: "",
+    disco: "",
   })
+  const [esComputoVerif, setEsComputoVerif] = useState(false)
 
   // Bienes esperados state
   const [bienesEsperados, setBienesEsperados] = useState<BienEsperado[]>([])
@@ -224,7 +236,9 @@ export default function VerificacionPage() {
     marca: "", modelo: "", serie: "", color: "", tipo: "",
     dimensiones: "", otros: "", resultado: "", estadoFisico: "",
     situacion: "", ubicacionReal: "", observaciones: "",
+    procesador: "", generacion: "", sistemaOperativo: "", ram: "", disco: "",
   })
+  const [esComputoEdicion, setEsComputoEdicion] = useState(false)
   const [guardandoEdicion, setGuardandoEdicion] = useState(false)
 
   // Identificación de persona state
@@ -253,10 +267,16 @@ export default function VerificacionPage() {
     serie: "",
     dimensiones: "",
     otros: "",
+    procesador: "",
+    generacion: "",
+    sistemaOperativo: "",
+    ram: "",
+    disco: "",
     estadoFisico: "",
     situacion: "U",
     observaciones: "",
   })
+  const [esComputoSinCodigo, setEsComputoSinCodigo] = useState(false)
 
   // Participantes/equipo state
   const [participantes, setParticipantes] = useState<Array<{
@@ -594,7 +614,13 @@ export default function VerificacionPage() {
       situacion: v.situacion || "U",
       ubicacionReal: v.ubicacionReal || "",
       observaciones: v.observaciones || "",
+      procesador: v.procesador || "",
+      generacion: v.generacion || "",
+      sistemaOperativo: v.sistemaOperativo || "",
+      ram: v.ram || "",
+      disco: v.disco || "",
     })
+    setEsComputoEdicion(!!(v.procesador || v.generacion || v.sistemaOperativo || v.ram || v.disco))
     setDialogDetalle(true)
   }
 
@@ -618,6 +644,11 @@ export default function VerificacionPage() {
           tipoSiga: formEdicion.tipo || null,
           dimensionesSiga: formEdicion.dimensiones || null,
           otrosSiga: formEdicion.otros || null,
+          procesador: esComputoEdicion ? formEdicion.procesador || null : null,
+          generacion: esComputoEdicion ? formEdicion.generacion || null : null,
+          sistemaOperativo: esComputoEdicion ? formEdicion.sistemaOperativo || null : null,
+          ram: esComputoEdicion ? formEdicion.ram || null : null,
+          disco: esComputoEdicion ? formEdicion.disco || null : null,
         }),
       })
       const data = await res.json()
@@ -666,6 +697,11 @@ export default function VerificacionPage() {
           serie: formSinCodigo.serie || null,
           dimensiones: formSinCodigo.dimensiones || null,
           otros: formSinCodigo.otros || null,
+          procesador: esComputoSinCodigo ? formSinCodigo.procesador || null : null,
+          generacion: esComputoSinCodigo ? formSinCodigo.generacion || null : null,
+          sistemaOperativo: esComputoSinCodigo ? formSinCodigo.sistemaOperativo || null : null,
+          ram: esComputoSinCodigo ? formSinCodigo.ram || null : null,
+          disco: esComputoSinCodigo ? formSinCodigo.disco || null : null,
         }),
       })
 
@@ -678,8 +714,11 @@ export default function VerificacionPage() {
       setDialogSinCodigo(false)
       setFormSinCodigo({
         denominacion: "", marca: "", modelo: "", tipo: "", color: "",
-        serie: "", dimensiones: "", otros: "", estadoFisico: "", situacion: "U", observaciones: "",
+        serie: "", dimensiones: "", otros: "",
+        procesador: "", generacion: "", sistemaOperativo: "", ram: "", disco: "",
+        estadoFisico: "", situacion: "U", observaciones: "",
       })
+      setEsComputoSinCodigo(false)
       toast.success("Bien sin código registrado como sobrante")
 
       // Agregar a la lista de verificaciones de la persona
@@ -840,6 +879,11 @@ export default function VerificacionPage() {
           tipo: "",
           dimensiones: bien.medidas || "",
           otros: "",
+          procesador: "",
+          generacion: "",
+          sistemaOperativo: "",
+          ram: "",
+          disco: "",
         })
       } else {
         // No encontrado en SIGA
@@ -857,9 +901,15 @@ export default function VerificacionPage() {
           tipo: "",
           dimensiones: "",
           otros: "",
+          procesador: "",
+          generacion: "",
+          sistemaOperativo: "",
+          ram: "",
+          disco: "",
         })
       }
 
+      setEsComputoVerif(false)
       setDialogOpen(true)
     } catch {
       toast.error("Error de conexión al servidor")
@@ -946,6 +996,11 @@ export default function VerificacionPage() {
           tipo: formVerificacion.tipo || null,
           dimensiones: formVerificacion.dimensiones || null,
           otros: formVerificacion.otros || null,
+          procesador: esComputoVerif ? formVerificacion.procesador || null : null,
+          generacion: esComputoVerif ? formVerificacion.generacion || null : null,
+          sistemaOperativo: esComputoVerif ? formVerificacion.sistemaOperativo || null : null,
+          ram: esComputoVerif ? formVerificacion.ram || null : null,
+          disco: esComputoVerif ? formVerificacion.disco || null : null,
         }),
       })
 
@@ -2138,6 +2193,68 @@ export default function VerificacionPage() {
               </div>
             </div>
 
+            {/* Especificaciones técnicas (equipos de cómputo) */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="esComputoVerif"
+                  checked={esComputoVerif}
+                  onCheckedChange={(v) => setEsComputoVerif(v === true)}
+                />
+                <Label htmlFor="esComputoVerif" className="text-xs font-medium uppercase tracking-wide cursor-pointer">
+                  ¿Es equipo de cómputo?
+                </Label>
+              </div>
+              {esComputoVerif && (
+                <div className="space-y-3 rounded-md border bg-muted/30 p-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="grid gap-1.5">
+                      <Label className="text-xs">Procesador</Label>
+                      <Input
+                        placeholder="Ej: Intel Core i5..."
+                        value={formVerificacion.procesador}
+                        onChange={(e) => setFormVerificacion({ ...formVerificacion, procesador: e.target.value })}
+                      />
+                    </div>
+                    <div className="grid gap-1.5">
+                      <Label className="text-xs">Generación</Label>
+                      <Input
+                        placeholder="Ej: 10ma, 12va..."
+                        value={formVerificacion.generacion}
+                        onChange={(e) => setFormVerificacion({ ...formVerificacion, generacion: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="grid gap-1.5">
+                      <Label className="text-xs">RAM</Label>
+                      <Input
+                        placeholder="Ej: 8GB, 16GB..."
+                        value={formVerificacion.ram}
+                        onChange={(e) => setFormVerificacion({ ...formVerificacion, ram: e.target.value })}
+                      />
+                    </div>
+                    <div className="grid gap-1.5">
+                      <Label className="text-xs">Disco</Label>
+                      <Input
+                        placeholder="Ej: 512GB SSD, 1TB HDD..."
+                        value={formVerificacion.disco}
+                        onChange={(e) => setFormVerificacion({ ...formVerificacion, disco: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-1.5">
+                    <Label className="text-xs">Sistema Operativo</Label>
+                    <Input
+                      placeholder="Ej: Windows 11 Pro, Ubuntu 22.04..."
+                      value={formVerificacion.sistemaOperativo}
+                      onChange={(e) => setFormVerificacion({ ...formVerificacion, sistemaOperativo: e.target.value })}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Verificación */}
             <div className="space-y-3">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Verificación</p>
@@ -2304,6 +2421,48 @@ export default function VerificacionPage() {
                   <Label className="text-xs">Otros</Label>
                   <Input value={formEdicion.otros} onChange={(e) => setFormEdicion({ ...formEdicion, otros: e.target.value })} placeholder="Otros datos..." />
                 </div>
+              </div>
+
+              {/* Especificaciones técnicas (equipos de cómputo) */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="esComputoEdicion"
+                    checked={esComputoEdicion}
+                    onCheckedChange={(v) => setEsComputoEdicion(v === true)}
+                  />
+                  <Label htmlFor="esComputoEdicion" className="text-xs font-medium uppercase tracking-wide cursor-pointer">
+                    ¿Es equipo de cómputo?
+                  </Label>
+                </div>
+                {esComputoEdicion && (
+                  <div className="space-y-3 rounded-md border bg-muted/30 p-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="grid gap-1.5">
+                        <Label className="text-xs">Procesador</Label>
+                        <Input value={formEdicion.procesador} onChange={(e) => setFormEdicion({ ...formEdicion, procesador: e.target.value })} placeholder="Ej: Intel Core i5..." />
+                      </div>
+                      <div className="grid gap-1.5">
+                        <Label className="text-xs">Generación</Label>
+                        <Input value={formEdicion.generacion} onChange={(e) => setFormEdicion({ ...formEdicion, generacion: e.target.value })} placeholder="Ej: 10ma, 12va..." />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="grid gap-1.5">
+                        <Label className="text-xs">RAM</Label>
+                        <Input value={formEdicion.ram} onChange={(e) => setFormEdicion({ ...formEdicion, ram: e.target.value })} placeholder="Ej: 8GB, 16GB..." />
+                      </div>
+                      <div className="grid gap-1.5">
+                        <Label className="text-xs">Disco</Label>
+                        <Input value={formEdicion.disco} onChange={(e) => setFormEdicion({ ...formEdicion, disco: e.target.value })} placeholder="Ej: 512GB SSD..." />
+                      </div>
+                    </div>
+                    <div className="grid gap-1.5">
+                      <Label className="text-xs">Sistema Operativo</Label>
+                      <Input value={formEdicion.sistemaOperativo} onChange={(e) => setFormEdicion({ ...formEdicion, sistemaOperativo: e.target.value })} placeholder="Ej: Windows 11 Pro..." />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Verificación */}
@@ -2477,6 +2636,66 @@ export default function VerificacionPage() {
                 onChange={(e) => setFormSinCodigo({ ...formSinCodigo, otros: e.target.value })}
               />
             </div>
+
+            {/* Especificaciones técnicas (equipos de cómputo) */}
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="esComputoSinCodigo"
+                checked={esComputoSinCodigo}
+                onCheckedChange={(v) => setEsComputoSinCodigo(v === true)}
+              />
+              <Label htmlFor="esComputoSinCodigo" className="text-xs font-medium uppercase tracking-wide cursor-pointer">
+                ¿Es equipo de cómputo?
+              </Label>
+            </div>
+            {esComputoSinCodigo && (
+              <div className="space-y-4 rounded-md border bg-muted/30 p-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label>Procesador</Label>
+                    <Input
+                      placeholder="Ej: Intel Core i5..."
+                      value={formSinCodigo.procesador}
+                      onChange={(e) => setFormSinCodigo({ ...formSinCodigo, procesador: e.target.value })}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Generación</Label>
+                    <Input
+                      placeholder="Ej: 10ma, 12va..."
+                      value={formSinCodigo.generacion}
+                      onChange={(e) => setFormSinCodigo({ ...formSinCodigo, generacion: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label>RAM</Label>
+                    <Input
+                      placeholder="Ej: 8GB, 16GB..."
+                      value={formSinCodigo.ram}
+                      onChange={(e) => setFormSinCodigo({ ...formSinCodigo, ram: e.target.value })}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label>Disco</Label>
+                    <Input
+                      placeholder="Ej: 512GB SSD, 1TB HDD..."
+                      value={formSinCodigo.disco}
+                      onChange={(e) => setFormSinCodigo({ ...formSinCodigo, disco: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label>Sistema Operativo</Label>
+                  <Input
+                    placeholder="Ej: Windows 11 Pro, Ubuntu 22.04..."
+                    value={formSinCodigo.sistemaOperativo}
+                    onChange={(e) => setFormSinCodigo({ ...formSinCodigo, sistemaOperativo: e.target.value })}
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">

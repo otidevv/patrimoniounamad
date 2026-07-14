@@ -707,6 +707,12 @@ model VerificacionBien {
   tipoSiga          String? // Tipo/características del bien
   dimensionesSiga   String? // Dimensiones/medidas
   otrosSiga         String? // Otros datos descriptivos
+  // Especificaciones técnicas (equipos de cómputo)
+  procesador        String?
+  generacion        String?
+  sistemaOperativo  String?
+  ram               String?
+  disco             String?
   responsableSiga   String? // Nombre del responsable en SIGA
   usuarioSiga       String? // Usuario final en SIGA
   dependenciaSiga   String? // Nombre de la dependencia en SIGA

@@ -118,6 +118,11 @@ export async function PUT(
       tipoSiga,
       dimensionesSiga,
       otrosSiga,
+      procesador,
+      generacion,
+      sistemaOperativo,
+      ram,
+      disco,
     } = body
 
     const verificacionActualizada = await prisma.verificacionBien.update({
@@ -137,6 +142,11 @@ export async function PUT(
         tipoSiga: tipoSiga !== undefined ? tipoSiga : undefined,
         dimensionesSiga: dimensionesSiga !== undefined ? dimensionesSiga : undefined,
         otrosSiga: otrosSiga !== undefined ? otrosSiga : undefined,
+        procesador: procesador !== undefined ? procesador : undefined,
+        generacion: generacion !== undefined ? generacion : undefined,
+        sistemaOperativo: sistemaOperativo !== undefined ? sistemaOperativo : undefined,
+        ram: ram !== undefined ? ram : undefined,
+        disco: disco !== undefined ? disco : undefined,
       },
       include: {
         verificador: {

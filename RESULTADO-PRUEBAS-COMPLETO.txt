@@ -1,0 +1,197 @@
+================================================================================
+ RESULTADO DE PRUEBAS (COMPLETO) - SISTEMA DE GESTIÓN DE PATRIMONIO UNAMAD
+ Fecha de ejecución: 2026-06-26
+================================================================================
+
+RESUMEN GENERAL
+--------------------------------------------------------------------------------
+  Pruebas unitarias (Jest)......: 58 / 58  PASARON        ✓   (7 suites)
+  Pruebas E2E (Playwright)......:  8 pasaron + 10 saltadas ✓   (18 total)
+  --------------------------------------------------------------------
+  Las 10 E2E saltadas son los flujos que necesitan un usuario real de
+  la base de datos (login). Se ejecutan automáticamente al definir las
+  variables TEST_USER_EMAIL y TEST_USER_PASSWORD. Sin credenciales, el
+  resto pasa y la suite queda en verde.
+
+
+################################################################################
+# 1) PRUEBAS UNITARIAS  (Jest + ts-jest)
+################################################################################
+Comando:  npm test
+
+SALIDA REAL:
+--------------------------------------------------------------------------------
+Test Suites: 7 passed, 7 total
+Tests:       58 passed, 58 total
+Snapshots:   0 total
+Time:        0.77 s
+Ran all test suites.
+--------------------------------------------------------------------------------
+
+Las 7 suites cubren EXACTAMENTE las categorías solicitadas:
+
+--- A) Validación de datos de un bien ------------------------------------------
+   Archivo:  __tests__/validacion-bien.test.ts
+   Prueba la lógica pura de lib/validaciones.ts:
+     esCodigoPatrimonialValido()
+       ✓ acepta un código de 12 dígitos
+       ✓ ignora espacios alrededor
+       ✓ rechaza códigos con menos o más de 12 dígitos
+       ✓ rechaza códigos con letras o símbolos
+       ✓ rechaza vacío, null y undefined
+     validarBien()
+       ✓ valida un bien correcto sin errores
+       ✓ exige código patrimonial
+       ✓ exige formato correcto del código
+       ✓ exige descripción
+       ✓ rechaza valor de compra negativo
+       ✓ acumula varios errores a la vez
+
+--- B) Cálculo / formato de reportes -------------------------------------------
+   Archivo:  __tests__/reportes.test.ts
+     formatearMoneda()      ✓ dos decimales con S/  ✓ null/undefined = 0
+     formatearFechaCorta()  ✓ DD/MM/AAAA  ✓ cadenas ISO  ✓ fecha inválida = ""
+     contarPorEstado()      ✓ activos/inactivos  ✓ lista vacía
+     sumarValorBienes()     ✓ suma valores  ✓ lista vacía = 0
+
+--- C) Generación de hash para Firma Perú --------------------------------------
+   Archivo:  __tests__/firma-peru.test.ts
+     generarHashSha256()
+       ✓ SHA-256 hexadecimal esperado de un texto
+       ✓ produce 64 caracteres hexadecimales
+       ✓ determinista: misma entrada => mismo hash
+       ✓ entradas distintas => hashes distintos
+       ✓ funciona con un Buffer (contenido de archivo)
+     IDs de lote de firma (lib/firma-peru/storage.ts)
+       ✓ generateLoteId() con prefijo lote_
+       ✓ generateTokenLote() con prefijo token_
+       ✓ genera identificadores distintos
+
+--- D) Verificación de permisos por rol ----------------------------------------
+   Archivo:  __tests__/permisos.test.ts
+   Prueba construirPermisosMap() (lógica real usada por getUserPermisos en
+   lib/auth.ts, refactorizada para ser testeable):
+       ✓ ADMIN obtiene todos los permisos en todos los módulos
+       ✓ un rol sin permisos en BD tiene todo en false
+       ✓ aplica permisos de la BD solo a los módulos correspondientes
+       ✓ incluye todos los módulos en el mapa
+       ✓ un rol de solo lectura puede ver pero no modificar
+
+--- E) Validación de credenciales (bcrypt) -------------------------------------
+   Archivo:  __tests__/credenciales.test.ts
+   Prueba el MISMO mecanismo que usa /api/auth/login:
+     bcrypt
+       ✓ la contraseña correcta coincide con el hash
+       ✓ una contraseña incorrecta NO coincide
+       ✓ el hash es distinto del texto plano (formato $2...)
+       ✓ dos hashes de la misma contraseña son distintos (salt)
+     validarEntradaLogin()  ✓ email+password ok  ✓ falta email  ✓ falta password
+     esEmailInstitucional() ✓ @unamad.edu.pe  ✓ otros dominios  ✓ vacío/null
+
+--- (Extra, ya existentes) -----------------------------------------------------
+   __tests__/utils.test.ts          -> cn() (6 pruebas)
+   __tests__/zebra-printer.test.ts  -> etiquetas ZPL (9 pruebas)
+
+
+################################################################################
+# 2) PRUEBAS E2E  (Playwright / Chromium)
+################################################################################
+Comando:  npx playwright test --reporter=list
+
+SALIDA REAL:
+--------------------------------------------------------------------------------
+Running 18 tests using 12 workers
+
+  ✓ login.spec.ts  › muestra el título y los campos del formulario
+  ✓ login.spec.ts  › permite mostrar y ocultar la contraseña
+  ✓ login.spec.ts  › muestra error con credenciales inválidas
+  ✓ login.spec.ts  › tiene enlace para recuperar contraseña
+  ✓ login.spec.ts  › ofrece inicio de sesión con Google
+  ✓ dashboard.spec.ts › una ruta protegida redirige a /login si no hay sesión
+  ✓ dashboard.spec.ts › la búsqueda de bienes también está protegida
+  ✓ acta.spec.ts   › el módulo de trámite está protegido sin sesión
+
+  -  dashboard.spec.ts  › inicia sesión y entra al dashboard            (skip)
+  -  buscar-bien.spec.ts › muestra la página de búsqueda de bienes      (skip)
+  -  buscar-bien.spec.ts › busca un bien por código patrimonial         (skip)
+  -  buscar-bien.spec.ts › una búsqueda sin resultados informa          (skip)
+  -  mis-bienes.spec.ts  › la ruta está protegida sin sesión            (skip)
+  -  mis-bienes.spec.ts  › muestra la página de mis bienes              (skip)
+  -  mis-bienes.spec.ts  › la API de mis-bienes responde                (skip)
+  -  acta.spec.ts  › accede al módulo de trámite documentario           (skip)
+  -  acta.spec.ts  › puede abrir la bandeja de mis documentos           (skip)
+  -  acta.spec.ts  › genera un acta de entrega (flujo completo)         (skip)
+
+  10 skipped
+  8 passed (8.1s)
+--------------------------------------------------------------------------------
+
+Cobertura de los flujos solicitados:
+
+  FLUJO 1 - Login y acceso al dashboard    -> e2e/dashboard.spec.ts
+            (+ e2e/login.spec.ts ya existente)
+  FLUJO 2 - Buscar un bien                 -> e2e/buscar-bien.spec.ts
+  FLUJO 3 - Registrar/consultar un bien    -> e2e/buscar-bien.spec.ts
+  FLUJO 4 - Crear y firmar un acta         -> e2e/acta.spec.ts
+  FLUJO 5 - Ver "mis bienes"               -> e2e/mis-bienes.spec.ts
+
+
+CÓMO EJECUTAR LOS FLUJOS AUTENTICADOS (los 10 saltados):
+--------------------------------------------------------------------------------
+  En PowerShell, antes de correr Playwright:
+
+    $env:TEST_USER_EMAIL="usuario@unamad.edu.pe"
+    $env:TEST_USER_PASSWORD="la-contraseña"
+    # opcionales:
+    $env:TEST_BIEN_CODIGO="740895200001"   # código real en SIGA
+    $env:TEST_ACTA_FULL="1"                 # flujo completo de acta + Firma Perú
+    npm run test:e2e
+
+  Requisitos para que pasen:
+    - PostgreSQL activo con el usuario de prueba.
+    - SQL Server del SIGA accesible (para buscar/mis-bienes).
+    - Para el acta completa: datos de verificación + cliente Firma Perú.
+
+
+################################################################################
+# 3) ARCHIVOS CREADOS / MODIFICADOS
+################################################################################
+  NUEVO  lib/validaciones.ts                 -> funciones puras reutilizables
+  MOD.   lib/auth.ts                         -> getUserPermisos usa
+                                                construirPermisosMap (testeable)
+
+  Pruebas unitarias (Jest):
+    NUEVO  __tests__/validacion-bien.test.ts
+    NUEVO  __tests__/reportes.test.ts
+    NUEVO  __tests__/firma-peru.test.ts
+    NUEVO  __tests__/permisos.test.ts
+    NUEVO  __tests__/credenciales.test.ts
+    (ya existían) __tests__/utils.test.ts, __tests__/zebra-printer.test.ts
+
+  Pruebas E2E (Playwright):
+    NUEVO  e2e/helpers.ts          -> login() + gating por credenciales
+    NUEVO  e2e/dashboard.spec.ts
+    NUEVO  e2e/buscar-bien.spec.ts
+    NUEVO  e2e/mis-bienes.spec.ts
+    NUEVO  e2e/acta.spec.ts
+    (ya existía) e2e/login.spec.ts
+
+
+################################################################################
+# 4) NOTAS
+################################################################################
+  - El sistema tiene muy poca lógica "pura"; casi todo vive dentro de rutas
+    API que dependen de Prisma (PostgreSQL) y del SIGA (SQL Server). Por eso
+    se extrajo la lógica testeable a lib/validaciones.ts (sin tocar el
+    comportamiento de producción) y se refactorizó getUserPermisos para que
+    use esa función pura.
+
+  - Los E2E levantan el servidor de patrimonio en el puerto 3100 para no
+    chocar con la otra app que corre en el 3000 (panel de posgrado).
+
+  - Si Playwright reporta "Unable to acquire lock at .next\dev\lock",
+    eliminar ese archivo y liberar el puerto 3100 antes de reintentar.
+
+================================================================================
+ Fin del reporte  -  58/58 unitarias PASARON  ·  8 E2E PASARON (+10 listas)
+================================================================================

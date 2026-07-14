@@ -137,6 +137,12 @@ export async function POST(request: NextRequest) {
       serie,
       dimensiones,
       otros,
+      // Especificaciones técnicas (equipos de cómputo)
+      procesador,
+      generacion,
+      sistemaOperativo,
+      ram,
+      disco,
     } = body
 
     if (!sesionId || !codigoPatrimonial) {
@@ -233,6 +239,12 @@ export async function POST(request: NextRequest) {
         tipoSiga: tipo || null,
         dimensionesSiga: dimensiones || datosSiga?.medidas || null,
         otrosSiga: otros || null,
+        // Especificaciones técnicas (equipos de cómputo)
+        procesador: procesador || null,
+        generacion: generacion || null,
+        sistemaOperativo: sistemaOperativo || null,
+        ram: ram || null,
+        disco: disco || null,
         responsableSiga: datosSiga?.responsable || null,
         usuarioSiga: datosSiga?.usuario || null,
         dependenciaSiga: datosSiga?.nombre_depend || null,

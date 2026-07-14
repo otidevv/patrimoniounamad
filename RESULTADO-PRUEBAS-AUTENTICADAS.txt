@@ -1,0 +1,113 @@
+================================================================================
+ RESULTADO DE PRUEBAS (CON LOGIN REAL) - PATRIMONIO UNAMAD
+ Fecha de ejecución: 2026-06-26
+================================================================================
+
+¿FALTABAN LAS CREDENCIALES? -> NO. Ya existían en el seed de la BD.
+--------------------------------------------------------------------------------
+El archivo prisma/seed.ts crea 3 usuarios de prueba (líneas 563-566):
+
+   ROL              EMAIL                          CONTRASEÑA
+   ---------------  -----------------------------  -----------
+   ADMIN            admin@unamad.edu.pe            admin123
+   JEFE_PATRIMONIO  patrimonio@unamad.edu.pe       usuario123
+   RESPONSABLE      redes@unamad.edu.pe            usuario123
+
+Para que existan en la base de datos:   npm run db:seed
+
+Los tests E2E ahora usan por defecto  admin@unamad.edu.pe / admin123
+(configurado en e2e/helpers.ts). Se pueden sobrescribir con:
+   $env:TEST_USER_EMAIL="..."   $env:TEST_USER_PASSWORD="..."
+
+
+RESUMEN GENERAL
+--------------------------------------------------------------------------------
+  Pruebas unitarias (Jest)......: 58 / 58  PASARON
+  Pruebas E2E (Playwright)......: 16 pasaron + 2 saltadas   (18 total)
+
+  Las 2 saltadas son opcionales (necesitan datos extra):
+    - "busca un bien por código patrimonial"  -> define TEST_BIEN_CODIGO
+    - "genera un acta de entrega (completo)"   -> define TEST_ACTA_FULL=1
+
+
+################################################################################
+# PRUEBAS E2E - SALIDA REAL (login real con el usuario admin del seed)
+################################################################################
+Comando:  npm run test:e2e     (o:  npx playwright test --reporter=list)
+
+Running 18 tests using 12 workers
+
+  ✓ login.spec.ts      › muestra el título y los campos del formulario
+  ✓ login.spec.ts      › permite mostrar y ocultar la contraseña
+  ✓ login.spec.ts      › muestra error con credenciales inválidas
+  ✓ login.spec.ts      › tiene enlace para recuperar contraseña
+  ✓ login.spec.ts      › ofrece inicio de sesión con Google
+  ✓ dashboard.spec.ts  › una ruta protegida redirige a /login si no hay sesión
+  ✓ dashboard.spec.ts  › la búsqueda de bienes también está protegida
+  ✓ dashboard.spec.ts  › inicia sesión y entra al dashboard            <-- LOGIN OK
+  ✓ buscar-bien.spec.ts › muestra la página de búsqueda de bienes
+  ✓ buscar-bien.spec.ts › una búsqueda sin resultados informa al usuario
+  ✓ mis-bienes.spec.ts › la ruta está protegida sin sesión
+  ✓ mis-bienes.spec.ts › muestra la página de mis bienes al usuario autenticado
+  ✓ mis-bienes.spec.ts › la API de mis-bienes responde para el usuario autenticado
+  ✓ acta.spec.ts       › el módulo de trámite está protegido sin sesión
+  ✓ acta.spec.ts       › accede al módulo de trámite documentario
+  ✓ acta.spec.ts       › puede abrir la bandeja de mis documentos
+
+  -  buscar-bien.spec.ts › busca un bien por código patrimonial  (skip: TEST_BIEN_CODIGO)
+  -  acta.spec.ts        › genera un acta de entrega (completo)   (skip: TEST_ACTA_FULL=1)
+
+  2 skipped
+  16 passed (11.1s)
+
+
+################################################################################
+# QUÉ SE VALIDÓ DE CADA FLUJO
+################################################################################
+  FLUJO 1 - Login y acceso al dashboard
+            Login real con admin@unamad.edu.pe -> entra a /dashboard y se ve
+            el header del sistema. Rutas protegidas redirigen a /login.
+
+  FLUJO 2 - Buscar un bien
+            Carga la página de búsqueda; búsqueda de código inexistente
+            ("000000000000") muestra "Bien no encontrado" desde SIGA.
+
+  FLUJO 3 - Registrar/consultar un bien
+            Consulta por código (formulario real: escribir + botón Buscar).
+            El caso con un código existente queda listo (define TEST_BIEN_CODIGO).
+
+  FLUJO 4 - Crear y firmar un acta
+            Accede al módulo de trámite y a "mis documentos". El flujo completo
+            de generación + firma con Firma Perú queda listo (TEST_ACTA_FULL=1).
+
+  FLUJO 5 - Ver "mis bienes"
+            Página accesible para el usuario autenticado y la API
+            /api/patrimonio/mis-bienes responde correctamente.
+
+
+################################################################################
+# CÓMO CORRER TODO
+################################################################################
+  1) Asegurar BD poblada (una vez):     npm run db:seed
+  2) Pruebas unitarias:                 npm test
+  3) Pruebas E2E (login real):          npm run test:e2e
+
+  Opcional (activa los 2 tests saltados), en PowerShell antes del paso 3:
+     $env:TEST_BIEN_CODIGO="<codigo real de SIGA>"
+     $env:TEST_ACTA_FULL="1"
+
+  Requisitos de los flujos autenticados:
+     - PostgreSQL activo y con el seed cargado.
+     - SQL Server del SIGA accesible (buscar bien / mis bienes).
+
+
+################################################################################
+# ARCHIVO MODIFICADO EN ESTE PASO
+################################################################################
+  MOD.  e2e/helpers.ts  -> credenciales por defecto = usuario admin del seed
+  MOD.  e2e/buscar-bien.spec.ts -> usa el formulario real (escribir + Buscar)
+                                   en vez de depender de la URL
+
+================================================================================
+ Fin  -  58/58 unitarias  ·  16 E2E PASARON (login real) + 2 opcionales listas
+================================================================================

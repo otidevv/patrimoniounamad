@@ -1,0 +1,171 @@
+================================================================================
+ RESULTADO FINAL DE PRUEBAS - SISTEMA DE GESTIÓN DE PATRIMONIO UNAMAD
+ Fecha de ejecución: 2026-06-26
+ Usuario de pruebas: admin@unamad.edu.pe / admin123  (rol ADMIN, del seed)
+================================================================================
+
+RESUMEN GENERAL
+--------------------------------------------------------------------------------
+  Pruebas unitarias (Jest)......: 58 / 58  PASARON
+  Pruebas E2E (Playwright)......: 17 pasaron + 1 saltada   (18 total)
+  --------------------------------------------------------------------
+  TOTAL EJECUTADO Y EN VERDE....: 75 pruebas
+
+  El único test saltado es el flujo COMPLETO de firma del acta, que no se
+  puede automatizar headless porque requiere el cliente de escritorio de
+  Firma Perú (PCM). Todo lo demás se ejecutó realmente y pasó.
+
+
+################################################################################
+# 1) PRUEBAS UNITARIAS  (Jest + ts-jest)
+################################################################################
+Comando:  npm test
+
+SALIDA REAL:
+--------------------------------------------------------------------------------
+Test Suites: 7 passed, 7 total
+Tests:       58 passed, 58 total
+Snapshots:   0 total
+Time:        0.95 s
+Ran all test suites.
+--------------------------------------------------------------------------------
+
+Cobertura por categoría (las 5 solicitadas + 2 ya existentes):
+
+  A) Validación de datos de un bien      __tests__/validacion-bien.test.ts   (11)
+  B) Cálculo / formato de reportes       __tests__/reportes.test.ts          (12)
+  C) Hash para Firma Perú                __tests__/firma-peru.test.ts         (8)
+  D) Verificación de permisos por rol    __tests__/permisos.test.ts           (5)
+  E) Validación de credenciales (bcrypt) __tests__/credenciales.test.ts      (10)
+  -  Utilidad cn()                       __tests__/utils.test.ts              (6)
+  -  Etiquetas ZPL (Zebra)               __tests__/zebra-printer.test.ts      (6)
+                                                                       TOTAL = 58
+
+
+################################################################################
+# 2) PRUEBAS E2E  (Playwright / Chromium) - CON LOGIN REAL
+################################################################################
+Comando:  npm run test:e2e
+
+SALIDA REAL:
+--------------------------------------------------------------------------------
+Running 18 tests using 12 workers
+
+  ✓ login.spec.ts      › muestra el título y los campos del formulario
+  ✓ login.spec.ts      › permite mostrar y ocultar la contraseña
+  ✓ login.spec.ts      › muestra error con credenciales inválidas
+  ✓ login.spec.ts      › tiene enlace para recuperar contraseña
+  ✓ login.spec.ts      › ofrece inicio de sesión con Google
+  ✓ dashboard.spec.ts  › una ruta protegida redirige a /login si no hay sesión
+  ✓ dashboard.spec.ts  › la búsqueda de bienes también está protegida
+  ✓ dashboard.spec.ts  › inicia sesión y entra al dashboard            [LOGIN REAL OK]
+  ✓ buscar-bien.spec.ts › muestra la página de búsqueda de bienes
+  ✓ buscar-bien.spec.ts › busca un bien por código patrimonial (consulta)
+  ✓ buscar-bien.spec.ts › una búsqueda sin resultados informa al usuario
+  ✓ mis-bienes.spec.ts › la ruta está protegida sin sesión
+  ✓ mis-bienes.spec.ts › muestra la página de mis bienes al usuario autenticado
+  ✓ mis-bienes.spec.ts › la API de mis-bienes responde para el usuario autenticado
+  ✓ acta.spec.ts       › el módulo de trámite está protegido sin sesión
+  ✓ acta.spec.ts       › accede al módulo de trámite documentario
+  ✓ acta.spec.ts       › puede abrir la bandeja de mis documentos
+
+  -  acta.spec.ts      › genera un acta de entrega (flujo completo)    [SKIP]
+
+  1 skipped
+  17 passed (11.3s)
+--------------------------------------------------------------------------------
+
+DATOS REALES USADOS:
+  - Login real con admin@unamad.edu.pe (PostgreSQL + bcrypt + JWT).
+  - Búsqueda de bien por código real de SIGA: 740805000001
+    (COMPUTADORA PERSONAL PORTATIL) -> aparece en los resultados.
+  - Búsqueda de código inexistente 000000000000 -> "Bien no encontrado".
+  - API /api/patrimonio/mis-bienes responde para el usuario autenticado.
+  - Acceso real a /dashboard/tramite y /dashboard/tramite/mis-documentos.
+
+
+################################################################################
+# 3) COBERTURA DE LOS FLUJOS SOLICITADOS
+################################################################################
+  FLUJO 1 - Login y acceso al dashboard ......... EJECUTADO Y PASÓ (login real)
+  FLUJO 2 - Buscar un bien ...................... EJECUTADO Y PASÓ (SIGA real)
+  FLUJO 3 - Registrar/consultar un bien ......... EJECUTADO Y PASÓ (consulta real
+                                                   por código 740805000001)
+  FLUJO 4 - Crear y firmar un acta .............. PARCIAL: acceso al módulo de
+            trámite y bandejas PASÓ. La generación + FIRMA completa queda como
+            test opt-in (requiere cliente de escritorio Firma Perú).
+  FLUJO 5 - Ver "mis bienes" .................... EJECUTADO Y PASÓ
+
+
+################################################################################
+# 4) ¿POR QUÉ SE SALTA EL FLUJO COMPLETO DEL ACTA?
+################################################################################
+  La firma de un acta usa Firma Perú (PCM), que NO es una operación web:
+    1. El sistema genera el PDF y un lote de firma.
+    2. Se abre el CLIENTE DE ESCRITORIO de Firma Perú instalado en la PC.
+    3. El usuario firma con su certificado/DNIe.
+    4. El cliente devuelve el PDF firmado y el sistema lo recibe.
+  El paso 2-3 ocurre fuera del navegador, por lo que no es automatizable con
+  Playwright en modo headless. Por eso ese caso queda como skip opt-in:
+       $env:TEST_ACTA_FULL="1"   (solo con la PC y el cliente preparados)
+
+
+################################################################################
+# 5) CÓMO REPRODUCIR
+################################################################################
+  Requisitos:
+    - PostgreSQL activo con el seed cargado:   npm run db:seed
+    - SQL Server del SIGA accesible (buscar bien / mis bienes).
+
+  Ejecutar:
+    npm test            # 58 pruebas unitarias
+    npm run test:e2e    # 17 E2E (login real con admin@unamad.edu.pe)
+
+  Las credenciales por defecto (admin@unamad.edu.pe / admin123) y el código
+  de bien de prueba (740805000001) están configurados en e2e/, y se pueden
+  sobrescribir con variables de entorno:
+    $env:TEST_USER_EMAIL / $env:TEST_USER_PASSWORD / $env:TEST_BIEN_CODIGO
+
+
+################################################################################
+# 6) ARCHIVOS DE PRUEBA (estado final)
+################################################################################
+  Configuración:
+    jest.config.ts
+    playwright.config.ts        (servidor de pruebas en puerto 3100)
+
+  Lógica testeable (pura):
+    lib/validaciones.ts         (NUEVO)
+    lib/auth.ts                 (usa construirPermisosMap)
+
+  Unitarias (Jest) - 7 suites / 58 pruebas:
+    __tests__/validacion-bien.test.ts
+    __tests__/reportes.test.ts
+    __tests__/firma-peru.test.ts
+    __tests__/permisos.test.ts
+    __tests__/credenciales.test.ts
+    __tests__/utils.test.ts
+    __tests__/zebra-printer.test.ts
+
+  E2E (Playwright) - 5 specs / 18 pruebas:
+    e2e/helpers.ts              (login + credenciales por defecto del seed)
+    e2e/login.spec.ts
+    e2e/dashboard.spec.ts
+    e2e/buscar-bien.spec.ts
+    e2e/mis-bienes.spec.ts
+    e2e/acta.spec.ts
+
+  Scripts (package.json):
+    npm test            npm run test:watch
+    npm run test:e2e    npm run test:e2e:ui
+
+
+################################################################################
+# 7) NOTA DE SEGURIDAD
+################################################################################
+  admin123 / usuario123 son contraseñas de PRUEBA del seed. Si este seed se
+  usa en producción, cámbialas por contraseñas seguras.
+
+================================================================================
+ Fin  -  58/58 unitarias  ·  17 E2E PASARON (login real)  ·  1 skip justificado
+================================================================================

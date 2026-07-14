@@ -1,0 +1,113 @@
+========================================================================
+ RESULTADO DE PRUEBAS - SISTEMA DE GESTIÓN DE PATRIMONIO UNAMAD
+ Fecha de ejecución: 2026-06-26
+========================================================================
+
+RESUMEN GENERAL
+------------------------------------------------------------------------
+  Pruebas unitarias (Jest)......: 15 / 15  PASARON  ✓
+  Pruebas E2E (Playwright)......:  5 /  5  PASARON  ✓
+  ----------------------------------------------------
+  TOTAL.........................: 20 / 20  PASARON  ✓
+
+
+========================================================================
+ 1) PRUEBAS UNITARIAS  -  Jest + ts-jest
+========================================================================
+Comando ejecutado:  npm test
+
+Salida:
+------------------------------------------------------------------------
+> patrimoniounamad@0.1.0 test
+> jest
+
+Test Suites: 2 passed, 2 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+Time:        0.3 s, estimated 1 s
+Ran all test suites.
+------------------------------------------------------------------------
+
+Detalle de las suites:
+
+  __tests__/utils.test.ts  -> función cn() (combinación de clases Tailwind)
+    ✓ une varias clases en una sola cadena
+    ✓ ignora valores falsy (false, null, undefined)
+    ✓ aplica clases condicionales
+    ✓ resuelve conflictos de Tailwind dejando la última clase
+    ✓ acepta arreglos y objetos (clsx)
+    ✓ devuelve cadena vacía sin argumentos
+
+  __tests__/zebra-printer.test.ts  -> generación de etiquetas ZPL de bienes
+    generateLabelZpl():
+      ✓ inicia con ^XA y termina con ^XZ
+      ✓ incluye el código patrimonial en el texto y en el código de barras
+      ✓ pone la descripción en mayúsculas
+      ✓ trunca descripciones largas (máx 35 caracteres)
+      ✓ incluye el logo cuando se proporciona el gráfico GF
+      ✓ omite el logo cuando no se proporciona
+    generateBatchZpl():
+      ✓ agrega una etiqueta en blanco al inicio para calentar el cabezal
+      ✓ genera una etiqueta por cada bien
+      ✓ maneja un lote vacío devolviendo solo la etiqueta en blanco
+
+
+========================================================================
+ 2) PRUEBAS E2E (extremo a extremo)  -  Playwright (Chromium)
+========================================================================
+Comando ejecutado:  npx playwright test --reporter=list
+
+Nota: el servidor de patrimonio se levanta automáticamente en el puerto
+3100 (propio) para NO chocar con la otra app que corre en el puerto 3000
+(panel de posgrado).
+
+Salida:
+------------------------------------------------------------------------
+Running 5 tests using 5 workers
+
+  ✓  5 [chromium] › e2e\login.spec.ts:47:7 › Página de Login › ofrece inicio de sesión con Google (658ms)
+  ✓  3 [chromium] › e2e\login.spec.ts:41:7 › Página de Login › tiene enlace para recuperar contraseña (674ms)
+  ✓  1 [chromium] › e2e\login.spec.ts:9:7 › Página de Login › muestra el título y los campos del formulario (698ms)
+  ✓  2 [chromium] › e2e\login.spec.ts:19:7 › Página de Login › permite mostrar y ocultar la contraseña (773ms)
+  ✓  4 [chromium] › e2e\login.spec.ts:29:7 › Página de Login › muestra error con credenciales inválidas (988ms)
+
+  5 passed (4.2s)
+------------------------------------------------------------------------
+
+
+========================================================================
+ ARCHIVOS DE PRUEBA
+========================================================================
+  Configuración:
+    jest.config.ts          -> configuración de Jest (ts-jest, alias @/)
+    playwright.config.ts     -> configuración de Playwright (puerto 3100)
+
+  Pruebas unitarias:
+    __tests__/utils.test.ts
+    __tests__/zebra-printer.test.ts
+
+  Pruebas E2E:
+    e2e/login.spec.ts
+
+  Scripts en package.json:
+    npm test             -> pruebas unitarias (Jest)
+    npm run test:watch   -> Jest en modo watch
+    npm run test:e2e     -> pruebas E2E (Playwright)
+    npm run test:e2e:ui  -> Playwright modo interactivo
+
+
+========================================================================
+ OBSERVACIONES
+========================================================================
+  - Durante la ejecución de Playwright apareció una vez el error
+    "Unable to acquire lock at .next\dev\lock" por una instancia previa
+    de 'next dev'. Se resolvió liberando el puerto 3100 y eliminando el
+    archivo .next\dev\lock; tras eso las 5 pruebas E2E pasaron.
+
+  - Existe OTRA aplicación corriendo en el puerto 3000 (panel de
+    administración de posgrado, login admin@unamad.edu.pe) distinta a
+    este sistema. Por eso los E2E usan el puerto 3100.
+
+========================================================================
+ Fin del reporte  -  20/20 pruebas PASARON
+========================================================================
