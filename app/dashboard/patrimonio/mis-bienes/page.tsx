@@ -34,9 +34,11 @@ import {
   Sparkles,
   ArrowUpRight,
   X,
+  FileSpreadsheet,
   type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { exportMisBienesToExcel } from "@/lib/excel-export"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -258,6 +260,7 @@ export default function MisBienesPage() {
   const [busquedaSiga, setBusquedaSiga] = useState("")
   const [paginaSiga, setPaginaSiga] = useState(1)
   const [porPaginaSiga, setPorPaginaSiga] = useState(10)
+  const [descargandoExcel, setDescargandoExcel] = useState(false)
 
   // ─── Bienes verificados (inventario) ───
   const [bienesVerificados, setBienesVerificados] = useState<MiBien[]>([])
@@ -450,6 +453,27 @@ export default function MisBienesPage() {
     (acc, bien) => acc + (bien.valor_neto || 0),
     0
   )
+
+  // ─── Descargar Excel ───
+  const descargarExcel = async () => {
+    if (bienesSigaFiltrados.length === 0) {
+      toast.error("No hay bienes para exportar")
+      return
+    }
+    setDescargandoExcel(true)
+    try {
+      await exportMisBienesToExcel(bienesSigaFiltrados, usuario)
+      toast.success(
+        `Excel generado (${bienesSigaFiltrados.length} bien${
+          bienesSigaFiltrados.length === 1 ? "" : "es"
+        })`
+      )
+    } catch {
+      toast.error("Error al generar el archivo Excel")
+    } finally {
+      setDescargandoExcel(false)
+    }
+  }
 
   // ─── Selección ───
   const toggleSeleccion = (id: string) => {
@@ -953,11 +977,25 @@ export default function MisBienesPage() {
             />
           ) : (
             <>
-              <SearchBar
-                value={busquedaSiga}
-                onChange={setBusquedaSiga}
-                placeholder="Buscar por código, descripción, marca o serie..."
-              />
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <SearchBar
+                  value={busquedaSiga}
+                  onChange={setBusquedaSiga}
+                  placeholder="Buscar por código, descripción, marca o serie..."
+                />
+                <Button
+                  onClick={descargarExcel}
+                  disabled={descargandoExcel || bienesSigaFiltrados.length === 0}
+                  className="shrink-0 gap-2 bg-emerald-600 hover:bg-emerald-700"
+                >
+                  {descargandoExcel ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <FileSpreadsheet className="h-4 w-4" />
+                  )}
+                  Descargar Excel
+                </Button>
+              </div>
               <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
                 <div className="overflow-x-auto">
                   <Table>
