@@ -219,6 +219,8 @@ async function main() {
         descripcion: tipoDoc.descripcion,
         requiereFirma: tipoDoc.requiereFirma,
         prefijo: tipoDoc.prefijo,
+        // Sincronizar activo: solo se usan ACTA-ENT, OF, MEM e INF
+        activo: tipoDoc.activo ?? true,
       },
       create: tipoDoc,
     })
