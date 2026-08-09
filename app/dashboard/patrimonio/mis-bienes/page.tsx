@@ -35,9 +35,12 @@ import {
   ArrowUpRight,
   X,
   FileSpreadsheet,
+  FileText,
+  PenTool,
   type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { FirmaModal } from "@/components/firma-peru/firma-modal"
 import { exportMisBienesToExcel } from "@/lib/excel-export"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -125,6 +128,11 @@ interface Transferencia {
   remitente: { id: string; nombre: string; apellidos: string } | null
   destinatario: { id: string; nombre: string; apellidos: string } | null
   verificacion: { id: string; codigoPatrimonial: string; descripcionSiga: string | null }
+  documentoActa?: {
+    id: string
+    fechaFirma: string | null
+    archivosAdjuntos: { id: string; nombre: string; url: string }[]
+  } | null
 }
 
 interface MiBien {
@@ -148,6 +156,9 @@ interface MiAsignacion {
   apellidoMaterno: string | null
   sesion: { codigo: string; nombre: string; sigaNombreDependencia: string | null }
   _count: { verificaciones: number }
+  anexo7Url?: string | null
+  anexo7FirmaInventariadorAt?: string | null
+  anexo7FirmaUsuarioAt?: string | null
 }
 
 interface HistorialItem {
@@ -265,6 +276,8 @@ export default function MisBienesPage() {
   // ─── Bienes verificados (inventario) ───
   const [bienesVerificados, setBienesVerificados] = useState<MiBien[]>([])
   const [misAsignaciones, setMisAsignaciones] = useState<MiAsignacion[]>([])
+  const [firmaRecepcionAsig, setFirmaRecepcionAsig] = useState<MiAsignacion | null>(null)
+  const [firmaActaTransf, setFirmaActaTransf] = useState<Transferencia | null>(null)
   const [loadingVerificados, setLoadingVerificados] = useState(true)
   const [seleccionados, setSeleccionados] = useState<Set<string>>(new Set())
   const [busquedaVerif, setBusquedaVerif] = useState("")
@@ -449,6 +462,13 @@ export default function MisBienesPage() {
   const asignacionesPendientes = misAsignaciones.filter(
     (a) => a.estado === "ENVIADO"
   )
+  // Asignaciones aceptadas cuya recepción aún puede firmarse digitalmente
+  const asignacionesPorFirmar = misAsignaciones.filter(
+    (a) =>
+      a.estado === "ACEPTADO" &&
+      a.anexo7FirmaInventariadorAt &&
+      !a.anexo7FirmaUsuarioAt
+  )
   const valorTotal = bienes.reduce(
     (acc, bien) => acc + (bien.valor_neto || 0),
     0
@@ -630,6 +650,14 @@ export default function MisBienesPage() {
         setDialogResponder(false)
         cargarBienesVerificados()
         cargarTransferencias()
+        // Al aceptar, si la transferencia tiene acta de entrega, ofrecer
+        // de inmediato la firma digital de recepción
+        if (
+          accionRespuesta === "aceptar" &&
+          transferenciaResponder?.documentoActa?.archivosAdjuntos?.length
+        ) {
+          setFirmaActaTransf(transferenciaResponder)
+        }
       } else toast.error(data.error || "Error")
     } catch {
       toast.error("Error de conexión")
@@ -648,24 +676,37 @@ export default function MisBienesPage() {
   }
 
   const getEstadoTransfBadge = (estado: string) => {
-    if (estado === "PENDIENTE")
+    if (estado === "PENDIENTE" || estado === "ENVIADO")
       return (
         <Badge className="gap-1 border border-amber-200 bg-amber-50 text-amber-800">
           <Clock className="h-3 w-3" />
           Pendiente
         </Badge>
       )
-    if (estado === "ACEPTADA")
+    if (estado === "ACEPTADA" || estado === "ACEPTADO")
       return (
         <Badge className="gap-1 border border-emerald-200 bg-emerald-50 text-emerald-800">
           <CheckCircle2 className="h-3 w-3" />
           Aceptada
         </Badge>
       )
+    if (estado === "COMPLETADA" || estado === "CERRADO")
+      return (
+        <Badge className="gap-1 border border-emerald-200 bg-emerald-50 text-emerald-800">
+          <CheckCircle2 className="h-3 w-3" />
+          Completada
+        </Badge>
+      )
+    if (estado === "RECHAZADA" || estado === "RECHAZADO")
+      return (
+        <Badge className="gap-1 border border-rose-200 bg-rose-50 text-rose-800">
+          <XCircle className="h-3 w-3" />
+          Rechazada
+        </Badge>
+      )
     return (
-      <Badge className="gap-1 border border-rose-200 bg-rose-50 text-rose-800">
-        <XCircle className="h-3 w-3" />
-        Rechazada
+      <Badge className="gap-1 border border-slate-200 bg-slate-50 text-slate-700">
+        {estado}
       </Badge>
     )
   }
@@ -857,19 +898,79 @@ export default function MisBienesPage() {
                 </p>
               </div>
             </div>
-            <Button
-              size="sm"
-              className="shrink-0 gap-1.5 bg-[#0c1f3a] hover:bg-[#0a1a30]"
-              disabled={aceptandoAsignacion === asig.id}
-              onClick={() => aceptarAsignacion(asig.id)}
-            >
-              {aceptandoAsignacion === asig.id ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <CheckCircle2 className="h-4 w-4" />
+            <div className="flex shrink-0 flex-wrap gap-1.5 sm:gap-2">
+              {asig.anexo7Url && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5 border-amber-300 text-amber-800 hover:bg-amber-100"
+                  onClick={() => window.open(`${asig.anexo7Url}?v=${Date.now()}`, "_blank")}
+                >
+                  <FileText className="h-4 w-4" />
+                  Ver Anexo 7
+                </Button>
               )}
-              Aceptar
-            </Button>
+              <Button
+                size="sm"
+                className="gap-1.5 bg-[#0c1f3a] hover:bg-[#0a1a30]"
+                disabled={aceptandoAsignacion === asig.id}
+                onClick={() => aceptarAsignacion(asig.id)}
+              >
+                {aceptandoAsignacion === asig.id ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4" />
+                )}
+                Aceptar
+              </Button>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {/* Firma digital de recepción pendiente (Anexo 7) */}
+      {asignacionesPorFirmar.map((asig) => (
+        <div
+          key={`firma-${asig.id}`}
+          className="relative overflow-hidden rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-3 sm:px-5 sm:py-4"
+          style={{
+            animation: "fadeSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both",
+          }}
+        >
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-blue-100">
+                <PenTool className="h-4 w-4 text-blue-700" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-blue-900">
+                  Firma de recepción pendiente — Anexo 7
+                </p>
+                <p className="text-xs text-blue-700">
+                  <span className={jetbrains.className}>{asig.sesion.codigo}</span> · {asig.sesion.nombre} ·{" "}
+                  ya firmado por el inventariador. Puedes firmar la recepción con tu certificado digital.
+                </p>
+              </div>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-1.5 sm:gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 border-blue-300 text-blue-800 hover:bg-blue-100"
+                onClick={() => window.open(`${asig.anexo7Url}?v=${Date.now()}`, "_blank")}
+              >
+                <FileText className="h-4 w-4" />
+                Ver Anexo 7
+              </Button>
+              <Button
+                size="sm"
+                className="gap-1.5 bg-blue-600 hover:bg-blue-700"
+                onClick={() => setFirmaRecepcionAsig(asig)}
+              >
+                <PenTool className="h-4 w-4" />
+                Firmar recepción
+              </Button>
+            </div>
           </div>
         </div>
       ))}
@@ -1370,6 +1471,33 @@ export default function MisBienesPage() {
                               </Button>
                             </div>
                           )}
+                          {t.estado === "ACEPTADA" &&
+                            (t.documentoActa?.archivosAdjuntos?.length ?? 0) > 0 && (
+                              <div className="flex justify-end gap-1">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-7 gap-1 text-xs"
+                                  onClick={() =>
+                                    window.open(
+                                      `${t.documentoActa!.archivosAdjuntos[0].url}?v=${Date.now()}`,
+                                      "_blank"
+                                    )
+                                  }
+                                >
+                                  <FileText className="h-3.5 w-3.5" />
+                                  <span className="hidden sm:inline">Ver acta</span>
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  className="h-7 gap-1 bg-blue-600 text-xs hover:bg-blue-700"
+                                  onClick={() => setFirmaActaTransf(t)}
+                                >
+                                  <PenTool className="h-3.5 w-3.5" />
+                                  <span className="hidden sm:inline">Firmar</span>
+                                </Button>
+                              </div>
+                            )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -2048,6 +2176,42 @@ export default function MisBienesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Modal de firma digital FIRMA PERÚ para la recepción del Anexo 7 */}
+      {firmaRecepcionAsig?.anexo7Url && (
+        <FirmaModal
+          isOpen={!!firmaRecepcionAsig}
+          onClose={() => setFirmaRecepcionAsig(null)}
+          archivos={[
+            {
+              id: firmaRecepcionAsig.id,
+              nombre: `Anexo 7 — ${firmaRecepcionAsig.sesion.codigo}`,
+              url: firmaRecepcionAsig.anexo7Url,
+            },
+          ]}
+          onSuccess={() => {
+            cargarBienesVerificados()
+          }}
+          motivoInicial={2}
+        />
+      )}
+
+      {/* Modal de firma digital del acta de entrega (transferencia recibida) */}
+      {(firmaActaTransf?.documentoActa?.archivosAdjuntos?.length ?? 0) > 0 && (
+        <FirmaModal
+          isOpen={!!firmaActaTransf}
+          onClose={() => setFirmaActaTransf(null)}
+          archivos={firmaActaTransf!.documentoActa!.archivosAdjuntos.map((a) => ({
+            id: a.id,
+            nombre: a.nombre,
+            url: a.url,
+          }))}
+          onSuccess={() => {
+            cargarTransferencias()
+          }}
+          motivoInicial={2}
+        />
+      )}
     </div>
   )
 }

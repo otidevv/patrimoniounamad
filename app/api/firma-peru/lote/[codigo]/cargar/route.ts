@@ -103,6 +103,72 @@ export async function POST(
           },
         })
       } else {
+        // Buscar en AsignacionInventario (Anexo 7 de inventario)
+        const asignacionInv = await prisma.asignacionInventario.findUnique({
+          where: { id: archivoId },
+          include: {
+            sesion: {
+              select: {
+                responsableId: true,
+                participantes: { where: { activo: true }, select: { usuarioId: true } },
+              },
+            },
+          },
+        })
+
+        if (asignacionInv?.anexo7Url) {
+          // Autorización: el firmante es quien creó el lote (sesión autenticada)
+          const firmanteId = loteParams.usuario_id || ""
+          const firmante = firmanteId
+            ? await prisma.usuario.findUnique({
+                where: { id: firmanteId },
+                select: { rol: { select: { codigo: true } } },
+              })
+            : null
+          const esInventariador =
+            asignacionInv.sesion.responsableId === firmanteId ||
+            asignacionInv.sesion.participantes.some((p) => p.usuarioId === firmanteId) ||
+            firmante?.rol.codigo === "ADMIN"
+          const esUsuarioAsignado = asignacionInv.usuarioId === firmanteId
+
+          // Determinar qué firma corresponde y validar que el firmante puede hacerla:
+          // 1ra firma (autor) = inventariador; 2da firma (recepción) = usuario asignado
+          let dataFirma: { anexo7FirmaInventariadorAt: Date } | { anexo7FirmaUsuarioAt: Date } | null = null
+          if (!asignacionInv.anexo7FirmaInventariadorAt) {
+            if (esInventariador) dataFirma = { anexo7FirmaInventariadorAt: new Date() }
+          } else if (!asignacionInv.anexo7FirmaUsuarioAt) {
+            if (esUsuarioAsignado) dataFirma = { anexo7FirmaUsuarioAt: new Date() }
+          }
+
+          if (!dataFirma) {
+            console.warn(
+              `[Firma Perú] Firmante ${firmanteId} no autorizado para Anexo 7 de asignación ${archivoId}`
+            )
+            continue
+          }
+
+          // Sobreescribir el PDF del Anexo 7 con la versión firmada,
+          // validando que la ruta quede dentro del directorio de uploads
+          const originalRelativePath = asignacionInv.anexo7Url.replace(/^\/api\//, "")
+          const originalFilePath = path.resolve(process.cwd(), originalRelativePath)
+          const uploadsRoot = path.join(process.cwd(), "uploads", "inventario", "anexo7") + path.sep
+          if (!originalFilePath.startsWith(uploadsRoot)) {
+            console.warn(`[Firma Perú] Ruta de Anexo 7 fuera de uploads: ${originalFilePath}`)
+            continue
+          }
+          const originalDir = path.dirname(originalFilePath)
+          if (!fs.existsSync(originalDir)) fs.mkdirSync(originalDir, { recursive: true })
+          fs.copyFileSync(filePath, originalFilePath)
+
+          await prisma.asignacionInventario.update({
+            where: { id: archivoId },
+            data: dataFirma,
+          })
+
+          procesados.push(archivoId)
+          continue
+        }
+
         // Buscar en ArchivoAdjunto (adjuntos de trámite)
         const archivoAdjunto = await prisma.archivoAdjunto.findUnique({
           where: { id: archivoId },

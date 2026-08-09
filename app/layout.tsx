@@ -62,6 +62,8 @@ export default function RootLayout({
         `}</Script>
         <FirmaPeruScripts />
         {/* Contenedores ocultos requeridos por firmaperu.min.js para ClickOnce */}
+        {/* firmaperu.min.js hace getElementById("addComponent").appendChild(...) para lanzar el cliente */}
+        <div id="addComponent" style={{display:"none"}} />
         <div id="FirmaPeruContainer" style={{display:"none"}} />
         <div id="clickOnceDiv" style={{display:"none"}} />
         <iframe id="FirmaPeruFrame" name="FirmaPeruFrame" style={{display:"none",width:0,height:0,border:"none",position:"absolute"}} />

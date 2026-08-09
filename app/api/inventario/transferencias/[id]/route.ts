@@ -82,6 +82,76 @@ export async function PUT(
         },
       })
 
+      // Si la transferencia está vinculada a un acta de trámite, actualizar el
+      // documento (mismo comportamiento que /api/tramite/documentos/[id]/aceptar-transferencia)
+      if (transferencia.documentoActaId) {
+        const pendientesDelActa = await prisma.transferenciaBien.count({
+          where: {
+            documentoActaId: transferencia.documentoActaId,
+            estado: "PENDIENTE",
+          },
+        })
+
+        // Solo marcar ATENDIDO cuando no quedan bienes pendientes en el acta
+        if (pendientesDelActa === 0) {
+          const documento = await prisma.documentoTramite.findUnique({
+            where: { id: transferencia.documentoActaId },
+            include: { destinos: true },
+          })
+
+          if (
+            documento &&
+            documento.estado !== "ATENDIDO" &&
+            documento.estado !== "ARCHIVADO"
+          ) {
+            await prisma.documentoTramite.update({
+              where: { id: documento.id },
+              data: { estado: "ATENDIDO" },
+            })
+
+            for (const destino of documento.destinos) {
+              if (
+                (destino.destinatarioId === session.id ||
+                  destino.dependenciaDestinoId === session.dependenciaId) &&
+                destino.estadoRecepcion === "PENDIENTE"
+              ) {
+                await prisma.documentoDestino.update({
+                  where: { id: destino.id },
+                  data: {
+                    estadoRecepcion: "RECIBIDO",
+                    fechaRecepcion: now,
+                    receptorId: session.id,
+                  },
+                })
+              }
+            }
+
+            await prisma.documentoHistorial.create({
+              data: {
+                documentoId: documento.id,
+                accion: "ATENDIDO",
+                usuarioId: session.id,
+                dependenciaId: session.dependenciaId,
+                descripcion: `Transferencia del bien ${transferencia.codigoPatrimonial} aceptada por ${session.nombre} ${session.apellidos}`,
+                estadoAnterior: documento.estado,
+                estadoNuevo: "ATENDIDO",
+              },
+            })
+
+            await prisma.notificacion.create({
+              data: {
+                usuarioId: documento.remitenteId,
+                documentoId: documento.id,
+                tipo: "DOCUMENTO_ATENDIDO",
+                titulo: "Transferencia aceptada",
+                mensaje: `${session.nombre} ${session.apellidos} ha aceptado la transferencia del bien ${transferencia.codigoPatrimonial}`,
+                enlace: `/dashboard/tramite/documento/${documento.id}`,
+              },
+            })
+          }
+        }
+      }
+
       return NextResponse.json({
         transferencia: updated,
         mensaje: "Transferencia aceptada. El bien ahora está bajo su responsabilidad.",

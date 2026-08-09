@@ -28,9 +28,11 @@ interface FirmaModalProps {
   onClose: () => void
   archivos: { id: string; nombre: string; url: string }[]
   onSuccess?: () => void
+  /** Motivo preseleccionado: 1 = autor, 2 = V°B° (ej. firma de recepción) */
+  motivoInicial?: 1 | 2
 }
 
-export function FirmaModal({ isOpen, onClose, archivos, onSuccess }: FirmaModalProps) {
+export function FirmaModal({ isOpen, onClose, archivos, onSuccess, motivoInicial }: FirmaModalProps) {
   const { firmarDocumentos, isLoading, error, clearError } = useFirmaPeru()
 
   const [nombreLote, setNombreLote] = useState("")
@@ -47,9 +49,10 @@ export function FirmaModal({ isOpen, onClose, archivos, onSuccess }: FirmaModalP
       })
       setNombreLote(`Firma ${formatted}`)
       setFirmaExitosa(false)
+      if (motivoInicial) setMotivo(motivoInicial.toString())
       clearError()
     }
-  }, [isOpen, clearError])
+  }, [isOpen, clearError, motivoInicial])
 
   useEffect(() => {
     const handleSuccess = () => {

@@ -39,6 +39,15 @@ export async function GET(request: NextRequest) {
             modeloSiga: true,
           },
         },
+        documentoActa: {
+          select: {
+            id: true,
+            fechaFirma: true,
+            archivosAdjuntos: {
+              select: { id: true, nombre: true, url: true },
+            },
+          },
+        },
       },
       orderBy: { fechaSolicitud: "desc" },
     })

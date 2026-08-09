@@ -68,12 +68,15 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     requiereFirma: true,
     prefijo: "INF",
   },
+  // Los siguientes tipos existen en el catálogo pero inician desactivados:
+  // solo se usan Acta de Entrega de Bien, Oficio, Memorándum e Informe
   {
     codigo: "RES",
     nombre: "Resolución",
     descripcion: "Acto administrativo de autoridad competente",
     requiereFirma: true,
     prefijo: "RES",
+    activo: false,
   },
   {
     codigo: "PROV",
@@ -81,6 +84,7 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     descripcion: "Disposición breve para dar trámite a un documento",
     requiereFirma: true,
     prefijo: "PROV",
+    activo: false,
   },
   {
     codigo: "CARTA",
@@ -88,6 +92,7 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     descripcion: "Comunicación formal general",
     requiereFirma: true,
     prefijo: "CARTA",
+    activo: false,
   },
   {
     codigo: "SOL",
@@ -95,6 +100,7 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     descripcion: "Petición formal de un servicio o trámite",
     requiereFirma: true,
     prefijo: "SOL",
+    activo: false,
   },
   {
     codigo: "CONV",
@@ -102,6 +108,7 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     descripcion: "Acuerdo entre partes",
     requiereFirma: true,
     prefijo: "CONV",
+    activo: false,
   },
   {
     codigo: "ACTA",
@@ -109,6 +116,7 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     descripcion: "Documento que certifica hechos o acuerdos",
     requiereFirma: true,
     prefijo: "ACTA",
+    activo: false,
   },
   {
     codigo: "ACTA-ENT",
@@ -123,6 +131,7 @@ const TIPOS_DOCUMENTO_TRAMITE = [
     descripcion: "Comunicación de difusión masiva",
     requiereFirma: true,
     prefijo: "CIRC",
+    activo: false,
   },
 ]
 

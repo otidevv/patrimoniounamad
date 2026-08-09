@@ -680,6 +680,11 @@ model AsignacionInventario {
   fechaRespuestaUsuario  DateTime?           // Cuándo respondió el usuario
   fechaCierre            DateTime?           // Cuándo se cerró definitivamente
   observacionesUsuario   String?             // Observaciones del usuario al aceptar/rechazar
+  // Anexo 7 PDF con firma digital FIRMA PERÚ
+  anexo7Url                  String?         // Ruta del PDF generado (se sobreescribe al firmar)
+  anexo7GeneradoAt           DateTime?
+  anexo7FirmaInventariadorAt DateTime?       // Primera firma (motivo autor)
+  anexo7FirmaUsuarioAt       DateTime?       // Segunda firma: recepción del usuario (V°B°)
   // Verificaciones asociadas
   verificaciones         VerificacionBien[]
   createdAt              DateTime            @default(now())
