@@ -17,6 +17,7 @@ import {
   User,
   Building2,
   RefreshCw,
+  RotateCcw,
   Pause,
   Check,
   AlertTriangle,
@@ -39,6 +40,8 @@ import {
   Lock,
   UserPlus,
   UserMinus,
+  PenTool,
+  FileText,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -78,6 +81,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { BarcodeScanner } from "@/components/barcode-scanner"
+import { FirmaModal } from "@/components/firma-peru/firma-modal"
 
 interface Sesion {
   id: string
@@ -149,6 +153,10 @@ interface Asignacion {
   apellidoMaterno: string | null
   usuarioId: string | null
   _count: { verificaciones: number }
+  anexo7Url?: string | null
+  anexo7GeneradoAt?: string | null
+  anexo7FirmaInventariadorAt?: string | null
+  anexo7FirmaUsuarioAt?: string | null
 }
 
 interface BienSIGA {
@@ -163,6 +171,9 @@ interface BienSIGA {
   modelo: string | null
   serie: string | null
   valor_neto: number | null
+  color?: string | null
+  medidas?: string | null
+  caracteristicas?: string | null
 }
 
 interface BienEsperado extends BienSIGA {
@@ -187,6 +198,7 @@ export default function VerificacionPage() {
   const [sesion, setSesion] = useState<Sesion | null>(null)
   const [verificaciones, setVerificaciones] = useState<Verificacion[]>([])
   const [loading, setLoading] = useState(true)
+  const [esAdmin, setEsAdmin] = useState(false)
 
   // Scanner state
   const [codigo, setCodigo] = useState("")
@@ -257,6 +269,14 @@ export default function VerificacionPage() {
 
   // Dialog para bien sin código
   const [dialogSinCodigo, setDialogSinCodigo] = useState(false)
+
+  // Búsqueda por serie: resultados múltiples para elegir
+  const [resultadosSerie, setResultadosSerie] = useState<BienSIGA[]>([])
+  const [dialogSerie, setDialogSerie] = useState(false)
+
+  // Firma digital del Anexo 7 (FIRMA PERÚ)
+  const [firmaAnexoOpen, setFirmaAnexoOpen] = useState(false)
+  const [generandoAnexoPdf, setGenerandoAnexoPdf] = useState(false)
   const [savingSinCodigo, setSavingSinCodigo] = useState(false)
   const [formSinCodigo, setFormSinCodigo] = useState({
     denominacion: "",
@@ -293,6 +313,13 @@ export default function VerificacionPage() {
   const [usuarioExpandido, setUsuarioExpandido] = useState<string | null>(null)
   const [bienesUsuario, setBienesUsuario] = useState<BienEsperado[]>([])
   const [loadingBienesUsuario, setLoadingBienesUsuario] = useState(false)
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setEsAdmin(data?.user?.rol === "ADMIN"))
+      .catch(() => setEsAdmin(false))
+  }, [])
 
   const cargarSesion = useCallback(async () => {
     try {
@@ -733,6 +760,48 @@ export default function VerificacionPage() {
     }
   }
 
+  // Generar (o regenerar) el PDF del Anexo 7 para firma digital
+  const generarAnexo7Pdf = async () => {
+    if (!asignacionActual) return
+    if (
+      (asignacionActual.anexo7FirmaInventariadorAt || asignacionActual.anexo7FirmaUsuarioAt) &&
+      !confirm("El Anexo 7 ya tiene firmas digitales. Regenerarlo las invalidará y deberá firmarse de nuevo. ¿Continuar?")
+    ) {
+      return
+    }
+
+    setGenerandoAnexoPdf(true)
+    try {
+      const res = await fetch(`/api/inventario/asignaciones/${asignacionActual.id}/anexo7`, {
+        method: "POST",
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || "Error al generar el PDF")
+      }
+      setAsignacionActual({ ...asignacionActual, ...data.asignacion })
+      toast.success("Anexo 7 PDF generado. Ya puede firmarlo digitalmente.")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al generar el PDF")
+    } finally {
+      setGenerandoAnexoPdf(false)
+    }
+  }
+
+  // Refrescar estado de firmas tras firmar con FIRMA PERÚ
+  const refrescarAsignacion = useCallback(async () => {
+    if (!asignacionActual) return
+    try {
+      const res = await fetch(`/api/inventario/asignaciones/${asignacionActual.id}`)
+      const data = await res.json()
+      if (res.ok && data.asignacion) {
+        setAsignacionActual((prev) => (prev ? { ...prev, ...data.asignacion } : prev))
+      }
+    } catch {
+      /* silencioso: el estado se actualizará al recargar */
+    }
+  }, [asignacionActual])
+
   const descargarAnexo7 = async (empleadoFinal: string, nombreUsuario: string, e: React.MouseEvent) => {
     e.stopPropagation()
     try {
@@ -848,75 +917,101 @@ export default function VerificacionPage() {
     setDocInput("")
   }
 
-  // Buscar bien y abrir diálogo
-  const buscarYVerificar = useCallback(async (codigoBuscar: string) => {
-    if (!codigoBuscar.trim() || codigoBuscar.length < 10) return
+  // Abrir diálogo de verificación con un bien encontrado en SIGA
+  const abrirVerificacionConBien = useCallback((bien: BienSIGA) => {
+    setBienEncontrado(bien)
+    setCodigo(bien.codigo_patrimonial)
+    // Extraer color de caracteristicas si tiene formato "COLOR: xxx"
+    const colorFromCaract = bien.caracteristicas?.match(/COLOR:\s*([^/]+)/i)?.[1]?.trim()
+    setFormVerificacion({
+      resultado: "ENCONTRADO",
+      estadoFisico: "",
+      situacion: "U",
+      ubicacionReal: "",
+      observaciones: "",
+      marca: bien.marca || "",
+      modelo: bien.modelo || "",
+      serie: bien.serie || "",
+      color: bien.color || colorFromCaract || "",
+      tipo: "",
+      dimensiones: bien.medidas || "",
+      otros: "",
+      procesador: "",
+      generacion: "",
+      sistemaOperativo: "",
+      ram: "",
+      disco: "",
+    })
+    setEsComputoVerif(false)
+    setDialogOpen(true)
+  }, [])
+
+  // Buscar bien (por código patrimonial o serie) y abrir diálogo
+  const buscarYVerificar = useCallback(async (textoBuscar: string) => {
+    const texto = textoBuscar.trim()
+    // 12 dígitos numéricos = código patrimonial; otro texto = número de serie
+    const esCodigo = /^\d{12}$/.test(texto)
+    if (!texto || (!esCodigo && texto.length < 4)) return
 
     setScanning(true)
 
     try {
-      // Primero buscar en SIGA
-      const response = await fetch(
-        `/api/patrimonio/buscar?codigo=${encodeURIComponent(codigoBuscar.trim())}`
-      )
-      const data = await response.json()
+      if (esCodigo) {
+        const response = await fetch(
+          `/api/patrimonio/buscar?codigo=${encodeURIComponent(texto)}`
+        )
+        const data = await response.json()
 
-      if (response.ok && data.bien) {
-        const bien = data.bien
-        setBienEncontrado(bien)
-        // Extraer color de caracteristicas si tiene formato "COLOR: xxx"
-        const colorFromCaract = bien.caracteristicas?.match(/COLOR:\s*([^/]+)/i)?.[1]?.trim()
-        setFormVerificacion({
-          resultado: "ENCONTRADO",
-          estadoFisico: "",
-          situacion: "U",
-          ubicacionReal: "",
-          observaciones: "",
-          marca: bien.marca || "",
-          modelo: bien.modelo || "",
-          serie: bien.serie || "",
-          color: bien.color || colorFromCaract || "",
-          tipo: "",
-          dimensiones: bien.medidas || "",
-          otros: "",
-          procesador: "",
-          generacion: "",
-          sistemaOperativo: "",
-          ram: "",
-          disco: "",
-        })
+        if (response.ok && data.bien) {
+          abrirVerificacionConBien(data.bien)
+        } else {
+          // No encontrado en SIGA → registrar como sobrante
+          setBienEncontrado(null)
+          setFormVerificacion({
+            resultado: "SOBRANTE",
+            estadoFisico: "",
+            situacion: "U",
+            ubicacionReal: "",
+            observaciones: "",
+            marca: "",
+            modelo: "",
+            serie: "",
+            color: "",
+            tipo: "",
+            dimensiones: "",
+            otros: "",
+            procesador: "",
+            generacion: "",
+            sistemaOperativo: "",
+            ram: "",
+            disco: "",
+          })
+          setEsComputoVerif(false)
+          setDialogOpen(true)
+        }
       } else {
-        // No encontrado en SIGA
-        setBienEncontrado(null)
-        setFormVerificacion({
-          resultado: "SOBRANTE",
-          estadoFisico: "",
-          situacion: "U",
-          ubicacionReal: "",
-          observaciones: "",
-          marca: "",
-          modelo: "",
-          serie: "",
-          color: "",
-          tipo: "",
-          dimensiones: "",
-          otros: "",
-          procesador: "",
-          generacion: "",
-          sistemaOperativo: "",
-          ram: "",
-          disco: "",
-        })
-      }
+        const response = await fetch(
+          `/api/patrimonio/buscar?serie=${encodeURIComponent(texto)}`
+        )
+        const data = await response.json()
+        const lista: BienSIGA[] =
+          response.ok && Array.isArray(data.bienes) ? data.bienes : []
 
-      setEsComputoVerif(false)
-      setDialogOpen(true)
+        if (lista.length === 0) {
+          toast.info("No se encontró ningún bien con esa serie")
+        } else if (lista.length === 1) {
+          abrirVerificacionConBien(lista[0])
+        } else {
+          setResultadosSerie(lista)
+          setDialogSerie(true)
+        }
+      }
     } catch {
       toast.error("Error de conexión al servidor")
     } finally {
       setScanning(false)
     }
-  }, [])
+  }, [abrirVerificacionConBien])
 
   // Manejar escaneo desde cámara
   const handleCameraScan = useCallback((code: string) => {
@@ -1045,6 +1140,11 @@ export default function VerificacionPage() {
     }
   }
 
+  const handleReabrir = () => {
+    if (!confirm("¿Reabrir esta sesión? Volverá al estado En Proceso y se podrá seguir verificando bienes.")) return
+    handleAccionSesion("reabrir")
+  }
+
   const handleAccionSesion = async (accion: string) => {
     try {
       const response = await fetch(`/api/inventario/sesiones/${sesionId}`, {
@@ -1153,6 +1253,17 @@ export default function VerificacionPage() {
             <h1 className="text-base sm:text-xl font-bold truncate">{sesion.nombre}</h1>
           </div>
           <div className="flex gap-1.5 sm:gap-2 shrink-0">
+            {esAdmin && (sesion.estado === "FINALIZADA" || sesion.estado === "CANCELADA") && (
+              <Button
+                variant="outline"
+                size="icon"
+                className="sm:w-auto sm:px-3"
+                onClick={handleReabrir}
+              >
+                <RotateCcw className="h-4 w-4 sm:mr-1.5" />
+                <span className="hidden sm:inline">Reabrir</span>
+              </Button>
+            )}
             {(sesion.estado === "EN_PROCESO") && (
               <Button
                 variant="outline"
@@ -1472,6 +1583,51 @@ export default function VerificacionPage() {
                           <span className="hidden sm:inline">Anexo 7</span>
                         </Button>
                       )}
+                      {asignacionActual && verificacionesPersona.length > 0 && (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={generandoAnexoPdf}
+                            onClick={generarAnexo7Pdf}
+                            className="gap-1.5 border-green-300 text-green-800 hover:bg-green-100"
+                          >
+                            {generandoAnexoPdf ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <FileText className="h-4 w-4" />
+                            )}
+                            <span className="hidden sm:inline">
+                              {asignacionActual.anexo7Url ? "Regenerar PDF" : "Anexo 7 PDF"}
+                            </span>
+                            <span className="sm:hidden">PDF</span>
+                          </Button>
+                          {asignacionActual.anexo7Url && (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1.5 border-green-300 text-green-800 hover:bg-green-100"
+                                onClick={() => window.open(`${asignacionActual.anexo7Url}?v=${Date.now()}`, "_blank")}
+                              >
+                                <Download className="h-4 w-4" />
+                                <span className="hidden sm:inline">Ver PDF</span>
+                              </Button>
+                              {!asignacionActual.anexo7FirmaInventariadorAt && (
+                                <Button
+                                  size="sm"
+                                  className="gap-1.5 bg-blue-600 hover:bg-blue-700"
+                                  onClick={() => setFirmaAnexoOpen(true)}
+                                >
+                                  <PenTool className="h-4 w-4" />
+                                  <span className="hidden sm:inline">Firmar Anexo 7</span>
+                                  <span className="sm:hidden">Firmar</span>
+                                </Button>
+                              )}
+                            </>
+                          )}
+                        </>
+                      )}
                       {asignacionActual && asignacionActual.estado === "PENDIENTE" && verificacionesPersona.length > 0 && (
                         <Button
                           size="sm"
@@ -1511,6 +1667,33 @@ export default function VerificacionPage() {
                       )}
                     </div>
                   )}
+                  {asignacionActual?.anexo7Url && (
+                    <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                      <Badge variant="outline" className="gap-1 text-[10px]">
+                        <FileText className="h-3 w-3" />Anexo 7 PDF
+                      </Badge>
+                      {asignacionActual.anexo7FirmaInventariadorAt ? (
+                        <Badge className="bg-blue-100 text-blue-800 gap-1 text-[10px]">
+                          <PenTool className="h-3 w-3" />Firmado por inventariador
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="gap-1 text-[10px] text-muted-foreground">
+                          <Clock className="h-3 w-3" />Pendiente firma del inventariador
+                        </Badge>
+                      )}
+                      {asignacionActual.anexo7FirmaUsuarioAt ? (
+                        <Badge className="bg-green-100 text-green-800 gap-1 text-[10px]">
+                          <ShieldCheck className="h-3 w-3" />Recepción firmada por el usuario
+                        </Badge>
+                      ) : (
+                        asignacionActual.anexo7FirmaInventariadorAt && (
+                          <Badge variant="outline" className="gap-1 text-[10px] text-muted-foreground">
+                            <Clock className="h-3 w-3" />Pendiente firma de recepción
+                          </Badge>
+                        )
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -1534,16 +1717,16 @@ export default function VerificacionPage() {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <Barcode className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                            <span className="text-sm sm:text-base font-medium">Código Patrimonial</span>
+                            <span className="text-sm sm:text-base font-medium">Código Patrimonial o Serie</span>
                           </div>
                           <form onSubmit={handleBuscar} className="flex gap-2">
                             <Input
                               ref={inputRef}
-                              placeholder="Ingrese o escanee código..."
+                              placeholder="Ingrese código o serie..."
                               value={codigo}
                               onChange={(e) => setCodigo(e.target.value)}
                               className="font-mono text-base sm:text-lg h-11 sm:h-12"
-                              maxLength={12}
+                              maxLength={30}
                               autoComplete="off"
                             />
                             <Button type="submit" disabled={scanning || !codigo.trim()} className="h-11 sm:h-12 px-4 sm:px-6">
@@ -2536,6 +2719,59 @@ export default function VerificacionPage() {
               <Button disabled variant="outline">Solo lectura</Button>
             )}
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de firma digital FIRMA PERÚ para el Anexo 7 */}
+      {asignacionActual?.anexo7Url && (
+        <FirmaModal
+          isOpen={firmaAnexoOpen}
+          onClose={() => setFirmaAnexoOpen(false)}
+          archivos={[
+            {
+              id: asignacionActual.id,
+              nombre: `Anexo 7 — ${personaActual?.nombre ?? ""} ${personaActual?.apellidos ?? ""}`.trim(),
+              url: asignacionActual.anexo7Url,
+            },
+          ]}
+          onSuccess={refrescarAsignacion}
+        />
+      )}
+
+      {/* Dialog: Varios bienes coinciden con la serie buscada */}
+      <Dialog open={dialogSerie} onOpenChange={setDialogSerie}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Search className="h-5 w-5" />
+              Varios bienes con esa serie
+            </DialogTitle>
+            <DialogDescription>
+              Selecciona el bien que corresponde para verificarlo
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex max-h-[60vh] flex-col gap-2 overflow-y-auto">
+            {resultadosSerie.map((bien) => (
+              <button
+                key={bien.codigo_patrimonial}
+                type="button"
+                className="rounded-lg border p-3 text-left transition-colors hover:bg-muted"
+                onClick={() => {
+                  setDialogSerie(false)
+                  abrirVerificacionConBien(bien)
+                }}
+              >
+                <div className="font-mono text-sm font-medium">
+                  {bien.codigo_patrimonial}
+                </div>
+                <div className="truncate text-sm">{bien.descripcion}</div>
+                <div className="truncate text-xs text-muted-foreground">
+                  Serie: {bien.serie || "—"}
+                  {bien.usuario ? ` · ${bien.usuario}` : ""}
+                </div>
+              </button>
+            ))}
+          </div>
         </DialogContent>
       </Dialog>
 

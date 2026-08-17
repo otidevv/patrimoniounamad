@@ -19,6 +19,7 @@ import {
   AlertCircle,
   Package,
   RefreshCw,
+  RotateCcw,
   ChevronsUpDown,
   Check,
   ChevronLeft,
@@ -130,6 +131,7 @@ export default function InventarioPage() {
   const [sigaDependenciaOpen, setSigaDependenciaOpen] = useState(false)
   const [loadingSiga, setLoadingSiga] = useState(false)
   const [paginaActual, setPaginaActual] = useState(1)
+  const [esAdmin, setEsAdmin] = useState(false)
   const itemsPorPagina = 10
 
   // Form state
@@ -203,6 +205,13 @@ export default function InventarioPage() {
     cargarCatalogos()
   }, [cargarSesiones, cargarCatalogos])
 
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setEsAdmin(data?.user?.rol === "ADMIN"))
+      .catch(() => setEsAdmin(false))
+  }, [])
+
   const handleCrear = async () => {
     if (!formData.nombre || !formData.fechaProgramada) {
       setError("Nombre y fecha programada son requeridos")
@@ -267,6 +276,11 @@ export default function InventarioPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al ejecutar acción")
     }
+  }
+
+  const handleReabrir = (sesionId: string) => {
+    if (!confirm("¿Reabrir esta sesión? Volverá al estado En Proceso y se podrá seguir verificando bienes.")) return
+    handleAccion(sesionId, "reabrir")
   }
 
   const getEstadoBadge = (estado: string) => {
@@ -706,6 +720,16 @@ export default function InventarioPage() {
                                 <DropdownMenuItem onClick={() => handleAccion(sesion.id, "finalizar")}>
                                   <CheckCircle className="mr-2 h-4 w-4" />
                                   Finalizar
+                                </DropdownMenuItem>
+                              </>
+                            )}
+
+                            {esAdmin && (sesion.estado === "FINALIZADA" || sesion.estado === "CANCELADA") && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => handleReabrir(sesion.id)}>
+                                  <RotateCcw className="mr-2 h-4 w-4" />
+                                  Reabrir
                                 </DropdownMenuItem>
                               </>
                             )}

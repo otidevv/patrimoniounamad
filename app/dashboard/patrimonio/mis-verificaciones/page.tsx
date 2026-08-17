@@ -22,7 +22,10 @@ import {
   ChevronRight,
   ArrowUp,
   ArrowDown,
+  PenTool,
+  FileText,
 } from "lucide-react"
+import { FirmaModal } from "@/components/firma-peru/firma-modal"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -75,6 +78,9 @@ interface Asignacion {
     sigaNombreDependencia: string | null
   }
   _count: { verificaciones: number }
+  anexo7Url?: string | null
+  anexo7FirmaInventariadorAt?: string | null
+  anexo7FirmaUsuarioAt?: string | null
 }
 
 interface Verificacion {
@@ -128,6 +134,9 @@ export default function MisVerificacionesPage() {
   const [asignacionDialog, setAsignacionDialog] = useState<Asignacion | null>(null)
   const [observacionesResp, setObservacionesResp] = useState("")
   const [enviando, setEnviando] = useState(false)
+
+  // Firma digital de recepción del Anexo 7 (FIRMA PERÚ)
+  const [firmaRecepcion, setFirmaRecepcion] = useState<Asignacion | null>(null)
 
   const cargarAsignaciones = useCallback(async () => {
     try {
@@ -201,6 +210,16 @@ export default function MisVerificacionesPage() {
         cargarAsignaciones()
         if (vistaDetalle && asignacionSeleccionada?.id === asignacionDialog.id) {
           setAsignacionSeleccionada({ ...asignacionDialog, estado: accionDialog === "aceptar" ? "ACEPTADO" : "RECHAZADO" })
+        }
+        // Al aceptar, si el Anexo 7 ya fue firmado por el inventariador,
+        // abrir de inmediato la firma digital de recepción
+        if (
+          accionDialog === "aceptar" &&
+          asignacionDialog.anexo7Url &&
+          asignacionDialog.anexo7FirmaInventariadorAt &&
+          !asignacionDialog.anexo7FirmaUsuarioAt
+        ) {
+          setFirmaRecepcion({ ...asignacionDialog, estado: "ACEPTADO" })
         }
       } else {
         toast.error(data.error || "Error al responder")
@@ -362,6 +381,25 @@ export default function MisVerificacionesPage() {
     return c
   }, [verificaciones])
 
+  // Modal de firma digital de recepción (compartido entre vista lista y detalle)
+  const firmaRecepcionModal = firmaRecepcion?.anexo7Url ? (
+    <FirmaModal
+      isOpen={!!firmaRecepcion}
+      onClose={() => setFirmaRecepcion(null)}
+      archivos={[
+        {
+          id: firmaRecepcion.id,
+          nombre: `Anexo 7 — ${firmaRecepcion.sesion.codigo}`,
+          url: firmaRecepcion.anexo7Url,
+        },
+      ]}
+      onSuccess={() => {
+        cargarAsignaciones()
+      }}
+      motivoInicial={2}
+    />
+  ) : null
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]" role="status">
@@ -408,6 +446,39 @@ export default function MisVerificacionesPage() {
                 <XCircle className="h-4 w-4" />
                 Rechazar
               </Button>
+            </div>
+          )}
+
+          {/* Anexo 7: ver PDF y firmar recepción */}
+          {asignacionSeleccionada.anexo7Url && (
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => window.open(`${asignacionSeleccionada.anexo7Url}?v=${Date.now()}`, "_blank")}
+              >
+                <FileText className="h-4 w-4" />
+                Ver Anexo 7
+              </Button>
+              {asignacionSeleccionada.estado === "ACEPTADO" &&
+                asignacionSeleccionada.anexo7FirmaInventariadorAt &&
+                !asignacionSeleccionada.anexo7FirmaUsuarioAt && (
+                  <Button
+                    size="sm"
+                    className="gap-1.5 bg-blue-600 hover:bg-blue-700"
+                    onClick={() => setFirmaRecepcion(asignacionSeleccionada)}
+                  >
+                    <PenTool className="h-4 w-4" />
+                    Firmar recepción
+                  </Button>
+                )}
+              {asignacionSeleccionada.anexo7FirmaUsuarioAt && (
+                <Badge className="bg-green-100 text-green-800 gap-1 self-center">
+                  <ShieldCheck className="h-3 w-3" />
+                  Recepción firmada digitalmente
+                </Badge>
+              )}
             </div>
           )}
         </div>
@@ -654,6 +725,20 @@ export default function MisVerificacionesPage() {
               />
             </div>
 
+            {accionDialog === "aceptar" &&
+              asignacionDialog?.anexo7Url &&
+              asignacionDialog.anexo7FirmaInventariadorAt &&
+              !asignacionDialog.anexo7FirmaUsuarioAt && (
+                <div className="flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
+                  <PenTool className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>
+                    Al confirmar se abrirá la <strong>firma digital de recepción</strong> con
+                    FIRMA PERÚ. Necesitas tu certificado digital; si no lo tienes a la mano,
+                    podrás firmar después desde esta misma página.
+                  </span>
+                </div>
+              )}
+
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogRespuesta(false)}>
                 Cancelar
@@ -669,6 +754,7 @@ export default function MisVerificacionesPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        {firmaRecepcionModal}
       </div>
     )
   }
@@ -792,6 +878,18 @@ export default function MisVerificacionesPage() {
                               </Button>
                             </>
                           )}
+                          {asig.estado === "ACEPTADO" &&
+                            asig.anexo7FirmaInventariadorAt &&
+                            !asig.anexo7FirmaUsuarioAt && (
+                              <Button
+                                size="sm"
+                                className="h-8 gap-1 text-xs bg-blue-600 hover:bg-blue-700"
+                                onClick={() => setFirmaRecepcion(asig)}
+                              >
+                                <PenTool className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline">Firmar recepción</span>
+                              </Button>
+                            )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -867,6 +965,20 @@ export default function MisVerificacionesPage() {
             />
           </div>
 
+          {accionDialog === "aceptar" &&
+            asignacionDialog?.anexo7Url &&
+            asignacionDialog.anexo7FirmaInventariadorAt &&
+            !asignacionDialog.anexo7FirmaUsuarioAt && (
+              <div className="flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
+                <PenTool className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>
+                  Al confirmar se abrirá la <strong>firma digital de recepción</strong> con
+                  FIRMA PERÚ. Necesitas tu certificado digital; si no lo tienes a la mano,
+                  podrás firmar después desde esta misma página.
+                </span>
+              </div>
+            )}
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogRespuesta(false)}>
               Cancelar
@@ -882,6 +994,7 @@ export default function MisVerificacionesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {firmaRecepcionModal}
     </div>
   )
 }

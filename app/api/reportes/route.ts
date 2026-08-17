@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { contarBienesPorDocumentos, verificarConexion } from "@/lib/siga"
 
 // GET: Obtener datos para reportes
 export async function GET(request: NextRequest) {
@@ -77,35 +78,69 @@ async function getReporteUsuarios() {
     orderBy: { apellidos: "asc" },
   })
 
-  const data = usuarios.map((u) => ({
-    ID: u.id,
-    Nombres: u.nombre,
-    Apellidos: u.apellidos,
-    "Nombre Completo": `${u.apellidos}, ${u.nombre}`,
-    Email: u.email,
-    "Tipo Doc.": u.tipoDocumento,
-    "Nro. Documento": u.numeroDocumento || "",
-    Cargo: u.cargo || "",
-    Teléfono: u.telefono || "",
-    Sede: u.sede?.nombre || "",
-    Dependencia: u.dependencia?.nombre || "",
-    "Siglas Dep.": u.dependencia?.siglas || "",
-    Rol: u.rol?.nombre || "",
-    Estado: u.activo ? "Activo" : "Inactivo",
-    "Fecha Inicio": u.fechaInicio?.toISOString().split("T")[0] || "",
-    "Fecha Fin": u.fechaFin?.toISOString().split("T")[0] || "",
-    "Sesiones Responsable": u._count.sesionesResponsable,
-    "Participaciones Inventario": u._count.participacionesInventario,
-    "Verificaciones Realizadas": u._count.verificacionesRealizadas,
-    "Fecha Registro": u.createdAt.toISOString().split("T")[0],
-  }))
+  // Consultar SIGA: cuántos bienes patrimoniales tiene asignado actualmente cada
+  // usuario (como responsable o usuario final) y el valor neto acumulado.
+  const documentos = usuarios
+    .map((u) => u.numeroDocumento?.trim())
+    .filter((d): d is string => !!d)
+
+  const conteoMap = new Map<string, { total: number; valor: number }>()
+  let sigaDisponible = false
+
+  if (documentos.length > 0) {
+    try {
+      const conexionOk = await verificarConexion()
+      if (conexionOk) {
+        const conteos = await contarBienesPorDocumentos(documentos)
+        conteos.forEach((c) =>
+          conteoMap.set(c.documento, { total: c.total_bienes, valor: c.valor_neto })
+        )
+        sigaDisponible = true
+      }
+    } catch (error) {
+      console.error("No se pudo obtener el conteo de bienes SIGA:", error)
+    }
+  }
+
+  const data = usuarios.map((u) => {
+    const doc = u.numeroDocumento?.trim()
+    const conteo = doc ? conteoMap.get(doc) : undefined
+    return {
+      ID: u.id,
+      Nombres: u.nombre,
+      Apellidos: u.apellidos,
+      "Nombre Completo": `${u.apellidos}, ${u.nombre}`,
+      Email: u.email,
+      "Tipo Doc.": u.tipoDocumento,
+      "Nro. Documento": u.numeroDocumento || "",
+      "Bienes en SIGA": sigaDisponible ? conteo?.total ?? 0 : "N/D",
+      "Valor Neto SIGA (S/)": sigaDisponible
+        ? Number((conteo?.valor ?? 0).toFixed(2))
+        : "N/D",
+      Cargo: u.cargo || "",
+      Teléfono: u.telefono || "",
+      Sede: u.sede?.nombre || "",
+      Dependencia: u.dependencia?.nombre || "",
+      "Siglas Dep.": u.dependencia?.siglas || "",
+      Rol: u.rol?.nombre || "",
+      Estado: u.activo ? "Activo" : "Inactivo",
+      "Fecha Inicio": u.fechaInicio?.toISOString().split("T")[0] || "",
+      "Fecha Fin": u.fechaFin?.toISOString().split("T")[0] || "",
+      "Sesiones Responsable": u._count.sesionesResponsable,
+      "Participaciones Inventario": u._count.participacionesInventario,
+      "Verificaciones Realizadas": u._count.verificacionesRealizadas,
+      "Fecha Registro": u.createdAt.toISOString().split("T")[0],
+    }
+  })
 
   return NextResponse.json({
     tipo: "usuarios",
     titulo: "Reporte de Usuarios del Sistema",
     total: data.length,
+    sigaDisponible,
     columnas: [
       "ID", "Nombres", "Apellidos", "Nombre Completo", "Email", "Tipo Doc.", "Nro. Documento",
+      "Bienes en SIGA", "Valor Neto SIGA (S/)",
       "Cargo", "Teléfono", "Sede", "Dependencia", "Siglas Dep.", "Rol", "Estado",
       "Fecha Inicio", "Fecha Fin", "Sesiones Responsable", "Participaciones Inventario",
       "Verificaciones Realizadas", "Fecha Registro"

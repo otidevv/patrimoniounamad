@@ -784,7 +784,7 @@ export default function BuscarBienPage() {
                     id="codigo"
                     placeholder="112236140168"
                     value={codigo}
-                    onChange={(e) => setCodigo(e.target.value)}
+                    onChange={(e) => setCodigo(e.target.value.replace(/\D/g, ""))}
                     className={cn(
                       jetbrains.className,
                       "h-12 border-slate-200 pl-11 pr-20 text-base tracking-[0.1em] transition-all focus:border-[#0c1f3a] focus:ring-2 focus:ring-[#0c1f3a]/10 sm:h-14 sm:text-lg"
@@ -950,7 +950,7 @@ export default function BuscarBienPage() {
                     id="documento"
                     placeholder="12345678"
                     value={documento}
-                    onChange={(e) => setDocumento(e.target.value)}
+                    onChange={(e) => setDocumento(e.target.value.replace(/\D/g, ""))}
                     className={cn(
                       jetbrains.className,
                       "h-12 border-slate-200 pl-11 pr-20 text-base tracking-[0.1em] transition-all focus:border-[#0c1f3a] focus:ring-2 focus:ring-[#0c1f3a]/10 sm:h-14 sm:text-lg"

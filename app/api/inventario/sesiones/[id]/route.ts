@@ -172,6 +172,52 @@ export async function PUT(
       return NextResponse.json(sesionActualizada)
     }
 
+    if (action === "reabrir") {
+      if (session.rol !== "ADMIN") {
+        return NextResponse.json(
+          { error: "Solo el administrador puede reabrir una sesión" },
+          { status: 403 }
+        )
+      }
+
+      if (
+        sesionActual.estado !== "FINALIZADA" &&
+        sesionActual.estado !== "CANCELADA"
+      ) {
+        return NextResponse.json(
+          { error: "Solo se puede reabrir una sesión finalizada o cancelada" },
+          { status: 400 }
+        )
+      }
+
+      const admin = await prisma.usuario.findUnique({
+        where: { id: session.id },
+        select: { nombre: true, apellidos: true },
+      })
+
+      const fechaReapertura = new Date().toLocaleString("es-PE", {
+        timeZone: "America/Lima",
+        dateStyle: "short",
+        timeStyle: "short",
+      })
+      const marcaReapertura = `[Reabierta por ${
+        admin ? `${admin.nombre} ${admin.apellidos}` : "administrador"
+      } el ${fechaReapertura}]`
+
+      const sesionActualizada = await prisma.sesionInventario.update({
+        where: { id },
+        data: {
+          estado: "EN_PROCESO",
+          fechaFin: null,
+          observaciones: sesionActual.observaciones
+            ? `${sesionActual.observaciones}\n${marcaReapertura}`
+            : marcaReapertura,
+        },
+      })
+
+      return NextResponse.json(sesionActualizada)
+    }
+
     if (action === "cancelar") {
       if (sesionActual.estado === "FINALIZADA") {
         return NextResponse.json(

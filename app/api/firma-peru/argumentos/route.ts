@@ -15,7 +15,21 @@ import {
   updateLoteParams,
 } from "@/lib/firma-peru/storage"
 
-async function handleGetArgumentos(tokenLote: string | null): Promise<NextResponse> {
+// URL base para que el cliente Firma Perú descargue/suba documentos.
+// En desarrollo (localhost) se usa el host real de la petición; en producción
+// se respeta NEXT_PUBLIC_APP_URL.
+function resolverBaseUrl(request: NextRequest): string {
+  const requestHost = request.headers.get("host") || ""
+  const esLocal =
+    requestHost.startsWith("localhost") || requestHost.startsWith("127.")
+  if (esLocal) return `http://${requestHost}`
+  return process.env.NEXT_PUBLIC_APP_URL || `https://${requestHost}`
+}
+
+async function handleGetArgumentos(
+  tokenLote: string | null,
+  baseUrl: string
+): Promise<NextResponse> {
   try {
     if (!tokenLote) {
       return new NextResponse(
@@ -47,7 +61,6 @@ async function handleGetArgumentos(tokenLote: string | null): Promise<NextRespon
     }
 
     const motivoText = MOTIVOS_FIRMA_TEXT[loteParams.motivo] || "Soy el autor del documento"
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
 
     const firmaConfig: FirmaPeruConfig = {
       signatureFormat: "PAdES",
@@ -72,7 +85,9 @@ async function handleGetArgumentos(tokenLote: string | null): Promise<NextRespon
       stampWordWrap: 37,
       role: "",
       stampPage: "1",
-      positionx: "20",
+      // El V°B° (firma de recepción) se estampa a la derecha para no
+      // superponerse con la firma del autor (ambas en la misma página)
+      positionx: loteParams.motivo === 2 ? "320" : "20",
       positiony: "20",
       uploadDocumentSigned: `${baseUrl}/api/firma-peru/lote/${codigoLote}/cargar`,
       certificationSignature: false,
@@ -99,7 +114,7 @@ export async function POST(request: NextRequest) {
     // Si viene del cliente Firma Perú (form-urlencoded)
     if (!contentType.includes("application/json")) {
       const { searchParams } = new URL(request.url)
-      return handleGetArgumentos(searchParams.get("token_lote"))
+      return handleGetArgumentos(searchParams.get("token_lote"), resolverBaseUrl(request))
     }
 
     // Solicitud del frontend
@@ -133,5 +148,5 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  return handleGetArgumentos(searchParams.get("token_lote"))
+  return handleGetArgumentos(searchParams.get("token_lote"), resolverBaseUrl(request))
 }
