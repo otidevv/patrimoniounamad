@@ -1,8 +1,12 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import * as XLSX from "xlsx"
 import {
   BarChart3,
+  ChevronLeft,
+  ChevronRight,
   Download,
   FileSpreadsheet,
   Filter,
@@ -14,12 +18,11 @@ import {
   XCircle,
   AlertTriangle,
   RefreshCw,
-  Calendar,
   TrendingUp,
   PieChart,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -37,7 +40,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface Sesion {
   id: string
@@ -75,13 +77,18 @@ interface EstadisticasGenerales {
   bienesSobrantes: number
 }
 
+const OPCIONES_PAGINA = [10, 20, 50, 100]
+
 export default function ReportesPage() {
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [sesiones, setSesiones] = useState<Sesion[]>([])
   const [dependencias, setDependencias] = useState<Dependencia[]>([])
   const [filtroEstado, setFiltroEstado] = useState<string>("all")
   const [filtroDependencia, setFiltroDependencia] = useState<string>("all")
   const [exportando, setExportando] = useState(false)
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
 
   const cargarDatos = useCallback(async () => {
     setLoading(true)
@@ -115,6 +122,32 @@ export default function ReportesPage() {
     if (filtroDependencia !== "all" && s.dependencia?.id !== filtroDependencia) return false
     return true
   })
+
+  // Paginación de la tabla de sesiones
+  const totalPages = Math.max(1, Math.ceil(sesionesFiltradas.length / pageSize))
+  const paginaActual = Math.min(page, totalPages)
+  const sesionesPagina = sesionesFiltradas.slice(
+    (paginaActual - 1) * pageSize,
+    paginaActual * pageSize
+  )
+  const desde = sesionesFiltradas.length === 0 ? 0 : (paginaActual - 1) * pageSize + 1
+  const hasta = Math.min(paginaActual * pageSize, sesionesFiltradas.length)
+
+  // Al cambiar filtros o tamaño de página, volver a la primera página
+  const cambiarFiltroEstado = (valor: string) => {
+    setFiltroEstado(valor)
+    setPage(1)
+  }
+
+  const cambiarFiltroDependencia = (valor: string) => {
+    setFiltroDependencia(valor)
+    setPage(1)
+  }
+
+  const cambiarPageSize = (valor: string) => {
+    setPageSize(Number(valor))
+    setPage(1)
+  }
 
   // Calcular estadísticas
   const estadisticas: EstadisticasGenerales = {
@@ -196,6 +229,104 @@ export default function ReportesPage() {
     setExportando(false)
   }
 
+  // Exportar a Excel (.xlsx)
+  const exportarExcel = (tipo: "sesiones" | "resumen") => {
+    setExportando(true)
+
+    try {
+      const wb = XLSX.utils.book_new()
+      const fecha = new Date().toISOString().split("T")[0]
+
+      if (tipo === "sesiones") {
+        const columnas = [
+          "C\u00f3digo", "Nombre", "Estado", "Dependencia", "Sede", "Responsable",
+          "Fecha Programada", "Fecha Inicio", "Fecha Fin", "Total Bienes SIGA",
+          "Total Verificados", "Encontrados", "Reubicados", "No Encontrados",
+          "Sobrantes", "% Avance",
+        ]
+
+        const datos = sesionesFiltradas.map((s) => ({
+          "C\u00f3digo": s.codigo,
+          "Nombre": s.nombre,
+          "Estado": s.estado,
+          "Dependencia": s.dependencia?.nombre || "",
+          "Sede": s.sede?.nombre || "",
+          "Responsable": `${s.responsable.apellidos} ${s.responsable.nombre}`,
+          "Fecha Programada": formatDate(s.fechaProgramada),
+          "Fecha Inicio": formatDate(s.fechaInicio),
+          "Fecha Fin": formatDate(s.fechaFin),
+          "Total Bienes SIGA": s.totalBienesSiga,
+          "Total Verificados": s.totalVerificados,
+          "Encontrados": s.totalEncontrados,
+          "Reubicados": s.totalReubicados,
+          "No Encontrados": s.totalNoEncontrados,
+          "Sobrantes": s.totalSobrantes,
+          "% Avance":
+            s.totalBienesSiga > 0
+              ? Math.round((s.totalVerificados / s.totalBienesSiga) * 100)
+              : 0,
+        }))
+
+        const ws = XLSX.utils.json_to_sheet(datos, { header: columnas })
+        ws["!cols"] = columnas.map((col) => ({
+          wch:
+            Math.max(
+              col.length,
+              ...datos.map((row) => String(row[col as keyof typeof row] ?? "").length)
+            ) + 2,
+        }))
+        XLSX.utils.book_append_sheet(wb, ws, "Sesiones")
+      } else {
+        const datos = [
+          { "M\u00e9trica": "Total Sesiones", "Valor": estadisticas.totalSesiones },
+          { "M\u00e9trica": "Sesiones Finalizadas", "Valor": estadisticas.sesionesFinalizadas },
+          { "M\u00e9trica": "Sesiones En Proceso", "Valor": estadisticas.sesionesEnProceso },
+          { "M\u00e9trica": "Total Verificaciones", "Valor": estadisticas.totalVerificaciones },
+          { "M\u00e9trica": "Bienes Encontrados", "Valor": estadisticas.bienesEncontrados },
+          { "M\u00e9trica": "Bienes Reubicados", "Valor": estadisticas.bienesReubicados },
+          { "M\u00e9trica": "Bienes No Encontrados", "Valor": estadisticas.bienesNoEncontrados },
+          { "M\u00e9trica": "Bienes Sobrantes", "Valor": estadisticas.bienesSobrantes },
+        ]
+        const ws = XLSX.utils.json_to_sheet(datos, { header: ["M\u00e9trica", "Valor"] })
+        ws["!cols"] = [{ wch: 28 }, { wch: 12 }]
+        XLSX.utils.book_append_sheet(wb, ws, "Resumen")
+      }
+
+      // Hoja de informaci\u00f3n
+      const infoData = [
+        ["UNIVERSIDAD NACIONAL AMAZ\u00d3NICA DE MADRE DE DIOS"],
+        ["SISTEMA DE GESTI\u00d3N DE PATRIMONIO"],
+        [""],
+        ["REPORTE:", tipo === "sesiones" ? "Sesiones de Inventario" : "Resumen de Inventario"],
+        ["FECHA DE GENERACI\u00d3N:", new Date().toLocaleString("es-PE")],
+        ["TOTAL DE REGISTROS:", sesionesFiltradas.length],
+        [
+          "FILTRO ESTADO:",
+          filtroEstado === "all" ? "Todos" : filtroEstado,
+        ],
+        [
+          "FILTRO DEPENDENCIA:",
+          filtroDependencia === "all"
+            ? "Todas"
+            : dependencias.find((d) => d.id === filtroDependencia)?.nombre || filtroDependencia,
+        ],
+      ]
+      const wsInfo = XLSX.utils.aoa_to_sheet(infoData)
+      wsInfo["!cols"] = [{ wch: 28 }, { wch: 50 }]
+      XLSX.utils.book_append_sheet(wb, wsInfo, "Informaci\u00f3n")
+
+      const nombreArchivo =
+        tipo === "sesiones"
+          ? `reporte_sesiones_${fecha}.xlsx`
+          : `resumen_inventario_${fecha}.xlsx`
+      XLSX.writeFile(wb, nombreArchivo)
+    } catch (error) {
+      console.error("Error al exportar a Excel:", error)
+    } finally {
+      setExportando(false)
+    }
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-3 sm:p-4 md:p-6">
       {/* Header */}
@@ -226,7 +357,7 @@ export default function ReportesPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="grid gap-2">
               <Label>Estado</Label>
-              <Select value={filtroEstado} onValueChange={setFiltroEstado}>
+              <Select value={filtroEstado} onValueChange={cambiarFiltroEstado}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todos" />
                 </SelectTrigger>
@@ -242,7 +373,7 @@ export default function ReportesPage() {
             </div>
             <div className="grid gap-2">
               <Label>Dependencia</Label>
-              <Select value={filtroDependencia} onValueChange={setFiltroDependencia}>
+              <Select value={filtroDependencia} onValueChange={cambiarFiltroDependencia}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
@@ -258,19 +389,37 @@ export default function ReportesPage() {
             </div>
             <div className="grid gap-2 sm:col-span-2 lg:col-span-2">
               <Label>Exportar</Label>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => exportarCSV("resumen")}
+                  className="w-full"
+                  onClick={() => exportarExcel("resumen")}
                   disabled={exportando}
                 >
                   <FileSpreadsheet className="h-4 w-4 mr-2" />
+                  Resumen Excel
+                </Button>
+                <Button
+                  className="w-full"
+                  onClick={() => exportarExcel("sesiones")}
+                  disabled={exportando}
+                >
+                  <FileSpreadsheet className="h-4 w-4 mr-2" />
+                  Sesiones Excel
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => exportarCSV("resumen")}
+                  disabled={exportando}
+                >
+                  <Download className="h-4 w-4 mr-2" />
                   Resumen CSV
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1"
+                  size="sm"
+                  className="w-full"
                   onClick={() => exportarCSV("sesiones")}
                   disabled={exportando}
                 >
@@ -445,10 +594,30 @@ export default function ReportesPage() {
           {/* Tabla de Sesiones */}
           <Card>
             <CardHeader className="p-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">
-                  Detalle de Sesiones ({sesionesFiltradas.length})
-                </CardTitle>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <CardTitle className="text-base">
+                    Detalle de Sesiones ({sesionesFiltradas.length})
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Haz clic en una sesión para ver su reporte y descargar el Excel
+                  </p>
+                </div>
+                <div className="grid gap-1.5">
+                  <Label className="text-xs">Por página</Label>
+                  <Select value={String(pageSize)} onValueChange={cambiarPageSize}>
+                    <SelectTrigger className="w-full sm:w-[110px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {OPCIONES_PAGINA.map((n) => (
+                        <SelectItem key={n} value={String(n)}>
+                          {n} filas
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="p-0 sm:p-6 sm:pt-0">
@@ -464,18 +633,25 @@ export default function ReportesPage() {
                       <TableHead className="text-center">Verificados</TableHead>
                       <TableHead className="text-center hidden sm:table-cell">OK</TableHead>
                       <TableHead className="text-center hidden sm:table-cell">Faltantes</TableHead>
+                      <TableHead className="w-10"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {sesionesFiltradas.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                        <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                           No hay sesiones con los filtros seleccionados
                         </TableCell>
                       </TableRow>
                     ) : (
-                      sesionesFiltradas.slice(0, 20).map((sesion) => (
-                        <TableRow key={sesion.id}>
+                      sesionesPagina.map((sesion) => (
+                        <TableRow
+                          key={sesion.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() =>
+                            router.push(`/dashboard/patrimonio/reportes/${sesion.id}`)
+                          }
+                        >
                           <TableCell className="font-mono text-xs">{sesion.codigo}</TableCell>
                           <TableCell className="max-w-[150px] truncate">{sesion.nombre}</TableCell>
                           <TableCell className="hidden md:table-cell">
@@ -494,17 +670,61 @@ export default function ReportesPage() {
                           <TableCell className="text-center hidden sm:table-cell">
                             <span className="text-red-600 font-medium">{sesion.totalNoEncontrados}</span>
                           </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            <ChevronRight className="h-4 w-4" />
+                          </TableCell>
                         </TableRow>
                       ))
                     )}
                   </TableBody>
                 </Table>
               </div>
-              {sesionesFiltradas.length > 20 && (
-                <div className="p-4 text-center text-sm text-muted-foreground border-t">
-                  Mostrando 20 de {sesionesFiltradas.length} sesiones. Exporta a CSV para ver todas.
+
+              {/* Paginación */}
+              <div className="flex flex-col gap-3 border-t p-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {sesionesFiltradas.length === 0
+                    ? "Sin sesiones"
+                    : `Mostrando ${desde}–${hasta} de ${sesionesFiltradas.length} sesiones`}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(1)}
+                    disabled={paginaActual === 1}
+                  >
+                    Primera
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(paginaActual - 1)}
+                    disabled={paginaActual === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm px-2 whitespace-nowrap">
+                    Página {paginaActual} de {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(paginaActual + 1)}
+                    disabled={paginaActual >= totalPages}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage(totalPages)}
+                    disabled={paginaActual >= totalPages}
+                  >
+                    Última
+                  </Button>
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
         </>
