@@ -7,6 +7,7 @@ import {
   BarChart3,
   ChevronLeft,
   ChevronRight,
+  Cpu,
   Download,
   FileSpreadsheet,
   Filter,
@@ -66,6 +67,25 @@ interface Dependencia {
   siglas: string | null
 }
 
+interface EquipoComputo {
+  id: string
+  codigoPatrimonial: string
+  descripcionSiga: string | null
+  marcaSiga: string | null
+  modeloSiga: string | null
+  serieSiga: string | null
+  procesador: string | null
+  generacion: string | null
+  sistemaOperativo: string | null
+  ram: string | null
+  disco: string | null
+  resultado: string
+  ubicacionReal: string | null
+  ubicacionSiga: string | null
+  responsableReal: string | null
+  sesion: { id: string; codigo: string; nombre: string }
+}
+
 interface EstadisticasGenerales {
   totalSesiones: number
   sesionesFinalizadas: number
@@ -89,6 +109,14 @@ export default function ReportesPage() {
   const [exportando, setExportando] = useState(false)
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
+
+  // Equipos de cómputo de todas las sesiones
+  const [equipos, setEquipos] = useState<EquipoComputo[]>([])
+  const [loadingEquipos, setLoadingEquipos] = useState(true)
+  const [pageEquipos, setPageEquipos] = useState(1)
+  const [pageSizeEquipos, setPageSizeEquipos] = useState(20)
+  const [totalEquipos, setTotalEquipos] = useState(0)
+  const [totalPagesEquipos, setTotalPagesEquipos] = useState(1)
 
   const cargarDatos = useCallback(async () => {
     setLoading(true)
@@ -116,6 +144,35 @@ export default function ReportesPage() {
     cargarDatos()
   }, [cargarDatos])
 
+  const cargarEquipos = useCallback(async () => {
+    setLoadingEquipos(true)
+    try {
+      const query = new URLSearchParams({
+        page: String(pageEquipos),
+        limit: String(pageSizeEquipos),
+      })
+      if (filtroEstado !== "all") query.set("estado", filtroEstado)
+      if (filtroDependencia !== "all") query.set("dependenciaId", filtroDependencia)
+
+      const response = await fetch(`/api/inventario/reporte-consolidado?${query}`)
+      const data = await response.json()
+
+      if (response.ok) {
+        setEquipos(data.equipos || [])
+        setTotalEquipos(data.pagination?.total || 0)
+        setTotalPagesEquipos(Math.max(1, data.pagination?.pages || 1))
+      }
+    } catch (error) {
+      console.error("Error al cargar equipos de cómputo:", error)
+    } finally {
+      setLoadingEquipos(false)
+    }
+  }, [pageEquipos, pageSizeEquipos, filtroEstado, filtroDependencia])
+
+  useEffect(() => {
+    cargarEquipos()
+  }, [cargarEquipos])
+
   // Filtrar sesiones
   const sesionesFiltradas = sesiones.filter((s) => {
     if (filtroEstado !== "all" && s.estado !== filtroEstado) return false
@@ -133,15 +190,26 @@ export default function ReportesPage() {
   const desde = sesionesFiltradas.length === 0 ? 0 : (paginaActual - 1) * pageSize + 1
   const hasta = Math.min(paginaActual * pageSize, sesionesFiltradas.length)
 
+  // Paginación de la tabla de equipos de cómputo (datos del servidor)
+  const desdeEquipos = totalEquipos === 0 ? 0 : (pageEquipos - 1) * pageSizeEquipos + 1
+  const hastaEquipos = Math.min(pageEquipos * pageSizeEquipos, totalEquipos)
+
   // Al cambiar filtros o tamaño de página, volver a la primera página
   const cambiarFiltroEstado = (valor: string) => {
     setFiltroEstado(valor)
     setPage(1)
+    setPageEquipos(1)
   }
 
   const cambiarFiltroDependencia = (valor: string) => {
     setFiltroDependencia(valor)
     setPage(1)
+    setPageEquipos(1)
+  }
+
+  const cambiarPageSizeEquipos = (valor: string) => {
+    setPageSizeEquipos(Number(valor))
+    setPageEquipos(1)
   }
 
   const cambiarPageSize = (valor: string) => {
@@ -187,6 +255,18 @@ export default function ReportesPage() {
     return <Badge className={cfg.color}>{cfg.label}</Badge>
   }
 
+  const getResultadoBadge = (resultado: string) => {
+    const config: Record<string, { color: string; label: string }> = {
+      ENCONTRADO: { color: "bg-green-100 text-green-800", label: "Encontrado" },
+      REUBICADO: { color: "bg-blue-100 text-blue-800", label: "Reubicado" },
+      NO_ENCONTRADO: { color: "bg-red-100 text-red-800", label: "No Encontrado" },
+      SOBRANTE: { color: "bg-yellow-100 text-yellow-800", label: "Sobrante" },
+    }
+    const cfg = config[resultado]
+    if (!cfg) return <Badge variant="outline">{resultado}</Badge>
+    return <Badge className={cfg.color}>{cfg.label}</Badge>
+  }
+
   // Exportar a CSV
   const exportarCSV = (tipo: "sesiones" | "resumen") => {
     setExportando(true)
@@ -227,6 +307,39 @@ export default function ReportesPage() {
     link.click()
 
     setExportando(false)
+  }
+
+  // Descargar reporte consolidado de todas las sesiones (generado en el servidor)
+  const descargarConsolidado = async () => {
+    setExportando(true)
+    try {
+      const query = new URLSearchParams({ formato: "excel" })
+      if (filtroEstado !== "all") query.set("estado", filtroEstado)
+      if (filtroDependencia !== "all") query.set("dependenciaId", filtroDependencia)
+
+      const response = await fetch(`/api/inventario/reporte-consolidado?${query}`)
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || "Error al generar el reporte consolidado")
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download =
+        response.headers.get("Content-Disposition")?.match(/filename="(.+)"/)?.[1] ||
+        `Reporte_Consolidado_${new Date().toISOString().split("T")[0]}.xlsx`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error("Error al descargar el reporte consolidado:", error)
+    } finally {
+      setExportando(false)
+    }
   }
 
   // Exportar a Excel (.xlsx)
@@ -390,6 +503,18 @@ export default function ReportesPage() {
             <div className="grid gap-2 sm:col-span-2 lg:col-span-2">
               <Label>Exportar</Label>
               <div className="grid grid-cols-2 gap-2">
+                <Button
+                  className="w-full col-span-2"
+                  onClick={descargarConsolidado}
+                  disabled={exportando}
+                >
+                  {exportando ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Cpu className="h-4 w-4 mr-2" />
+                  )}
+                  Reporte Consolidado (todas las sesiones)
+                </Button>
                 <Button
                   className="w-full"
                   onClick={() => exportarExcel("resumen")}
@@ -720,6 +845,162 @@ export default function ReportesPage() {
                     size="sm"
                     onClick={() => setPage(totalPages)}
                     disabled={paginaActual >= totalPages}
+                  >
+                    Última
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Equipos de Cómputo de todas las sesiones */}
+          <Card>
+            <CardHeader className="p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Cpu className="h-4 w-4" />
+                    Equipos de Cómputo — Todas las Sesiones ({totalEquipos})
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Bienes con especificaciones técnicas registradas en todas las
+                    sesiones de inventario
+                  </p>
+                </div>
+                <div className="grid gap-1.5">
+                  <Label className="text-xs">Por página</Label>
+                  <Select
+                    value={String(pageSizeEquipos)}
+                    onValueChange={cambiarPageSizeEquipos}
+                  >
+                    <SelectTrigger className="w-full sm:w-[110px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {OPCIONES_PAGINA.map((n) => (
+                        <SelectItem key={n} value={String(n)}>
+                          {n} filas
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0 sm:p-6 sm:pt-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Código</TableHead>
+                      <TableHead>Denominación</TableHead>
+                      <TableHead className="hidden md:table-cell">Marca / Modelo</TableHead>
+                      <TableHead>Procesador</TableHead>
+                      <TableHead className="hidden sm:table-cell">RAM</TableHead>
+                      <TableHead className="hidden sm:table-cell">Disco</TableHead>
+                      <TableHead className="hidden lg:table-cell">S.O.</TableHead>
+                      <TableHead className="hidden md:table-cell">Sesión</TableHead>
+                      <TableHead>Resultado</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {loadingEquipos ? (
+                      <TableRow>
+                        <TableCell colSpan={9} className="text-center py-8">
+                          <Loader2 className="h-5 w-5 animate-spin mx-auto text-muted-foreground" />
+                        </TableCell>
+                      </TableRow>
+                    ) : equipos.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                          No hay equipos de cómputo con los filtros seleccionados
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      equipos.map((equipo) => (
+                        <TableRow
+                          key={equipo.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() =>
+                            router.push(`/dashboard/patrimonio/reportes/${equipo.sesion.id}`)
+                          }
+                        >
+                          <TableCell className="font-mono text-xs">
+                            {equipo.codigoPatrimonial}
+                          </TableCell>
+                          <TableCell className="max-w-[180px] truncate">
+                            {equipo.descripcionSiga || "—"}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell max-w-[140px] truncate">
+                            {[equipo.marcaSiga, equipo.modeloSiga]
+                              .filter(Boolean)
+                              .join(" / ") || "—"}
+                          </TableCell>
+                          <TableCell className="max-w-[150px] truncate">
+                            {[equipo.procesador, equipo.generacion]
+                              .filter(Boolean)
+                              .join(" ") || "—"}
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell whitespace-nowrap">
+                            {equipo.ram || "—"}
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell whitespace-nowrap">
+                            {equipo.disco || "—"}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell max-w-[120px] truncate">
+                            {equipo.sistemaOperativo || "—"}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell font-mono text-xs">
+                            {equipo.sesion.codigo}
+                          </TableCell>
+                          <TableCell>{getResultadoBadge(equipo.resultado)}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Paginación de equipos */}
+              <div className="flex flex-col gap-3 border-t p-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {totalEquipos === 0
+                    ? "Sin equipos de cómputo"
+                    : `Mostrando ${desdeEquipos}–${hastaEquipos} de ${totalEquipos} equipos`}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPageEquipos(1)}
+                    disabled={pageEquipos === 1}
+                  >
+                    Primera
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPageEquipos(pageEquipos - 1)}
+                    disabled={pageEquipos === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm px-2 whitespace-nowrap">
+                    Página {pageEquipos} de {totalPagesEquipos}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPageEquipos(pageEquipos + 1)}
+                    disabled={pageEquipos >= totalPagesEquipos}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPageEquipos(totalPagesEquipos)}
+                    disabled={pageEquipos >= totalPagesEquipos}
                   >
                     Última
                   </Button>

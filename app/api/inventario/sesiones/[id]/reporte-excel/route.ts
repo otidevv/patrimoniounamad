@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getSession } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import ExcelJS from "exceljs"
+import { esEquipoComputo } from "@/lib/reporte-consolidado"
 
 // Etiquetas legibles para los enums
 const LABEL_RESULTADO: Record<string, string> = {
@@ -94,13 +95,6 @@ type VerificacionRow = {
   fechaVerificacion: Date
   verificador: { nombre: string; apellidos: string } | null
   dispositivoTipo: string | null
-}
-
-// Un bien es equipo de cómputo si tiene alguna especificación técnica registrada
-function esEquipoComputo(v: VerificacionRow): boolean {
-  return Boolean(
-    v.procesador || v.generacion || v.sistemaOperativo || v.ram || v.disco
-  )
 }
 
 function formatFechaPeru(fecha: Date): string {

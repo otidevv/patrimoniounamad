@@ -21,6 +21,7 @@ import {
   User,
   XCircle,
 } from "lucide-react"
+import { esEquipoComputo } from "@/lib/reporte-consolidado"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -107,10 +108,6 @@ const LABEL_ESTADO_SESION: Record<string, { label: string; color: string }> = {
   CANCELADA: { label: "Cancelada", color: "bg-red-100 text-red-800" },
 }
 
-// Un bien es equipo de cómputo si tiene alguna especificación técnica registrada
-function esEquipoComputo(v: Verificacion): boolean {
-  return Boolean(v.procesador || v.generacion || v.sistemaOperativo || v.ram || v.disco)
-}
 
 export default function ReporteSesionPage() {
   const params = useParams()
